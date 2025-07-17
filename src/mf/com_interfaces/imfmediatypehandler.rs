@@ -29,9 +29,9 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	#[must_use]
 	fn GetMajorType(&self) -> HrResult<GUID> {
 		let mut mt = GUID::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(self.ptr(), pvoid(&mut mt))
-		})
+		}).to_hrresult()
 		.map(|_| mt)
 	}
 
@@ -40,9 +40,9 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	#[must_use]
 	fn GetMediaTypeCount(&self) -> HrResult<u32> {
 		let mut count = 0u32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaTypeHandlerVT>(self).GetMediaTypeCount)(self.ptr(), &mut count)
-		})
+		}).to_hrresult()
 		.map(|_| count)
 	}
 }

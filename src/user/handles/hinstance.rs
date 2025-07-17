@@ -19,7 +19,7 @@ impl HINSTANCE {
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>,
 	) -> SysResult<HWND> {
-		ptr_to_sysresult_handle(unsafe {
+		PtrRet(unsafe {
 			ffi::CreateDialogParamW(
 				self.ptr(),
 				resource_id.as_ptr(),
@@ -28,6 +28,7 @@ impl HINSTANCE {
 				init_param.unwrap_or_default(),
 			)
 		})
+		.to_sysresult_handle()
 	}
 
 	/// [`DialogBoxIndirectParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxindirectparamw)
@@ -117,7 +118,8 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()))
+			PtrRet(ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()))
+				.to_sysresult_handle()
 				.map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
@@ -139,7 +141,8 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()))
+			PtrRet(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()))
+				.to_sysresult_handle()
 				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
@@ -161,7 +164,8 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadIconW(self.ptr(), icon_id.as_ptr()))
+			PtrRet(ffi::LoadIconW(self.ptr(), icon_id.as_ptr()))
+				.to_sysresult_handle()
 				.map(|h| DestroyIconGuard::new(h))
 		}
 	}
@@ -171,7 +175,8 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn LoadMenu(&self, resource_id: IdStr) -> SysResult<DestroyMenuGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()))
+			PtrRet(ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()))
+				.to_sysresult_handle()
 				.map(|h| DestroyMenuGuard::new(h))
 		}
 	}

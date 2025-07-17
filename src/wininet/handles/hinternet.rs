@@ -27,7 +27,7 @@ impl HINTERNET {
 		context: Option<isize>,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNETSESSION>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::InternetConnectW(
+			PtrRet(ffi::InternetConnectW(
 				self.ptr(),
 				WString::from_str(server_name).as_ptr(),
 				server_port.raw(),
@@ -37,6 +37,7 @@ impl HINTERNET {
 				flags.raw(),
 				context.unwrap_or_default(),
 			))
+			.to_sysresult_handle()
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}
 	}
@@ -52,13 +53,14 @@ impl HINTERNET {
 		flags: co::INTERNET_FLAG,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNET>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::InternetOpenW(
+			PtrRet(ffi::InternetOpenW(
 				WString::from_str(agent).as_ptr(),
 				access_type.raw(),
 				WString::from_opt_str(proxy).as_ptr(),
 				WString::from_opt_str(proxy_bypass).as_ptr(),
 				flags.raw(),
 			))
+			.to_sysresult_handle()
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}
 	}
@@ -79,7 +81,7 @@ impl HINTERNET {
 	) -> SysResult<InternetCloseHandleGuard<HINTERNETREQUEST>> {
 		let wheaders = WString::from_opt_str(headers);
 		unsafe {
-			ptr_to_sysresult_handle(ffi::InternetOpenUrlW(
+			PtrRet(ffi::InternetOpenUrlW(
 				self.ptr(),
 				WString::from_str(url).as_ptr(),
 				wheaders.as_ptr(),
@@ -87,6 +89,7 @@ impl HINTERNET {
 				flags.raw(),
 				context.unwrap_or_default(),
 			))
+			.to_sysresult_handle()
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}
 	}

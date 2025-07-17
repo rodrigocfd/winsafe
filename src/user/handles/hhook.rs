@@ -26,7 +26,7 @@ impl HHOOK {
 		module: Option<&HINSTANCE>,
 		thread_id: Option<u32>,
 	) -> SysResult<HHOOK> {
-		ptr_to_sysresult_handle(unsafe {
+		PtrRet(unsafe {
 			ffi::SetWindowsHookExW(
 				hook_id.raw(),
 				proc as _,
@@ -34,6 +34,7 @@ impl HHOOK {
 				thread_id.unwrap_or_default(),
 			)
 		})
+		.to_sysresult_handle()
 	}
 
 	/// [`UnhookWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
@@ -43,7 +44,7 @@ impl HHOOK {
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	pub fn UnhookWindowsHookEx(&mut self) -> SysResult<()> {
-		let ret = bool_to_sysresult(unsafe { ffi::UnhookWindowsHookEx(self.ptr()) });
+		let ret = BoolRet(unsafe { ffi::UnhookWindowsHookEx(self.ptr()) }).to_sysresult();
 		*self = Self::INVALID;
 		ret
 	}

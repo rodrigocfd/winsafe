@@ -14,6 +14,6 @@ impl HSERVICE {
 	/// [`DeleteService`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-deleteservice)
 	/// function.
 	pub fn DeleteService(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::DeleteService(self.ptr()) })
+		BoolRet(unsafe { ffi::DeleteService(self.ptr()) }).to_sysresult()
 	}
 }

@@ -23,7 +23,7 @@ impl HWND {
 		other_stuff: Option<&str>,
 		hicon: Option<&HICON>,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::ShellAboutW(
 				self.ptr(),
 				WString::from_str(&match first_line {
@@ -35,6 +35,7 @@ impl HWND {
 				hicon.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)

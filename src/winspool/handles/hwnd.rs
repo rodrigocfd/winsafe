@@ -14,7 +14,7 @@ impl HWND {
 		name: &str,
 		connection_info: &PRINTER_CONNECTION_INFO_1,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::AddPrinterConnection2W(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -22,6 +22,7 @@ impl HWND {
 				pcvoid(connection_info),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`AdvancedDocumentProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/advanceddocumentproperties)
@@ -50,6 +51,6 @@ impl HWND {
 	/// [`PrinterProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printerproperties)
 	/// function.
 	pub fn PrinterProperties(&self, hprinter: &HPRINTER) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::PrinterProperties(self.ptr(), hprinter.ptr()) })
+		BoolRet(unsafe { ffi::PrinterProperties(self.ptr(), hprinter.ptr()) }).to_invalidparm()
 	}
 }

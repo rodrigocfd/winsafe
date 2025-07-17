@@ -19,10 +19,9 @@ impl HBITMAP {
 		bits: *mut u8,
 	) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateBitmap(
-				sz.cx, sz.cy, num_planes, bit_count, bits as _,
-			))
-			.map(|h| DeleteObjectGuard::new(h))
+			PtrRet(ffi::CreateBitmap(sz.cx, sz.cy, num_planes, bit_count, bits as _))
+				.to_invalidparm_handle()
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -30,9 +29,10 @@ impl HBITMAP {
 	/// function.
 	pub fn GetObject(&self) -> SysResult<BITMAP> {
 		let mut bm = BITMAP::default();
-		bool_to_invalidparm(unsafe {
+		BoolRet(unsafe {
 			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(&mut bm))
 		})
+		.to_invalidparm()
 		.map(|_| bm)
 	}
 }

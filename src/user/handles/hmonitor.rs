@@ -15,7 +15,9 @@ impl HMONITOR {
 	/// function.
 	pub fn GetMonitorInfo(&self) -> SysResult<MONITORINFOEX> {
 		let mut mi = MONITORINFOEX::default();
-		bool_to_sysresult(unsafe { ffi::GetMonitorInfoW(self.ptr(), pvoid(&mut mi)) }).map(|_| mi)
+		BoolRet(unsafe { ffi::GetMonitorInfoW(self.ptr(), pvoid(&mut mi)) })
+			.to_sysresult()
+			.map(|_| mi)
 	}
 
 	/// [`MonitorFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)

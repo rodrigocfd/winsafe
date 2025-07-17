@@ -19,10 +19,11 @@ impl HUPDATERSRC {
 		delete_existing_resources: bool,
 	) -> SysResult<EndUpdateResourceGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::BeginUpdateResourceW(
+			PtrRet(ffi::BeginUpdateResourceW(
 				WString::from_str(file_name).as_ptr(),
 				delete_existing_resources as _,
 			))
+			.to_sysresult_handle()
 			.map(|h| EndUpdateResourceGuard::new(h))
 		}
 	}
@@ -36,7 +37,7 @@ impl HUPDATERSRC {
 		language: LANGID,
 		data: &[u8],
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::UpdateResourceW(
 				self.ptr(),
 				resource_type.as_ptr(),
@@ -46,5 +47,6 @@ impl HUPDATERSRC {
 				data.len() as _,
 			)
 		})
+		.to_sysresult()
 	}
 }

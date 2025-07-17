@@ -36,7 +36,7 @@ pub trait ole_IDataObject: ole_IUnknown {
 		adv_sink: &impl ole_IAdviseSink,
 	) -> HrResult<u32> {
 		let mut connection = 0u32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDataObjectVT>(self).DAdvise)(
 				self.ptr(),
 				pcvoid(formatetc),
@@ -45,13 +45,15 @@ pub trait ole_IDataObject: ole_IUnknown {
 				&mut connection,
 			)
 		})
+		.to_hrresult()
 		.map(|_| connection)
 	}
 
 	/// [`IDataObject::DUnadvise`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-dunadvise)
 	/// method.
 	fn DUnadvise(&self, connection: u32) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IDataObjectVT>(self).DUnadvise)(self.ptr(), connection) })
+		HrRet(unsafe { (vt::<IDataObjectVT>(self).DUnadvise)(self.ptr(), connection) })
+			.to_hrresult()
 	}
 
 	/// [`IDataObject::GetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-getdata)
@@ -62,17 +64,17 @@ pub trait ole_IDataObject: ole_IUnknown {
 	/// The returned struct may contain pointers that need to be deallocated.
 	unsafe fn GetData(&self, formatetc: &FORMATETC) -> HrResult<ReleaseStgMediumGuard> {
 		let mut sm = STGMEDIUM::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDataObjectVT>(self).GetData)(self.ptr(), pcvoid(formatetc), pvoid(&mut sm))
 		})
+		.to_hrresult()
 		.map(|_| unsafe { ReleaseStgMediumGuard::new(sm) })
 	}
 
 	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
 	/// method.
 	fn QueryGetData(&self, formatetc: &FORMATETC) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IDataObjectVT>(self).QueryGetData)(self.ptr(), pcvoid(formatetc))
-		})
+		HrRet(unsafe { (vt::<IDataObjectVT>(self).QueryGetData)(self.ptr(), pcvoid(formatetc)) })
+			.to_hrresult()
 	}
 }

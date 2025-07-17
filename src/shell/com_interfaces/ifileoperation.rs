@@ -60,18 +60,18 @@ pub trait shell_IFileOperation: ole_IUnknown {
 	/// method.
 	fn Advise(&self, fops: &IFileOperationProgressSink) -> HrResult<u32> {
 		let mut cookie = 0u32;
-		ok_to_hrresult(unsafe {
-			(vt::<IFileOperationVT>(self).Advise)(self.ptr(), fops.ptr(), &mut cookie)
-		})
-		.map(|_| cookie)
+		HrRet(unsafe { (vt::<IFileOperationVT>(self).Advise)(self.ptr(), fops.ptr(), &mut cookie) })
+			.to_hrresult()
+			.map(|_| cookie)
 	}
 
 	/// [`IFileOperation::ApplyPropertiesToItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-applypropertiestoitem)
 	/// method.
 	fn ApplyPropertiesToItem(&self, item: &impl shell_IShellItem) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).ApplyPropertiesToItem)(self.ptr(), item.ptr())
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::CopyItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-copyitem)
@@ -83,7 +83,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		copy_name: Option<&str>,
 		fops: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).CopyItem)(
 				self.ptr(),
 				item.ptr(),
@@ -92,6 +92,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 				fops.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::DeleteItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-deleteitem)
@@ -101,13 +102,14 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		item: &impl shell_IShellItem,
 		fops: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).DeleteItem)(
 				self.ptr(),
 				item.ptr(),
 				fops.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::GetAnyOperationsAborted`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-getanyoperationsaborted)
@@ -115,9 +117,10 @@ pub trait shell_IFileOperation: ole_IUnknown {
 	#[must_use]
 	fn GetAnyOperationsAborted(&self) -> HrResult<bool> {
 		let mut res = 0;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).GetAnyOperationsAborted)(self.ptr(), &mut res)
 		})
+		.to_hrresult()
 		.map(|_| res != 0)
 	}
 
@@ -130,7 +133,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		new_name: Option<&str>,
 		fops: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).MoveItem)(
 				self.ptr(),
 				item.ptr(),
@@ -139,6 +142,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 				fops.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::NewItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-newitem)
@@ -151,7 +155,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		template_name: Option<&str>,
 		fops: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).NewItem)(
 				self.ptr(),
 				destination_folder.ptr(),
@@ -161,6 +165,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 				fops.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	fn_com_noparm! { PerformOperations: IFileOperationVT;
@@ -176,7 +181,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		new_name: &str,
 		fops: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).RenameItem)(
 				self.ptr(),
 				item.ptr(),
@@ -184,35 +189,37 @@ pub trait shell_IFileOperation: ole_IUnknown {
 				fops.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::SetOperationFlags`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setoperationflags)
 	/// method.
 	fn SetOperationFlags(&self, flags: co::FOF) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).SetOperationFlags)(self.ptr(), flags.raw() as _)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::SetOwnerWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setownerwindow)
 	/// method.
 	fn SetOwnerWindow(&self, hwnd_owner: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileOperationVT>(self).SetOwnerWindow)(self.ptr(), hwnd_owner.ptr())
 		})
+		.to_hrresult()
 	}
 
 	/// [`IFileOperation::SetProgressDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setprogressdialog)
 	/// method.
 	fn SetProgressDialog(&self, popd: &IOperationsProgressDialog) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IFileOperationVT>(self).SetProgressDialog)(self.ptr(), popd.ptr())
-		})
+		HrRet(unsafe { (vt::<IFileOperationVT>(self).SetProgressDialog)(self.ptr(), popd.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IFileOperation::Unadvise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-unadvise)
 	/// method.
 	fn Unadvise(&self, cookie: u32) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IFileOperationVT>(self).Unadvise)(self.ptr(), cookie) })
+		HrRet(unsafe { (vt::<IFileOperationVT>(self).Unadvise)(self.ptr(), cookie) }).to_hrresult()
 	}
 }

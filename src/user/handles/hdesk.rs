@@ -24,7 +24,7 @@ impl HDESK {
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateDesktopW(
+			PtrRet(ffi::CreateDesktopW(
 				WString::from_str(name).as_ptr(),
 				std::ptr::null(),
 				std::ptr::null(),
@@ -32,6 +32,7 @@ impl HDESK {
 				desired_access.raw(),
 				pcvoid_or_null(security_attributes),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
@@ -47,7 +48,7 @@ impl HDESK {
 		heap_size_kb: u32,
 	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateDesktopExW(
+			PtrRet(ffi::CreateDesktopExW(
 				WString::from_str(name).as_ptr(),
 				std::ptr::null(),
 				std::ptr::null(),
@@ -57,6 +58,7 @@ impl HDESK {
 				heap_size_kb,
 				std::ptr::null_mut(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
@@ -74,7 +76,8 @@ impl HDESK {
 	#[must_use]
 	pub fn GetThreadDesktop(thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::GetThreadDesktop(thread_id))
+			PtrRet(ffi::GetThreadDesktop(thread_id))
+				.to_sysresult_handle()
 				.map(|h| ManuallyDrop::new(CloseDesktopGuard::new(h)))
 		}
 	}
@@ -89,12 +92,13 @@ impl HDESK {
 		desired_access: co::DESKTOP_RIGHTS,
 	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::OpenDesktopW(
+			PtrRet(ffi::OpenDesktopW(
 				WString::from_str(name).as_ptr(),
 				flags.unwrap_or_default().raw(),
 				inherit as _,
 				desired_access.raw(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
@@ -108,11 +112,12 @@ impl HDESK {
 		desired_access: co::DESKTOP_RIGHTS,
 	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::OpenInputDesktop(
+			PtrRet(ffi::OpenInputDesktop(
 				flags.unwrap_or_default().raw(),
 				inherit as _,
 				desired_access.raw(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
@@ -120,12 +125,12 @@ impl HDESK {
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)
 	/// function.
 	pub fn SetThreadDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetThreadDesktop(self.ptr()) })
+		BoolRet(unsafe { ffi::SetThreadDesktop(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`SwitchDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchdesktop)
 	/// function.
 	pub fn SwitchDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SwitchDesktop(self.ptr()) })
+		BoolRet(unsafe { ffi::SwitchDesktop(self.ptr()) }).to_sysresult()
 	}
 }

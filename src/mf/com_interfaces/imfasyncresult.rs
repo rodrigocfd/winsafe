@@ -31,38 +31,27 @@ pub trait mf_IMFAsyncResult: ole_IUnknown {
 	/// [`IMFAsyncResult::GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getobject)
 	/// method.
 	#[must_use]
-	fn GetObject<T>(&self) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn GetObject<T: ole_IUnknown>(&self) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<IMFAsyncResultVT>(self).GetObject)(self.ptr(), queried.as_mut())
-		})
-		.map(|_| queried)
+		HrRet(unsafe { (vt::<IMFAsyncResultVT>(self).GetObject)(self.ptr(), queried.as_mut()) })
+			.to_hrresult()
+			.map(|_| queried)
 	}
 
 	/// [`IMFAsyncResult::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getstate)
 	/// method.
 	#[must_use]
-	fn GetState<T>(&self) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn GetState<T: ole_IUnknown>(&self) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<IMFAsyncResultVT>(self).GetState)(self.ptr(), queried.as_mut())
-		})
-		.map(|_| queried)
+		HrRet(unsafe { (vt::<IMFAsyncResultVT>(self).GetState)(self.ptr(), queried.as_mut()) })
+			.to_hrresult()
+			.map(|_| queried)
 	}
 
 	/// [`IMFAsyncResult::GetStateNoAddRef`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getstatenoaddref)
 	/// method.
 	#[must_use]
-	fn GetStateNoAddRef<T>(&self) -> Option<ManuallyDrop<T>>
-	where
-		T: ole_IUnknown,
-	{
+	fn GetStateNoAddRef<T: ole_IUnknown>(&self) -> Option<ManuallyDrop<T>> {
 		let ptr = unsafe { (vt::<IMFAsyncResultVT>(self).GetStateNoAddRef)(self.ptr()) };
 		if ptr.is_null() { None } else { Some(ManuallyDrop::new(unsafe { T::from_ptr(ptr) })) }
 	}
@@ -77,8 +66,7 @@ pub trait mf_IMFAsyncResult: ole_IUnknown {
 	/// [`IMFAsyncResult::SetStatus`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-setstatus)
 	/// method.
 	fn SetStatus(&self, status: co::HRESULT) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IMFAsyncResultVT>(self).SetStatus)(self.ptr(), status.raw())
-		})
+		HrRet(unsafe { (vt::<IMFAsyncResultVT>(self).SetStatus)(self.ptr(), status.raw()) })
+			.to_hrresult()
 	}
 }

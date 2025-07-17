@@ -35,7 +35,7 @@ impl HACCESSTOKEN {
 	/// # w::SysResult::Ok(())
 	/// ```
 	pub fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::AdjustTokenPrivileges(
 				self.ptr(),
 				match new_state {
@@ -51,6 +51,7 @@ impl HACCESSTOKEN {
 				std::ptr::null_mut(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`CheckTokenCapability`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability)
@@ -58,13 +59,14 @@ impl HACCESSTOKEN {
 	#[must_use]
 	pub fn CheckTokenCapability(&self, capability_sid_to_check: &SID) -> SysResult<bool> {
 		let mut has_capability = 0;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::CheckTokenCapability(
 				self.ptr(),
 				pcvoid(capability_sid_to_check),
 				&mut has_capability,
 			)
 		})
+		.to_sysresult()
 		.map(|_| has_capability != 0)
 	}
 
@@ -73,9 +75,10 @@ impl HACCESSTOKEN {
 	#[must_use]
 	pub fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
 		let mut is_member = 0;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::CheckTokenMembership(self.ptr(), pcvoid(sid_to_check), &mut is_member)
 		})
+		.to_sysresult()
 		.map(|_| is_member != 0)
 	}
 
@@ -88,7 +91,8 @@ impl HACCESSTOKEN {
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(ffi::DuplicateToken(self.ptr(), level.raw(), handle.as_mut()))
+			BoolRet(ffi::DuplicateToken(self.ptr(), level.raw(), handle.as_mut()))
+				.to_sysresult()
 				.map(|_| CloseHandleGuard::new(handle))
 		}
 	}
@@ -143,7 +147,7 @@ impl HACCESSTOKEN {
 		information_class: co::TOKEN_INFORMATION_CLASS,
 	) -> SysResult<TokenInfo> {
 		let mut num_bytes = 0u32;
-		match bool_to_sysresult(unsafe {
+		match BoolRet(unsafe {
 			ffi::GetTokenInformation(
 				self.ptr(),
 				information_class.raw(),
@@ -151,7 +155,9 @@ impl HACCESSTOKEN {
 				0,
 				&mut num_bytes,
 			)
-		}) {
+		})
+		.to_sysresult()
+		{
 			Err(err) => match err {
 				co::ERROR::INSUFFICIENT_BUFFER => {}, // all good
 				err => return Err(err),
@@ -162,13 +168,14 @@ impl HACCESSTOKEN {
 		let mut buf = vec![0u8; num_bytes as usize].into_boxed_slice();
 
 		unsafe {
-			bool_to_sysresult(ffi::GetTokenInformation(
+			BoolRet(ffi::GetTokenInformation(
 				self.ptr(),
 				information_class.raw(),
 				buf.as_mut_ptr() as _,
 				num_bytes,
 				&mut num_bytes,
 			))
+			.to_sysresult()
 			.map(|_| match information_class {
 				co::TOKEN_INFORMATION_CLASS::User => {
 					TokenInfo::User(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_USER))
@@ -280,7 +287,7 @@ impl HACCESSTOKEN {
 	/// [`ImpersonateLoggedOnUser`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser)
 	/// function.
 	pub fn ImpersonateLoggedOnUser(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::ImpersonateLoggedOnUser(self.ptr()) })
+		BoolRet(unsafe { ffi::ImpersonateLoggedOnUser(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)

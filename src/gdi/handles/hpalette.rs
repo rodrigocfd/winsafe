@@ -11,7 +11,8 @@ impl HPALETTE {
 	#[must_use]
 	pub fn CreatePalette(pal: &LOGPALETTE) -> SysResult<DeleteObjectPaletteGuard> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreatePalette(pcvoid(pal)))
+			PtrRet(ffi::CreatePalette(pcvoid(pal)))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}

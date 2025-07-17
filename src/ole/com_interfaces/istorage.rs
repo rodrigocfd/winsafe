@@ -29,7 +29,8 @@ pub trait ole_IStorage: ole_IUnknown {
 	/// [`IStorage::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-commit)
 	/// method.
 	fn Commit(&self, commit_flags: co::STGC) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IStorageVT>(self).Commit)(self.ptr(), commit_flags.raw()) })
+		HrRet(unsafe { (vt::<IStorageVT>(self).Commit)(self.ptr(), commit_flags.raw()) })
+			.to_hrresult()
 	}
 
 	/// [`IStorage::CopyTo`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-copyto)
@@ -40,7 +41,7 @@ pub trait ole_IStorage: ole_IUnknown {
 		snb_exclude: &[impl AsRef<str>],
 		stg_dest: &impl ole_IStorage,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).CopyTo)(
 				self.ptr(),
 				iid_exclude.len() as _,
@@ -49,6 +50,7 @@ pub trait ole_IStorage: ole_IUnknown {
 				stg_dest.ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IStorage::CreateStorage`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-createstorage)
@@ -56,7 +58,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	#[must_use]
 	fn CreateStorage(&self, name: &str, grf_mode: co::STGM) -> HrResult<IStorage> {
 		let mut queried = unsafe { IStorage::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).CreateStorage)(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -66,6 +68,7 @@ pub trait ole_IStorage: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -74,7 +77,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	#[must_use]
 	fn CreateStream(&self, name: &str, grf_mode: co::STGM) -> HrResult<IStream> {
 		let mut queried = unsafe { IStream::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).CreateStream)(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -84,15 +87,17 @@ pub trait ole_IStorage: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
 	/// [`IStorage::DestroyElement`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-destroyelement)
 	/// method.
 	fn DestroyElement(&self, name: &str) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).DestroyElement)(self.ptr(), WString::from_str(name).as_ptr())
 		})
+		.to_hrresult()
 	}
 
 	/// [`IStorage::MoveElementTo`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-moveelementto)
@@ -104,7 +109,7 @@ pub trait ole_IStorage: ole_IUnknown {
 		new_name: &str,
 		grf_flags: co::STGMOVE,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).MoveElementTo)(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -113,6 +118,7 @@ pub trait ole_IStorage: ole_IUnknown {
 				grf_flags.raw(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IStorage::OpenStorage`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-openstorage)
@@ -120,7 +126,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	#[must_use]
 	fn OpenStorage(&self, name: &str, grf_mode: co::STGM) -> HrResult<IStorage> {
 		let mut queried = unsafe { IStorage::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).OpenStorage)(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -131,6 +137,7 @@ pub trait ole_IStorage: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -139,7 +146,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	#[must_use]
 	fn OpenStream(&self, name: &str, grf_mode: co::STGM) -> HrResult<IStream> {
 		let mut queried = unsafe { IStream::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).OpenStream)(
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
@@ -149,19 +156,21 @@ pub trait ole_IStorage: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
 	/// [`IStorage::RenameElement`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-renameelement)
 	/// method.
 	fn RenameElement(&self, old_name: &str, new_name: &str) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).RenameElement)(
 				self.ptr(),
 				WString::from_str(old_name).as_ptr(),
 				WString::from_str(new_name).as_ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	fn_com_noparm! { Revert: IStorageVT;
@@ -172,7 +181,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	/// [`IStorage::SetClass`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-setclass)
 	/// method.
 	fn SetClass(&self, clsid: &co::CLSID) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IStorageVT>(self).SetClass)(self.ptr(), pcvoid(clsid)) })
+		HrRet(unsafe { (vt::<IStorageVT>(self).SetClass)(self.ptr(), pcvoid(clsid)) }).to_hrresult()
 	}
 
 	/// [`IStorage::SetElementTimes`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-setelementtimes)
@@ -184,7 +193,7 @@ pub trait ole_IStorage: ole_IUnknown {
 		access: Option<&FILETIME>,
 		modification: Option<&FILETIME>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IStorageVT>(self).SetElementTimes)(
 				self.ptr(),
 				WString::from_opt_str(name).as_ptr(),
@@ -193,13 +202,13 @@ pub trait ole_IStorage: ole_IUnknown {
 				pcvoid_or_null(modification),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IStorage::SetStateBits`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-setstatebits)
 	/// method.
 	fn SetStateBits(&self, state_bits: u32, mask: u32) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IStorageVT>(self).SetStateBits)(self.ptr(), state_bits, mask)
-		})
+		HrRet(unsafe { (vt::<IStorageVT>(self).SetStateBits)(self.ptr(), state_bits, mask) })
+			.to_hrresult()
 	}
 }

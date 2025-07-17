@@ -23,7 +23,7 @@ impl HINSTANCE {
 	where
 		F: FnMut(LANGID) -> bool,
 	{
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::EnumResourceLanguagesW(
 				self.ptr(),
 				resource_type.as_ptr(),
@@ -32,6 +32,7 @@ impl HINSTANCE {
 				pcvoid(&func),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
@@ -65,7 +66,7 @@ impl HINSTANCE {
 	where
 		F: FnMut(IdStr) -> bool,
 	{
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::EnumResourceNamesW(
 				self.ptr(),
 				resource_type.as_ptr(),
@@ -73,6 +74,7 @@ impl HINSTANCE {
 				pcvoid(&func),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`EnumResourceTypes`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
@@ -99,13 +101,14 @@ impl HINSTANCE {
 	where
 		F: FnMut(RtStr) -> bool,
 	{
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::EnumResourceTypesW(
 				self.ptr(),
 				callbacks::hinstance_enum_resource_types::<F> as _,
 				pcvoid(&func),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`FindResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
@@ -115,9 +118,10 @@ impl HINSTANCE {
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	#[must_use]
 	pub fn FindResource(&self, resource_id: IdStr, resource_type: RtStr) -> SysResult<HRSRC> {
-		ptr_to_sysresult_handle(unsafe {
+		PtrRet(unsafe {
 			ffi::FindResourceW(self.ptr(), resource_id.as_ptr(), resource_type.as_ptr())
 		})
+		.to_sysresult_handle()
 	}
 
 	/// [`FindResourceEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
@@ -132,7 +136,7 @@ impl HINSTANCE {
 		resource_type: RtStr,
 		language: Option<LANGID>,
 	) -> SysResult<HRSRC> {
-		ptr_to_sysresult_handle(unsafe {
+		PtrRet(unsafe {
 			ffi::FindResourceExW(
 				self.ptr(),
 				resource_id.as_ptr(),
@@ -140,6 +144,7 @@ impl HINSTANCE {
 				language.unwrap_or(LANGID::NEUTRAL).into(),
 			)
 		})
+		.to_sysresult_handle()
 	}
 
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
@@ -192,9 +197,8 @@ impl HINSTANCE {
 	/// ```
 	#[must_use]
 	pub fn GetModuleHandle(module_name: Option<&str>) -> SysResult<HINSTANCE> {
-		ptr_to_sysresult_handle(unsafe {
-			ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
-		})
+		PtrRet(unsafe { ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr()) })
+			.to_sysresult_handle()
 	}
 
 	/// [`GetModuleHandleEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw)
@@ -234,7 +238,8 @@ impl HINSTANCE {
 
 		let mut h = unsafe { HINSTANCE::from_ptr(std::ptr::null_mut()) };
 		unsafe {
-			bool_to_sysresult(ffi::GetModuleHandleExW(f, module_name, h.as_mut()))
+			BoolRet(ffi::GetModuleHandleExW(f, module_name, h.as_mut()))
+				.to_sysresult()
 				.map(|_| FreeLibraryGuard::new(h))
 		}
 	}
@@ -243,9 +248,10 @@ impl HINSTANCE {
 	/// function.
 	#[must_use]
 	pub fn GetProcAddress(&self, proc_name: &str) -> SysResult<*const std::ffi::c_void> {
-		ptr_to_sysresult(unsafe {
+		PtrRet(unsafe {
 			ffi::GetProcAddress(self.ptr(), vec_ptr(&str_to_iso88591(proc_name))) as _
 		})
+		.to_sysresult()
 		.map(|ptr| ptr as _)
 	}
 
@@ -254,7 +260,8 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn LoadLibrary(lib_file_name: &str) -> SysResult<FreeLibraryGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr()))
+			PtrRet(ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr()))
+				.to_sysresult_handle()
 				.map(|h| FreeLibraryGuard::new(h))
 		}
 	}
@@ -266,7 +273,7 @@ impl HINSTANCE {
 	/// [`HINSTANCE::LockResource`](crate::HINSTANCE::LockResource).
 	#[must_use]
 	pub fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
-		ptr_to_sysresult_handle(unsafe { ffi::LoadResource(self.ptr(), res_info.ptr()) })
+		PtrRet(unsafe { ffi::LoadResource(self.ptr(), res_info.ptr()) }).to_sysresult_handle()
 	}
 
 	/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
@@ -316,7 +323,8 @@ impl HINSTANCE {
 	pub fn LockResource(&self, res_info: &HRSRC, hres_loaded: &HRSRCMEM) -> SysResult<&[u8]> {
 		let sz = self.SizeofResource(res_info)?;
 		unsafe {
-			ptr_to_sysresult(ffi::LockResource(hres_loaded.ptr()))
+			PtrRet(ffi::LockResource(hres_loaded.ptr()))
+				.to_sysresult()
 				.map(|ptr| std::slice::from_raw_parts(ptr as _, sz as _))
 		}
 	}

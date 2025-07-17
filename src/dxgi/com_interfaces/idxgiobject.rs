@@ -29,14 +29,13 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 	/// [`IDXGIObject::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiobject-getparent)
 	/// method.
 	#[must_use]
-	fn GetParent<T>(&self) -> HrResult<T>
-	where
-		T: ole_IUnknown,
+	fn GetParent<T: ole_IUnknown>(&self) -> HrResult<T>
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIObjectVT>(self).GetParent)(self.ptr(), pcvoid(&T::IID), queried.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -44,32 +43,28 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 	/// method.
 	///
 	/// Note: a copy of the data is made.
-	fn SetPrivateData<T>(&self, name: &GUID, data: &T) -> HrResult<()>
-	where
-		T: Sized,
+	fn SetPrivateData<T: Sized>(&self, name: &GUID, data: &T) -> HrResult<()>
 	{
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIObjectVT>(self).SetPrivateData)(
 				self.ptr(),
 				pcvoid(name),
 				std::mem::size_of::<T>() as _,
 				pcvoid(data),
 			)
-		})
+		}).to_hrresult()
 	}
 
 	/// [`IDXGIObject::SetPrivateDataInterface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiobject-setprivatedatainterface)
 	/// method.
-	fn SetPrivateDataInterface<T>(&self, obj: &T) -> HrResult<()>
-	where
-		T: ole_IUnknown,
+	fn SetPrivateDataInterface<T: ole_IUnknown>(&self, obj: &T) -> HrResult<()>
 	{
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIObjectVT>(self).SetPrivateDataInterface)(
 				self.ptr(),
 				pcvoid(&T::IID),
 				obj.ptr(),
 			)
-		})
+		}).to_hrresult()
 	}
 }

@@ -59,14 +59,16 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 		let mut queried = unsafe { IPin::null() };
 		let mut fetched = 0u32;
 
-		match ok_to_hrresult(unsafe {
+		match HrRet(unsafe {
 			(vt::<IEnumPinsVT>(self).Next)(
 				self.ptr(),
 				1, // retrieve only 1
 				queried.as_mut(),
 				&mut fetched,
 			)
-		}) {
+		})
+		.to_hrresult()
+		{
 			Ok(_) => Ok(Some(queried)),
 			Err(hr) => match hr {
 				co::HRESULT::S_FALSE => Ok(None), // no pin found
@@ -83,6 +85,6 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// [`IEnumPins::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe { (vt::<IEnumPinsVT>(self).Skip)(self.ptr(), count) })
+		HrRet(unsafe { (vt::<IEnumPinsVT>(self).Skip)(self.ptr(), count) }).to_bool_hrresult()
 	}
 }

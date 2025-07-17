@@ -39,7 +39,7 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		shared_resource: Option<&DXGI_SHARED_RESOURCE>,
 	) -> HrResult<IDXGISurface> {
 		let mut queried = unsafe { IDXGISurface::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).CreateSurface)(
 				self.ptr(),
 				pcvoid(desc),
@@ -49,6 +49,7 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -62,9 +63,9 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetGPUThreadPriority(&self) -> HrResult<i8> {
 		let mut priority = 0i32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).GetGPUThreadPriority)(self.ptr(), &mut priority)
-		})
+		}).to_hrresult()
 		.map(|_| priority as _)
 	}
 
@@ -76,22 +77,22 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		resources: &[&impl dxgi_IDXGIResource],
 	) -> HrResult<Vec<co::DXGI_RESIDENCY>> {
 		let mut status = vec![co::DXGI_RESIDENCY::default(); resources.len()];
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).QueryResourceResidency)(
 				self.ptr(),
 				resources.as_ptr() as _,
 				status.as_mut_ptr() as _,
 				resources.len() as _,
 			)
-		})
+		}).to_hrresult()
 		.map(|_| status)
 	}
 
 	/// [`IDXGIDevice::SetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-setgputhreadpriority)
 	/// method.
 	fn SetGPUThreadPriority(&self, priority: i8) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).SetGPUThreadPriority)(self.ptr(), priority as _)
-		})
+		}).to_hrresult()
 	}
 }

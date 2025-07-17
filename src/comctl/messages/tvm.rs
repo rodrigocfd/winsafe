@@ -799,7 +799,7 @@ impl MsgSend for SetExtendedStyle {
 	type RetType = HrResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		ok_to_hrresult(v as _)
+		HrRet(v as _).to_hrresult()
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

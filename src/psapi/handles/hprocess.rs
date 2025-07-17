@@ -9,7 +9,7 @@ impl HPROCESS {
 	/// [`EmptyWorkingSet`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-emptyworkingset)
 	/// function.
 	pub fn EmptyWorkingSet(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::EmptyWorkingSet(self.ptr()) })
+		BoolRet(unsafe { ffi::EmptyWorkingSet(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`EnumProcessModules`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules)
@@ -18,9 +18,10 @@ impl HPROCESS {
 	pub fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
 		loop {
 			let mut bytes_needed = 0u32;
-			bool_to_sysresult(unsafe {
+			BoolRet(unsafe {
 				ffi::EnumProcessModules(self.ptr(), std::ptr::null_mut(), 0, &mut bytes_needed)
-			})?;
+			})
+			.to_sysresult()?;
 
 			let elems_needed = bytes_needed / (std::mem::size_of::<HINSTANCE>() as u32);
 			let mut buf = (0..elems_needed)
@@ -28,14 +29,15 @@ impl HPROCESS {
 				.collect::<Vec<_>>();
 
 			let mut bytes_got = 0u32;
-			bool_to_sysresult(unsafe {
+			BoolRet(unsafe {
 				ffi::EnumProcessModules(
 					self.ptr(),
 					buf.as_mut_ptr() as _,
 					bytes_needed,
 					&mut bytes_got,
 				)
-			})?;
+			})
+			.to_sysresult()?;
 
 			if bytes_needed == bytes_got {
 				return Ok(buf);
@@ -48,9 +50,10 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetMappedFileName(&self, address: *mut std::ffi::c_void) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetMappedFileNameW(self.ptr(), address, buf.as_mut_ptr(), buf.buf_len() as _)
 		})
+		.to_sysresult()
 		.map(|_| buf.to_string())
 	}
 
@@ -59,7 +62,7 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetModuleBaseName(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetModuleBaseNameW(
 				self.ptr(),
 				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -67,6 +70,7 @@ impl HPROCESS {
 				buf.buf_len() as _,
 			)
 		})
+		.to_sysresult()
 		.map(|_| buf.to_string())
 	}
 
@@ -75,7 +79,7 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetModuleFileNameEx(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetModuleFileNameExW(
 				self.ptr(),
 				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -83,6 +87,7 @@ impl HPROCESS {
 				buf.buf_len() as _,
 			)
 		})
+		.to_sysresult()
 		.map(|_| buf.to_string())
 	}
 
@@ -91,7 +96,7 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetModuleInformation(&self, hmodule: Option<&HINSTANCE>) -> SysResult<MODULEINFO> {
 		let mut mi = MODULEINFO::default();
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetModuleInformation(
 				self.ptr(),
 				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -99,6 +104,7 @@ impl HPROCESS {
 				std::mem::size_of::<MODULEINFO>() as _,
 			)
 		})
+		.to_sysresult()
 		.map(|_| mi)
 	}
 
@@ -107,9 +113,10 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetProcessImageFileName(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetProcessImageFileNameW(self.ptr(), buf.as_mut_ptr(), buf.buf_len() as _)
 		})
+		.to_sysresult()
 		.map(|_| buf.to_string())
 	}
 
@@ -118,13 +125,14 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetProcessMemoryInfo(&self) -> SysResult<PROCESS_MEMORY_COUNTERS_EX> {
 		let mut pmc = PROCESS_MEMORY_COUNTERS_EX::default();
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetProcessMemoryInfo(
 				self.ptr(),
 				pvoid(&mut pmc),
 				std::mem::size_of::<PROCESS_MEMORY_COUNTERS_EX>() as _,
 			)
 		})
+		.to_sysresult()
 		.map(|_| pmc)
 	}
 }

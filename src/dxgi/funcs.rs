@@ -11,7 +11,8 @@ use crate::prelude::*;
 #[must_use]
 pub fn CreateDXGIFactory() -> HrResult<IDXGIFactory> {
 	let mut queried = unsafe { IDXGIFactory::null() };
-	ok_to_hrresult(unsafe { ffi::CreateDXGIFactory(pcvoid(&IDXGIFactory::IID), queried.as_mut()) })
+	HrRet(unsafe { ffi::CreateDXGIFactory(pcvoid(&IDXGIFactory::IID), queried.as_mut()) })
+		.to_hrresult()
 		.map(|_| queried)
 }
 
@@ -20,8 +21,7 @@ pub fn CreateDXGIFactory() -> HrResult<IDXGIFactory> {
 #[must_use]
 pub fn CreateDXGIFactory1() -> HrResult<IDXGIFactory1> {
 	let mut queried = unsafe { IDXGIFactory1::null() };
-	ok_to_hrresult(unsafe {
-		ffi::CreateDXGIFactory1(pcvoid(&IDXGIFactory1::IID), queried.as_mut())
-	})
-	.map(|_| queried)
+	HrRet(unsafe { ffi::CreateDXGIFactory1(pcvoid(&IDXGIFactory1::IID), queried.as_mut()) })
+		.to_hrresult()
+		.map(|_| queried)
 }

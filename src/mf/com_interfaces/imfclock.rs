@@ -32,9 +32,10 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetClockCharacteristics(&self) -> HrResult<co::MFCLOCK_CHARACTERISTICS_FLAG> {
 		let mut characteristics = co::MFCLOCK_CHARACTERISTICS_FLAG::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFClockVT>(self).GetClockCharacteristics)(self.ptr(), characteristics.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| characteristics)
 	}
 
@@ -43,7 +44,8 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetContinuityKey(&self) -> HrResult<u32> {
 		let mut ck = 0u32;
-		ok_to_hrresult(unsafe { (vt::<IMFClockVT>(self).GetContinuityKey)(self.ptr(), &mut ck) })
+		HrRet(unsafe { (vt::<IMFClockVT>(self).GetContinuityKey)(self.ptr(), &mut ck) })
+			.to_hrresult()
 			.map(|_| ck)
 	}
 
@@ -56,9 +58,10 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetCorrelatedTime(&self) -> HrResult<(i64, i64)> {
 		let (mut clock, mut system) = (0i64, 0i64);
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFClockVT>(self).GetCorrelatedTime)(self.ptr(), 0, &mut clock, &mut system)
 		})
+		.to_hrresult()
 		.map(|_| (clock, system))
 	}
 
@@ -67,10 +70,9 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetProperties(&self) -> HrResult<MFCLOCK_PROPERTIES> {
 		let mut cp = MFCLOCK_PROPERTIES::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IMFClockVT>(self).GetProperties)(self.ptr(), pvoid(&mut cp))
-		})
-		.map(|_| cp)
+		HrRet(unsafe { (vt::<IMFClockVT>(self).GetProperties)(self.ptr(), pvoid(&mut cp)) })
+			.to_hrresult()
+			.map(|_| cp)
 	}
 
 	/// [`IMFClock::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getstate)
@@ -78,7 +80,8 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetState(&self) -> HrResult<co::MFCLOCK_STATE> {
 		let mut state = co::MFCLOCK_STATE::default();
-		ok_to_hrresult(unsafe { (vt::<IMFClockVT>(self).GetState)(self.ptr(), 0, state.as_mut()) })
+		HrRet(unsafe { (vt::<IMFClockVT>(self).GetState)(self.ptr(), 0, state.as_mut()) })
+			.to_hrresult()
 			.map(|_| state)
 	}
 }

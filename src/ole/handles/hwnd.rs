@@ -13,12 +13,12 @@ impl HWND {
 	/// before this function, you'll receive an
 	/// [`ERROR::OUTOFMEMORY`](crate::co::ERROR::OUTOFMEMORY) error.
 	pub fn RegisterDragDrop(&self, drop_target: &IDropTarget) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ffi::RegisterDragDrop(self.ptr(), drop_target.ptr() as _) })
+		HrRet(unsafe { ffi::RegisterDragDrop(self.ptr(), drop_target.ptr() as _) }).to_hrresult()
 	}
 
 	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
 	/// function.
 	pub fn RevokeDragDrop(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ffi::RevokeDragDrop(self.ptr()) })
+		HrRet(unsafe { ffi::RevokeDragDrop(self.ptr()) }).to_hrresult()
 	}
 }

@@ -48,7 +48,7 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		domain: Option<&str>,
 		password: Option<&str>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskServiceVT>(self).Connect)(
 				self.ptr(),
 				Variant::from_opt_str(server_name).to_raw()?,
@@ -57,6 +57,7 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 				Variant::from_opt_str(password).to_raw()?,
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskService::get_Connected`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connected)
@@ -64,10 +65,9 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn get_Connected(&self) -> HrResult<bool> {
 		let mut connected = i16::default();
-		ok_to_hrresult(unsafe {
-			(vt::<ITaskServiceVT>(self).get_Connected)(self.ptr(), &mut connected)
-		})
-		.map(|_| connected != 0)
+		HrRet(unsafe { (vt::<ITaskServiceVT>(self).get_Connected)(self.ptr(), &mut connected) })
+			.to_hrresult()
+			.map(|_| connected != 0)
 	}
 
 	fn_com_bstr_get! { get_ConnectedDomain: ITaskServiceVT;
@@ -85,10 +85,9 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn get_HighestVersion(&self) -> HrResult<u32> {
 		let mut ver = 0u32;
-		ok_to_hrresult(unsafe {
-			(vt::<ITaskServiceVT>(self).get_HighestVersion)(self.ptr(), &mut ver)
-		})
-		.map(|_| ver)
+		HrRet(unsafe { (vt::<ITaskServiceVT>(self).get_HighestVersion)(self.ptr(), &mut ver) })
+			.to_hrresult()
+			.map(|_| ver)
 	}
 
 	fn_com_bstr_get! { get_TargetServer: ITaskServiceVT;
@@ -101,13 +100,14 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn GetFolder(&self, path: &str) -> HrResult<ITaskFolder> {
 		let mut queried = unsafe { ITaskFolder::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskServiceVT>(self).GetFolder)(
 				self.ptr(),
 				BSTR::SysAllocString(path)?.as_ptr(),
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -116,9 +116,8 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn NewTask(&self) -> HrResult<ITaskDefinition> {
 		let mut queried = unsafe { ITaskDefinition::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<ITaskServiceVT>(self).NewTask)(self.ptr(), 0, queried.as_mut())
-		})
-		.map(|_| queried)
+		HrRet(unsafe { (vt::<ITaskServiceVT>(self).NewTask)(self.ptr(), 0, queried.as_mut()) })
+			.to_hrresult()
+			.map(|_| queried)
 	}
 }

@@ -17,7 +17,7 @@ impl HCLIPBOARD {
 	/// [`EmptyClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
 	/// function.
 	pub fn EmptyClipboard(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::EmptyClipboard() })
+		BoolRet(unsafe { ffi::EmptyClipboard() }).to_sysresult()
 	}
 
 	/// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
@@ -42,10 +42,8 @@ impl HCLIPBOARD {
 	/// ```
 	#[must_use]
 	pub fn GetClipboardData(&self, format: co::CF) -> SysResult<Vec<u8>> {
-		let hglobal = unsafe {
-			ptr_to_sysresult(ffi::GetClipboardData(format.raw() as _))
-				.map(|p| HGLOBAL::from_ptr(p))?
-		};
+		let hglobal = PtrRet(unsafe { ffi::GetClipboardData(format.raw() as _) })
+			.to_sysresult_handle::<HGLOBAL>()?;
 		let copied = {
 			let block = hglobal.GlobalLock()?;
 			block.as_slice().to_vec()
@@ -90,9 +88,8 @@ impl HCLIPBOARD {
 			let mut block = hglobal.GlobalLock()?;
 			block.as_mut_slice().copy_from_slice(data); // copy the contents into HGLOBAL
 		}
-		ptr_to_sysresult(unsafe {
-			ffi::SetClipboardData(format.raw() as _, hglobal.leak().ptr() as _)
-		})?;
+		PtrRet(unsafe { ffi::SetClipboardData(format.raw() as _, hglobal.leak().ptr() as _) })
+			.to_sysresult()?;
 		Ok(())
 	}
 }

@@ -14,7 +14,7 @@ impl HDC {
 	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
 	/// function.
 	pub fn DrawFocusRect(&self, rect: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::DrawFocusRect(self.ptr(), pcvoid(&rect)) })
+		BoolRet(unsafe { ffi::DrawFocusRect(self.ptr(), pcvoid(&rect)) }).to_sysresult()
 	}
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
@@ -88,7 +88,7 @@ impl HDC {
 	where
 		F: FnMut(HMONITOR, HDC, &RECT) -> bool,
 	{
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::EnumDisplayMonitors(
 				self.ptr(),
 				pcvoid_or_null(rc_clip.as_ref()),
@@ -96,6 +96,7 @@ impl HDC {
 				pcvoid(&func),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`ExcludeUpdateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-excludeupdatergn)
@@ -110,25 +111,25 @@ impl HDC {
 	/// [`FrameRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-framerect)
 	/// function.
 	pub fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FrameRect(self.ptr(), pcvoid(&rc), hbr.ptr()) })
+		BoolRet(unsafe { ffi::FrameRect(self.ptr(), pcvoid(&rc), hbr.ptr()) }).to_sysresult()
 	}
 
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
 	pub fn InvertRect(&self, rc: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::InvertRect(self.ptr(), pcvoid(&rc)) })
+		BoolRet(unsafe { ffi::InvertRect(self.ptr(), pcvoid(&rc)) }).to_sysresult()
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
 	/// function.
 	pub fn PaintDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::PaintDesktop(self.ptr()) })
+		BoolRet(unsafe { ffi::PaintDesktop(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
 	/// function.
 	#[must_use]
 	pub fn WindowFromDC(&self) -> Option<HWND> {
-		ptr_to_option_handle(unsafe { ffi::WindowFromDC(self.ptr()) })
+		PtrRet(unsafe { ffi::WindowFromDC(self.ptr()) }).to_opt_handle()
 	}
 }

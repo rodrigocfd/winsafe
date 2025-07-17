@@ -17,7 +17,7 @@ impl HTRANSACTION {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 	/// function.
 	pub fn CommitTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::CommitTransaction(self.ptr()) })
+		BoolRet(unsafe { ffi::CommitTransaction(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
@@ -50,7 +50,8 @@ impl HTRANSACTION {
 	#[must_use]
 	pub fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
-		bool_to_sysresult(unsafe { ffi::GetTransactionId(self.ptr(), pvoid(&mut guid)) })
+		BoolRet(unsafe { ffi::GetTransactionId(self.ptr(), pvoid(&mut guid)) })
+			.to_sysresult()
 			.map(|_| guid)
 	}
 
@@ -72,6 +73,6 @@ impl HTRANSACTION {
 	/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
 	/// function.
 	pub fn RollbackTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::RollbackTransaction(self.ptr()) })
+		BoolRet(unsafe { ffi::RollbackTransaction(self.ptr()) }).to_sysresult()
 	}
 }

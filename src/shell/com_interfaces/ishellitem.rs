@@ -63,12 +63,13 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn BindToHandler<T>(&self, bind_ctx: Option<&impl ole_IBindCtx>, bhid: &co::BHID) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn BindToHandler<T: ole_IUnknown>(
+		&self,
+		bind_ctx: Option<&impl ole_IBindCtx>,
+		bhid: &co::BHID,
+	) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItemVT>(self).BindToHandler)(
 				self.ptr(),
 				bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
@@ -77,6 +78,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -85,9 +87,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn Compare(&self, other: &impl shell_IShellItem, hint: co::SICHINTF) -> HrResult<i32> {
 		let mut order = 0i32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItemVT>(self).Compare)(self.ptr(), other.ptr(), hint.raw(), &mut order)
 		})
+		.to_hrresult()
 		.map(|_| order)
 	}
 
@@ -129,9 +132,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItemVT>(self).GetDisplayName)(self.ptr(), sigdn_name.raw(), &mut pstr)
 		})
+		.to_hrresult()
 		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 

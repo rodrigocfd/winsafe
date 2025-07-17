@@ -3,7 +3,6 @@
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
-use crate::prelude::*;
 
 handle! { HACTCTX;
 	/// Handle to an
@@ -17,16 +16,15 @@ impl HACTCTX {
 	#[must_use]
 	pub fn CreateActCtx(actctx: &mut ACTCTX) -> SysResult<ReleaseActCtxGuard> {
 		unsafe {
-			match HACTCTX(ffi::CreateActCtxW(pvoid(actctx))) {
-				HACTCTX::INVALID => Err(GetLastError()),
-				handle => Ok(ReleaseActCtxGuard::new(handle)),
-			}
+			PtrRet(ffi::CreateActCtxW(pvoid(actctx)))
+				.to_sysresult_handle()
+				.map(|h| ReleaseActCtxGuard::new(h))
 		}
 	}
 
 	/// [`ZombifyActCtx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-zombifyactctx)
 	/// function.
 	pub fn ZombifyActCtx(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::ZombifyActCtx(self.ptr()) })
+		BoolRet(unsafe { ffi::ZombifyActCtx(self.ptr()) }).to_sysresult()
 	}
 }

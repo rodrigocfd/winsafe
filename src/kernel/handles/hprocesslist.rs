@@ -130,11 +130,9 @@ impl HPROCESSLIST {
 		th32_process_id: Option<u32>,
 	) -> SysResult<CloseHandleGuard<HPROCESSLIST>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateToolhelp32Snapshot(
-				flags.raw(),
-				th32_process_id.unwrap_or_default(),
-			))
-			.map(|h| CloseHandleGuard::new(h))
+			PtrRet(ffi::CreateToolhelp32Snapshot(flags.raw(), th32_process_id.unwrap_or_default()))
+				.to_sysresult_handle()
+				.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 

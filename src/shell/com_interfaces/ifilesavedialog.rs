@@ -67,7 +67,7 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 		hwnd: &HWND,
 		sink: Option<&IFileOperationProgressSink>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileSaveDialogVT>(self).ApplyProperties)(
 				self.ptr(),
 				item.ptr(),
@@ -76,6 +76,7 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 				sink.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	fn_com_interface_get! { GetProperties: IFileSaveDialogVT => IPropertyStore;
@@ -86,16 +87,14 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// [`IFileSaveDialog::SetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setproperties)
 	/// method.
 	fn SetProperties(&self, store: &impl oleaut_IPropertyStore) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IFileSaveDialogVT>(self).SetProperties)(self.ptr(), store.ptr())
-		})
+		HrRet(unsafe { (vt::<IFileSaveDialogVT>(self).SetProperties)(self.ptr(), store.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
 	fn SetSaveAsItem(&self, item: &impl shell_IShellItem) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IFileSaveDialogVT>(self).SetSaveAsItem)(self.ptr(), item.ptr())
-		})
+		HrRet(unsafe { (vt::<IFileSaveDialogVT>(self).SetSaveAsItem)(self.ptr(), item.ptr()) })
+			.to_hrresult()
 	}
 }

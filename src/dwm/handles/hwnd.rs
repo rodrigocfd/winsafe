@@ -10,9 +10,8 @@ impl HWND {
 	/// [`DwmExtendFrameIntoClientArea`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmextendframeintoclientarea)
 	/// function.
 	pub fn DwmExtendFrameIntoClientArea(&self, margins_inset: &MARGINS) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			ffi::DwmExtendFrameIntoClientArea(self.ptr(), pcvoid(margins_inset))
-		})
+		HrRet(unsafe { ffi::DwmExtendFrameIntoClientArea(self.ptr(), pcvoid(margins_inset)) })
+			.to_hrresult()
 	}
 
 	/// [`DwmGetWindowAttribute`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmgetwindowattribute)
@@ -22,14 +21,15 @@ impl HWND {
 		let mut buf_rc = RECT::new();
 		let (ptr, sz) = DwmAttr::ptr_sz_of_flag(attribute, &mut buf_u32, &mut buf_rc);
 
-		ok_to_hrresult(unsafe { ffi::DwmGetWindowAttribute(self.ptr(), attribute.raw(), ptr, sz) })
+		HrRet(unsafe { ffi::DwmGetWindowAttribute(self.ptr(), attribute.raw(), ptr, sz) })
+			.to_hrresult()
 			.map(|_| DwmAttr::from_raw(attribute, buf_u32, buf_rc))
 	}
 
 	/// [`DwmInvalidateIconicBitmaps`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwminvalidateiconicbitmaps)
 	/// function.
 	pub fn DwmInvalidateIconicBitmaps(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ffi::DwmInvalidateIconicBitmaps(self.ptr()) })
+		HrRet(unsafe { ffi::DwmInvalidateIconicBitmaps(self.ptr()) }).to_hrresult()
 	}
 
 	/// [`DwmModifyPreviousDxFrameDuration`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmmodifypreviousdxframeduration)
@@ -39,13 +39,14 @@ impl HWND {
 		num_refreshes: i32,
 		relative_to_current: bool,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::DwmModifyPreviousDxFrameDuration(
 				self.ptr(),
 				num_refreshes,
 				relative_to_current as _,
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`DwmSetIconicLivePreviewBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticoniclivepreviewbitmap)
@@ -56,7 +57,7 @@ impl HWND {
 		pt_client: Option<POINT>,
 		sit_flags: Option<co::DWM_SIT>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::DwmSetIconicLivePreviewBitmap(
 				self.ptr(),
 				hbmp.ptr(),
@@ -64,6 +65,7 @@ impl HWND {
 				sit_flags.unwrap_or_default().raw(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`DwmSetIconicThumbnail`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticonicthumbnail)
@@ -73,9 +75,10 @@ impl HWND {
 		hbmp: HBITMAP,
 		sit_flags: Option<co::DWM_SIT>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::DwmSetIconicThumbnail(self.ptr(), hbmp.ptr(), sit_flags.unwrap_or_default().raw())
 		})
+		.to_hrresult()
 	}
 
 	/// [`DwmSetWindowAttribute`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmsetwindowattribute)
@@ -84,7 +87,7 @@ impl HWND {
 		let mut buf_u32 = 0u32;
 		let mut buf_rc = RECT::new();
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::DwmSetWindowAttribute(
 				self.ptr(),
 				attribute.flag().raw(),
@@ -92,5 +95,6 @@ impl HWND {
 				attribute.sz(),
 			)
 		})
+		.to_hrresult()
 	}
 }

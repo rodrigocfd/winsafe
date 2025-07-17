@@ -23,13 +23,15 @@ where
 			None
 		} else {
 			let mut queried = unsafe { IDXGIOutput::null() };
-			match ok_to_hrresult(unsafe {
+			match HrRet(unsafe {
 				(vt::<IDXGIAdapterVT>(self.adapter).EnumOutputs)(
 					self.adapter.ptr(),
 					self.cur_index,
 					queried.as_mut(),
 				)
-			}) {
+			})
+			.to_hrresult()
+			{
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
@@ -75,13 +77,15 @@ where
 			None
 		} else {
 			let mut queried = unsafe { IDXGIAdapter::null() };
-			match ok_to_hrresult(unsafe {
+			match HrRet(unsafe {
 				(vt::<IDXGIFactoryVT>(self.fact).EnumAdapters)(
 					self.fact.ptr(),
 					self.cur_index,
 					queried.as_mut(),
 				)
-			}) {
+			})
+			.to_hrresult()
+			{
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
@@ -127,13 +131,15 @@ where
 			None
 		} else {
 			let mut queried = unsafe { IDXGIAdapter1::null() };
-			match ok_to_hrresult(unsafe {
+			match HrRet(unsafe {
 				(vt::<IDXGIFactory1VT>(self.fact).EnumAdapters1)(
 					self.fact.ptr(),
 					self.cur_index,
 					queried.as_mut(),
 				)
-			}) {
+			})
+			.to_hrresult()
+			{
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {

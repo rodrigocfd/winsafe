@@ -31,7 +31,8 @@ impl HACCEL {
 		}
 
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateAcceleratorTableW(hg_buf.ptr(), accel.len() as _))
+			PtrRet(ffi::CreateAcceleratorTableW(hg_buf.ptr(), accel.len() as _))
+				.to_sysresult_handle()
 				.map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}

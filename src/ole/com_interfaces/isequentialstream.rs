@@ -32,7 +32,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 	/// requested size, it means the end of stream was reached.
 	fn Read(&self, buffer: &mut [u8]) -> HrResult<u32> {
 		let mut num_read = 0u32;
-		okfalse_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ISequentialStreamVT>(self).Read)(
 				self.ptr(),
 				buffer.as_mut_ptr() as _,
@@ -40,6 +40,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 				&mut num_read,
 			)
 		})
+		.to_bool_hrresult()
 		.map(|_| num_read)
 	}
 
@@ -49,7 +50,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 	/// Returns the number of bytes written.
 	fn Write(&self, data: &[u8]) -> HrResult<u32> {
 		let mut num_written = 0u32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ISequentialStreamVT>(self).Read)(
 				self.ptr(),
 				vec_ptr(data) as _,
@@ -57,6 +58,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 				&mut num_written,
 			)
 		})
+		.to_hrresult()
 		.map(|_| num_written)
 	}
 }

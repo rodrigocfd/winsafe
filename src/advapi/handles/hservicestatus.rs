@@ -20,18 +20,19 @@ impl HSERVICESTATUS {
 	where
 		F: FnMut(SvcCtl) -> u32,
 	{
-		ptr_to_sysresult_handle(unsafe {
+		PtrRet(unsafe {
 			ffi::RegisterServiceCtrlHandlerExW(
 				WString::from_str(service_name).as_ptr(),
 				callbacks::hservicestatus_register_service_ctrl_handler_ex::<F> as _,
 				pcvoid(&handler_proc),
 			)
 		})
+		.to_sysresult_handle()
 	}
 
 	/// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
 	/// function.
 	pub fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetServiceStatus(self.ptr(), pvoid(status)) })
+		BoolRet(unsafe { ffi::SetServiceStatus(self.ptr(), pvoid(status)) }).to_sysresult()
 	}
 }

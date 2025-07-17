@@ -20,12 +20,13 @@ impl HWND {
 	/// [`SetWindowTheme`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-setwindowtheme)
 	/// function.
 	pub fn SetWindowTheme(&self, sub_app_name: &str, sub_id_list: Option<&str>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::SetWindowTheme(
 				self.ptr(),
 				WString::from_str(sub_app_name).as_ptr(),
 				WString::from_opt_str(sub_id_list).as_ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 }

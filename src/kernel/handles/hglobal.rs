@@ -20,7 +20,8 @@ impl HGLOBAL {
 	#[must_use]
 	pub fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.raw(), num_bytes))
+			PtrRet(ffi::GlobalAlloc(flags.raw(), num_bytes))
+				.to_sysresult_handle()
 				.map(|h| GlobalFreeGuard::new(h))
 		}
 	}
@@ -64,7 +65,8 @@ impl HGLOBAL {
 	pub fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_>> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
-			ptr_to_sysresult(ffi::GlobalLock(self.ptr()))
+			PtrRet(ffi::GlobalLock(self.ptr()))
+				.to_sysresult()
 				.map(|ptr| GlobalUnlockGuard::new(self, ptr, mem_sz))
 		}
 	}
@@ -75,7 +77,8 @@ impl HGLOBAL {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	pub fn GlobalReAlloc(&mut self, num_bytes: usize, flags: co::GMEM) -> SysResult<()> {
-		ptr_to_sysresult_handle(unsafe { ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw()) })
+		PtrRet(unsafe { ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw()) })
+			.to_sysresult_handle()
 			.map(|h| {
 				*self = h;
 			})

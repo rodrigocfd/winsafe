@@ -34,9 +34,10 @@ pub trait dxgi_IDXGIAdapter2: dxgi_IDXGIAdapter1 {
 	#[must_use]
 	fn GetDesc2(&self) -> HrResult<DXGI_ADAPTER_DESC2> {
 		let mut desc = DXGI_ADAPTER_DESC2::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIAdapter2VT>(self).GetDesc2)(self.ptr(), pvoid(&mut desc))
 		})
+		.to_hrresult()
 		.map(|_| desc)
 	}
 }

@@ -59,7 +59,8 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 	}
 
 	let mut buf = WString::new_alloc_buf(len as _);
-	bool_to_sysresult(unsafe { ffi::GetAllUsersProfileDirectoryW(buf.as_mut_ptr(), &mut len) })
+	BoolRet(unsafe { ffi::GetAllUsersProfileDirectoryW(buf.as_mut_ptr(), &mut len) })
+		.to_sysresult()
 		.map(|_| buf.to_string())
 }
 
@@ -72,7 +73,7 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 #[must_use]
 pub fn GetCurrentProcessExplicitAppUserModelID() -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
-	ok_to_hrresult(unsafe { ffi::GetCurrentProcessExplicitAppUserModelID(&mut pstr) })?;
+	HrRet(unsafe { ffi::GetCurrentProcessExplicitAppUserModelID(&mut pstr) }).to_hrresult()?;
 	let app_name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
 	let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 	Ok(app_name)
@@ -97,7 +98,8 @@ pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
 	}
 
 	let mut buf = WString::new_alloc_buf(len as _);
-	bool_to_sysresult(unsafe { ffi::GetDefaultUserProfileDirectoryW(buf.as_mut_ptr(), &mut len) })
+	BoolRet(unsafe { ffi::GetDefaultUserProfileDirectoryW(buf.as_mut_ptr(), &mut len) })
+		.to_sysresult()
 		.map(|_| buf.to_string())
 }
 
@@ -120,7 +122,8 @@ pub fn GetProfilesDirectory() -> SysResult<String> {
 	}
 
 	let mut buf = WString::new_alloc_buf(len as _);
-	bool_to_sysresult(unsafe { ffi::GetProfilesDirectoryW(buf.as_mut_ptr(), &mut len) })
+	BoolRet(unsafe { ffi::GetProfilesDirectoryW(buf.as_mut_ptr(), &mut len) })
+		.to_sysresult()
 		.map(|_| buf.to_string())
 }
 
@@ -231,9 +234,10 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 ///
 /// * [`GetCurrentProcessExplicitAppUserModelID`](crate::GetCurrentProcessExplicitAppUserModelID)
 pub fn SetCurrentProcessExplicitAppUserModelID(app_id: &str) -> HrResult<()> {
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SetCurrentProcessExplicitAppUserModelID(WString::from_str(app_id).as_ptr())
 	})
+	.to_hrresult()
 }
 
 /// [`SHAddToRecentDocs`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
@@ -271,20 +275,18 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
-pub fn SHBindToParent<T>(pidl: &PIDL) -> HrResult<(T, PIDL)>
-where
-	T: ole_IUnknown,
-{
+pub fn SHBindToParent<T: ole_IUnknown>(pidl: &PIDL) -> HrResult<(T, PIDL)> {
 	unsafe {
 		let mut queried = T::null();
 		let mut pidl_last = PIDL::from_ptr(std::ptr::null_mut()); // belongs to the system
 
-		ok_to_hrresult(ffi::SHBindToParent(
+		HrRet(ffi::SHBindToParent(
 			pidl.ptr() as _,
 			pcvoid(&T::IID),
 			queried.as_mut(),
 			pvoid(&mut pidl_last),
 		))
+		.to_hrresult()
 		.map(|_| (queried, pidl_last))
 	}
 }
@@ -296,14 +298,12 @@ where
 ///
 /// * [`SHGetIDListFromObject`](crate::SHGetIDListFromObject)
 #[must_use]
-pub fn SHCreateItemFromIDList<T>(pidl: &PIDL) -> HrResult<T>
-where
-	T: shell_IShellItem,
-{
+pub fn SHCreateItemFromIDList<T: shell_IShellItem>(pidl: &PIDL) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateItemFromIDList(pidl.ptr() as _, pcvoid(&T::IID), queried.as_mut())
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -322,15 +322,12 @@ where
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
-pub fn SHCreateItemFromParsingName<T>(
+pub fn SHCreateItemFromParsingName<T: shell_IShellItem>(
 	file_or_folder_path: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
-) -> HrResult<T>
-where
-	T: shell_IShellItem,
-{
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateItemFromParsingName(
 			WString::from_str(file_or_folder_path).as_ptr(),
 			bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
@@ -338,22 +335,20 @@ where
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
 /// [`SHCreateItemFromRelativeName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromrelativename)
 /// function.
 #[must_use]
-pub fn SHCreateItemFromRelativeName<T>(
+pub fn SHCreateItemFromRelativeName<T: shell_IShellItem>(
 	parent: &impl shell_IShellItem,
 	name: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
-) -> HrResult<T>
-where
-	T: shell_IShellItem,
-{
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateItemFromRelativeName(
 			parent.ptr(),
 			WString::from_str(name).as_ptr(),
@@ -362,22 +357,20 @@ where
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
 /// [`SHCreateItemInKnownFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateiteminknownfolder)
 /// function.
 #[must_use]
-pub fn SHCreateItemInKnownFolder<T>(
+pub fn SHCreateItemInKnownFolder<T: shell_IShellItem>(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
 	item: &str,
-) -> HrResult<T>
-where
-	T: shell_IShellItem,
-{
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateItemInKnownFolder(
 			pcvoid(folder_id),
 			flags.raw(),
@@ -386,6 +379,7 @@ where
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -400,7 +394,7 @@ pub fn SHCreateShellItemArray(
 	let mut queried = unsafe { IShellItemArray::null() };
 	let pidl_ptrs = pidl_children.iter().map(|p| p.ptr()).collect::<Vec<_>>();
 
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateShellItemArray(
 			pidl_parent.map_or(std::ptr::null(), |p| p.ptr() as _),
 			folder.map_or(std::ptr::null_mut(), |p| p.ptr()),
@@ -409,20 +403,21 @@ pub fn SHCreateShellItemArray(
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
 /// [`SHCreateShellItemArrayFromShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateshellitemarrayfromshellitem)
 /// function.
 #[must_use]
-pub fn SHCreateShellItemArrayFromShellItem<T>(item: &impl shell_IShellItem) -> HrResult<T>
-where
-	T: shell_IShellItemArray,
-{
+pub fn SHCreateShellItemArrayFromShellItem<T: shell_IShellItemArray>(
+	item: &impl shell_IShellItem,
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHCreateShellItemArrayFromShellItem(item.ptr(), pcvoid(&T::IID), queried.as_mut())
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -475,7 +470,8 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreePidlGuard> {
 	unsafe {
 		let mut pidl = PIDL::from_ptr(std::ptr::null_mut());
-		ok_to_hrresult(ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)))
+		HrRet(ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)))
+			.to_hrresult()
 			.map(|_| CoTaskMemFreePidlGuard::new(pidl))
 	}
 }
@@ -483,12 +479,12 @@ pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreeP
 /// [`SHGetPropertyStoreFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromidlist)
 /// function.
 #[must_use]
-pub fn SHGetPropertyStoreFromIDList<T>(pidl: &PIDL, flags: co::GPS) -> HrResult<T>
-where
-	T: oleaut_IPropertyStore,
-{
+pub fn SHGetPropertyStoreFromIDList<T: oleaut_IPropertyStore>(
+	pidl: &PIDL,
+	flags: co::GPS,
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHGetPropertyStoreFromIDList(
 			pidl.ptr() as _,
 			flags.raw(),
@@ -496,22 +492,20 @@ where
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
 /// [`SHGetPropertyStoreFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromparsingname)
 /// function.
 #[must_use]
-pub fn SHGetPropertyStoreFromParsingName<T>(
+pub fn SHGetPropertyStoreFromParsingName<T: oleaut_IPropertyStore>(
 	path: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
 	flags: co::GPS,
-) -> HrResult<T>
-where
-	T: oleaut_IPropertyStore,
-{
+) -> HrResult<T> {
 	let mut queried = unsafe { T::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHGetPropertyStoreFromParsingName(
 			WString::from_str(path).as_ptr(),
 			bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
@@ -520,6 +514,7 @@ where
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -586,7 +581,8 @@ pub fn SHGetFileInfo(
 pub fn SHGetStockIconInfo(siid: co::SIID, flags: co::SHGSI) -> HrResult<DestroyIconSiiGuard> {
 	let mut sii = SHSTOCKICONINFO::default();
 	unsafe {
-		ok_to_hrresult(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), pvoid(&mut sii)))
+		HrRet(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), pvoid(&mut sii)))
+			.to_hrresult()
 			.map(|_| DestroyIconSiiGuard::new(sii))
 	}
 }

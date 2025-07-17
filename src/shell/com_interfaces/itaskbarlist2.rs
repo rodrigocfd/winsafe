@@ -42,12 +42,13 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self, hwnd: &HWND, full_screen: bool) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList2VT>(self).MarkFullscreenWindow)(
 				self.ptr(),
 				hwnd.ptr(),
 				full_screen as _,
 			)
 		})
+		.to_hrresult()
 	}
 }

@@ -18,12 +18,13 @@ impl HTHREAD {
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(ffi::OpenThreadToken(
+			BoolRet(ffi::OpenThreadToken(
 				self.ptr(),
 				desired_access.raw(),
 				open_as_self as _,
 				handle.as_mut(),
 			))
+			.to_sysresult()
 			.map(|_| CloseHandleGuard::new(handle))
 		}
 	}

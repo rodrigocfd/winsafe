@@ -45,13 +45,13 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	#[must_use]
 	fn CreateSoftwareAdapter(&self, hmodule: &HINSTANCE) -> HrResult<IDXGIAdapter> {
 		let mut queried = unsafe { IDXGIAdapter::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
 				self.ptr(),
 				hmodule.ptr(),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -64,14 +64,14 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 		desc: &DXGI_SWAP_CHAIN_DESC,
 	) -> HrResult<IDXGISwapChain> {
 		let mut queried = unsafe { IDXGISwapChain::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).CreateSwapChain)(
 				self.ptr(),
 				device.ptr(),
 				pcvoid(desc),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -109,17 +109,17 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetWindowAssociation(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).GetWindowAssociation)(self.ptr(), hwnd.as_mut())
-		})
+		}).to_hrresult()
 		.map(|_| hwnd)
 	}
 
 	/// [`IDXGIFactory::MakeWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-makewindowassociation)
 	/// method.
 	fn MakeWindowAssociation(&self, hwnd: &HWND, flags: co::DXGI_MWA) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(self.ptr(), hwnd.ptr(), flags.raw())
-		})
+		}).to_hrresult()
 	}
 }

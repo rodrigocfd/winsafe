@@ -45,9 +45,10 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::RegisterTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	fn RegisterTab(&self, hwnd_tab: &HWND, hwnd_mdi: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).RegisterTab)(self.ptr(), hwnd_tab.ptr(), hwnd_mdi.ptr())
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetOverlayIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
@@ -58,7 +59,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		hicon: Option<&HICON>,
 		description: &str,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetOverlayIcon)(
 				self.ptr(),
 				hwnd.ptr(),
@@ -66,14 +67,16 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 				WString::from_str(description).as_ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetProgressState`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 	/// method.
 	fn SetProgressState(&self, hwnd: &HWND, tbpf_flags: co::TBPF) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetProgressState)(self.ptr(), hwnd.ptr(), tbpf_flags.raw())
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetProgressValue`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
@@ -95,15 +98,16 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// # w::HrResult::Ok(())
 	/// ```
 	fn SetProgressValue(&self, hwnd: &HWND, completed: u64, total: u64) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetProgressValue)(self.ptr(), hwnd.ptr(), completed, total)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetTabActive`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 	/// method.
 	fn SetTabActive(&self, hwnd_tab: &HWND, hwnd_mdi: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetTabActive)(
 				self.ptr(),
 				hwnd_tab.ptr(),
@@ -111,41 +115,45 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 				0,
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetTabOrder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 	/// method.
 	fn SetTabOrder(&self, hwnd_tab: &HWND, hwnd_insert_before: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetTabOrder)(
 				self.ptr(),
 				hwnd_tab.ptr(),
 				hwnd_insert_before.ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetThumbnailClip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailclip)
 	/// method.
 	fn SetThumbnailClip(&self, hwnd: &HWND, clip: Option<RECT>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetThumbnailClip)(
 				self.ptr(),
 				hwnd.ptr(),
 				pcvoid_or_null(clip.as_ref()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`ITaskbarList3::SetThumbnailTooltip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
 	/// method.
 	fn SetThumbnailTooltip(&self, hwnd: &HWND, tip: Option<&str>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList3VT>(self).SetThumbnailTooltip)(
 				self.ptr(),
 				hwnd.ptr(),
 				WString::from_opt_str(tip).as_ptr(),
 			)
 		})
+		.to_hrresult()
 	}
 }

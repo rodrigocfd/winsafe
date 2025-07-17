@@ -34,7 +34,7 @@ pub fn OleLoadPicture(
 	keep_original_format: bool,
 ) -> HrResult<IPicture> {
 	let mut queried = unsafe { IPicture::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::OleLoadPicture(
 			stream.ptr() as _,
 			size.unwrap_or_default() as _,
@@ -43,6 +43,7 @@ pub fn OleLoadPicture(
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -58,7 +59,7 @@ pub fn OleLoadPicture(
 #[must_use]
 pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> HrResult<IPicture> {
 	let mut queried = unsafe { IPicture::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::OleLoadPicturePath(
 			WString::from_str(path).as_ptr(),
 			std::ptr::null_mut(),
@@ -68,6 +69,7 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -76,7 +78,8 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 #[must_use]
 pub fn PSGetNameFromPropertyKey(prop_key: &co::PKEY) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) })
+	HrRet(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) })
+		.to_hrresult()
 		.map(|_| htaskmem_ptr_to_str(pstr))
 }
 
@@ -92,7 +95,8 @@ pub fn PSGetNameFromPropertyKey(prop_key: &co::PKEY) -> HrResult<String> {
 #[must_use]
 pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
-	bool_to_invalidparm(unsafe { ffi::SystemTimeToVariantTime(pcvoid(st), &mut double) })
+	BoolRet(unsafe { ffi::SystemTimeToVariantTime(pcvoid(st), &mut double) })
+		.to_invalidparm()
 		.map(|_| double)
 }
 
@@ -105,6 +109,7 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 #[must_use]
 pub fn VariantTimeToSystemTime(var_time: f64) -> SysResult<SYSTEMTIME> {
 	let mut st = SYSTEMTIME::default();
-	bool_to_invalidparm(unsafe { ffi::VariantTimeToSystemTime(var_time, pvoid(&mut st)) })
+	BoolRet(unsafe { ffi::VariantTimeToSystemTime(var_time, pvoid(&mut st)) })
+		.to_invalidparm()
 		.map(|_| st)
 }

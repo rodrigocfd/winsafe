@@ -26,7 +26,7 @@ impl HTHREAD {
 	) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)> {
 		let mut thread_id = 0u32;
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateThread(
+			PtrRet(ffi::CreateThread(
 				pvoid_or_null(thread_attrs),
 				stack_size,
 				start_addr,
@@ -34,6 +34,7 @@ impl HTHREAD {
 				flags.raw(),
 				&mut thread_id,
 			))
+			.to_sysresult_handle()
 			.map(|h| (CloseHandleGuard::new(h), thread_id))
 		}
 	}
@@ -50,7 +51,8 @@ impl HTHREAD {
 	#[must_use]
 	pub fn GetExitCodeThread(&self) -> SysResult<u32> {
 		let mut exit_code = 0u32;
-		bool_to_sysresult(unsafe { ffi::GetExitCodeThread(self.ptr(), &mut exit_code) })
+		BoolRet(unsafe { ffi::GetExitCodeThread(self.ptr(), &mut exit_code) })
+			.to_sysresult()
 			.map(|_| exit_code)
 	}
 
@@ -79,7 +81,8 @@ impl HTHREAD {
 	#[must_use]
 	pub fn GetThreadIdealProcessorEx(&self) -> SysResult<PROCESSOR_NUMBER> {
 		let mut pi = PROCESSOR_NUMBER::default();
-		bool_to_sysresult(unsafe { ffi::GetThreadIdealProcessorEx(self.ptr(), pvoid(&mut pi)) })
+		BoolRet(unsafe { ffi::GetThreadIdealProcessorEx(self.ptr(), pvoid(&mut pi)) })
+			.to_sysresult()
 			.map(|_| pi)
 	}
 
@@ -88,7 +91,8 @@ impl HTHREAD {
 	#[must_use]
 	pub fn GetThreadIOPendingFlag(&self) -> SysResult<bool> {
 		let mut io = 0;
-		bool_to_sysresult(unsafe { ffi::GetThreadIOPendingFlag(self.ptr(), &mut io) })
+		BoolRet(unsafe { ffi::GetThreadIOPendingFlag(self.ptr(), &mut io) })
+			.to_sysresult()
 			.map(|_| io != 0)
 	}
 
@@ -97,7 +101,8 @@ impl HTHREAD {
 	#[must_use]
 	pub fn GetThreadPriorityBoost(&self) -> SysResult<bool> {
 		let mut pb = 0;
-		bool_to_sysresult(unsafe { ffi::GetThreadPriorityBoost(self.ptr(), &mut pb) })
+		BoolRet(unsafe { ffi::GetThreadPriorityBoost(self.ptr(), &mut pb) })
+			.to_sysresult()
 			.map(|_| pb != 0)
 	}
 
@@ -126,7 +131,7 @@ impl HTHREAD {
 		let (mut creation, mut exit, mut kernel, mut user) =
 			(FILETIME::default(), FILETIME::default(), FILETIME::default(), FILETIME::default());
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetThreadTimes(
 				self.ptr(),
 				pvoid(&mut creation),
@@ -135,6 +140,7 @@ impl HTHREAD {
 				pvoid(&mut user),
 			)
 		})
+		.to_sysresult()
 		.map(|_| (creation, exit, kernel, user))
 	}
 
@@ -143,7 +149,9 @@ impl HTHREAD {
 	#[must_use]
 	pub fn QueryThreadCycleTime(&self) -> SysResult<u64> {
 		let mut t = 0u64;
-		bool_to_sysresult(unsafe { ffi::QueryThreadCycleTime(self.ptr(), &mut t) }).map(|_| t)
+		BoolRet(unsafe { ffi::QueryThreadCycleTime(self.ptr(), &mut t) })
+			.to_sysresult()
+			.map(|_| t)
 	}
 
 	/// [`ResumeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread)
@@ -169,18 +177,18 @@ impl HTHREAD {
 		ideal_processor: PROCESSOR_NUMBER,
 	) -> SysResult<PROCESSOR_NUMBER> {
 		let mut prev = PROCESSOR_NUMBER::default();
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetThreadIdealProcessorEx(self.ptr(), pcvoid(&ideal_processor), pvoid(&mut prev))
 		})
+		.to_sysresult()
 		.map(|_| prev)
 	}
 
 	/// [`SetThreadPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriorityboost)
 	/// function.
 	pub fn SetThreadPriorityBoost(&self, disable_priority_boost: bool) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
-			ffi::SetThreadPriorityBoost(self.ptr(), disable_priority_boost as _)
-		})
+		BoolRet(unsafe { ffi::SetThreadPriorityBoost(self.ptr(), disable_priority_boost as _) })
+			.to_sysresult()
 	}
 
 	/// [`SuspendThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread)
@@ -192,6 +200,6 @@ impl HTHREAD {
 	/// [`TerminateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread)
 	/// function.
 	pub fn TerminateThread(&self, exit_code: u32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::TerminateThread(self.ptr(), exit_code) })
+		BoolRet(unsafe { ffi::TerminateThread(self.ptr(), exit_code) }).to_sysresult()
 	}
 }

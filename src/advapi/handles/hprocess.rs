@@ -27,12 +27,9 @@ impl HPROCESS {
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(ffi::OpenProcessToken(
-				self.ptr(),
-				desired_access.raw(),
-				handle.as_mut(),
-			))
-			.map(|_| CloseHandleGuard::new(handle))
+			BoolRet(ffi::OpenProcessToken(self.ptr(), desired_access.raw(), handle.as_mut()))
+				.to_sysresult()
+				.map(|_| CloseHandleGuard::new(handle))
 		}
 	}
 }

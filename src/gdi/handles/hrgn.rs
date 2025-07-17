@@ -15,13 +15,9 @@ impl HRGN {
 	#[must_use]
 	pub fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateRectRgn(
-				bounds.left,
-				bounds.top,
-				bounds.right,
-				bounds.bottom,
-			))
-			.map(|h| DeleteObjectGuard::new(h))
+			PtrRet(ffi::CreateRectRgn(bounds.left, bounds.top, bounds.right, bounds.bottom))
+				.to_invalidparm_handle()
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -30,7 +26,8 @@ impl HRGN {
 	#[must_use]
 	pub fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateRectRgnIndirect(pcvoid(&rc)))
+			PtrRet(ffi::CreateRectRgnIndirect(pcvoid(&rc)))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -40,7 +37,7 @@ impl HRGN {
 	#[must_use]
 	pub fn CreateRoundRectRgn(bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateRoundRectRgn(
+			PtrRet(ffi::CreateRoundRectRgn(
 				bounds.left,
 				bounds.top,
 				bounds.right,
@@ -48,6 +45,7 @@ impl HRGN {
 				size.cx,
 				size.cy,
 			))
+			.to_invalidparm_handle()
 			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}

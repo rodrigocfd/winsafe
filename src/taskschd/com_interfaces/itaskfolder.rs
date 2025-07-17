@@ -30,13 +30,14 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 	/// [`ITaskFolder::DeleteTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-deletetask)
 	/// method.
 	fn DeleteTask(&self, name: &str) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskFolderVT>(self).DeleteTask)(
 				self.ptr(),
 				BSTR::SysAllocString(name)?.as_ptr(),
 				0,
 			)
 		})
+		.to_hrresult()
 	}
 
 	fn_com_bstr_get! { get_Name: ITaskFolderVT;
@@ -62,7 +63,7 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		sddl: Option<VARIANT>,
 	) -> HrResult<IRegisteredTask> {
 		let mut queried = unsafe { IRegisteredTask::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskFolderVT>(self).RegisterTaskDefinition)(
 				self.ptr(),
 				BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
@@ -75,6 +76,7 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 }

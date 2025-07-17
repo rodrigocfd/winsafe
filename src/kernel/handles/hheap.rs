@@ -17,7 +17,7 @@ impl HHEAP {
 	/// function.
 	#[must_use]
 	pub fn GetProcessHeap() -> SysResult<HHEAP> {
-		ptr_to_sysresult_handle(unsafe { ffi::GetProcessHeap() })
+		PtrRet(unsafe { ffi::GetProcessHeap() }).to_sysresult_handle()
 	}
 
 	/// [`GetProcessHeaps`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheaps)
@@ -33,7 +33,8 @@ impl HHEAP {
 		};
 
 		let mut buf = [0..num].iter().map(|_| HHEAP::NULL).collect::<Vec<_>>();
-		bool_to_sysresult(unsafe { ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _) } as _)
+		BoolRet(unsafe { ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _) } as _)
+			.to_sysresult()
 			.map(|_| buf)
 	}
 
@@ -46,12 +47,9 @@ impl HHEAP {
 		maximum_size: usize,
 	) -> SysResult<HeapDestroyGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::HeapCreate(
-				options.unwrap_or_default().raw(),
-				initial_size,
-				maximum_size,
-			))
-			.map(|h| HeapDestroyGuard::new(h))
+			PtrRet(ffi::HeapCreate(options.unwrap_or_default().raw(), initial_size, maximum_size))
+				.to_sysresult_handle()
+				.map(|h| HeapDestroyGuard::new(h))
 		}
 	}
 
@@ -84,7 +82,8 @@ impl HHEAP {
 	) -> SysResult<HeapFreeGuard<'_>> {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
-			ptr_to_sysresult(ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes))
+			PtrRet(ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes))
+				.to_sysresult()
 				.map(|p| HeapFreeGuard::new(self, p, num_bytes))
 		}
 	}
@@ -135,7 +134,11 @@ impl HHEAP {
 	/// ```
 	#[must_use]
 	pub fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_>> {
-		unsafe { bool_to_sysresult(ffi::HeapLock(self.ptr())).map(|_| HeapUnlockGuard::new(self)) }
+		unsafe {
+			BoolRet(ffi::HeapLock(self.ptr()))
+				.to_sysresult()
+				.map(|_| HeapUnlockGuard::new(self))
+		}
 	}
 
 	/// [`HeapReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaprealloc)
@@ -166,7 +169,7 @@ impl HHEAP {
 		num_bytes: usize,
 	) -> SysResult<()> {
 		SetLastError(co::ERROR::SUCCESS);
-		ptr_to_sysresult(unsafe {
+		PtrRet(unsafe {
 			ffi::HeapReAlloc(
 				self.ptr(),
 				flags.unwrap_or_default().raw(),
@@ -174,6 +177,7 @@ impl HHEAP {
 				num_bytes,
 			)
 		})
+		.to_sysresult()
 		.map(|p| {
 			let _ = mem.leak();
 			*mem = unsafe { HeapFreeGuard::new(self, p, num_bytes) };
@@ -187,7 +191,7 @@ impl HHEAP {
 		information_class: co::HEAP_INFORMATION,
 		information: &[u8],
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::HeapSetInformation(
 				self.ptr(),
 				information_class.raw(),
@@ -195,6 +199,7 @@ impl HHEAP {
 				information.len() as _,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)

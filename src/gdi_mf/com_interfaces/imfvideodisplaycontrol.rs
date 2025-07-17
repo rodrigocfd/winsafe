@@ -29,7 +29,7 @@ pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 		let mut dib_sz = 0u32;
 		let mut time_stamp = 0i64;
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetCurrentImage)(
 				self.ptr(),
 				pvoid(&mut bih),
@@ -38,6 +38,7 @@ pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 				&mut time_stamp,
 			)
 		})
+		.to_hrresult()
 		.map(|_| {
 			let dib_vec = unsafe { std::slice::from_raw_parts(dib_ptr, dib_sz as _) }.to_vec();
 			let _ = unsafe { CoTaskMemFreeGuard::new(dib_ptr as _, 0) };

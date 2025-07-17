@@ -37,7 +37,8 @@ pub trait taskschd_IAction: oleaut_IDispatch {
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::TASK_ACTION_TYPE> {
 		let mut at = co::TASK_ACTION_TYPE::default();
-		ok_to_hrresult(unsafe { (vt::<IActionVT>(self).get_Type)(self.ptr(), at.as_mut()) })
+		HrRet(unsafe { (vt::<IActionVT>(self).get_Type)(self.ptr(), at.as_mut()) })
+			.to_hrresult()
 			.map(|_| at)
 	}
 

@@ -14,9 +14,11 @@ pub fn InternetCanonicalizeUrl(url: &str, flags: co::ICU) -> SysResult<String> {
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
-		match bool_to_sysresult(unsafe {
+		match BoolRet(unsafe {
 			ffi::InternetCanonicalizeUrlW(wurl.as_ptr(), buf.as_mut_ptr(), &mut buf_sz, flags.raw())
-		}) {
+		})
+		.to_sysresult()
+		{
 			Ok(_) => return Ok(buf.to_string()),
 			Err(err) => match err {
 				co::ERROR::INSUFFICIENT_BUFFER => continue,
@@ -36,7 +38,7 @@ pub fn InternetCombineUrl(base_url: &str, relative_url: &str, flags: co::ICU) ->
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
-		match bool_to_sysresult(unsafe {
+		match BoolRet(unsafe {
 			ffi::InternetCombineUrlW(
 				wbase.as_ptr(),
 				wrelative.as_ptr(),
@@ -44,7 +46,9 @@ pub fn InternetCombineUrl(base_url: &str, relative_url: &str, flags: co::ICU) ->
 				&mut buf_sz,
 				flags.raw(),
 			)
-		}) {
+		})
+		.to_sysresult()
+		{
 			Ok(_) => return Ok(buf.to_string()),
 			Err(err) => match err {
 				co::ERROR::INSUFFICIENT_BUFFER => continue,
@@ -65,9 +69,10 @@ pub fn InternetCrackUrl(url: &str, flags: co::ICU) -> SysResult<URL_COMPONENTS> 
 	let w_url = WString::from_str(url);
 	let mut raw = URL_COMPONENTS_raw::new_crack();
 
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InternetCrackUrlW(w_url.as_ptr(), w_url.str_len() as _, flags.raw(), pvoid(&mut raw))
 	})
+	.to_sysresult()
 	.map(|_| URL_COMPONENTS {
 		scheme: WString::from_wchars_count(raw.lpszScheme, raw.dwSchemeLength as _).to_string(),
 		protocol_scheme: raw.nScheme,
@@ -126,9 +131,11 @@ pub fn InternetCreateUrl(components: &URL_COMPONENTS, flags: co::ICU) -> SysResu
 	}
 
 	let mut url_len = 0u32;
-	match bool_to_sysresult(unsafe {
+	match BoolRet(unsafe {
 		ffi::InternetCreateUrlW(pcvoid(&raw), flags.raw(), std::ptr::null_mut(), &mut url_len) // first call to retrieve len
-	}) {
+	})
+	.to_sysresult()
+	{
 		Ok(_) => {}, // should never happen
 		Err(err) => match err {
 			co::ERROR::INSUFFICIENT_BUFFER => {}, // expected
@@ -137,9 +144,10 @@ pub fn InternetCreateUrl(components: &URL_COMPONENTS, flags: co::ICU) -> SysResu
 	}
 
 	let mut buf = WString::new_alloc_buf(url_len as _);
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InternetCreateUrlW(pcvoid(&raw), flags.raw(), buf.as_mut_ptr(), &mut url_len)
 	})
+	.to_sysresult()
 	.map(|_| buf.to_string())
 }
 
@@ -148,8 +156,9 @@ pub fn InternetCreateUrl(components: &URL_COMPONENTS, flags: co::ICU) -> SysResu
 #[must_use]
 pub fn InternetTimeToSystemTime(time: &str) -> SysResult<SYSTEMTIME> {
 	let mut st = SYSTEMTIME::default();
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InternetTimeToSystemTimeW(WString::from_str(time).as_ptr(), pvoid(&mut st), 0)
 	})
+	.to_sysresult()
 	.map(|_| st)
 }

@@ -31,7 +31,7 @@ impl HINTERNETSESSION {
 		pacctys.push(std::ptr::null()); // last element must be a null pointer
 
 		unsafe {
-			ptr_to_sysresult_handle(ffi::HttpOpenRequestW(
+			PtrRet(ffi::HttpOpenRequestW(
 				self.ptr(),
 				WString::from_opt_str(verb).as_ptr(),
 				WString::from_str(object_name).as_ptr(),
@@ -41,6 +41,7 @@ impl HINTERNETSESSION {
 				flags.raw(),
 				context.unwrap_or_default(),
 			))
+			.to_sysresult_handle()
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}
 	}

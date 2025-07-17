@@ -16,7 +16,7 @@ pub fn MFCreateAsyncResult(
 	state: Option<&impl ole_IUnknown>,
 ) -> HrResult<IMFAsyncResult> {
 	let mut queried = unsafe { IMFAsyncResult::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::MFCreateAsyncResult(
 			object.map_or(std::ptr::null_mut(), |o| o.ptr()),
 			callback.ptr(),
@@ -24,6 +24,7 @@ pub fn MFCreateAsyncResult(
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -43,12 +44,13 @@ pub fn MFCreateMediaSession(
 	configuration: Option<&impl mf_IMFAttributes>,
 ) -> HrResult<IMFMediaSession> {
 	let mut queried = unsafe { IMFMediaSession::null() };
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::MFCreateMediaSession(
 			configuration.map_or(std::ptr::null_mut(), |c| c.ptr()),
 			queried.as_mut(),
 		)
 	})
+	.to_hrresult()
 	.map(|_| queried)
 }
 
@@ -70,7 +72,8 @@ pub fn MFCreateMediaSession(
 #[must_use]
 pub fn MFCreateMFByteStreamOnStream(stream: &impl ole_IStream) -> HrResult<IMFByteStream> {
 	let mut queried = unsafe { IMFByteStream::null() };
-	ok_to_hrresult(unsafe { ffi::MFCreateMFByteStreamOnStream(stream.ptr(), queried.as_mut()) })
+	HrRet(unsafe { ffi::MFCreateMFByteStreamOnStream(stream.ptr(), queried.as_mut()) })
+		.to_hrresult()
 		.map(|_| queried)
 }
 
@@ -88,7 +91,9 @@ pub fn MFCreateMFByteStreamOnStream(stream: &impl ole_IStream) -> HrResult<IMFBy
 #[must_use]
 pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 	let mut queried = unsafe { IMFSourceResolver::null() };
-	ok_to_hrresult(unsafe { ffi::MFCreateSourceResolver(queried.as_mut()) }).map(|_| queried)
+	HrRet(unsafe { ffi::MFCreateSourceResolver(queried.as_mut()) })
+		.to_hrresult()
+		.map(|_| queried)
 }
 
 /// [`MFCreateTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopology)
@@ -105,7 +110,9 @@ pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 #[must_use]
 pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 	let mut queried = unsafe { IMFTopology::null() };
-	ok_to_hrresult(unsafe { ffi::MFCreateTopology(queried.as_mut()) }).map(|_| queried)
+	HrRet(unsafe { ffi::MFCreateTopology(queried.as_mut()) })
+		.to_hrresult()
+		.map(|_| queried)
 }
 
 /// [`MFCreateTopologyNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopologynode)
@@ -122,7 +129,8 @@ pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 #[must_use]
 pub fn MFCreateTopologyNode(node_type: co::MF_TOPOLOGY) -> HrResult<IMFTopologyNode> {
 	let mut queried = unsafe { IMFTopologyNode::null() };
-	ok_to_hrresult(unsafe { ffi::MFCreateTopologyNode(node_type.raw(), queried.as_mut()) })
+	HrRet(unsafe { ffi::MFCreateTopologyNode(node_type.raw(), queried.as_mut()) })
+		.to_hrresult()
 		.map(|_| queried)
 }
 
@@ -154,6 +162,8 @@ pub fn MFCreateTopologyNode(node_type: co::MF_TOPOLOGY) -> HrResult<IMFTopologyN
 /// ```
 pub fn MFStartup(flags: co::MFSTARTUP) -> HrResult<MFShutdownGuard> {
 	unsafe {
-		ok_to_hrresult(ffi::MFStartup(MF_VERSION, flags.raw())).map(|_| MFShutdownGuard::new())
+		HrRet(ffi::MFStartup(MF_VERSION, flags.raw()))
+			.to_hrresult()
+			.map(|_| MFShutdownGuard::new())
 	}
 }

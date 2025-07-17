@@ -52,7 +52,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<IUnknown> {
 		let mut queried = unsafe { IUnknown::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).BeginCreateObjectFromByteStream)(
 				self.ptr(),
 				byte_stream.ptr(),
@@ -63,7 +63,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -80,7 +80,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<IUnknown> {
 		let mut queried = unsafe { IUnknown::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).BeginCreateObjectFromURL)(
 				self.ptr(),
 				WString::from_str(url).as_ptr(),
@@ -90,16 +90,16 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 
 	/// [`IMFSourceResolver::CancelObjectCreation`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-cancelobjectcreation)
 	/// method.
 	fn CancelObjectCreation(&self, cookie: &impl ole_IUnknown) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).CancelObjectCreation)(self.ptr(), cookie.ptr())
-		})
+		}).to_hrresult()
 	}
 
 	/// [`IMFSourceResolver::CreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfrombytestream)
@@ -114,7 +114,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		let mut obj_type = co::MF_OBJECT::default();
 		let mut queried = unsafe { IUnknown::null() };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).CreateObjectFromByteStream)(
 				self.ptr(),
 				byte_stream.ptr(),
@@ -124,7 +124,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -139,7 +139,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		let mut obj_type = co::MF_OBJECT::default();
 		let mut queried = unsafe { IUnknown::null() };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).CreateObjectFromURL)(
 				self.ptr(),
 				WString::from_str(url).as_ptr(),
@@ -148,7 +148,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -161,14 +161,14 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		let mut obj_type = co::MF_OBJECT::default();
 		let mut queried = unsafe { IUnknown::null() };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).EndCreateObjectFromByteStream)(
 				self.ptr(),
 				result.ptr(),
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -181,14 +181,14 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		let mut obj_type = co::MF_OBJECT::default();
 		let mut queried = unsafe { IUnknown::null() };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).EndCreateObjectFromURL)(
 				self.ptr(),
 				result.ptr(),
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 }

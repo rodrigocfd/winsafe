@@ -138,13 +138,15 @@ impl HIMAGELIST {
 		grow_size: i32,
 	) -> HrResult<ImageListDestroyGuard> {
 		unsafe {
-			match ptr_to_option_handle(ffi::ImageList_Create(
+			match PtrRet(ffi::ImageList_Create(
 				image_sz.cx,
 				image_sz.cy,
 				flags.raw(),
 				initial_size,
 				grow_size,
-			)) {
+			))
+			.to_opt_handle()
+			{
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(ImageListDestroyGuard::new(h)),
 			}
@@ -215,7 +217,7 @@ impl HIMAGELIST {
 	/// function.
 	pub fn Duplicate(&self) -> HrResult<ImageListDestroyGuard> {
 		unsafe {
-			match ptr_to_option_handle(ffi::ImageList_Duplicate(self.ptr())) {
+			match PtrRet(ffi::ImageList_Duplicate(self.ptr())).to_opt_handle() {
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(ImageListDestroyGuard::new(h)),
 			}
@@ -245,7 +247,8 @@ impl HIMAGELIST {
 	#[must_use]
 	pub fn GetIcon(&self, index: u32, flags: co::ILD) -> HrResult<DestroyIconGuard> {
 		unsafe {
-			match ptr_to_option_handle(ffi::ImageList_GetIcon(self.ptr(), index as _, flags.raw()))
+			match PtrRet(ffi::ImageList_GetIcon(self.ptr(), index as _, flags.raw()))
+				.to_opt_handle()
 			{
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(DestroyIconGuard::new(h)),

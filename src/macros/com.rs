@@ -57,11 +57,11 @@ macro_rules! fn_com_noparm {
 	) => {
 		$( #[$doc] )*
 		fn $method(&self) -> crate::HrResult<()> {
-			crate::ole::privs::ok_to_hrresult(
+			crate::ole::privs::HrRet(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr())
 				},
-			)
+			).to_hrresult()
 		}
 	};
 }
@@ -90,11 +90,11 @@ macro_rules! fn_com_interface_get {
 		fn $method(&self) -> crate::HrResult<$iface> {
 			use crate::prelude::ole_IUnknown;
 			let mut queried = unsafe { <$iface>::null() };
-			crate::ole::privs::ok_to_hrresult(
+			crate::ole::privs::HrRet(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), queried.as_mut())
 				},
-			).map(|_| queried)
+			).to_hrresult().map(|_| queried)
 		}
 	};
 }
@@ -109,11 +109,11 @@ macro_rules! fn_com_bstr_get {
 		#[must_use]
 		fn $method(&self) -> crate::HrResult<String> {
 			let mut pstr = std::ptr::null_mut::<u16>();
-			crate::ole::privs::ok_to_hrresult(
+			crate::ole::privs::HrRet(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), &mut pstr)
 				},
-			).map(|_| {
+			).to_hrresult().map(|_| {
 				let bstr = unsafe { crate::BSTR::from_ptr(pstr) };
 				bstr.to_string()
 			})
@@ -129,14 +129,14 @@ macro_rules! fn_com_bstr_set {
 	) => {
 		$( #[$doc] )*
 		fn $method(&self, $arg: &str) -> crate::HrResult<()> {
-			crate::ole::privs::ok_to_hrresult(
+			crate::ole::privs::HrRet(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(
 						self.ptr(),
 						crate::BSTR::SysAllocString($arg)?.as_ptr(),
 					)
 				},
-			)
+			).to_hrresult()
 		}
 	};
 }

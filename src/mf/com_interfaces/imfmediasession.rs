@@ -61,14 +61,14 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		topo_id: u64,
 	) -> HrResult<IMFTopology> {
 		let mut queried = unsafe { IMFTopology::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).GetFullTopology)(
 				self.ptr(),
 				flags.raw(),
 				topo_id,
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -77,9 +77,9 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	#[must_use]
 	fn GetSessionCapabilities(&self) -> HrResult<co::MFSESSIONCAP> {
 		let mut caps = co::MFSESSIONCAP::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).GetSessionCapabilities)(self.ptr(), caps.as_mut())
-		})
+		}).to_hrresult()
 		.map(|_| caps)
 	}
 
@@ -95,9 +95,9 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		flags: co::MFSESSION_SETTOPOLOGY,
 		topology: &impl mf_IMFTopology,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).SetTopology)(self.ptr(), flags.raw(), topology.ptr())
-		})
+		}).to_hrresult()
 	}
 
 	fn_com_noparm! { Shutdown: IMFMediaSessionVT;
@@ -123,13 +123,13 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	/// # w::HrResult::Ok(())
 	/// ```
 	fn Start(&self, time_format: co::MF_TIME_FORMAT, start_position: &PropVariant) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).Start)(
 				self.ptr(),
 				pcvoid(&time_format),
 				pcvoid(&start_position.to_raw()?),
 			)
-		})
+		}).to_hrresult()
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSessionVT;

@@ -46,10 +46,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Attributes(&self) -> HrResult<co::PICTURE> {
 		let mut attr = co::PICTURE::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IPictureVT>(self).get_Attributes)(self.ptr(), attr.as_mut())
-		})
-		.map(|_| attr)
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_Attributes)(self.ptr(), attr.as_mut()) })
+			.to_hrresult()
+			.map(|_| attr)
 	}
 
 	/// [`IPicture::get_CurDC`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
@@ -57,7 +56,8 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_CurDC(&self) -> HrResult<HDC> {
 		let mut hdc = HDC::NULL;
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_CurDC)(self.ptr(), hdc.as_mut()) })
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_CurDC)(self.ptr(), hdc.as_mut()) })
+			.to_hrresult()
 			.map(|_| hdc)
 	}
 
@@ -84,7 +84,8 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = 0i32;
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h) })
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h) })
+			.to_hrresult()
 			.map(|_| h)
 	}
 
@@ -93,7 +94,8 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_hPal(&self) -> HrResult<HPALETTE> {
 		let mut hpal = HPALETTE::NULL;
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_hPal)(self.ptr(), hpal.as_mut()) })
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_hPal)(self.ptr(), hpal.as_mut()) })
+			.to_hrresult()
 			.map(|_| hpal)
 	}
 
@@ -102,10 +104,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_KeepOriginalFormat(&self) -> HrResult<bool> {
 		let mut res = 0;
-		ok_to_hrresult(unsafe {
-			(vt::<IPictureVT>(self).get_KeepOriginalFormat)(self.ptr(), &mut res)
-		})
-		.map(|_| res != 0)
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_KeepOriginalFormat)(self.ptr(), &mut res) })
+			.to_hrresult()
+			.map(|_| res != 0)
 	}
 
 	/// [`IPicture::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
@@ -113,7 +114,8 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
 		let mut ty = co::PICTYPE::default();
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Type)(self.ptr(), ty.as_mut()) })
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_Type)(self.ptr(), ty.as_mut()) })
+			.to_hrresult()
 			.map(|_| ty)
 	}
 
@@ -140,7 +142,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Width(&self) -> HrResult<i32> {
 		let mut w = 0i32;
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Width)(self.ptr(), &mut w) }).map(|_| w)
+		HrRet(unsafe { (vt::<IPictureVT>(self).get_Width)(self.ptr(), &mut w) })
+			.to_hrresult()
+			.map(|_| w)
 	}
 
 	fn_com_noparm! { PictureChanged: IPictureVT;
@@ -151,9 +155,8 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::put_KeepOriginalFormat`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-put_keeporiginalformat)
 	/// method.
 	fn put_KeepOriginalFormat(&self, keep: bool) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IPictureVT>(self).put_KeepOriginalFormat)(self.ptr(), keep as _)
-		})
+		HrRet(unsafe { (vt::<IPictureVT>(self).put_KeepOriginalFormat)(self.ptr(), keep as _) })
+			.to_hrresult()
 	}
 
 	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
@@ -193,7 +196,7 @@ pub trait ole_IPicture: ole_IUnknown {
 			None => SIZE::with(self.get_Width()?, -self.get_Height()?),
 		};
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IPictureVT>(self).Render)(
 				self.ptr(),
 				hdc.ptr(),
@@ -208,6 +211,7 @@ pub trait ole_IPicture: ole_IUnknown {
 				pcvoid_or_null(metafile_bounds),
 			)
 		})
+		.to_hrresult()
 		.map_err(|e| e.into())
 	}
 
@@ -217,7 +221,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// Returns the number of bytes written into the stream.
 	fn SaveAsFile(&self, stream: &IStream, save_mem_copy: bool) -> HrResult<u32> {
 		let mut cb = 0i32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IPictureVT>(self).SaveAsFile)(
 				self.ptr(),
 				stream.ptr(),
@@ -225,6 +229,7 @@ pub trait ole_IPicture: ole_IUnknown {
 				&mut cb,
 			)
 		})
+		.to_hrresult()
 		.map(|_| cb as _)
 	}
 
@@ -234,7 +239,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		let mut hdc_out = HDC::NULL;
 		let mut hbmp = HBITMAP::NULL;
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IPictureVT>(self).SelectPicture)(
 				self.ptr(),
 				hdc.ptr(),
@@ -242,12 +247,13 @@ pub trait ole_IPicture: ole_IUnknown {
 				hbmp.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| (hdc_out, hbmp))
 	}
 
 	/// [`IPicture::set_hPal`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-set_hpal)
 	/// method.
 	fn set_hPal(&self, hpal: &HPALETTE) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).set_hPal)(self.ptr(), hpal.ptr()) })
+		HrRet(unsafe { (vt::<IPictureVT>(self).set_hPal)(self.ptr(), hpal.ptr()) }).to_hrresult()
 	}
 }

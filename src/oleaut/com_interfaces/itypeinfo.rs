@@ -36,7 +36,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		inv_kind: co::INVOKEKIND,
 	) -> HrResult<*mut std::ffi::c_void> {
 		let mut addr: *mut std::ffi::c_void = std::ptr::null_mut();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).AddressOfMember)(
 				self.ptr(),
 				member_id,
@@ -44,18 +44,19 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				&mut addr,
 			)
 		})
+		.to_hrresult()
 		.map(|_| addr)
 	}
 
 	/// [`ITypeInfo::CreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	#[must_use]
-	fn CreateInstance<T>(&self, iunk_outer: Option<&impl ole_IUnknown>) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn CreateInstance<T: ole_IUnknown>(
+		&self,
+		iunk_outer: Option<&impl ole_IUnknown>,
+	) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).CreateInstance)(
 				self.ptr(),
 				iunk_outer.map_or(std::ptr::null_mut(), |uo| uo.ptr()),
@@ -63,6 +64,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -82,7 +84,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		let (mut dll_name, mut name) = (BSTR::default(), BSTR::default());
 		let mut ordinal = 0u16;
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).GetDllEntry)(
 				self.ptr(),
 				member_id,
@@ -92,6 +94,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				&mut ordinal,
 			)
 		})
+		.to_hrresult()
 		.map(|_| {
 			let dll_name_str = dll_name.to_string();
 			let name_str = if name.as_ptr().is_null() { String::new() } else { name.to_string() };
@@ -114,7 +117,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		let mut context = 0u32;
 		let mut help_file = BSTR::default();
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).GetDocumentation)(
 				self.ptr(),
 				member_id,
@@ -124,6 +127,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				help_file.as_mut_ptr(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| (name.to_string(), doc.to_string(), context, help_file.to_string()))
 	}
 
@@ -134,7 +138,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(names);
 		let mut ids = vec![0i32; names.len()];
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).GetIDsOfNames)(
 				self.ptr(),
 				vec_ptr(&pwstrs),
@@ -142,6 +146,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				ids.as_mut_ptr() as _,
 			)
 		})
+		.to_hrresult()
 		.map(|_| ids)
 	}
 }

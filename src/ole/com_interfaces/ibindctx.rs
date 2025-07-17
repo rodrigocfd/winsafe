@@ -32,27 +32,24 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	#[must_use]
 	fn GetBindOptions(&self) -> HrResult<BIND_OPTS3> {
 		let mut bo = BIND_OPTS3::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IBindCtxVT>(self).GetBindOptions)(self.ptr(), pvoid(&mut bo))
-		})
-		.map(|_| bo)
+		HrRet(unsafe { (vt::<IBindCtxVT>(self).GetBindOptions)(self.ptr(), pvoid(&mut bo)) })
+			.to_hrresult()
+			.map(|_| bo)
 	}
 
 	/// [`IBindCtx::GetObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-getobjectparam)
 	/// method.
 	#[must_use]
-	fn GetObjectParam<T>(&self, key: &str) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn GetObjectParam<T: ole_IUnknown>(&self, key: &str) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IBindCtxVT>(self).GetObjectParam)(
 				self.ptr(),
 				WString::from_str(key).as_ptr(),
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -64,8 +61,9 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::RevokeObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-revokeobjectparam)
 	/// method.
 	fn RevokeObjectParam(&self, key: &str) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IBindCtxVT>(self).RevokeObjectParam)(self.ptr(), WString::from_str(key).as_ptr())
 		})
+		.to_hrresult()
 	}
 }

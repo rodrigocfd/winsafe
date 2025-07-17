@@ -59,7 +59,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// which is simpler.
 	#[must_use]
 	fn Next(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IEnumMediaTypesVT>(self).Next)(
 				self.ptr(),
 				1, // retrieve only 1
@@ -67,6 +67,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 				std::ptr::null_mut(),
 			)
 		})
+		.to_bool_hrresult()
 	}
 
 	fn_com_noparm! { Reset: IEnumMediaTypesVT;
@@ -77,6 +78,6 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// [`IEnumMediaTypes::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) })
+		HrRet(unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) }).to_bool_hrresult()
 	}
 }

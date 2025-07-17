@@ -17,23 +17,29 @@ pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	unsafe { &**ppvt }
 }
 
-/// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
-#[must_use]
-pub(crate) const fn ok_to_hrresult(hr: HRES) -> HrResult<()> {
-	match unsafe { co::HRESULT::from_raw(hr) } {
-		co::HRESULT::S_OK => Ok(()),
-		hr => Err(hr),
-	}
-}
+/// Wraps a `co::HRESULT` value returned by a FFI call, providing treatment
+/// options.
+pub(crate) struct HrRet(pub(crate) HRES);
 
-/// If value is `S_OK` yields `Ok(true)`, if `S_FALSE` yields `Ok(false)`
-/// othersize `Err(hresult)`.
-#[must_use]
-pub(crate) const fn okfalse_to_hrresult(hr: HRES) -> HrResult<bool> {
-	match unsafe { co::HRESULT::from_raw(hr) } {
-		co::HRESULT::S_OK => Ok(true),
-		co::HRESULT::S_FALSE => Ok(false),
-		hr => Err(hr),
+impl HrRet {
+	/// If value is `co::HRESULT::S_OK` yields `Ok()`, othersize `Err(hr)`.
+	#[must_use]
+	pub(crate) const fn to_hrresult(self) -> HrResult<()> {
+		match unsafe { co::HRESULT::from_raw(self.0) } {
+			co::HRESULT::S_OK => Ok(()),
+			hr => Err(hr),
+		}
+	}
+
+	/// If value is `co::HRESULT::S_OK` yields `Ok(true)`,
+	/// if `co::HRESULT::S_FALSE` yields `Ok(false)` othersize `Err(hr)`.
+	#[must_use]
+	pub(crate) const fn to_bool_hrresult(self) -> HrResult<bool> {
+		match unsafe { co::HRESULT::from_raw(self.0) } {
+			co::HRESULT::S_OK => Ok(true),
+			co::HRESULT::S_FALSE => Ok(false),
+			hr => Err(hr),
+		}
 	}
 }
 

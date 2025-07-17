@@ -34,7 +34,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(names);
 		let mut ids = vec![0i32; names.len()];
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDispatchVT>(self).GetIDsOfNames)(
 				self.ptr(),
 				pcvoid(&co::IID::default()),
@@ -44,6 +44,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 				ids.as_mut_ptr() as _,
 			)
 		})
+		.to_hrresult()
 		.map(|_| ids)
 	}
 
@@ -52,10 +53,9 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
 		let mut count = 0u32;
-		ok_to_hrresult(unsafe {
-			(vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count)
-		})
-		.map(|_| count)
+		HrRet(unsafe { (vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count) })
+			.to_hrresult()
+			.map(|_| count)
 	}
 
 	/// [`IDispatch::GetTypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
@@ -63,7 +63,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
 		let mut queried = unsafe { ITypeInfo::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDispatchVT>(self).GetTypeInfo)(
 				self.ptr(),
 				info_type,
@@ -71,6 +71,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -95,7 +96,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 		let mut remote_err = EXCEPINFO::default();
 		let mut arg_err = 0u32;
 
-		match ok_to_hrresult(unsafe {
+		match HrRet(unsafe {
 			(vt::<IDispatchVT>(self).Invoke)(
 				self.ptr(),
 				disp_id_member,
@@ -107,7 +108,9 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 				pvoid(&mut remote_err),
 				&mut arg_err,
 			)
-		}) {
+		})
+		.to_hrresult()
+		{
 			Ok(_) => Ok(remote_res),
 			Err(hr) => match hr {
 				co::HRESULT::DISP_E_EXCEPTION => Err(Box::new(remote_err)),

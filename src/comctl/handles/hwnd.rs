@@ -38,7 +38,7 @@ impl HWND {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// function.
 	pub fn InitializeFlatSB(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ffi::InitializeFlatSB(self.ptr()) })
+		HrRet(unsafe { ffi::InitializeFlatSB(self.ptr()) }).to_hrresult()
 	}
 
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
@@ -48,9 +48,8 @@ impl HWND {
 		subclass_func: SUBCLASSPROC,
 		subclass_id: usize,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
-			ffi::RemoveWindowSubclass(self.ptr(), subclass_func as _, subclass_id)
-		})
+		BoolRet(unsafe { ffi::RemoveWindowSubclass(self.ptr(), subclass_func as _, subclass_id) })
+			.to_sysresult()
 	}
 
 	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
@@ -65,9 +64,10 @@ impl HWND {
 		subclass_id: usize,
 		ref_data: usize,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetWindowSubclass(self.ptr(), subclass_proc as _, subclass_id, ref_data)
 		})
+		.to_sysresult()
 	}
 
 	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
@@ -129,7 +129,7 @@ impl HWND {
 		let mut pn_button = 0i32;
 		let (hinst, raw_ico) = icon.as_ptr();
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::TaskDialog(
 				self.ptr(),
 				hinst.ptr(),
@@ -141,12 +141,13 @@ impl HWND {
 				&mut pn_button,
 			)
 		})
+		.to_hrresult()
 		.map(|_| unsafe { co::DLGID::from_raw(pn_button as _) })
 	}
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
 	/// function.
 	pub fn UninitializeFlatSB(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ffi::UninitializeFlatSB(self.ptr()) })
+		HrRet(unsafe { ffi::UninitializeFlatSB(self.ptr()) }).to_hrresult()
 	}
 }

@@ -45,10 +45,9 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 	#[must_use]
 	fn get_DaysInterval(&self) -> HrResult<i16> {
 		let mut days = i16::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IDailyTriggerVT>(self).get_DaysInterval)(self.ptr(), &mut days)
-		})
-		.map(|_| days)
+		HrRet(unsafe { (vt::<IDailyTriggerVT>(self).get_DaysInterval)(self.ptr(), &mut days) })
+			.to_hrresult()
+			.map(|_| days)
 	}
 
 	fn_com_bstr_get! { get_RandomDelay: IDailyTriggerVT;
@@ -59,7 +58,8 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 	/// [`IDailyTrigger::put_DaysInterval`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_daysinterval)
 	/// method.
 	fn put_DaysInterval(&self, days: i16) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IDailyTriggerVT>(self).put_DaysInterval)(self.ptr(), days) })
+		HrRet(unsafe { (vt::<IDailyTriggerVT>(self).put_DaysInterval)(self.ptr(), days) })
+			.to_hrresult()
 	}
 
 	fn_com_bstr_set! { put_RandomDelay: IDailyTriggerVT, random_delay;

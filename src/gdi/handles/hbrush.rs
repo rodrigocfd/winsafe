@@ -25,7 +25,8 @@ impl HBRUSH {
 	#[must_use]
 	pub fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateBrushIndirect(pcvoid(lb)))
+			PtrRet(ffi::CreateBrushIndirect(pcvoid(lb)))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -38,7 +39,8 @@ impl HBRUSH {
 		color: COLORREF,
 	) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateHatchBrush(hatch.raw(), color.into()))
+			PtrRet(ffi::CreateHatchBrush(hatch.raw(), color.into()))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -48,7 +50,8 @@ impl HBRUSH {
 	#[must_use]
 	pub fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreatePatternBrush(hbmp.ptr()))
+			PtrRet(ffi::CreatePatternBrush(hbmp.ptr()))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -58,7 +61,8 @@ impl HBRUSH {
 	#[must_use]
 	pub fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateSolidBrush(color.into()))
+			PtrRet(ffi::CreateSolidBrush(color.into()))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -67,9 +71,10 @@ impl HBRUSH {
 	/// function.
 	pub fn GetObject(&self) -> SysResult<LOGBRUSH> {
 		let mut lb = LOGBRUSH::default();
-		bool_to_invalidparm(unsafe {
+		BoolRet(unsafe {
 			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(&mut lb))
 		})
+		.to_invalidparm()
 		.map(|_| lb)
 	}
 
@@ -77,19 +82,19 @@ impl HBRUSH {
 	/// function.
 	#[must_use]
 	pub fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
-		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sb.raw()) })
+		PtrRet(unsafe { ffi::GetStockObject(sb.raw()) }).to_invalidparm_handle()
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// function.
 	#[must_use]
 	pub fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
-		ptr_to_invalidparm_handle(unsafe { ffi::GetSysColorBrush(index.raw()) })
+		PtrRet(unsafe { ffi::GetSysColorBrush(index.raw()) }).to_invalidparm_handle()
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// function.
 	pub fn UnrealizeObject(&self) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::UnrealizeObject(self.ptr()) })
+		BoolRet(unsafe { ffi::UnrealizeObject(self.ptr()) }).to_invalidparm()
 	}
 }

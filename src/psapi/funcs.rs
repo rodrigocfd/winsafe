@@ -9,8 +9,9 @@ use crate::psapi::ffi;
 #[must_use]
 pub fn GetPerformanceInfo() -> SysResult<PERFORMANCE_INFORMATION> {
 	let mut pi = PERFORMANCE_INFORMATION::default();
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::GetPerformanceInfo(pvoid(&mut pi), std::mem::size_of::<PERFORMANCE_INFORMATION>() as _)
 	})
+	.to_sysresult()
 	.map(|_| pi)
 }

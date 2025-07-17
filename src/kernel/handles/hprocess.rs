@@ -17,7 +17,8 @@ impl HPROCESS {
 	#[must_use]
 	pub fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
 		let mut present = 0;
-		bool_to_sysresult(unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) })
+		BoolRet(unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) })
+			.to_sysresult()
 			.map(|_| present != 0)
 	}
 
@@ -28,7 +29,8 @@ impl HPROCESS {
 		base_address: *mut std::ffi::c_void,
 		size: usize,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FlushInstructionCache(self.ptr(), base_address, size) })
+		BoolRet(unsafe { ffi::FlushInstructionCache(self.ptr(), base_address, size) })
+			.to_sysresult()
 	}
 
 	/// [`GetCurrentProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
@@ -43,7 +45,8 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetExitCodeProcess(&self) -> SysResult<u32> {
 		let mut exit_code = 0u32;
-		bool_to_sysresult(unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) })
+		BoolRet(unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) })
+			.to_sysresult()
 			.map(|_| exit_code)
 	}
 
@@ -72,7 +75,8 @@ impl HPROCESS {
 	#[must_use]
 	pub fn GetProcessHandleCount(&self) -> SysResult<u32> {
 		let mut count = 0u32;
-		bool_to_sysresult(unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) })
+		BoolRet(unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) })
+			.to_sysresult()
 			.map(|_| count)
 	}
 
@@ -111,7 +115,7 @@ impl HPROCESS {
 		let (mut creation, mut exit, mut kernel, mut user) =
 			(FILETIME::default(), FILETIME::default(), FILETIME::default(), FILETIME::default());
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetProcessTimes(
 				self.ptr(),
 				pvoid(&mut creation),
@@ -120,6 +124,7 @@ impl HPROCESS {
 				pvoid(&mut user),
 			)
 		})
+		.to_sysresult()
 		.map(|_| (creation, exit, kernel, user))
 	}
 
@@ -128,7 +133,8 @@ impl HPROCESS {
 	#[must_use]
 	pub fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical = 0;
-		bool_to_sysresult(unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) })
+		BoolRet(unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) })
+			.to_sysresult()
 			.map(|_| critical != 0)
 	}
 
@@ -156,12 +162,9 @@ impl HPROCESS {
 		process_id: u32,
 	) -> SysResult<CloseHandleGuard<HPROCESS>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::OpenProcess(
-				desired_access.raw(),
-				inherit_handle as _,
-				process_id,
-			))
-			.map(|h| CloseHandleGuard::new(h))
+			PtrRet(ffi::OpenProcess(desired_access.raw(), inherit_handle as _, process_id))
+				.to_sysresult_handle()
+				.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
@@ -172,9 +175,10 @@ impl HPROCESS {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		let mut sz = buf.buf_len() as u32;
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::QueryFullProcessImageNameW(self.ptr(), flags.raw(), buf.as_mut_ptr(), &mut sz)
 		})
+		.to_sysresult()
 		.map(|_| buf.to_string())
 	}
 
@@ -183,10 +187,9 @@ impl HPROCESS {
 	#[must_use]
 	pub fn QueryProcessAffinityUpdateMode(&self) -> SysResult<co::PROCESS_AFFINITY> {
 		let mut affinity = co::PROCESS_AFFINITY::default();
-		bool_to_sysresult(unsafe {
-			ffi::QueryProcessAffinityUpdateMode(self.ptr(), affinity.as_mut())
-		})
-		.map(|_| affinity)
+		BoolRet(unsafe { ffi::QueryProcessAffinityUpdateMode(self.ptr(), affinity.as_mut()) })
+			.to_sysresult()
+			.map(|_| affinity)
 	}
 
 	/// [`QueryProcessCycleTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryprocesscycletime)
@@ -194,7 +197,9 @@ impl HPROCESS {
 	#[must_use]
 	pub fn QueryProcessCycleTime(&self) -> SysResult<u64> {
 		let mut t = 0u64;
-		bool_to_sysresult(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }).map(|_| t)
+		BoolRet(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) })
+			.to_sysresult()
+			.map(|_| t)
 	}
 
 	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
@@ -209,7 +214,7 @@ impl HPROCESS {
 		buffer: &mut [u8],
 	) -> SysResult<usize> {
 		let mut bytes_read = 0usize;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::ReadProcessMemory(
 				self.ptr(),
 				base_address,
@@ -218,33 +223,34 @@ impl HPROCESS {
 				&mut bytes_read,
 			)
 		})
+		.to_sysresult()
 		.map(|_| bytes_read)
 	}
 
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
 	/// function.
 	pub fn SetPriorityClass(&self, prority_class: co::PRIORITY_CLASS) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetPriorityClass(self.ptr(), prority_class.raw()) })
+		BoolRet(unsafe { ffi::SetPriorityClass(self.ptr(), prority_class.raw()) }).to_sysresult()
 	}
 
 	/// [`SetProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessaffinityupdatemode)
 	/// function.
 	pub fn SetProcessAffinityUpdateMode(&self, flags: co::PROCESS_AFFINITY) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw()) })
+		BoolRet(unsafe { ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw()) })
+			.to_sysresult()
 	}
 
 	/// [`SetProcessPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost)
 	/// function.
 	pub fn SetProcessPriorityBoost(&self, disable_priority_boost: bool) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
-			ffi::SetProcessPriorityBoost(self.ptr(), disable_priority_boost as _)
-		})
+		BoolRet(unsafe { ffi::SetProcessPriorityBoost(self.ptr(), disable_priority_boost as _) })
+			.to_sysresult()
 	}
 
 	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)
 	/// function.
 	pub fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::TerminateProcess(self.ptr(), exit_code) })
+		BoolRet(unsafe { ffi::TerminateProcess(self.ptr(), exit_code) }).to_sysresult()
 	}
 
 	/// [`VirtualQueryEx`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
@@ -284,7 +290,7 @@ impl HPROCESS {
 		buffer: &[u8],
 	) -> SysResult<usize> {
 		let mut bytes_written = 0usize;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::WriteProcessMemory(
 				self.ptr(),
 				base_address,
@@ -293,6 +299,7 @@ impl HPROCESS {
 				&mut bytes_written,
 			)
 		})
+		.to_sysresult()
 		.map(|_| bytes_written)
 	}
 }

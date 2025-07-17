@@ -66,11 +66,12 @@ impl HKEY {
 
 		let mut hkey = HKEY::NULL;
 		unsafe {
-			error_to_sysresult(ffi::RegConnectRegistryW(
+			ErrorRet(ffi::RegConnectRegistryW(
 				WString::from_opt_str(machine_name).as_ptr(),
 				predef_hkey.ptr(),
 				hkey.as_mut(),
 			))
+			.to_sysresult()
 			.map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -78,9 +79,10 @@ impl HKEY {
 	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
 	/// function.
 	pub fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegCopyTreeW(self.ptr(), WString::from_opt_str(sub_key).as_ptr(), dest.ptr())
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegCreateKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw)
@@ -98,7 +100,7 @@ impl HKEY {
 		let mut disposition = co::REG_DISPOSITION::default();
 
 		unsafe {
-			error_to_sysresult(ffi::RegCreateKeyExW(
+			ErrorRet(ffi::RegCreateKeyExW(
 				self.ptr(),
 				WString::from_str(sub_key).as_ptr(),
 				0,
@@ -109,6 +111,7 @@ impl HKEY {
 				hkey.as_mut(),
 				disposition.as_mut(),
 			))
+			.to_sysresult()
 			.map(|_| (RegCloseKeyGuard::new(hkey), disposition))
 		}
 	}
@@ -129,7 +132,7 @@ impl HKEY {
 		let mut disposition = co::REG_DISPOSITION::default();
 
 		unsafe {
-			error_to_sysresult(ffi::RegCreateKeyTransactedW(
+			ErrorRet(ffi::RegCreateKeyTransactedW(
 				self.ptr(),
 				WString::from_str(sub_key).as_ptr(),
 				0,
@@ -142,6 +145,7 @@ impl HKEY {
 				htransaction.ptr(),
 				std::ptr::null_mut(),
 			))
+			.to_sysresult()
 			.map(|_| (RegCloseKeyGuard::new(hkey), disposition))
 		}
 	}
@@ -149,9 +153,8 @@ impl HKEY {
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
 	/// function.
 	pub fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
-		error_to_sysresult(unsafe {
-			ffi::RegDeleteKeyW(self.ptr(), WString::from_str(sub_key).as_ptr())
-		})
+		ErrorRet(unsafe { ffi::RegDeleteKeyW(self.ptr(), WString::from_str(sub_key).as_ptr()) })
+			.to_sysresult()
 	}
 
 	/// [`RegDeleteKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyexw)
@@ -167,7 +170,7 @@ impl HKEY {
 			panic!("Platform view must be co::KEY::WOW64_32KEY or co::KEY::WOW64_64KEY");
 		}
 
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegDeleteKeyExW(
 				self.ptr(),
 				WString::from_str(sub_key).as_ptr(),
@@ -175,6 +178,7 @@ impl HKEY {
 				0,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegDeleteKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeytransactedw)
@@ -185,7 +189,7 @@ impl HKEY {
 		access_rights: co::KEY,
 		htransaction: &HTRANSACTION,
 	) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegDeleteKeyTransactedW(
 				self.ptr(),
 				WString::from_str(sub_key).as_ptr(),
@@ -195,34 +199,37 @@ impl HKEY {
 				std::ptr::null_mut(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegDeleteTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew)
 	/// function.
 	pub fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegDeleteTreeW(self.ptr(), WString::from_opt_str(sub_key).as_ptr())
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegDeleteValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevaluew)
 	/// function.
 	pub fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegDeleteValueW(self.ptr(), WString::from_opt_str(value_name).as_ptr())
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
 	/// function.
 	pub fn RegDisableReflectionKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { ffi::RegDisableReflectionKey(self.ptr()) })
+		ErrorRet(unsafe { ffi::RegDisableReflectionKey(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`RegEnableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenablereflectionkey)
 	/// function.
 	pub fn RegEnableReflectionKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { ffi::RegEnableReflectionKey(self.ptr()) })
+		ErrorRet(unsafe { ffi::RegEnableReflectionKey(self.ptr()) }).to_sysresult()
 	}
 
 	/// Returns an iterator over the names of the keys, which calls
@@ -294,7 +301,7 @@ impl HKEY {
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
 	/// function.
 	pub fn RegFlushKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { ffi::RegFlushKey(self.ptr()) })
+		ErrorRet(unsafe { ffi::RegFlushKey(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -328,8 +335,8 @@ impl HKEY {
 		loop {
 			let mut data_len = 0u32; // in bytes
 
-			match unsafe {
-				co::ERROR::from_raw(ffi::RegGetValueW(
+			ErrorRet(unsafe {
+				ffi::RegGetValueW(
 					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
@@ -337,11 +344,9 @@ impl HKEY {
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
 					&mut data_len, // first call to retrieve the size only
-				) as _)
-			} {
-				co::ERROR::SUCCESS => {},
-				e => return Err(e),
-			}
+				)
+			})
+			.to_sysresult()?;
 
 			buf.resize(data_len as _, 0x00);
 			let mut data_type = 0u32;
@@ -370,13 +375,14 @@ impl HKEY {
 	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
 	/// function.
 	pub fn RegLoadKey(&self, sub_key: Option<&str>, file_path: &str) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegLoadKeyW(
 				self.ptr(),
 				WString::from_opt_str(sub_key).as_ptr(),
 				WString::from_str(file_path).as_ptr(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegOpenCurrentUser`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser)
@@ -385,7 +391,8 @@ impl HKEY {
 	pub fn RegOpenCurrentUser(access_rights: co::KEY) -> SysResult<RegCloseKeyGuard> {
 		let mut hkey = HKEY::NULL;
 		unsafe {
-			error_to_sysresult(ffi::RegOpenCurrentUser(access_rights.raw(), hkey.as_mut()))
+			ErrorRet(ffi::RegOpenCurrentUser(access_rights.raw(), hkey.as_mut()))
+				.to_sysresult()
 				.map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -414,13 +421,14 @@ impl HKEY {
 	) -> SysResult<RegCloseKeyGuard> {
 		let mut hkey = HKEY::NULL;
 		unsafe {
-			error_to_sysresult(ffi::RegOpenKeyExW(
+			ErrorRet(ffi::RegOpenKeyExW(
 				self.ptr(),
 				WString::from_opt_str(sub_key).as_ptr(),
 				options.raw(),
 				access_rights.raw(),
 				hkey.as_mut(),
 			))
+			.to_sysresult()
 			.map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -437,7 +445,7 @@ impl HKEY {
 	) -> SysResult<RegCloseKeyGuard> {
 		let mut hkey = HKEY::NULL;
 		unsafe {
-			error_to_sysresult(ffi::RegOpenKeyTransactedW(
+			ErrorRet(ffi::RegOpenKeyTransactedW(
 				self.ptr(),
 				WString::from_str(sub_key).as_ptr(),
 				options.raw(),
@@ -446,6 +454,7 @@ impl HKEY {
 				htransaction.ptr(),
 				std::ptr::null_mut(),
 			))
+			.to_sysresult()
 			.map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -602,7 +611,8 @@ impl HKEY {
 	#[must_use]
 	pub fn RegQueryReflectionKey(&self) -> SysResult<bool> {
 		let mut is_disabled = 0;
-		error_to_sysresult(unsafe { ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled) })
+		ErrorRet(unsafe { ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled) })
+			.to_sysresult()
 			.map(|_| is_disabled != 0)
 	}
 
@@ -632,19 +642,17 @@ impl HKEY {
 		loop {
 			let mut data_len = 0u32; // in bytes
 
-			match unsafe {
-				co::ERROR::from_raw(ffi::RegQueryValueExW(
+			ErrorRet(unsafe {
+				ffi::RegQueryValueExW(
 					self.ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
 					&mut data_len, // first call to retrieve size only
-				) as _)
-			} {
-				co::ERROR::SUCCESS => {},
-				e => return Err(e),
-			}
+				)
+			})
+			.to_sysresult()?;
 
 			buf.resize(data_len as _, 0x00);
 			let mut data_type = 0u32;
@@ -672,13 +680,14 @@ impl HKEY {
 	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
 	/// function.
 	pub fn RegRenameKey(&self, sub_key_name: &str, new_key_name: &str) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegRenameKey(
 				self.ptr(),
 				WString::from_str(sub_key_name).as_ptr(),
 				WString::from_str(new_key_name).as_ptr(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegReplaceKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regreplacekeyw)
@@ -689,7 +698,7 @@ impl HKEY {
 		new_src_file: &str,
 		old_file_backup: &str,
 	) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegReplaceKeyW(
 				self.ptr(),
 				WString::from_opt_str(sub_key).as_ptr(),
@@ -697,14 +706,16 @@ impl HKEY {
 				WString::from_str(old_file_backup).as_ptr(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegRestoreKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
 	/// function.
 	pub fn RegRestoreKey(&self, file_path: &str, flags: co::REG_RESTORE) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegRestoreKeyW(self.ptr(), WString::from_str(file_path).as_ptr(), flags.raw())
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegSaveKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyw)
@@ -714,13 +725,14 @@ impl HKEY {
 		dest_file_path: &str,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 	) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegSaveKeyW(
 				self.ptr(),
 				WString::from_str(dest_file_path).as_ptr(),
 				pcvoid_or_null(security_attributes),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegSaveKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
@@ -731,7 +743,7 @@ impl HKEY {
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		flags: co::REG_SAVE,
 	) -> SysResult<()> {
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegSaveKeyExW(
 				self.ptr(),
 				WString::from_str(dest_file_path).as_ptr(),
@@ -739,6 +751,7 @@ impl HKEY {
 				flags.raw(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetkeyvaluew)
@@ -768,7 +781,7 @@ impl HKEY {
 		let mut str_buf = WString::new();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegSetKeyValueW(
 				self.ptr(),
 				WString::from_opt_str(sub_key).as_ptr(),
@@ -778,6 +791,7 @@ impl HKEY {
 				data_len,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegSetValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
@@ -807,7 +821,7 @@ impl HKEY {
 		let mut str_buf = WString::new();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
-		error_to_sysresult(unsafe {
+		ErrorRet(unsafe {
 			ffi::RegSetValueExW(
 				self.ptr(),
 				WString::from_opt_str(value_name).as_ptr(),
@@ -817,13 +831,13 @@ impl HKEY {
 				data_len,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`RegUnLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regunloadkeyw)
 	/// function.
 	pub fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
-		error_to_sysresult(unsafe {
-			ffi::RegUnLoadKeyW(self.ptr(), WString::from_opt_str(sub_key).as_ptr())
-		})
+		ErrorRet(unsafe { ffi::RegUnLoadKeyW(self.ptr(), WString::from_opt_str(sub_key).as_ptr()) })
+			.to_sysresult()
 	}
 }

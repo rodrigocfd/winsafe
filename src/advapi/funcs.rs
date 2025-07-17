@@ -75,7 +75,7 @@ pub fn AllocateAndInitializeSid(
 
 	let mut psid = std::ptr::null_mut() as *mut SID;
 	unsafe {
-		bool_to_sysresult(ffi::AllocateAndInitializeSid(
+		BoolRet(ffi::AllocateAndInitializeSid(
 			pcvoid(identifier_authority),
 			sub_authorities.len() as _,
 			if sub_authorities.len() >= 1 { sub_authorities[0].raw() } else { 0 },
@@ -88,6 +88,7 @@ pub fn AllocateAndInitializeSid(
 			if sub_authorities.len() >= 8 { sub_authorities[7].raw() } else { 0 },
 			pvoid(&mut psid),
 		))
+		.to_sysresult()
 		.map(|_| FreeSidGuard::new(psid))
 	}
 }
@@ -118,7 +119,7 @@ pub fn AllocateAndInitializeSid(
 #[must_use]
 pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
-	bool_to_sysresult(unsafe { ffi::ConvertSidToStringSidW(pcvoid(sid), &mut pstr) })?;
+	BoolRet(unsafe { ffi::ConvertSidToStringSidW(pcvoid(sid), &mut pstr) }).to_sysresult()?;
 	let name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
 	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) }; // free returned pointer
 	Ok(name)
@@ -147,11 +148,9 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<LocalFreeSidGuard> {
 	let mut pbuf = std::ptr::null_mut() as *mut u8;
 	unsafe {
-		bool_to_sysresult(ffi::ConvertStringSidToSidW(
-			WString::from_str(str_sid).as_ptr(),
-			&mut pbuf,
-		))
-		.map(|_| LocalFreeSidGuard::new(HLOCAL::from_ptr(pbuf as _)))
+		BoolRet(ffi::ConvertStringSidToSidW(WString::from_str(str_sid).as_ptr(), &mut pbuf))
+			.to_sysresult()
+			.map(|_| LocalFreeSidGuard::new(HLOCAL::from_ptr(pbuf as _)))
 	}
 }
 
@@ -180,7 +179,8 @@ pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sid_sz as _)?;
 
 	unsafe {
-		bool_to_sysresult(ffi::CopySid(sid_sz, sid_buf.ptr(), pcvoid(src)))
+		BoolRet(ffi::CopySid(sid_sz, sid_buf.ptr(), pcvoid(src)))
+			.to_sysresult()
 			.map(|_| SidGuard::new(sid_buf))
 	}
 }
@@ -238,12 +238,13 @@ pub fn CreateWellKnownSid(
 
 	let sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sid_sz as _)?;
 	unsafe {
-		bool_to_sysresult(ffi::CreateWellKnownSid(
+		BoolRet(ffi::CreateWellKnownSid(
 			well_known_sid.raw(),
 			pcvoid_or_null(domain_sid),
 			sid_buf.ptr(),
 			&mut sid_sz,
 		))
+		.to_sysresult()
 		.map(|_| SidGuard::new(sid_buf))
 	}
 }
@@ -256,7 +257,7 @@ pub fn CreateWellKnownSid(
 /// * [`EncryptFile`](crate::EncryptFile)
 /// * [`EncryptionDisable`](crate::EncryptionDisable)
 pub fn DecryptFile(file_name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::DecryptFileW(WString::from_str(file_name).as_ptr(), 0) })
+	BoolRet(unsafe { ffi::DecryptFileW(WString::from_str(file_name).as_ptr(), 0) }).to_sysresult()
 }
 
 /// [`EncryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
@@ -267,7 +268,7 @@ pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 /// * [`DecryptFile`](crate::DecryptFile)
 /// * [`EncryptionDisable`](crate::EncryptionDisable)
 pub fn EncryptFile(file_name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::EncryptFileW(WString::from_str(file_name).as_ptr()) })
+	BoolRet(unsafe { ffi::EncryptFileW(WString::from_str(file_name).as_ptr()) }).to_sysresult()
 }
 
 /// [`EncryptionDisable`](https://learn.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
@@ -278,9 +279,8 @@ pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 /// * [`EncryptFile`](crate::EncryptFile)
 /// * [`DecryptFile`](crate::DecryptFile)
 pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
-		ffi::EncryptionDisable(WString::from_str(dir_path).as_ptr(), disable as _)
-	})
+	BoolRet(unsafe { ffi::EncryptionDisable(WString::from_str(dir_path).as_ptr(), disable as _) })
+		.to_sysresult()
 }
 
 /// [`EqualDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equaldomainsid)
@@ -305,7 +305,8 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 #[must_use]
 pub fn EqualDomainSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 	let mut is_equal = 0;
-	bool_to_sysresult(unsafe { ffi::EqualDomainSid(pcvoid(sid1), pcvoid(sid2), &mut is_equal) })
+	BoolRet(unsafe { ffi::EqualDomainSid(pcvoid(sid1), pcvoid(sid2), &mut is_equal) })
+		.to_sysresult()
 		.map(|_| is_equal != 0)
 }
 
@@ -435,7 +436,8 @@ pub fn GetUserName() -> SysResult<String> {
 	}
 
 	let mut name_buf = WString::new_alloc_buf(name_sz as _);
-	bool_to_sysresult(unsafe { ffi::GetUserNameW(name_buf.as_mut_ptr(), &mut name_sz) })
+	BoolRet(unsafe { ffi::GetUserNameW(name_buf.as_mut_ptr(), &mut name_sz) })
+		.to_sysresult()
 		.map(|_| name_buf.to_string())
 }
 
@@ -470,12 +472,9 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 
 	let ad_sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, ad_sid_sz as _)?;
 	unsafe {
-		bool_to_sysresult(ffi::GetWindowsAccountDomainSid(
-			pcvoid(sid),
-			ad_sid_buf.ptr(),
-			&mut ad_sid_sz,
-		))
-		.map(|_| SidGuard::new(ad_sid_buf))
+		BoolRet(ffi::GetWindowsAccountDomainSid(pcvoid(sid), ad_sid_buf.ptr(), &mut ad_sid_sz))
+			.to_sysresult()
+			.map(|_| SidGuard::new(ad_sid_buf))
 	}
 }
 
@@ -488,9 +487,10 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 #[must_use]
 pub fn InitializeSecurityDescriptor() -> SysResult<SECURITY_DESCRIPTOR> {
 	let mut sd = unsafe { std::mem::zeroed::<SECURITY_DESCRIPTOR>() };
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InitializeSecurityDescriptor(pvoid(&mut sd), SECURITY_DESCRIPTOR_REVISION)
 	})
+	.to_sysresult()
 	.map(|_| sd)
 }
 
@@ -503,7 +503,7 @@ pub fn InitiateSystemShutdown(
 	force_apps_closed: bool,
 	reboot_after_shutdown: bool,
 ) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InitiateSystemShutdownW(
 			WString::from_opt_str(machine_name).as_ptr(),
 			WString::from_opt_str(message).as_ptr(),
@@ -512,6 +512,7 @@ pub fn InitiateSystemShutdown(
 			reboot_after_shutdown as _,
 		)
 	})
+	.to_sysresult()
 }
 
 /// [`InitiateSystemShutdownEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-initiatesystemshutdownexw)
@@ -524,7 +525,7 @@ pub fn InitiateSystemShutdownEx(
 	reboot_after_shutdown: bool,
 	reason: Option<co::SHTDN_REASON>,
 ) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::InitiateSystemShutdownExW(
 			WString::from_opt_str(machine_name).as_ptr(),
 			WString::from_opt_str(message).as_ptr(),
@@ -534,6 +535,7 @@ pub fn InitiateSystemShutdownEx(
 			reason.unwrap_or_default().raw(),
 		)
 	})
+	.to_sysresult()
 }
 
 /// [`IsValidSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-isvalidsecuritydescriptor)
@@ -657,7 +659,7 @@ pub fn LookupAccountName(
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
 	unsafe {
-		bool_to_sysresult(ffi::LookupAccountNameW(
+		BoolRet(ffi::LookupAccountNameW(
 			WString::from_opt_str(system_name).as_ptr(),
 			WString::from_str(account_name).as_ptr(),
 			sid_buf.ptr(),
@@ -666,6 +668,7 @@ pub fn LookupAccountName(
 			&mut domain_sz,
 			sid_name_use.as_mut(),
 		))
+		.to_sysresult()
 		.map(|_| (domain_buf.to_string(), SidGuard::new(sid_buf), sid_name_use))
 	}
 }
@@ -719,7 +722,7 @@ pub fn LookupAccountSid(
 	let mut account_buf = WString::new_alloc_buf(account_sz as _);
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::LookupAccountSidW(
 			WString::from_opt_str(system_name).as_ptr(),
 			pcvoid(sid),
@@ -730,6 +733,7 @@ pub fn LookupAccountSid(
 			sid_name_use.as_mut(),
 		)
 	})
+	.to_sysresult()
 	.map(|_| (account_buf.to_string(), domain_buf.to_string(), sid_name_use))
 }
 
@@ -739,18 +743,19 @@ pub fn LookupAccountSid(
 pub fn LookupPrivilegeName(system_name: Option<&str>, luid: LUID) -> SysResult<co::SE_PRIV> {
 	let mut cch_name = 0u32;
 
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::LookupPrivilegeNameW(
 			WString::from_opt_str(system_name).as_ptr(),
 			pcvoid(&luid),
 			std::ptr::null_mut(),
 			&mut cch_name,
 		)
-	})?;
+	})
+	.to_sysresult()?;
 
 	let mut buf = WString::new_alloc_buf(cch_name as _);
 
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::LookupPrivilegeNameW(
 			WString::from_opt_str(system_name).as_ptr(),
 			pcvoid(&luid),
@@ -758,6 +763,7 @@ pub fn LookupPrivilegeName(system_name: Option<&str>, luid: LUID) -> SysResult<c
 			&mut cch_name,
 		)
 	})
+	.to_sysresult()
 	.map(|_| co::SE_PRIV::try_from(buf.to_string().as_str()))?
 }
 
@@ -778,24 +784,25 @@ pub fn LookupPrivilegeName(system_name: Option<&str>, luid: LUID) -> SysResult<c
 #[must_use]
 pub fn LookupPrivilegeValue(system_name: Option<&str>, name: co::SE_PRIV) -> SysResult<LUID> {
 	let mut luid = LUID::from_parts(0, 0);
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::LookupPrivilegeValueW(
 			WString::from_opt_str(system_name).as_ptr(),
 			WString::from(name).as_ptr(),
 			pvoid(&mut luid),
 		)
 	})
+	.to_sysresult()
 	.map(|_| luid)
 }
 
 /// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
 /// function.
 pub fn RegDisablePredefinedCache() -> SysResult<()> {
-	error_to_sysresult(unsafe { ffi::RegDisablePredefinedCache() })
+	ErrorRet(unsafe { ffi::RegDisablePredefinedCache() }).to_sysresult()
 }
 
 /// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
 /// function.
 pub fn RegDisablePredefinedCacheEx() -> SysResult<()> {
-	error_to_sysresult(unsafe { ffi::RegDisablePredefinedCacheEx() })
+	ErrorRet(unsafe { ffi::RegDisablePredefinedCacheEx() }).to_sysresult()
 }

@@ -40,7 +40,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).BindToObject)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -49,6 +49,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -64,7 +65,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).BindToStorage)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -73,6 +74,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -81,9 +83,10 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn CommonPrefixWith(&self, other: &impl ole_IMoniker) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).CommonPrefixWith)(self.ptr(), other.ptr(), queried.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -96,7 +99,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		only_if_not_generic: bool,
 	) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).ComposeWith)(
 				self.ptr(),
 				moniker_to_right.ptr(),
@@ -104,6 +107,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -112,10 +116,9 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn Enum(&self, forward: bool) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<IMonikerVT>(self).Enum)(self.ptr(), forward as _, queried.as_mut())
-		})
-		.map(|_| queried)
+		HrRet(unsafe { (vt::<IMonikerVT>(self).Enum)(self.ptr(), forward as _, queried.as_mut()) })
+			.to_hrresult()
+			.map(|_| queried)
 	}
 
 	/// [`IMoniker::GetDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-getdisplayname)
@@ -127,7 +130,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		moniker_to_left: Option<&impl ole_IMoniker>,
 	) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).GetDisplayName)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -135,6 +138,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				&mut pstr,
 			)
 		})
+		.to_hrresult()
 		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
@@ -147,7 +151,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		moniker_to_left: Option<&impl ole_IMoniker>,
 	) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).GetTimeOfLastChange)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -155,6 +159,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				pvoid(&mut ft),
 			)
 		})
+		.to_hrresult()
 		.map(|_| ft)
 	}
 
@@ -163,7 +168,8 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn Hash(&self) -> HrResult<u32> {
 		let mut hash = 0u32;
-		ok_to_hrresult(unsafe { (vt::<IMonikerVT>(self).Hash)(self.ptr(), &mut hash) })
+		HrRet(unsafe { (vt::<IMonikerVT>(self).Hash)(self.ptr(), &mut hash) })
+			.to_hrresult()
 			.map(|_| hash)
 	}
 
@@ -176,9 +182,8 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// method.
 	#[must_use]
 	fn IsEqual(&self, other_moniker: &impl ole_IMoniker) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe {
-			(vt::<IMonikerVT>(self).IsEqual)(self.ptr(), other_moniker.ptr())
-		})
+		HrRet(unsafe { (vt::<IMonikerVT>(self).IsEqual)(self.ptr(), other_moniker.ptr()) })
+			.to_bool_hrresult()
 	}
 
 	/// [`IMoniker::IsRunning`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-isrunning)
@@ -190,7 +195,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		moniker_to_left: Option<&impl ole_IMoniker>,
 		moniker_newly_running: Option<&impl ole_IMoniker>,
 	) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).IsRunning)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -198,6 +203,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				moniker_newly_running.map_or(std::ptr::null_mut(), |m| m.ptr()),
 			)
 		})
+		.to_bool_hrresult()
 	}
 
 	/// [`IMoniker::IsSystemMoniker](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-issystemmoniker)
@@ -205,10 +211,9 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn IsSystemMoniker(&self) -> HrResult<(bool, co::MKSYS)> {
 		let mut mksys = co::MKSYS::default();
-		okfalse_to_hrresult(unsafe {
-			(vt::<IMonikerVT>(self).IsSystemMoniker)(self.ptr(), mksys.as_mut())
-		})
-		.map(|b| (b, mksys))
+		HrRet(unsafe { (vt::<IMonikerVT>(self).IsSystemMoniker)(self.ptr(), mksys.as_mut()) })
+			.to_bool_hrresult()
+			.map(|b| (b, mksys))
 	}
 
 	/// [`IMoniker::ParseDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-parsedisplayname)
@@ -223,7 +228,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		let mut ch_eaten = 0u32;
 		let mut queried = unsafe { IMoniker::null() };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).ParseDisplayName)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -233,6 +238,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| (ch_eaten, queried))
 	}
 
@@ -248,7 +254,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	) -> HrResult<(IMoniker, IMoniker)> {
 		let (mut queried, mut queried2) = unsafe { (IMoniker::null(), IMoniker::null()) };
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).Reduce)(
 				self.ptr(),
 				bind_ctx.ptr(),
@@ -257,6 +263,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				queried2.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| (queried, queried2))
 	}
 
@@ -265,13 +272,14 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn RelativePathTo(&self, other_moniker: &impl ole_IMoniker) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMonikerVT>(self).RelativePathTo)(
 				self.ptr(),
 				other_moniker.ptr(),
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 }

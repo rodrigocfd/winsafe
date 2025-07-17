@@ -29,7 +29,8 @@ impl HDWP {
 	#[must_use]
 	pub fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::BeginDeferWindowPos(num_windows as _))
+			PtrRet(ffi::BeginDeferWindowPos(num_windows as _))
+				.to_sysresult_handle()
 				.map(|h| EndDeferWindowPosGuard::new(h))
 		}
 	}

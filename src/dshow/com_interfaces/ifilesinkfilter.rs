@@ -57,21 +57,23 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	#[must_use]
 	unsafe fn GetCurFile(&self, mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileSinkFilterVT>(self).GetCurFile)(self.ptr(), &mut pstr, pvoid_or_null(mt))
 		})
+		.to_hrresult()
 		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IFileSinkFilter::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self, file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IFileSinkFilterVT>(self).SetFileName)(
 				self.ptr(),
 				WString::from_str(file_name).as_ptr(),
 				pcvoid_or_null(mt),
 			)
 		})
+		.to_hrresult()
 	}
 }

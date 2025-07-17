@@ -45,12 +45,13 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 	/// [`ITaskbarList4::SetTabProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist4-settabproperties)
 	/// method.
 	fn SetTabProperties(&self, hwnd_tab: &HWND, stp_flags: co::STPFLAG) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITaskbarList4VT>(self).SetTabProperties)(
 				self.ptr(),
 				hwnd_tab.ptr(),
 				stp_flags.raw(),
 			)
 		})
+		.to_hrresult()
 	}
 }

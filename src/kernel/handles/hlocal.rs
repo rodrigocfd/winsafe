@@ -19,7 +19,8 @@ impl HLOCAL {
 	#[must_use]
 	pub fn LocalAlloc(flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes))
+			PtrRet(ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes))
+				.to_sysresult_handle()
 				.map(|h| LocalFreeGuard::new(h))
 		}
 	}
@@ -63,7 +64,8 @@ impl HLOCAL {
 	pub fn LocalLock(&self) -> SysResult<LocalUnlockGuard<'_>> {
 		let mem_sz = self.LocalSize()?;
 		unsafe {
-			ptr_to_sysresult(ffi::LocalLock(self.ptr()))
+			PtrRet(ffi::LocalLock(self.ptr()))
+				.to_sysresult()
 				.map(|ptr| LocalUnlockGuard::new(self, ptr, mem_sz))
 		}
 	}
@@ -74,12 +76,11 @@ impl HLOCAL {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	pub fn LocalReAlloc(&mut self, num_bytes: usize, flags: Option<co::LMEM>) -> SysResult<()> {
-		ptr_to_sysresult_handle(unsafe {
-			ffi::LocalReAlloc(self.ptr(), num_bytes, flags.unwrap_or_default().raw())
-		})
-		.map(|h| {
-			*self = h;
-		})
+		PtrRet(unsafe { ffi::LocalReAlloc(self.ptr(), num_bytes, flags.unwrap_or_default().raw()) })
+			.to_sysresult_handle()
+			.map(|h| {
+				*self = h;
+			})
 	}
 
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)

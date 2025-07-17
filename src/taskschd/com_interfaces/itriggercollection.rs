@@ -37,13 +37,14 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	#[must_use]
 	fn Create(&self, trigger_type: co::TASK_TRIGGER_TYPE2) -> HrResult<ITrigger> {
 		let mut queried = unsafe { ITrigger::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITriggerCollectionVT>(self).Create)(
 				self.ptr(),
 				trigger_type.raw(),
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -52,10 +53,9 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	#[must_use]
 	fn get_Count(&self) -> HrResult<i32> {
 		let mut count = 0i32;
-		ok_to_hrresult(unsafe {
-			(vt::<ITriggerCollectionVT>(self).get_Count)(self.ptr(), &mut count)
-		})
-		.map(|_| count)
+		HrRet(unsafe { (vt::<ITriggerCollectionVT>(self).get_Count)(self.ptr(), &mut count) })
+			.to_hrresult()
+			.map(|_| count)
 	}
 
 	/// [`ITriggerCollection::get_Item`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-get_item)
@@ -63,17 +63,19 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	#[must_use]
 	fn get_Item(&self, index: i32) -> HrResult<ITrigger> {
 		let mut queried = unsafe { ITrigger::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITriggerCollectionVT>(self).get_Item)(self.ptr(), index, queried.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
 	/// [`ITriggerCollection::Remove`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-remove)
 	/// method.
 	fn Remove(&self, index: i32) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<ITriggerCollectionVT>(self).Remove)(self.ptr(), Variant::I4(index).to_raw()?)
 		})
+		.to_hrresult()
 	}
 }

@@ -32,13 +32,13 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	#[must_use]
 	fn CheckInterfaceSupport(&self, interface_name: &GUID) -> HrResult<i64> {
 		let mut umd_ver = 0i64;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
 				self.ptr(),
 				pcvoid(interface_name),
 				&mut umd_ver,
 			)
-		})
+		}).to_hrresult()
 		.map(|_| umd_ver)
 	}
 
@@ -76,9 +76,9 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_ADAPTER_DESC> {
 		let mut desc = DXGI_ADAPTER_DESC::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIAdapterVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc))
-		})
+		}).to_hrresult()
 		.map(|_| desc)
 	}
 }

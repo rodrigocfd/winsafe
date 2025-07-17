@@ -37,10 +37,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_Enabled(&self) -> HrResult<bool> {
 		let mut enabled = i16::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).get_Enabled)(self.ptr(), &mut enabled)
-		})
-		.map(|_| enabled != 0)
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).get_Enabled)(self.ptr(), &mut enabled) })
+			.to_hrresult()
+			.map(|_| enabled != 0)
 	}
 
 	/// [`IRegisteredTask::get_LastRunTime`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_lastruntime)
@@ -48,10 +47,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_LastRunTime(&self) -> HrResult<f64> {
 		let mut rt = f64::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).get_LastRunTime)(self.ptr(), &mut rt)
-		})
-		.map(|_| rt)
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).get_LastRunTime)(self.ptr(), &mut rt) })
+			.to_hrresult()
+			.map(|_| rt)
 	}
 
 	/// [`IRegisteredTask::get_LastTaskResult`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_lasttaskresult)
@@ -59,10 +57,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_LastTaskResult(&self) -> HrResult<i32> {
 		let mut r = 0i32;
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).get_LastTaskResult)(self.ptr(), &mut r)
-		})
-		.map(|_| r)
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).get_LastTaskResult)(self.ptr(), &mut r) })
+			.to_hrresult()
+			.map(|_| r)
 	}
 
 	fn_com_bstr_get! { get_Name: IRegisteredTaskVT;
@@ -75,10 +72,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_NextRunTime(&self) -> HrResult<f64> {
 		let mut rt = f64::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).get_NextRunTime)(self.ptr(), &mut rt)
-		})
-		.map(|_| rt)
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).get_NextRunTime)(self.ptr(), &mut rt) })
+			.to_hrresult()
+			.map(|_| rt)
 	}
 
 	/// [`IRegisteredTask::get_NumberOfMissedRuns`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_numberofmissedruns)
@@ -86,9 +82,10 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_NumberOfMissedRuns(&self) -> HrResult<i32> {
 		let mut mr = 0i32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IRegisteredTaskVT>(self).get_NumberOfMissedRuns)(self.ptr(), &mut mr)
 		})
+		.to_hrresult()
 		.map(|_| mr)
 	}
 
@@ -102,10 +99,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	#[must_use]
 	fn get_State(&self) -> HrResult<co::TASK_STATE> {
 		let mut state = co::TASK_STATE::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).get_State)(self.ptr(), state.as_mut())
-		})
-		.map(|_| state)
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).get_State)(self.ptr(), state.as_mut()) })
+			.to_hrresult()
+			.map(|_| state)
 	}
 
 	fn_com_bstr_get! { get_Xml: IRegisteredTaskVT;
@@ -116,14 +112,13 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	/// [`IRegisteredTask::put_Enabled`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-put_enabled)
 	/// method.
 	fn put_Enabled(&self, enabled: bool) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IRegisteredTaskVT>(self).put_Enabled)(self.ptr(), enabled as _)
-		})
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).put_Enabled)(self.ptr(), enabled as _) })
+			.to_hrresult()
 	}
 
 	/// [`IRegisteredTask::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-stop)
 	/// method.
 	fn Stop(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IRegisteredTaskVT>(self).Stop)(self.ptr(), 0) })
+		HrRet(unsafe { (vt::<IRegisteredTaskVT>(self).Stop)(self.ptr(), 0) }).to_hrresult()
 	}
 }

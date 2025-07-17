@@ -23,7 +23,7 @@ impl HTHEME {
 		rc: RECT,
 		rc_clip: Option<RECT>,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::DrawThemeBackground(
 				self.ptr(),
 				hdc.ptr(),
@@ -33,6 +33,7 @@ impl HTHEME {
 				pcvoid_or_null(rc_clip.as_ref()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`GetThemeAppProperties`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
@@ -52,7 +53,7 @@ impl HTHEME {
 		bounds: RECT,
 	) -> HrResult<RECT> {
 		let mut rc_content = RECT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeBackgroundContentRect(
 				self.ptr(),
 				hdc.ptr(),
@@ -62,6 +63,7 @@ impl HTHEME {
 				pvoid(&mut rc_content),
 			)
 		})
+		.to_hrresult()
 		.map(|_| rc_content)
 	}
 
@@ -76,7 +78,7 @@ impl HTHEME {
 	) -> HrResult<RECT> {
 		let mut rc_extent = RECT::default();
 
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeBackgroundExtent(
 				self.ptr(),
 				hdc.ptr(),
@@ -86,6 +88,7 @@ impl HTHEME {
 				pvoid(&mut rc_extent),
 			)
 		})
+		.to_hrresult()
 		.map(|_| rc_extent)
 	}
 
@@ -100,7 +103,7 @@ impl HTHEME {
 	) -> HrResult<DeleteObjectGuard<HRGN>> {
 		let mut hrgn = HRGN::NULL;
 		unsafe {
-			ok_to_hrresult(ffi::GetThemeBackgroundRegion(
+			HrRet(ffi::GetThemeBackgroundRegion(
 				self.ptr(),
 				hdc.ptr(),
 				part_state.part,
@@ -108,6 +111,7 @@ impl HTHEME {
 				pcvoid(&rc),
 				hrgn.as_mut(),
 			))
+			.to_hrresult()
 			.map(|_| DeleteObjectGuard::new(hrgn))
 		}
 	}
@@ -117,7 +121,7 @@ impl HTHEME {
 	#[must_use]
 	pub fn GetThemeColor(&self, part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF> {
 		let mut color = COLORREF::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeColor(
 				self.ptr(),
 				part_state.part,
@@ -126,6 +130,7 @@ impl HTHEME {
 				color.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| color)
 	}
 
@@ -140,7 +145,7 @@ impl HTHEME {
 		draw_dest: Option<&RECT>,
 	) -> HrResult<MARGINS> {
 		let mut margins = MARGINS::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeMargins(
 				self.ptr(),
 				hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -151,6 +156,7 @@ impl HTHEME {
 				pvoid(&mut margins),
 			)
 		})
+		.to_hrresult()
 		.map(|_| margins)
 	}
 
@@ -164,7 +170,7 @@ impl HTHEME {
 		prop: co::TMT,
 	) -> HrResult<i32> {
 		let mut val = 0i32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeMetric(
 				self.ptr(),
 				hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -174,6 +180,7 @@ impl HTHEME {
 				&mut val,
 			)
 		})
+		.to_hrresult()
 		.map(|_| val)
 	}
 
@@ -188,7 +195,7 @@ impl HTHEME {
 		esize: co::THEMESIZE,
 	) -> HrResult<SIZE> {
 		let mut sz = SIZE::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemePartSize(
 				self.ptr(),
 				hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -199,6 +206,7 @@ impl HTHEME {
 				pvoid(&mut sz),
 			)
 		})
+		.to_hrresult()
 		.map(|_| sz)
 	}
 
@@ -207,7 +215,7 @@ impl HTHEME {
 	#[must_use]
 	pub fn GetThemePosition(&self, part_state: co::VS, prop: co::TMT) -> HrResult<POINT> {
 		let mut pt = POINT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemePosition(
 				self.ptr(),
 				part_state.part(),
@@ -216,6 +224,7 @@ impl HTHEME {
 				pvoid(&mut pt),
 			)
 		})
+		.to_hrresult()
 		.map(|_| pt)
 	}
 
@@ -228,7 +237,7 @@ impl HTHEME {
 		prop: co::TMT,
 	) -> HrResult<co::PROPERTYORIGIN> {
 		let mut origin = co::PROPERTYORIGIN::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemePropertyOrigin(
 				self.ptr(),
 				part_state.part(),
@@ -237,6 +246,7 @@ impl HTHEME {
 				origin.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| origin)
 	}
 
@@ -245,7 +255,7 @@ impl HTHEME {
 	#[must_use]
 	pub fn GetThemeRect(&self, part_state: co::VS, prop: co::TMT) -> HrResult<RECT> {
 		let mut rc = RECT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			ffi::GetThemeRect(
 				self.ptr(),
 				part_state.part(),
@@ -254,6 +264,7 @@ impl HTHEME {
 				pvoid(&mut rc),
 			)
 		})
+		.to_hrresult()
 		.map(|_| rc)
 	}
 

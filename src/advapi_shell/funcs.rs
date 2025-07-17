@@ -27,7 +27,7 @@ use crate::ole::privs::*;
 /// ```
 pub fn ShellExecuteEx(exec_info: &SHELLEXECUTEINFO) -> SysResult<()> {
 	let mut buf = exec_info.to_raw();
-	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(pvoid(&mut buf.raw)) })
+	BoolRet(unsafe { ffi::ShellExecuteExW(pvoid(&mut buf.raw)) }).to_sysresult()
 }
 
 /// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
@@ -56,7 +56,7 @@ pub fn SHGetKnownFolderPath(
 	token: Option<&HACCESSTOKEN>,
 ) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(unsafe {
+	HrRet(unsafe {
 		ffi::SHGetKnownFolderPath(
 			pcvoid(folder_id),
 			flags.raw(),
@@ -64,5 +64,6 @@ pub fn SHGetKnownFolderPath(
 			&mut pstr,
 		)
 	})
+	.to_hrresult()
 	.map(|_| htaskmem_ptr_to_str(pstr))
 }

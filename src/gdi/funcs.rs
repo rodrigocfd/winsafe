@@ -8,7 +8,7 @@ use crate::kernel::privs::*;
 /// [`GdiFlush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gdiflush)
 /// function.
 pub fn GdiFlush() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::GdiFlush() })
+	BoolRet(unsafe { ffi::GdiFlush() }).to_sysresult()
 }
 
 /// [`GdiGetBatchLimit`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gdigetbatchlimit)

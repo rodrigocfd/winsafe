@@ -34,10 +34,9 @@ pub trait dxgi_IDXGISurface: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_SURFACE_DESC> {
 		let mut desc = DXGI_SURFACE_DESC::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IDXGISurfaceVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc))
-		})
-		.map(|_| desc)
+		HrRet(unsafe { (vt::<IDXGISurfaceVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc)) })
+			.to_hrresult()
+			.map(|_| desc)
 	}
 
 	/// [`IDXGISurface::Map`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgisurface-map)
@@ -45,9 +44,10 @@ pub trait dxgi_IDXGISurface: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn Map(&self, map_flags: co::DXGI_MAP) -> HrResult<DXGI_MAPPED_RECT> {
 		let mut mr = DXGI_MAPPED_RECT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGISurfaceVT>(self).Map)(self.ptr(), pvoid(&mut mr), map_flags.raw())
 		})
+		.to_hrresult()
 		.map(|_| mr)
 	}
 

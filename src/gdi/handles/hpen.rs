@@ -25,7 +25,8 @@ impl HPEN {
 		color: COLORREF,
 	) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreatePen(style.raw(), width, color.into()))
+			PtrRet(ffi::CreatePen(style.raw(), width, color.into()))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -35,7 +36,8 @@ impl HPEN {
 	#[must_use]
 	pub fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreatePenIndirect(pcvoid(lp)))
+			PtrRet(ffi::CreatePenIndirect(pcvoid(lp)))
+				.to_invalidparm_handle()
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -44,6 +46,6 @@ impl HPEN {
 	/// function.
 	#[must_use]
 	pub fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
-		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sp.raw()) })
+		PtrRet(unsafe { ffi::GetStockObject(sp.raw()) }).to_invalidparm_handle()
 	}
 }

@@ -25,12 +25,13 @@ impl HFILEMAP {
 		number_of_bytes_to_map: Option<usize>,
 	) -> SysResult<UnmapViewOfFileGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::MapViewOfFileFromApp(
+			PtrRet(ffi::MapViewOfFileFromApp(
 				self.ptr(),
 				desired_access.raw(),
 				offset,
 				number_of_bytes_to_map.unwrap_or_default(),
 			))
+			.to_sysresult_handle()
 			.map(|h| UnmapViewOfFileGuard::new(h))
 		}
 	}

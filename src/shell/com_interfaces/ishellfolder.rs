@@ -56,7 +56,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellFolderVT>(self).BindToObject)(
 				self.ptr(),
 				pidl.ptr() as _,
@@ -65,6 +65,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -76,7 +77,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellFolderVT>(self).BindToStorage)(
 				self.ptr(),
 				pidl.ptr() as _,
@@ -85,6 +86,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -113,12 +115,9 @@ pub trait shell_IShellFolder: ole_IUnknown {
 	/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
 	/// method.
 	#[must_use]
-	fn CreateViewObject<T>(&self, hwnd_owner: &HWND) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn CreateViewObject<T: ole_IUnknown>(&self, hwnd_owner: &HWND) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellFolderVT>(self).CreateViewObject)(
 				self.ptr(),
 				hwnd_owner.ptr(),
@@ -126,6 +125,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -143,7 +143,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 		let mut ch_eaten = 0u32;
 
 		unsafe {
-			ok_to_hrresult((vt::<IShellFolderVT>(self).ParseDisplayName)(
+			HrRet((vt::<IShellFolderVT>(self).ParseDisplayName)(
 				self.ptr(),
 				hwnd.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
@@ -152,6 +152,7 @@ pub trait shell_IShellFolder: ole_IUnknown {
 				pvoid(&mut pidl),
 				attributes.map_or(std::ptr::null_mut(), |a| a.as_mut()),
 			))
+			.to_hrresult()
 			.map(|_| CoTaskMemFreePidlGuard::new(pidl))
 		}
 	}

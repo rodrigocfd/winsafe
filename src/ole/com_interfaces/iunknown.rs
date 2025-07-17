@@ -113,9 +113,10 @@ pub trait ole_IUnknown: Clone {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IUnknownVT>(self).QueryInterface)(self.ptr(), pcvoid(&T::IID), queried.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 }

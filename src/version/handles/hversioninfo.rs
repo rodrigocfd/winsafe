@@ -27,7 +27,7 @@ impl HVERSIONINFO {
 			HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, block_sz as _)?;
 		let hglobal_ptr = hglobal.leak();
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetFileVersionInfoW(
 				WString::from_str(file_name).as_ptr(),
 				0,
@@ -35,6 +35,7 @@ impl HVERSIONINFO {
 				hglobal_ptr.ptr(),
 			)
 		})
+		.to_sysresult()
 		.map(|_| unsafe {
 			VersionInfoGuard::new(
 				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), // simply use the HGLOBAL pointer
@@ -128,7 +129,7 @@ impl HVERSIONINFO {
 		let mut lp_lp_buffer = std::ptr::null();
 		let mut pu_len = 0;
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::VerQueryValueW(
 				self.ptr(),
 				WString::from_str(sub_block).as_ptr(),
@@ -136,6 +137,7 @@ impl HVERSIONINFO {
 				&mut pu_len,
 			)
 		})
+		.to_sysresult()
 		.map(|_| (lp_lp_buffer as *const T, pu_len))
 	}
 

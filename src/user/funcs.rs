@@ -20,9 +20,10 @@ pub fn AdjustWindowRectEx(
 	ex_style: co::WS_EX,
 ) -> SysResult<RECT> {
 	let mut buf = rc;
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::AdjustWindowRectEx(pvoid(&mut buf), style.raw(), has_menu as _, ex_style.raw())
 	})
+	.to_sysresult()
 	.map(|_| buf)
 }
 
@@ -41,7 +42,7 @@ pub fn AdjustWindowRectExForDpi(
 	dpi: u32,
 ) -> SysResult<RECT> {
 	let mut buf = rc;
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::AdjustWindowRectExForDpi(
 			pvoid(&mut buf),
 			style.raw(),
@@ -50,13 +51,14 @@ pub fn AdjustWindowRectExForDpi(
 			dpi,
 		)
 	})
+	.to_sysresult()
 	.map(|_| buf)
 }
 
 /// [`AllowSetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
 /// function
 pub fn AllowSetForegroundWindow(process_id: Option<u32>) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::AllowSetForegroundWindow(process_id.unwrap_or(ASFW_ANY)) })
+	BoolRet(unsafe { ffi::AllowSetForegroundWindow(process_id.unwrap_or(ASFW_ANY)) }).to_sysresult()
 }
 
 /// [`AnyPopup`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-anypopup)
@@ -69,7 +71,8 @@ pub fn AnyPopup() -> bool {
 /// [`AttachThreadInput`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-attachthreadinput)
 /// function.
 pub fn AttachThreadInput(attach_id: u32, attach_to_id: u32, do_attach: bool) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::AttachThreadInput(attach_id, attach_to_id, do_attach as _) })
+	BoolRet(unsafe { ffi::AttachThreadInput(attach_id, attach_to_id, do_attach as _) })
+		.to_sysresult()
 }
 
 /// [`BlockInput`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-blockinput)
@@ -85,10 +88,11 @@ pub fn BlockInput(block_it: bool) -> bool {
 ///
 /// Messages manipulate pointers, copies and window states. Improper use may
 /// lead to undefined behavior.
-pub unsafe fn BroadcastSystemMessage<M>(flags: co::BSF, info: co::BSM, msg: M) -> SysResult<co::BSM>
-where
-	M: MsgSend,
-{
+pub unsafe fn BroadcastSystemMessage<M: MsgSend>(
+	flags: co::BSF,
+	info: co::BSM,
+	msg: M,
+) -> SysResult<co::BSM> {
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
 
@@ -195,7 +199,7 @@ pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 /// [`ClipCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clipcursor)
 /// function.
 pub fn ClipCursor(rc: Option<&RECT>) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::ClipCursor(pcvoid_or_null(rc)) })
+	BoolRet(unsafe { ffi::ClipCursor(pcvoid_or_null(rc)) }).to_sysresult()
 }
 
 /// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
@@ -219,7 +223,7 @@ pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
 /// [`EndMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endmenu)
 /// function.
 pub fn EndMenu() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::EndMenu() })
+	BoolRet(unsafe { ffi::EndMenu() }).to_sysresult()
 }
 
 /// [`EnumDisplayDevices`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
@@ -382,9 +386,10 @@ pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 where
 	F: FnMut(HWND) -> bool,
 {
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::EnumThreadWindows(thread_id, callbacks::func_enum_thread_wnd::<F> as _, pcvoid(&func))
 	})
+	.to_sysresult()
 }
 
 /// [`EnumWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumwindows)
@@ -405,15 +410,16 @@ pub fn EnumWindows<F>(func: F) -> SysResult<()>
 where
 	F: FnMut(HWND) -> bool,
 {
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::EnumWindows(callbacks::func_enum_windows::<F> as _, &func as *const _ as _)
 	})
+	.to_sysresult()
 }
 
 /// [`ExitWindowsEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex)
 /// function.
 pub fn ExitWindowsEx(flags: co::EWX, reason: co::SHTDN_REASON) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::ExitWindowsEx(flags.raw(), reason.raw()) })
+	BoolRet(unsafe { ffi::ExitWindowsEx(flags.raw(), reason.raw()) }).to_sysresult()
 }
 
 /// [`FlashWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-flashwindowex)
@@ -452,7 +458,9 @@ pub fn GetCaretBlinkTime() -> SysResult<u32> {
 #[must_use]
 pub fn GetCaretPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
-	bool_to_sysresult(unsafe { ffi::GetCaretPos(pvoid(&mut pt)) }).map(|_| pt)
+	BoolRet(unsafe { ffi::GetCaretPos(pvoid(&mut pt)) })
+		.to_sysresult()
+		.map(|_| pt)
 }
 
 /// [`GetClipCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
@@ -460,13 +468,15 @@ pub fn GetCaretPos() -> SysResult<POINT> {
 #[must_use]
 pub fn GetClipCursor() -> SysResult<RECT> {
 	let mut rc = RECT::default();
-	bool_to_sysresult(unsafe { ffi::GetClipCursor(pvoid(&mut rc)) }).map(|_| rc)
+	BoolRet(unsafe { ffi::GetClipCursor(pvoid(&mut rc)) })
+		.to_sysresult()
+		.map(|_| rc)
 }
 
 /// [`GetCursorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo)
 /// function.
 pub fn GetCursorInfo(ci: &mut CURSORINFO) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::GetCursorInfo(pvoid(ci)) })
+	BoolRet(unsafe { ffi::GetCursorInfo(pvoid(ci)) }).to_sysresult()
 }
 
 /// [`GetCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)
@@ -474,7 +484,9 @@ pub fn GetCursorInfo(ci: &mut CURSORINFO) -> SysResult<()> {
 #[must_use]
 pub fn GetCursorPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
-	bool_to_sysresult(unsafe { ffi::GetCursorPos(pvoid(&mut pt)) }).map(|_| pt)
+	BoolRet(unsafe { ffi::GetCursorPos(pvoid(&mut pt)) })
+		.to_sysresult()
+		.map(|_| pt)
 }
 
 /// [`GetDialogBaseUnits`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogbaseunits)
@@ -511,7 +523,9 @@ pub fn GetDoubleClickTime() -> u32 {
 #[must_use]
 pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
 	let mut gti = GUITHREADINFO::default();
-	bool_to_sysresult(unsafe { ffi::GetGUIThreadInfo(thread_id, pvoid(&mut gti)) }).map(|_| gti)
+	BoolRet(unsafe { ffi::GetGUIThreadInfo(thread_id, pvoid(&mut gti)) })
+		.to_sysresult()
+		.map(|_| gti)
 }
 
 /// [`GetLastInputInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastinputinfo)
@@ -519,7 +533,9 @@ pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
 #[must_use]
 pub fn GetLastInputInfo() -> SysResult<LASTINPUTINFO> {
 	let mut lii = LASTINPUTINFO::default();
-	bool_to_sysresult(unsafe { ffi::GetLastInputInfo(pvoid(&mut lii)) }).map(|_| lii)
+	BoolRet(unsafe { ffi::GetLastInputInfo(pvoid(&mut lii)) })
+		.to_sysresult()
+		.map(|_| lii)
 }
 
 /// [`GetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getphysicalcursorpos)
@@ -531,7 +547,9 @@ pub fn GetLastInputInfo() -> SysResult<LASTINPUTINFO> {
 #[must_use]
 pub fn GetPhysicalCursorPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
-	bool_to_sysresult(unsafe { ffi::GetPhysicalCursorPos(pvoid(&mut pt)) }).map(|_| pt)
+	BoolRet(unsafe { ffi::GetPhysicalCursorPos(pvoid(&mut pt)) })
+		.to_sysresult()
+		.map(|_| pt)
 }
 
 /// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -579,7 +597,11 @@ pub fn GetMessagePos() -> POINT {
 #[must_use]
 pub fn GetProcessDefaultLayout() -> SysResult<co::LAYOUT> {
 	let mut dl = co::LAYOUT::default();
-	unsafe { bool_to_sysresult(ffi::GetProcessDefaultLayout(dl.as_mut())).map(|_| dl) }
+	unsafe {
+		BoolRet(ffi::GetProcessDefaultLayout(dl.as_mut()))
+			.to_sysresult()
+			.map(|_| dl)
+	}
 }
 
 /// [`GetQueueStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
@@ -639,7 +661,9 @@ pub fn InSendMessage() -> bool {
 #[must_use]
 pub fn InflateRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
 	let mut buf = rc;
-	bool_to_sysresult(unsafe { ffi::InflateRect(pvoid(&mut buf), dx, dy) }).map(|_| buf)
+	BoolRet(unsafe { ffi::InflateRect(pvoid(&mut buf), dx, dy) })
+		.to_sysresult()
+		.map(|_| buf)
 }
 
 /// [`InSendMessageEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
@@ -657,7 +681,8 @@ pub fn InSendMessageEx() -> co::ISMEX {
 #[must_use]
 pub fn IntersectRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
-	bool_to_sysresult(unsafe { ffi::IntersectRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+	BoolRet(unsafe { ffi::IntersectRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+		.to_sysresult()
 		.map(|_| dest)
 }
 
@@ -693,19 +718,19 @@ pub fn IsWow64Message() -> bool {
 /// [`LockSetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-locksetforegroundwindow)
 /// function.
 pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::LockSetForegroundWindow(lock_code.raw()) })
+	BoolRet(unsafe { ffi::LockSetForegroundWindow(lock_code.raw()) }).to_sysresult()
 }
 
 /// [`LockWorkStation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-lockworkstation)
 /// function.
 pub fn LockWorkStation() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::LockWorkStation() })
+	BoolRet(unsafe { ffi::LockWorkStation() }).to_sysresult()
 }
 
 /// [`MessageBeep`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
 /// function.
 pub fn MessageBeep(sound_type: co::MBP) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::MessageBeep(sound_type.raw()) })
+	BoolRet(unsafe { ffi::MessageBeep(sound_type.raw()) }).to_sysresult()
 }
 
 /// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
@@ -713,7 +738,9 @@ pub fn MessageBeep(sound_type: co::MBP) -> SysResult<()> {
 #[must_use]
 pub fn OffsetRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
 	let mut buf = rc;
-	bool_to_sysresult(unsafe { ffi::OffsetRect(pvoid(&mut buf), dx, dy) }).map(|_| buf)
+	BoolRet(unsafe { ffi::OffsetRect(pvoid(&mut buf), dx, dy) })
+		.to_sysresult()
+		.map(|_| buf)
 }
 
 /// [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
@@ -755,9 +782,10 @@ where
 {
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::PostThreadMessageW(thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
 	})
+	.to_sysresult()
 }
 
 /// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
@@ -848,26 +876,26 @@ pub fn SendInput(inputs: &[HwKbMouse]) -> SysResult<u32> {
 /// [`SetCaretBlinkTime`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretblinktime)
 /// function.
 pub fn SetCaretBlinkTime(milliseconds: u32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetCaretBlinkTime(milliseconds) })
+	BoolRet(unsafe { ffi::SetCaretBlinkTime(milliseconds) }).to_sysresult()
 }
 
 /// [`SetCaretPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcaretpos)
 /// function.
 pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetCaretPos(x, y) })
+	BoolRet(unsafe { ffi::SetCaretPos(x, y) }).to_sysresult()
 }
 
 /// [`SetCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)
 /// function.
 pub fn SetCursorPos(x: i32, y: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetCursorPos(x, y) })
+	BoolRet(unsafe { ffi::SetCursorPos(x, y) }).to_sysresult()
 }
 
 /// [`SetDoubleClickTime`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setdoubleclicktime)
 /// function.
 #[must_use]
 pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetDoubleClickTime(ms) })
+	BoolRet(unsafe { ffi::SetDoubleClickTime(ms) }).to_sysresult()
 }
 
 /// [`SetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setphysicalcursorpos)
@@ -877,7 +905,7 @@ pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
 ///
 /// * [`GetPhysicalCursorPos`](crate::GetPhysicalCursorPos)
 pub fn SetPhysicalCursorPos(x: i32, y: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetPhysicalCursorPos(x, y) })
+	BoolRet(unsafe { ffi::SetPhysicalCursorPos(x, y) }).to_sysresult()
 }
 
 /// [`SetProcessDefaultLayout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdefaultlayout)
@@ -887,13 +915,13 @@ pub fn SetPhysicalCursorPos(x: i32, y: i32) -> SysResult<()> {
 ///
 /// * [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout)
 pub fn SetProcessDefaultLayout(layout: co::LAYOUT) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetProcessDefaultLayout(layout.raw()) })
+	BoolRet(unsafe { ffi::SetProcessDefaultLayout(layout.raw()) }).to_sysresult()
 }
 
 /// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
 pub fn SetProcessDPIAware() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetProcessDPIAware() })
+	BoolRet(unsafe { ffi::SetProcessDPIAware() }).to_sysresult()
 }
 
 /// [`SetSysColors`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsyscolors)
@@ -908,9 +936,10 @@ pub fn SetSysColors(elements_and_colors: &[(co::COLOR, COLORREF)]) -> SysResult<
 		.map(|ec| (ec.0.raw(), ec.1.raw()))
 		.unzip();
 
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::SetSysColors(elements_and_colors.len() as _, elems.as_ptr(), colors.as_ptr())
 	})
+	.to_sysresult()
 }
 
 /// [`SetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpihostingbehavior)
@@ -936,7 +965,8 @@ pub fn SoundSentry() -> bool {
 #[must_use]
 pub fn SubtractRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
-	bool_to_sysresult(unsafe { ffi::SubtractRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+	BoolRet(unsafe { ffi::SubtractRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+		.to_sysresult()
 		.map(|_| dest)
 }
 
@@ -959,15 +989,16 @@ pub unsafe fn SystemParametersInfo<T>(
 	pv_param: &mut T,
 	win_ini: co::SPIF,
 ) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	BoolRet(unsafe {
 		ffi::SystemParametersInfoW(action.raw(), ui_param, pvoid(pv_param), win_ini.raw())
 	})
+	.to_sysresult()
 }
 
 /// [`TrackMouseEvent`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)
 /// function.
 pub fn TrackMouseEvent(tme: &mut TRACKMOUSEEVENT) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::TrackMouseEvent(pvoid(tme)) })
+	BoolRet(unsafe { ffi::TrackMouseEvent(pvoid(tme)) }).to_sysresult()
 }
 
 /// [`TranslateMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translatemessage)
@@ -981,18 +1012,19 @@ pub fn TranslateMessage(msg: &MSG) -> bool {
 #[must_use]
 pub fn UnionRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
-	bool_to_sysresult(unsafe { ffi::UnionRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+	BoolRet(unsafe { ffi::UnionRect(pvoid(&mut dest), pcvoid(&src1), pcvoid(&src2)) })
+		.to_sysresult()
 		.map(|_| dest)
 }
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
 pub fn UnregisterClass(class_name: AtomStr, hinst: &HINSTANCE) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::UnregisterClassW(class_name.as_ptr(), hinst.ptr()) })
+	BoolRet(unsafe { ffi::UnregisterClassW(class_name.as_ptr(), hinst.ptr()) }).to_sysresult()
 }
 
 /// [`WaitMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitmessage)
 /// function.
 pub fn WaitMessage() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::WaitMessage() })
+	BoolRet(unsafe { ffi::WaitMessage() }).to_sysresult()
 }

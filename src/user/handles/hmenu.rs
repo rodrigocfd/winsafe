@@ -163,9 +163,10 @@ impl HMENU {
 	/// This method is rather tricky, consider using
 	/// [`HMENU::append_item`](crate::HMENU::append_item).
 	pub fn AppendMenu(&self, flags: co::MF, new_item: IdMenu, content: BmpPtrStr) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::AppendMenuW(self.ptr(), flags.raw(), new_item.as_usize(), content.as_ptr())
 		})
+		.to_sysresult()
 	}
 
 	/// [`CheckMenuItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
@@ -195,7 +196,7 @@ impl HMENU {
 			panic!("Different enum fields.");
 		}
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::CheckMenuRadioItem(
 				self.ptr(),
 				first.id_or_pos_u32(),
@@ -204,6 +205,7 @@ impl HMENU {
 				check.mf_flag().raw(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`CreateMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createmenu)
@@ -213,7 +215,7 @@ impl HMENU {
 	/// [`HMENU::DestroyMenu`](crate::HMENU::DestroyMenu) call.
 	#[must_use]
 	pub fn CreateMenu() -> SysResult<HMENU> {
-		ptr_to_sysresult_handle(unsafe { ffi::CreateMenu() })
+		PtrRet(unsafe { ffi::CreateMenu() }).to_sysresult_handle()
 	}
 
 	/// [`CreatePopupMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
@@ -225,15 +227,16 @@ impl HMENU {
 	/// [`HMENU::DestroyMenu`](crate::HMENU::DestroyMenu).
 	#[must_use]
 	pub fn CreatePopupMenu() -> SysResult<HMENU> {
-		ptr_to_sysresult_handle(unsafe { ffi::CreatePopupMenu() })
+		PtrRet(unsafe { ffi::CreatePopupMenu() }).to_sysresult_handle()
 	}
 
 	/// [`DeleteMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)
 	/// function.
 	pub fn DeleteMenu(&self, id_or_pos: IdPos) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::DeleteMenu(self.ptr(), id_or_pos.id_or_pos_u32(), id_or_pos.mf_flag().raw())
 		})
+		.to_sysresult()
 	}
 
 	/// [`DestroyMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
@@ -243,7 +246,7 @@ impl HMENU {
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	pub fn DestroyMenu(&mut self) -> SysResult<()> {
-		let ret = bool_to_sysresult(unsafe { ffi::DestroyMenu(self.ptr()) });
+		let ret = BoolRet(unsafe { ffi::DestroyMenu(self.ptr()) }).to_sysresult();
 		*self = Self::INVALID;
 		ret
 	}
@@ -322,7 +325,7 @@ impl HMENU {
 	/// [`GetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// function.
 	pub fn GetMenuInfo(&self, mi: &mut MENUINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::GetMenuInfo(self.ptr(), pvoid(mi)) })
+		BoolRet(unsafe { ffi::GetMenuInfo(self.ptr(), pvoid(mi)) }).to_sysresult()
 	}
 
 	/// [`GetMenuItemCount`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
@@ -353,7 +356,7 @@ impl HMENU {
 	/// This method is rather tricky, consider using
 	/// [`HMENU::item_info`](crate::HMENU::item_info).
 	pub fn GetMenuItemInfo(&self, id_or_pos: IdPos, mii: &mut MENUITEMINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetMenuItemInfoW(
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
@@ -361,6 +364,7 @@ impl HMENU {
 				pvoid(mii),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`GetMenuState`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenustate)
@@ -410,13 +414,13 @@ impl HMENU {
 	/// function.
 	#[must_use]
 	pub fn GetSubMenu(&self, pos: u32) -> Option<HMENU> {
-		ptr_to_option_handle(unsafe { ffi::GetSubMenu(self.ptr(), pos as _) })
+		PtrRet(unsafe { ffi::GetSubMenu(self.ptr(), pos as _) }).to_opt_handle()
 	}
 
 	/// [`InsertMenuItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insertmenuitemw)
 	/// function.
 	pub fn InsertMenuItem(&self, id_or_pos: IdPos, mii: &MENUITEMINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::InsertMenuItemW(
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
@@ -424,6 +428,7 @@ impl HMENU {
 				pcvoid(mii),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`IsMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ismenu)
@@ -436,27 +441,29 @@ impl HMENU {
 	/// [`RemoveMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
 	/// function.
 	pub fn RemoveMenu(&self, id_or_pos: IdPos) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::RemoveMenu(self.ptr(), id_or_pos.id_or_pos_u32(), id_or_pos.mf_flag().raw())
 		})
+		.to_sysresult()
 	}
 
 	/// [`SetMenuDefaultItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenudefaultitem)
 	/// function.
 	pub fn SetMenuDefaultItem(&self, id_or_pos: IdPos) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetMenuDefaultItem(
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				id_or_pos.is_by_pos() as _,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`SetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// function.
 	pub fn SetMenuInfo(&self, mi: &MENUINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetMenuInfo(self.ptr(), pcvoid(mi)) })
+		BoolRet(unsafe { ffi::SetMenuInfo(self.ptr(), pcvoid(mi)) }).to_sysresult()
 	}
 
 	/// [`SetMenuItemBitmaps`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps)
@@ -467,7 +474,7 @@ impl HMENU {
 		hbmp_unchecked: Option<&HBITMAP>,
 		hbmp_checked: Option<&HBITMAP>,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetMenuItemBitmaps(
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
@@ -476,12 +483,13 @@ impl HMENU {
 				hbmp_checked.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`SetMenuItemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuiteminfow)
 	/// function.
 	pub fn SetMenuItemInfo(&self, id_or_pos: IdPos, mii: &MENUITEMINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetMenuItemInfoW(
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
@@ -489,6 +497,7 @@ impl HMENU {
 				pcvoid(mii),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`TrackPopupMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackpopupmenu)

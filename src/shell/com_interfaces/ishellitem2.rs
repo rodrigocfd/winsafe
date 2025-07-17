@@ -64,10 +64,9 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetBool(&self, key: &co::PKEY) -> HrResult<bool> {
 		let mut f = 0;
-		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetBool)(self.ptr(), pcvoid(key), &mut f)
-		})
-		.map(|_| f != 0)
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).GetBool)(self.ptr(), pcvoid(key), &mut f) })
+			.to_hrresult()
+			.map(|_| f != 0)
 	}
 
 	/// [`IShellItem2::GetCLSID`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getclsid)
@@ -75,9 +74,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetCLSID(&self, key: &co::PKEY) -> HrResult<co::CLSID> {
 		let mut clsid = co::CLSID::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItem2VT>(self).GetCLSID)(self.ptr(), pcvoid(key), pvoid(&mut clsid))
 		})
+		.to_hrresult()
 		.map(|_| clsid)
 	}
 
@@ -88,9 +88,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetFileTime(&self, key: &co::PKEY) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItem2VT>(self).GetFileTime)(self.ptr(), pcvoid(key), pvoid(&mut ft))
 		})
+		.to_hrresult()
 		.map(|_| ft)
 	}
 
@@ -101,10 +102,9 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetInt32(&self, key: &co::PKEY) -> HrResult<i32> {
 		let mut i = 0i32;
-		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i)
-		})
-		.map(|_| i)
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i) })
+			.to_hrresult()
+			.map(|_| i)
 	}
 
 	/// [`IShellItem2::GetProperty`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getproperty)
@@ -112,9 +112,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetProperty(&self, key: &co::PKEY) -> HrResult<PropVariant> {
 		let mut pv = PROPVARIANT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItem2VT>(self).GetProperty)(self.ptr(), pcvoid(key), pvoid(&mut pv))
-		})?;
+		})
+		.to_hrresult()?;
 		PropVariant::from_raw(&pv)
 	}
 
@@ -123,7 +124,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetPropertyStore(&self, flags: co::GPS) -> HrResult<IPropertyStore> {
 		let mut queried = unsafe { IPropertyStore::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItem2VT>(self).GetPropertyStore)(
 				self.ptr(),
 				flags.raw(),
@@ -131,6 +132,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -143,7 +145,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 		flags: co::GPS,
 	) -> HrResult<IPropertyStore> {
 		let mut queried = unsafe { IPropertyStore::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItem2VT>(self).GetPropertyStoreForKeys)(
 				self.ptr(),
 				keys.as_ptr() as _,
@@ -153,6 +155,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -161,10 +164,9 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetString(&self, key: &co::PKEY) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetString)(self.ptr(), pcvoid(key), &mut pstr)
-		})
-		.map(|_| htaskmem_ptr_to_str(pstr))
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).GetString)(self.ptr(), pcvoid(key), &mut pstr) })
+			.to_hrresult()
+			.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IShellItem2::GetUInt32`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint32)
@@ -174,10 +176,9 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetUInt32(&self, key: &co::PKEY) -> HrResult<u32> {
 		let mut ui = 0u32;
-		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui)
-		})
-		.map(|_| ui)
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui) })
+			.to_hrresult()
+			.map(|_| ui)
 	}
 
 	/// [`IShellItem2::GetUInt64`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint64)
@@ -187,15 +188,14 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	#[must_use]
 	fn GetUInt64(&self, key: &co::PKEY) -> HrResult<u64> {
 		let mut ull = 0u64;
-		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull)
-		})
-		.map(|_| ull)
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull) })
+			.to_hrresult()
+			.map(|_| ull)
 	}
 
 	/// [`IShellItem2::Update`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-update)
 	/// method.
 	fn Update(&self, pbc: &impl ole_IBindCtx) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IShellItem2VT>(self).Update)(self.ptr(), pbc.ptr()) })
+		HrRet(unsafe { (vt::<IShellItem2VT>(self).Update)(self.ptr(), pbc.ptr()) }).to_hrresult()
 	}
 }

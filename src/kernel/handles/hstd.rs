@@ -16,7 +16,7 @@ impl HSTD {
 	/// [`FlushConsoleInputBuffer`](https://learn.microsoft.com/en-us/windows/console/flushconsoleinputbuffer)
 	/// function.
 	pub fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FlushConsoleInputBuffer(self.ptr()) })
+		BoolRet(unsafe { ffi::FlushConsoleInputBuffer(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`GetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/getconsolemode)
@@ -24,7 +24,9 @@ impl HSTD {
 	#[must_use]
 	pub fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
-		bool_to_sysresult(unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) }).map(|_| mode)
+		BoolRet(unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) })
+			.to_sysresult()
+			.map(|_| mode)
 	}
 
 	/// [`GetStdHandle`](https://learn.microsoft.com/en-us/windows/console/getstdhandle)
@@ -64,7 +66,7 @@ impl HSTD {
 		input_control: Option<&CONSOLE_READCONSOLE_CONTROL>,
 	) -> SysResult<u32> {
 		let mut num_read = 0u32;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::ReadConsoleW(
 				self.ptr(),
 				buffer.as_mut_ptr() as _,
@@ -73,6 +75,7 @@ impl HSTD {
 				pcvoid_or_null(input_control),
 			)
 		})
+		.to_sysresult()
 		.map(|_| num_read)
 	}
 
@@ -92,7 +95,7 @@ impl HSTD {
 	/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
 	/// function.
 	pub fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetConsoleMode(self.ptr(), mode.raw()) })
+		BoolRet(unsafe { ffi::SetConsoleMode(self.ptr(), mode.raw()) }).to_sysresult()
 	}
 
 	/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
@@ -103,15 +106,16 @@ impl HSTD {
 		let buf = WString::from_str(text);
 		let mut num_written = 0u32;
 
-		unsafe {
-			bool_to_sysresult(ffi::WriteConsoleW(
+		BoolRet(unsafe {
+			ffi::WriteConsoleW(
 				self.ptr(),
 				buf.as_ptr() as _,
 				buf.str_len() as _,
 				&mut num_written,
 				std::ptr::null_mut(),
-			))
-		}
+			)
+		})
+		.to_sysresult()
 		.map(|_| num_written)
 	}
 

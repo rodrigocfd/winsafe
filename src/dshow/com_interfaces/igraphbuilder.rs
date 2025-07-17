@@ -49,7 +49,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	#[must_use]
 	fn AddSourceFilter(&self, file_name: &str, filter_name: &str) -> HrResult<IBaseFilter> {
 		let mut queried = unsafe { IBaseFilter::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IGraphBuilderVT>(self).AddSourceFilter)(
 				self.ptr(),
 				WString::from_str(file_name).as_ptr(),
@@ -57,52 +57,56 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 				queried.as_mut(),
 			)
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
 	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
 	fn Connect(&self, pin_out: &impl dshow_IPin, pin_in: &impl dshow_IPin) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IGraphBuilderVT>(self).Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr())
 		})
+		.to_hrresult()
 	}
 
 	/// [`IGraphBuilder::Render`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-render)
 	/// method.
 	fn Render(&self, pin_out: &impl dshow_IPin) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IGraphBuilderVT>(self).Render)(self.ptr(), pin_out.ptr()) })
+		HrRet(unsafe { (vt::<IGraphBuilderVT>(self).Render)(self.ptr(), pin_out.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IGraphBuilder::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 	/// method.
 	fn RenderFile(&self, file: &str) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IGraphBuilderVT>(self).RenderFile)(
 				self.ptr(),
 				WString::from_str(file).as_ptr(),
 				std::ptr::null(),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IGraphBuilder::SetLogFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 	/// method.
 	fn SetLogFile(&self, hfile: Option<&HFILE>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IGraphBuilderVT>(self).SetLogFile)(
 				self.ptr(),
 				hfile.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IGraphBuilder::ShouldOperationContinue`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 	/// method.
 	#[must_use]
 	fn ShouldOperationContinue(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe {
-			(vt::<IGraphBuilderVT>(self).ShouldOperationContinue)(self.ptr())
-		})
+		HrRet(unsafe { (vt::<IGraphBuilderVT>(self).ShouldOperationContinue)(self.ptr()) })
+			.to_bool_hrresult()
 	}
 }

@@ -18,7 +18,7 @@ impl HPROCESS {
 		index: co::UOI,
 		pv_info: &mut T,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetUserObjectInformationW(
 				self.ptr(),
 				index.raw(),
@@ -26,6 +26,7 @@ impl HPROCESS {
 				std::mem::size_of::<T>() as _,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`WaitForInputIdle`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitforinputidle)

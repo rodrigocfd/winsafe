@@ -33,9 +33,9 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetExtendedType(&self) -> HrResult<GUID> {
 		let mut ex_ty = GUID::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaEventVT>(self).GetExtendedType)(self.ptr(), pvoid(&mut ex_ty))
-		})
+		}).to_hrresult()
 		.map(|_| ex_ty)
 	}
 
@@ -44,9 +44,9 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetStatus(&self) -> HrResult<co::HRESULT> {
 		let mut status = co::HRESULT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaEventVT>(self).GetStatus)(self.ptr(), status.as_mut())
-		})
+		}).to_hrresult()
 		.map(|_| status)
 	}
 
@@ -55,7 +55,8 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetType(&self) -> HrResult<co::ME> {
 		let mut met = co::ME::default();
-		ok_to_hrresult(unsafe { (vt::<IMFMediaEventVT>(self).GetType)(self.ptr(), met.as_mut()) })
+		HrRet(unsafe { (vt::<IMFMediaEventVT>(self).GetType)(self.ptr(), met.as_mut()) })
+		.to_hrresult()
 			.map(|_| met)
 	}
 
@@ -64,9 +65,9 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetValue(&self) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaEventVT>(self).GetValue)(self.ptr(), pvoid(&mut value))
-		})?;
+		}).to_hrresult()?;
 		PropVariant::from_raw(&value)
 	}
 }

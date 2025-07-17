@@ -35,13 +35,13 @@ pub trait dxgi_IDXGIDeviceSubObject: dxgi_IDXGIObject {
 		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIDeviceSubObjectVT>(self).GetDevice)(
 				self.ptr(),
 				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
-		})
+		}).to_hrresult()
 		.map(|_| queried)
 	}
 }

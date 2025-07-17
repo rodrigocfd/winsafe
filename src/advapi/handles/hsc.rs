@@ -35,7 +35,7 @@ impl HSC {
 			.map(|s| if s.starts_with('"') { s.to_owned() } else { format!("\"{}\"", s) });
 
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateServiceW(
+			PtrRet(ffi::CreateServiceW(
 				self.ptr(),
 				WString::from_str(service_name).as_ptr(),
 				WString::from_opt_str(display_name).as_ptr(),
@@ -50,6 +50,7 @@ impl HSC {
 				WString::from_opt_str(service_start_name).as_ptr(),
 				WString::from_opt_str(password).as_ptr(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseServiceHandleSvcGuard::new(h))
 		}
 	}
@@ -62,11 +63,12 @@ impl HSC {
 		desired_access: co::SC_MANAGER,
 	) -> SysResult<CloseServiceHandleGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::OpenSCManagerW(
+			PtrRet(ffi::OpenSCManagerW(
 				WString::from_opt_str(machine_name).as_ptr(),
 				std::ptr::null(),
 				desired_access.raw(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseServiceHandleGuard::new(h))
 		}
 	}
@@ -80,11 +82,12 @@ impl HSC {
 		desired_access: co::SERVICE,
 	) -> SysResult<CloseServiceHandleSvcGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::OpenServiceW(
+			PtrRet(ffi::OpenServiceW(
 				self.ptr(),
 				WString::from_str(service_name).as_ptr(),
 				desired_access.raw(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseServiceHandleSvcGuard::new(h))
 		}
 	}

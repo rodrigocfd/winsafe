@@ -30,7 +30,8 @@ pub trait ole_IPersistStream: ole_IPersist {
 	#[must_use]
 	fn GetSizeMax(&self) -> HrResult<u64> {
 		let mut max = 0u64;
-		ok_to_hrresult(unsafe { (vt::<IPersistStreamVT>(self).GetSizeMax)(self.ptr(), &mut max) })
+		HrRet(unsafe { (vt::<IPersistStreamVT>(self).GetSizeMax)(self.ptr(), &mut max) })
+			.to_hrresult()
 			.map(|_| max)
 	}
 
@@ -38,20 +39,22 @@ pub trait ole_IPersistStream: ole_IPersist {
 	/// method.
 	#[must_use]
 	fn IsDirty(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe { (vt::<IPersistStreamVT>(self).IsDirty)(self.ptr()) })
+		HrRet(unsafe { (vt::<IPersistStreamVT>(self).IsDirty)(self.ptr()) }).to_bool_hrresult()
 	}
 
 	/// [`IPersistStream::Load`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersiststream-load)
 	/// method.
 	fn Load(&self, stream: &impl ole_IStream) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPersistStreamVT>(self).Load)(self.ptr(), stream.ptr()) })
+		HrRet(unsafe { (vt::<IPersistStreamVT>(self).Load)(self.ptr(), stream.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IPersistStream::Save`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersiststream-save)
 	/// method.
 	fn Save(&self, stream: &impl ole_IStream, clear_dirty: bool) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IPersistStreamVT>(self).Save)(self.ptr(), stream.ptr(), clear_dirty as _)
 		})
+		.to_hrresult()
 	}
 }

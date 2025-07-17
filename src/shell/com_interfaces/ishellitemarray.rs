@@ -77,7 +77,8 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = 0u32;
-		ok_to_hrresult(unsafe { (vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count) })
+		HrRet(unsafe { (vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count) })
+			.to_hrresult()
 			.map(|_| count)
 	}
 
@@ -89,9 +90,10 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
 		let mut queried = unsafe { IShellItem::null() };
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IShellItemArrayVT>(self).GetItemAt)(self.ptr(), index, queried.as_mut())
 		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 }

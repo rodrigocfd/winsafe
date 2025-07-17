@@ -39,7 +39,7 @@ impl HINTERNETREQUEST {
 		let mut index = 0u32;
 
 		loop {
-			match bool_to_sysresult(unsafe {
+			match BoolRet(unsafe {
 				ffi::HttpQueryInfoW(
 					self.ptr(),
 					info.raw() | format.raw(),
@@ -47,7 +47,9 @@ impl HINTERNETREQUEST {
 					&mut buf_len,
 					&mut index,
 				)
-			}) {
+			})
+			.to_sysresult()
+			{
 				Ok(_) => break, // successful call, result is in buffer
 				Err(err) => match err {
 					co::ERROR::INSUFFICIENT_BUFFER => {
@@ -93,7 +95,7 @@ impl HINTERNETREQUEST {
 		modifiers: co::HTTP_ADDREQ,
 	) -> SysResult<()> {
 		let wheaders = WString::from_str(headers);
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::HttpAddRequestHeadersW(
 				self.ptr(),
 				wheaders.as_ptr(),
@@ -101,13 +103,14 @@ impl HINTERNETREQUEST {
 				modifiers.raw(),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`HttpSendRequest`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpsendrequestw)
 	/// function.
 	pub fn HttpSendRequest(&self, headers: Option<&str>, optional: &[u8]) -> SysResult<()> {
 		let wheaders = WString::from_opt_str(headers);
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::HttpSendRequestW(
 				self.ptr(),
 				wheaders.as_ptr(),
@@ -116,6 +119,7 @@ impl HINTERNETREQUEST {
 				optional.len() as _,
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`InternetQueryDataAvailable`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetquerydataavailable)
@@ -123,10 +127,9 @@ impl HINTERNETREQUEST {
 	#[must_use]
 	pub fn InternetQueryDataAvailable(&self) -> SysResult<u32> {
 		let mut num_bytes = 0u32;
-		bool_to_sysresult(unsafe {
-			ffi::InternetQueryDataAvailable(self.ptr(), &mut num_bytes, 0, 0)
-		})
-		.map(|_| num_bytes)
+		BoolRet(unsafe { ffi::InternetQueryDataAvailable(self.ptr(), &mut num_bytes, 0, 0) })
+			.to_sysresult()
+			.map(|_| num_bytes)
 	}
 
 	/// [`InternetReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetreadfile)
@@ -135,7 +138,7 @@ impl HINTERNETREQUEST {
 	/// Reads at most `buffer.len()`. Returns how many bytes were actually read.
 	pub fn InternetReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		let mut bytes_read = 0u32;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::InternetReadFile(
 				self.ptr(),
 				buffer.as_mut_ptr() as _,
@@ -143,6 +146,7 @@ impl HINTERNETREQUEST {
 				&mut bytes_read,
 			)
 		})
+		.to_sysresult()
 		.map(|_| bytes_read)
 	}
 }

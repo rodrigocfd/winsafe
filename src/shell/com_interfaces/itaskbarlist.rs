@@ -41,19 +41,21 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	/// [`ITaskbarList::ActivateTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-activatetab)
 	/// method.
 	fn ActivateTab(&self, hwnd: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<ITaskbarListVT>(self).ActivateTab)(self.ptr(), hwnd.ptr()) })
+		HrRet(unsafe { (vt::<ITaskbarListVT>(self).ActivateTab)(self.ptr(), hwnd.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`ITaskbarList::AddTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-addtab)
 	/// method.
 	fn AddTab(&self, hwnd: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<ITaskbarListVT>(self).AddTab)(self.ptr(), hwnd.ptr()) })
+		HrRet(unsafe { (vt::<ITaskbarListVT>(self).AddTab)(self.ptr(), hwnd.ptr()) }).to_hrresult()
 	}
 
 	/// [`ITaskbarList::DeleteTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-deletetab)
 	/// method.
 	fn DeleteTab(&self, hwnd: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<ITaskbarListVT>(self).DeleteTab)(self.ptr(), hwnd.ptr()) })
+		HrRet(unsafe { (vt::<ITaskbarListVT>(self).DeleteTab)(self.ptr(), hwnd.ptr()) })
+			.to_hrresult()
 	}
 
 	fn_com_noparm! { HrInit: ITaskbarListVT;
@@ -64,6 +66,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	/// [`ITaskbarList::SetActiveAlt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)
 	/// method.
 	fn SetActiveAlt(&self, hwnd: &HWND) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<ITaskbarListVT>(self).SetActiveAlt)(self.ptr(), hwnd.ptr()) })
+		HrRet(unsafe { (vt::<ITaskbarListVT>(self).SetActiveAlt)(self.ptr(), hwnd.ptr()) })
+			.to_hrresult()
 	}
 }

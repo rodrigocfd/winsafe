@@ -42,7 +42,8 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	/// [`IMFTopologyNode::CloneFrom`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-clonefrom)
 	/// method.
 	fn CloneFrom(&self, node: &impl mf_IMFTopologyNode) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IMFTopologyNodeVT>(self).CloneFrom)(self.ptr(), node.ptr()) })
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).CloneFrom)(self.ptr(), node.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IMFTopologyNode::ConnectOutput`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-connectoutput)
@@ -53,7 +54,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 		downstream_node: &impl mf_IMFTopologyNode,
 		input_index_on_downstream_node: u32,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).ConnectOutput)(
 				self.ptr(),
 				output_index,
@@ -61,15 +62,15 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 				input_index_on_downstream_node,
 			)
 		})
+		.to_hrresult()
 	}
 
 	/// [`IMFTopologyNode::DisconnectOutput`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-disconnectoutput)
 	/// method.
 	#[must_use]
 	fn DisconnectOutput(&self, output_index: u32) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).DisconnectOutput)(self.ptr(), output_index)
-		})
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).DisconnectOutput)(self.ptr(), output_index) })
+			.to_hrresult()
 	}
 
 	/// [`IMFTopologyNode::GetInput`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-getinput)
@@ -81,7 +82,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	fn GetInput(&self, input_index: u32) -> HrResult<(IMFTopologyNode, u32)> {
 		let mut queried = unsafe { IMFTopologyNode::null() };
 		let mut output_index_downstream_node = 0u32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetInput)(
 				self.ptr(),
 				input_index,
@@ -89,6 +90,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 				&mut output_index_downstream_node,
 			)
 		})
+		.to_hrresult()
 		.map(|_| (queried, output_index_downstream_node))
 	}
 
@@ -97,7 +99,8 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetInputCount(&self) -> HrResult<u32> {
 		let mut c = 0u32;
-		ok_to_hrresult(unsafe { (vt::<IMFTopologyNodeVT>(self).GetInputCount)(self.ptr(), &mut c) })
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetInputCount)(self.ptr(), &mut c) })
+			.to_hrresult()
 			.map(|_| c)
 	}
 
@@ -106,24 +109,19 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetNodeType(&self) -> HrResult<co::MF_TOPOLOGY> {
 		let mut ty = co::MF_TOPOLOGY::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).GetNodeType)(self.ptr(), ty.as_mut())
-		})
-		.map(|_| ty)
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetNodeType)(self.ptr(), ty.as_mut()) })
+			.to_hrresult()
+			.map(|_| ty)
 	}
 
 	/// [`IMFTopologyNode::GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-getobject)
 	/// method.
 	#[must_use]
-	fn GetObject<T>(&self) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
+	fn GetObject<T: ole_IUnknown>(&self) -> HrResult<T> {
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).GetObject)(self.ptr(), queried.as_mut())
-		})
-		.map(|_| queried)
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetObject)(self.ptr(), queried.as_mut()) })
+			.to_hrresult()
+			.map(|_| queried)
 	}
 
 	/// [`IMFTopologyNode::GetOutput`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-getoutput)
@@ -135,7 +133,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	fn GetOutput(&self, output_index: u32) -> HrResult<(IMFTopologyNode, u32)> {
 		let mut queried = unsafe { IMFTopologyNode::null() };
 		let mut input_index_downstream_node = 0u32;
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetOutput)(
 				self.ptr(),
 				output_index,
@@ -143,6 +141,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 				&mut input_index_downstream_node,
 			)
 		})
+		.to_hrresult()
 		.map(|_| (queried, input_index_downstream_node))
 	}
 
@@ -151,10 +150,9 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetOutputCount(&self) -> HrResult<u32> {
 		let mut c = 0u32;
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).GetOutputCount)(self.ptr(), &mut c)
-		})
-		.map(|_| c)
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetOutputCount)(self.ptr(), &mut c) })
+			.to_hrresult()
+			.map(|_| c)
 	}
 
 	/// [`IMFTopologyNode::GetTopoNodeID`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-gettoponodeid)
@@ -162,25 +160,22 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetTopoNodeID(&self) -> HrResult<u64> {
 		let mut id = 0u64;
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).GetTopoNodeID)(self.ptr(), &mut id)
-		})
-		.map(|_| id)
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetTopoNodeID)(self.ptr(), &mut id) })
+			.to_hrresult()
+			.map(|_| id)
 	}
 
 	/// [`IMFTopologyNode::SetObject`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-setobject)
 	/// method
 	fn SetObject(&self, object: &impl ole_IUnknown) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).SetObject)(self.ptr(), object.ptr())
-		})
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).SetObject)(self.ptr(), object.ptr()) })
+			.to_hrresult()
 	}
 
 	/// [`IMFTopologyNode::SetTopoNodeID`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-settoponodeid)
 	/// method.
 	fn SetTopoNodeID(&self, topo_id: u64) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IMFTopologyNodeVT>(self).SetTopoNodeID)(self.ptr(), topo_id)
-		})
+		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).SetTopoNodeID)(self.ptr(), topo_id) })
+			.to_hrresult()
 	}
 }

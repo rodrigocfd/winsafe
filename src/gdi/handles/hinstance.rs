@@ -17,15 +17,9 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadImageW(
-				self.ptr(),
-				name.as_ptr(),
-				0,
-				sz.cx,
-				sz.cy,
-				load.raw(),
-			))
-			.map(|h| DeleteObjectGuard::new(h))
+			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()))
+				.to_sysresult_handle()
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -39,15 +33,9 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadImageW(
-				self.ptr(),
-				name.as_ptr(),
-				2,
-				sz.cx,
-				sz.cy,
-				load.raw(),
-			))
-			.map(|h| DestroyCursorGuard::new(h))
+			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()))
+				.to_sysresult_handle()
+				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
@@ -61,15 +49,9 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::LoadImageW(
-				self.ptr(),
-				name.as_ptr(),
-				1,
-				sz.cx,
-				sz.cy,
-				load.raw(),
-			))
-			.map(|h| DestroyIconGuard::new(h))
+			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()))
+				.to_sysresult_handle()
+				.map(|h| DestroyIconGuard::new(h))
 		}
 	}
 }

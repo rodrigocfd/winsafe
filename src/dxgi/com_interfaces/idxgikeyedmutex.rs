@@ -31,18 +31,18 @@ pub trait dxgi_IDXGIKeyedMutex: dxgi_IDXGIDeviceSubObject {
 	/// [`IDXGIKeyedMutex::AcquireSync`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgikeyedmutex-acquiresync)
 	/// method.
 	fn AcquireSync(&self, key: u64, dw_milliseconds: Option<u32>) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IDXGIKeyedMutexVT>(self).AcquireSync)(
 				self.ptr(),
 				key,
 				dw_milliseconds.unwrap_or(INFINITE),
 			)
-		})
+		}).to_hrresult()
 	}
 
 	/// [`IDXGIKeyedMutex::ReleaseSync`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgikeyedmutex-releasesync)
 	/// method.
 	fn ReleaseSync(&self, key: u64) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IDXGIKeyedMutexVT>(self).ReleaseSync)(self.ptr(), key) })
+		HrRet(unsafe { (vt::<IDXGIKeyedMutexVT>(self).ReleaseSync)(self.ptr(), key) }).to_hrresult()
 	}
 }

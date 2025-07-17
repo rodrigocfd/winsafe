@@ -71,14 +71,16 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		let mut queried = unsafe { IShellItem::null() };
 		let mut fetched = 0u32;
 
-		match ok_to_hrresult(unsafe {
+		match HrRet(unsafe {
 			(vt::<IEnumShellItemsVT>(self).Next)(
 				self.ptr(),
 				1, // retrieve only 1
 				queried.as_mut(),
 				&mut fetched,
 			)
-		}) {
+		})
+		.to_hrresult()
+		{
 			Ok(_) => Ok(Some(queried)),
 			Err(hr) => match hr {
 				co::HRESULT::S_FALSE => Ok(None), // no item found
@@ -95,6 +97,6 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		okfalse_to_hrresult(unsafe { (vt::<IEnumShellItemsVT>(self).Skip)(self.ptr(), count) })
+		HrRet(unsafe { (vt::<IEnumShellItemsVT>(self).Skip)(self.ptr(), count) }).to_bool_hrresult()
 	}
 }

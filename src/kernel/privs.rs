@@ -31,72 +31,86 @@ pub(crate) const fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _
 }
 
-/// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
-#[must_use]
-pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
-	match expr {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
+/// Wraps a `BOOL` value returned by a FFI call, providing treatment options.
+pub(crate) struct BoolRet(pub(crate) BOOL);
+
+impl BoolRet {
+	/// If value is `FALSE`, yields `Err(GetLastError())`, otherwise `Ok()`.
+	#[must_use]
+	pub(crate) fn to_sysresult(self) -> SysResult<()> {
+		match self.0 {
+			0 => Err(GetLastError()),
+			_ => Ok(()),
+		}
+	}
+
+	/// If value is `FALSE`, yields `Err(co::ERROR::INVALID_PARAMETER)`,
+	/// otherwise `Ok()`.
+	#[must_use]
+	pub(crate) const fn to_invalidparm(self) -> SysResult<()> {
+		match self.0 {
+			0 => Err(co::ERROR::INVALID_PARAMETER),
+			_ => Ok(()),
+		}
 	}
 }
 
-/// If value is `FALSE`, yields `ERR(ERROR::INVALID_PARAMETER)`, otherwise
-/// `Ok()`.
-#[must_use]
-pub(crate) const fn bool_to_invalidparm(expr: BOOL) -> SysResult<()> {
-	match expr {
-		0 => Err(co::ERROR::INVALID_PARAMETER),
-		_ => Ok(()),
+/// Wraps a pointer value returned by a FFI call, providing treatment options.
+pub(crate) struct PtrRet(pub(crate) *mut std::ffi::c_void);
+
+impl PtrRet {
+	/// If pointer is null, yields `Err(GetLastError())`, otherwise `Ok(ptr)`.
+	#[must_use]
+	pub(crate) fn to_sysresult(self) -> SysResult<*mut std::ffi::c_void> {
+		if self.0.is_null() { Err(GetLastError()) } else { Ok(self.0) }
+	}
+
+	/// If pointer is null, yields `Err(co::ERROR::INVALID_PARAMETER)`, otherwise
+	/// `Ok(ptr)`.
+	#[must_use]
+	pub(crate) const fn to_invalidparm(self) -> SysResult<HANDLE> {
+		if self.0.is_null() { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(self.0) }
+	}
+
+	/// If pointer is null or invalid, yields `Err(GetLastError())`, otherwise
+	/// `Ok(Handle)`.
+	#[must_use]
+	pub(crate) fn to_sysresult_handle<H: Handle>(self) -> SysResult<H> {
+		self.to_invalidparm_handle().map_err(|_| GetLastError())
+	}
+
+	/// If pointer is null or invalid, yields
+	/// `Err(co::ERROR::INVALID_PARAMETER)`, otherwise `Ok(Handle)`.
+	#[must_use]
+	pub(crate) fn to_invalidparm_handle<H: Handle>(self) -> SysResult<H> {
+		// Using match{} yields E0158.
+		let ptr = unsafe { H::from_ptr(self.0) };
+		if ptr == H::NULL || ptr == H::INVALID {
+			Err(co::ERROR::INVALID_PARAMETER)
+		} else {
+			Ok(ptr)
+		}
+	}
+
+	/// If the pointer is null or invalid, yields `None`, otherwise
+	/// `Some(Handle)`.
+	#[must_use]
+	pub(crate) fn to_opt_handle<H: Handle>(self) -> Option<H> {
+		self.to_invalidparm_handle().ok()
 	}
 }
 
-/// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
-#[must_use]
-pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
-	if ptr.is_null() { Err(GetLastError()) } else { Ok(ptr) }
-}
+/// Wraps a returned `co::ERROR` value, providing treatment options.
+pub(crate) struct ErrorRet(pub(crate) i32);
 
-/// If pointer is null, yields `Err(ERROR::INVALID_PARAMETER)`, otherwise
-/// `Ok(ptr)`.
-#[must_use]
-pub(crate) const fn ptr_to_invalidparm(ptr: HANDLE) -> SysResult<HANDLE> {
-	if ptr.is_null() { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(ptr) }
-}
-
-/// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(Handle)`.
-#[must_use]
-pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
-where
-	H: Handle,
-{
-	ptr_to_sysresult(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
-}
-
-/// If pointer is null, yields `Err(ERROR::INVALID_PARAMETER)`, otherwise
-/// `Ok(Handle)`.
-#[must_use]
-pub(crate) fn ptr_to_invalidparm_handle<H>(ptr: HANDLE) -> SysResult<H>
-where
-	H: Handle,
-{
-	ptr_to_invalidparm(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
-}
-
-/// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
-#[must_use]
-pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
-where
-	H: Handle,
-{
-	if ptr.is_null() { None } else { Some(unsafe { H::from_ptr(ptr) }) }
-}
-
-/// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
-#[must_use]
-pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
-	match unsafe { co::ERROR::from_raw(lstatus as _) } {
-		co::ERROR::SUCCESS => Ok(()),
-		err => Err(err),
+impl ErrorRet {
+	/// If value is `co::ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
+	#[must_use]
+	pub(crate) const fn to_sysresult(self) -> SysResult<()> {
+		match unsafe { co::ERROR::from_raw(self.0 as _) } {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
 	}
 }
 

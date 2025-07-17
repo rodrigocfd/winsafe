@@ -110,13 +110,14 @@ impl HFILE {
 		mapping_name: Option<&str>,
 	) -> SysResult<CloseHandleGuard<HFILEMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateFileMappingFromApp(
+			PtrRet(ffi::CreateFileMappingFromApp(
 				self.ptr(),
 				pcvoid_or_null(mapping_attrs),
 				protect.raw() | sec.map_or(0, |f| f.raw()),
 				max_size.unwrap_or_default(),
 				WString::from_opt_str(mapping_name).as_ptr(),
 			))
+			.to_sysresult_handle()
 			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
@@ -125,7 +126,8 @@ impl HFILE {
 	/// function.
 	pub fn GetFileInformationByHandle(&self) -> SysResult<BY_HANDLE_FILE_INFORMATION> {
 		let mut fi = BY_HANDLE_FILE_INFORMATION::default();
-		bool_to_sysresult(unsafe { ffi::GetFileInformationByHandle(self.ptr(), pvoid(&mut fi)) })
+		BoolRet(unsafe { ffi::GetFileInformationByHandle(self.ptr(), pvoid(&mut fi)) })
+			.to_sysresult()
 			.map(|_| fi)
 	}
 
@@ -134,7 +136,8 @@ impl HFILE {
 	#[must_use]
 	pub fn GetFileSizeEx(&self) -> SysResult<u64> {
 		let mut sz_buf = 0i64;
-		bool_to_sysresult(unsafe { ffi::GetFileSizeEx(self.ptr(), &mut sz_buf) })
+		BoolRet(unsafe { ffi::GetFileSizeEx(self.ptr(), &mut sz_buf) })
+			.to_sysresult()
 			.map(|_| sz_buf as _)
 	}
 
@@ -161,7 +164,7 @@ impl HFILE {
 		let (mut creation, mut last_access, mut last_write) =
 			(FILETIME::default(), FILETIME::default(), FILETIME::default());
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::GetFileTime(
 				self.ptr(),
 				pvoid(&mut creation),
@@ -169,6 +172,7 @@ impl HFILE {
 				pvoid(&mut last_write),
 			)
 		})
+		.to_sysresult()
 		.map(|_| (creation, last_access, last_write))
 	}
 
@@ -218,13 +222,14 @@ impl HFILE {
 	#[must_use]
 	pub fn LockFile(&self, offset: u64, num_bytes_to_lock: u64) -> SysResult<UnlockFileGuard<'_>> {
 		unsafe {
-			bool_to_sysresult(ffi::LockFile(
+			BoolRet(ffi::LockFile(
 				self.ptr(),
 				LODWORD(offset),
 				HIDWORD(offset),
 				LODWORD(num_bytes_to_lock),
 				HIDWORD(num_bytes_to_lock),
 			))
+			.to_sysresult()
 			.map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
 		}
 	}
@@ -242,7 +247,7 @@ impl HFILE {
 	/// operation is complete, thus making the method unsound.
 	pub fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		let mut bytes_read = 0u32;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::ReadFile(
 				self.ptr(),
 				buffer.as_mut_ptr() as _,
@@ -251,13 +256,14 @@ impl HFILE {
 				std::ptr::null_mut(),
 			)
 		})
+		.to_sysresult()
 		.map(|_| bytes_read)
 	}
 
 	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// function.
 	pub fn SetEndOfFile(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetEndOfFile(self.ptr()) })
+		BoolRet(unsafe { ffi::SetEndOfFile(self.ptr()) }).to_sysresult()
 	}
 
 	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
@@ -269,9 +275,10 @@ impl HFILE {
 	) -> SysResult<i64> {
 		let mut new_offset = 0i64;
 
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetFilePointerEx(self.ptr(), distance_to_move, &mut new_offset, move_method.raw())
 		})
+		.to_sysresult()
 		.map(|_| new_offset)
 	}
 
@@ -283,7 +290,7 @@ impl HFILE {
 		last_access_time: Option<&FILETIME>,
 		last_write_time: Option<&FILETIME>,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::SetFileTime(
 				self.ptr(),
 				pcvoid_or_null(creation_time),
@@ -291,6 +298,7 @@ impl HFILE {
 				pcvoid_or_null(last_write_time),
 			)
 		})
+		.to_sysresult()
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
@@ -304,7 +312,7 @@ impl HFILE {
 	/// operation is complete, thus making the method unsound.
 	pub fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		let mut bytes_written = 0u32;
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::WriteFile(
 				self.ptr(),
 				vec_ptr(data) as _,
@@ -313,6 +321,7 @@ impl HFILE {
 				std::ptr::null_mut(),
 			)
 		})
+		.to_sysresult()
 		.map(|_| bytes_written)
 	}
 }

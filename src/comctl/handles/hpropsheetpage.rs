@@ -20,7 +20,7 @@ impl HPROPSHEETPAGE {
 		page: &PROPSHEETPAGE,
 	) -> HrResult<DestroyPropertySheetPageGuard> {
 		unsafe {
-			match ptr_to_option_handle(ffi::CreatePropertySheetPageW(pcvoid(page))) {
+			match PtrRet(ffi::CreatePropertySheetPageW(pcvoid(page))).to_opt_handle() {
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(DestroyPropertySheetPageGuard::new(h)),
 			}

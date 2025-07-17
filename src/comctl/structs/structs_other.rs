@@ -1271,7 +1271,7 @@ pub struct PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pcRefParent: *mut u32,
 	pszHeaderTitle: *mut u16,
 	pszHeaderSubTitle: *mut u16,
-	pub hActCtx: *mut std::ffi::c_void,
+	pub hActCtx: HACTCTX,
 	hbmHeader_pszbmHeader: *mut std::ffi::c_void, // union
 
 	_pszTemplate: PhantomData<&'a mut u16>,

@@ -33,9 +33,9 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 	#[must_use]
 	fn GetCharacteristics(&self) -> HrResult<co::MFMEDIASOURCE> {
 		let mut characteristics = co::MFMEDIASOURCE::default();
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSourceVT>(self).GetCharacteristics)(self.ptr(), characteristics.as_mut())
-		})
+		}).to_hrresult()
 		.map(|_| characteristics)
 	}
 
@@ -62,14 +62,14 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 		time_format: Option<&GUID>,
 		start_position: &PropVariant,
 	) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
+		HrRet(unsafe {
 			(vt::<IMFMediaSourceVT>(self).Start)(
 				self.ptr(),
 				presentation_descriptor.ptr(),
 				pcvoid(time_format.unwrap_or(&GUID::default())),
 				pcvoid(&start_position.to_raw()?),
 			)
-		})
+		}).to_hrresult()
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSourceVT;

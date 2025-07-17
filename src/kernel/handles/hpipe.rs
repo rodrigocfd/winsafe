@@ -23,13 +23,9 @@ impl HPIPE {
 	) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)> {
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
 		unsafe {
-			bool_to_sysresult(ffi::CreatePipe(
-				hread.as_mut(),
-				hwrite.as_mut(),
-				pcvoid_or_null(attrs),
-				size,
-			))
-			.map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))
+			BoolRet(ffi::CreatePipe(hread.as_mut(), hwrite.as_mut(), pcvoid_or_null(attrs), size))
+				.to_sysresult()
+				.map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))
 		}
 	}
 

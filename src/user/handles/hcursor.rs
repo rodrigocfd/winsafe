@@ -17,7 +17,9 @@ impl HCURSOR {
 	#[must_use]
 	pub fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CopyIcon(self.ptr())).map(|h| DestroyCursorGuard::new(h))
+			PtrRet(ffi::CopyIcon(self.ptr()))
+				.to_sysresult_handle()
+				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
@@ -25,12 +27,12 @@ impl HCURSOR {
 	/// function.
 	#[must_use]
 	pub fn GetCursor() -> Option<HCURSOR> {
-		ptr_to_option_handle(unsafe { ffi::GetCursor() })
+		PtrRet(unsafe { ffi::GetCursor() }).to_opt_handle()
 	}
 
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
 	/// function.
 	pub fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetSystemCursor(self.ptr(), id.raw()) })
+		BoolRet(unsafe { ffi::SetSystemCursor(self.ptr(), id.raw()) }).to_sysresult()
 	}
 }

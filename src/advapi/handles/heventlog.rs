@@ -21,10 +21,11 @@ impl HEVENTLOG {
 		source_name: &str,
 	) -> SysResult<DeregisterEventSourceGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::RegisterEventSourceW(
+			PtrRet(ffi::RegisterEventSourceW(
 				WString::from_opt_str(unc_server_name).as_ptr(),
 				WString::from_str(source_name).as_ptr(),
 			))
+			.to_sysresult_handle()
 			.map(|h| DeregisterEventSourceGuard::new(h))
 		}
 	}
@@ -41,7 +42,7 @@ impl HEVENTLOG {
 		raw_data: &[u8],
 	) -> SysResult<()> {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(strings);
-		bool_to_sysresult(unsafe {
+		BoolRet(unsafe {
 			ffi::ReportEventW(
 				self.ptr(),
 				event_type.raw(),
@@ -54,5 +55,6 @@ impl HEVENTLOG {
 				vec_ptr(raw_data) as _,
 			)
 		})
+		.to_sysresult()
 	}
 }
