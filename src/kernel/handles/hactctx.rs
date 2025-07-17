@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 handle! { HACTCTX;
 	/// Handle to an
@@ -19,6 +20,18 @@ impl HACTCTX {
 			PtrRet(ffi::CreateActCtxW(pvoid(actctx)))
 				.to_sysresult_handle()
 				.map(|h| ReleaseActCtxGuard::new(h))
+		}
+	}
+
+	/// [`GetCurrentActCtx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentactctx)
+	/// function.
+	#[must_use]
+	pub fn GetCurrentActCtx() -> SysResult<ReleaseActCtxGuard> {
+		let mut hact = HACTCTX::NULL;
+		unsafe {
+			BoolRet(ffi::GetCurrentActCtx(hact.as_mut()))
+				.to_sysresult()
+				.map(|_| ReleaseActCtxGuard::new(hact))
 		}
 	}
 

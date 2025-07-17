@@ -40,6 +40,7 @@ extern_sys! { "kernel32";
 	GetCommandLineW() -> PCSTR
 	GetComputerNameW(PSTR, *mut u32) -> BOOL
 	GetConsoleMode(HANDLE, *mut u32) -> BOOL
+	GetCurrentActCtx(*mut HANDLE) -> BOOL
 	GetCurrentDirectoryW(u32, PSTR) -> u32
 	GetCurrentProcess() -> HANDLE
 	GetCurrentProcessId() -> u32
