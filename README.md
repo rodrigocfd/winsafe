@@ -25,7 +25,7 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 899 |
+| Functions | 900 |
 | Structs | 262 |
 | Constants | 15,035 |
 | Window messages | 655 |

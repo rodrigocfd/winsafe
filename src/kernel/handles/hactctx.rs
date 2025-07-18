@@ -29,6 +29,16 @@ impl HACTCTX {
 			.map(|_| cookie)
 	}
 
+	/// [`AddRefActCtx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-addrefactctx)
+	/// function.
+	#[must_use]
+	pub fn AddRefActCtx(&self) -> ReleaseActCtxGuard {
+		unsafe {
+			ffi::AddRefActCtx(self.ptr());
+			ReleaseActCtxGuard::new(self.raw_copy())
+		}
+	}
+
 	/// [`CreateActCtx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-createactctxw)
 	/// function.
 	#[must_use]
