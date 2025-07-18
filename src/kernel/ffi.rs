@@ -1,6 +1,7 @@
 use crate::kernel::ffi_types::*;
 
 extern_sys! { "kernel32";
+	ActivateActCtx(HANDLE, *mut usize) -> BOOL
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL
@@ -15,6 +16,7 @@ extern_sys! { "kernel32";
 	CreateProcessW(PCSTR, PSTR, PCVOID, PCVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
 	CreateThread(PVOID, usize, PVOID, PVOID, u32, *mut u32) -> HANDLE
 	CreateToolhelp32Snapshot(u32, u32) -> HANDLE
+	DeactivateActCtx(u32, usize) -> BOOL
 	DeleteFileW(PCSTR) -> BOOL
 	EndUpdateResourceW(HANDLE, BOOL) -> BOOL
 	EnumResourceLanguagesW(HANDLE, PCSTR, PCSTR, PFUNC, PCVOID) -> BOOL

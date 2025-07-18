@@ -213,6 +213,17 @@ const_bitflag! { DBTF: u16;
 	NET 0x0002
 }
 
+const_bitflag! { DEACTIVATE_ACTCTX: u32;
+	/// [`HACTCTX::DeactivateActCtx`](crate::HACTCTX::DeactivateActCtx) `flags`
+	/// (`u32`).
+	///
+	/// Originally has `DEACTIVATE_ACTCTX_FLAG` prefix.
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	FORCE_EARLY_DEACTIVATION 0x0000_0001
+}
+
 const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `creation_disposition`
 	/// (`u32`).
