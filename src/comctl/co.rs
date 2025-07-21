@@ -1535,6 +1535,25 @@ const_bitflag! { PSH: u32;
 	NOMARGIN 0x1000_0000
 }
 
+const_nm! { PSN;
+	/// Property sheet `WM_NOTIFY`
+	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-notifications)
+	/// (`i32`).
+	=>
+	SETACTIVE PSN_FIRST - 0
+	KILLACTIVE PSN_FIRST - 1
+	APPLY PSN_FIRST - 2
+	RESET PSN_FIRST - 3
+	HELP PSN_FIRST - 5
+	WIZBACK PSN_FIRST - 6
+	WIZNEXT PSN_FIRST - 7
+	WIZFINISH PSN_FIRST - 8
+	QUERYCANCEL PSN_FIRST - 9
+	GETOBJECT PSN_FIRST - 10
+	TRANSLATEACCELERATOR PSN_FIRST - 12
+	QUERYINITIALFOCUS PSN_FIRST - 13
+}
+
 const_bitflag! { PSP: u32;
 	/// [`PROPSHEETPAGE`](crate::PROPSHEETPAGE) `dwFlags` (`u32`).
 	=>
