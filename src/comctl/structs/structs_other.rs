@@ -1336,6 +1336,14 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	}
 }
 
+/// [`PSHNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/ns-prsht-pshnotify)
+/// struct.
+#[repr(C)]
+pub struct PSHNOTIFY {
+	pub hdr: NMHDR,
+	pub lParam: isize,
+}
+
 /// [`TBADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)
 /// struct.
 #[repr(C)]
