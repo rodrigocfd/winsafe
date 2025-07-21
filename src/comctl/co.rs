@@ -1535,6 +1535,46 @@ const_bitflag! { PSH: u32;
 	NOMARGIN 0x1000_0000
 }
 
+const_wm! { PSM;
+	/// Property pages
+	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-messages)
+	/// (`u32`).
+	=>
+	SETCURSEL WM::USER.raw() + 101
+	REMOVEPAGE WM::USER.raw() + 102
+	ADDPAGE WM::USER.raw() + 103
+	CHANGED WM::USER.raw() + 104
+	RESTARTWINDOWS WM::USER.raw() + 105
+	REBOOTSYSTEM WM::USER.raw() + 106
+	CANCELTOCLOSE WM::USER.raw() + 107
+	QUERYSIBLINGS WM::USER.raw() + 108
+	UNCHANGED WM::USER.raw() + 109
+	APPLY WM::USER.raw() + 110
+	SETTITLE WM::USER.raw() + 120
+	SETWIZBUTTONS WM::USER.raw() + 112
+	PRESSBUTTON WM::USER.raw() + 113
+	SETCURSELID WM::USER.raw() + 114
+	SETFINISHTEXT WM::USER.raw() + 121
+	GETTABCONTROL WM::USER.raw() + 116
+	ISDIALOGMESSAGE WM::USER.raw() + 117
+	GETCURRENTPAGEHWND WM::USER.raw() + 118
+	INSERTPAGE WM::USER.raw() + 119
+	SETHEADERTITLE WM::USER.raw() + 126
+	SETHEADERSUBTITLE WM::USER.raw() + 128
+	HWNDTOINDEX WM::USER.raw() + 129
+	INDEXTOHWND WM::USER.raw() + 130
+	PAGETOINDEX WM::USER.raw() + 131
+	INDEXTOPAGE WM::USER.raw() + 132
+	IDTOINDEX WM::USER.raw() + 133
+	INDEXTOID WM::USER.raw() + 134
+	GETRESULT WM::USER.raw() + 135
+	RECALCPAGESIZES WM::USER.raw() + 136
+	SETNEXTTEXT WM::USER.raw() + 137
+	SHOWWIZBUTTONS WM::USER.raw() + 138
+	ENABLEWIZBUTTONS WM::USER.raw() + 139
+	SETBUTTONTEXT WM::USER.raw() + 140
+}
+
 const_nm! { PSN;
 	/// Property sheet `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-notifications)
