@@ -1521,6 +1521,15 @@ const_ordinary! { PSBTN: u32;
 	HELP 6
 }
 
+const_ordinary! { PSCB: u32;
+	/// [`PFNPROPSHEETCALLBACK`](crate::PFNPROPSHEETCALLBACK) message codes
+	/// (`u32`).
+	=>
+	INITIALIZED 1
+	PRECREATE 2
+	BUTTONPRESSED 3
+}
+
 const_bitflag! { PSH: u32;
 	/// [`PROPSHEETHEADER`](crate::PROPSHEETHEADER) `dwFlags` (`u32`).
 	=>
@@ -1633,7 +1642,10 @@ const_bitflag! { PSP: u32;
 }
 
 const_bitflag! { PSWIZB: u32;
-	/// [`psm::EnableWizButtons`](crate::msg::psm::EnableWizButtons) buttons
+	/// [`psm::EnableWizButtons`](crate::msg::psm::EnableWizButtons),
+	/// [`psm::SetButtonText`](crate::msg::psm::SetButtonText),
+	/// [`psm::SetWizButtons`](crate::msg::psm::SetWizButtons) and
+	/// [`psm::ShowWizButtons`](crate::msg::psm::ShowWizButtons) buttons
 	/// (`u32`).
 	=>
 	BACK 0x0000_0001
