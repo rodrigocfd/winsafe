@@ -51,10 +51,10 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// [`ITypeInfo::CreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	#[must_use]
-	fn CreateInstance<T: ole_IUnknown>(
-		&self,
-		iunk_outer: Option<&impl ole_IUnknown>,
-	) -> HrResult<T> {
+	fn CreateInstance<T>(&self, iunk_outer: Option<&impl ole_IUnknown>) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<ITypeInfoVT>(self).CreateInstance)(

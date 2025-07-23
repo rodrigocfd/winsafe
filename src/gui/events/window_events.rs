@@ -24,6 +24,11 @@ struct StorageTmr {
 	fun: Box<dyn Fn() -> AnyResult<()>>,
 }
 
+/// Exposes window
+/// [notifications](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
+///
+/// You cannot directly instantiate this object, it is created internally by the
+/// window.
 pub struct WindowEvents {
 	wnd_ty: WndTy,
 	msgs: UnsafeCell<Vec<StorageMsg>>, // ordinary WM messages

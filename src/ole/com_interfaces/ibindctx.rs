@@ -40,7 +40,10 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::GetObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-getobjectparam)
 	/// method.
 	#[must_use]
-	fn GetObjectParam<T: ole_IUnknown>(&self, key: &str) -> HrResult<T> {
+	fn GetObjectParam<T>(&self, key: &str) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<IBindCtxVT>(self).GetObjectParam)(

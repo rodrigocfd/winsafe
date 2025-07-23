@@ -115,7 +115,10 @@ pub trait shell_IShellFolder: ole_IUnknown {
 	/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
 	/// method.
 	#[must_use]
-	fn CreateViewObject<T: ole_IUnknown>(&self, hwnd_owner: &HWND) -> HrResult<T> {
+	fn CreateViewObject<T>(&self, hwnd_owner: &HWND) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<IShellFolderVT>(self).CreateViewObject)(

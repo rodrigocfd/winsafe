@@ -23,7 +23,8 @@ pub type PFNLVGROUPCOMPARE =
 /// Type alias to
 /// [`PFNPROPSHEETCALLBACK`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nc-prsht-pfnpropsheetcallback)
 /// callback function.
-pub type PFNPROPSHEETCALLBACK = extern "system" fn(hwnd: HWND, uMsg: u32, lParam: isize) -> i32;
+pub type PFNPROPSHEETCALLBACK =
+	extern "system" fn(hwnd: HWND, uMsg: co::PSCB, lParam: isize) -> i32;
 
 /// Type alias to
 /// [`PFNTVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvsortcb)

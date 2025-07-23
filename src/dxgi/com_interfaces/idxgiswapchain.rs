@@ -32,7 +32,10 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	/// [`IDXGISwapChain::GetBuffer`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer)
 	/// method.
 	#[must_use]
-	fn GetBuffer<T: ole_IUnknown>(&self, buffer_index: u32) -> HrResult<T> {
+	fn GetBuffer<T>(&self, buffer_index: u32) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<IDXGISwapChainVT>(self).GetBuffer)(

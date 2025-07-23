@@ -129,7 +129,10 @@ pub fn EnumPrinters4<'a, 'b>(flags: co::PRINTER_ENUM) -> SysResult<Vec<PRINTER_I
 }
 
 #[must_use]
-fn enum_printers<T: Default + Clone>(flags: co::PRINTER_ENUM, lvl: u32) -> SysResult<Vec<T>> {
+fn enum_printers<T>(flags: co::PRINTER_ENUM, lvl: u32) -> SysResult<Vec<T>>
+where
+	T: Default + Clone,
+{
 	let (mut sz_buf, mut count) = (0u32, 0u32);
 	unsafe {
 		ffi::EnumPrintersW(

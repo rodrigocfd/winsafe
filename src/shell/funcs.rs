@@ -275,7 +275,10 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
-pub fn SHBindToParent<T: ole_IUnknown>(pidl: &PIDL) -> HrResult<(T, PIDL)> {
+pub fn SHBindToParent<T>(pidl: &PIDL) -> HrResult<(T, PIDL)>
+where
+	T: ole_IUnknown,
+{
 	unsafe {
 		let mut queried = T::null();
 		let mut pidl_last = PIDL::from_ptr(std::ptr::null_mut()); // belongs to the system
@@ -298,7 +301,10 @@ pub fn SHBindToParent<T: ole_IUnknown>(pidl: &PIDL) -> HrResult<(T, PIDL)> {
 ///
 /// * [`SHGetIDListFromObject`](crate::SHGetIDListFromObject)
 #[must_use]
-pub fn SHCreateItemFromIDList<T: shell_IShellItem>(pidl: &PIDL) -> HrResult<T> {
+pub fn SHCreateItemFromIDList<T>(pidl: &PIDL) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHCreateItemFromIDList(pidl.ptr() as _, pcvoid(&T::IID), queried.as_mut())
@@ -322,10 +328,13 @@ pub fn SHCreateItemFromIDList<T: shell_IShellItem>(pidl: &PIDL) -> HrResult<T> {
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
-pub fn SHCreateItemFromParsingName<T: shell_IShellItem>(
+pub fn SHCreateItemFromParsingName<T>(
 	file_or_folder_path: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
-) -> HrResult<T> {
+) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHCreateItemFromParsingName(
@@ -342,11 +351,14 @@ pub fn SHCreateItemFromParsingName<T: shell_IShellItem>(
 /// [`SHCreateItemFromRelativeName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromrelativename)
 /// function.
 #[must_use]
-pub fn SHCreateItemFromRelativeName<T: shell_IShellItem>(
+pub fn SHCreateItemFromRelativeName<T>(
 	parent: &impl shell_IShellItem,
 	name: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
-) -> HrResult<T> {
+) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHCreateItemFromRelativeName(
@@ -364,11 +376,14 @@ pub fn SHCreateItemFromRelativeName<T: shell_IShellItem>(
 /// [`SHCreateItemInKnownFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateiteminknownfolder)
 /// function.
 #[must_use]
-pub fn SHCreateItemInKnownFolder<T: shell_IShellItem>(
+pub fn SHCreateItemInKnownFolder<T>(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
 	item: &str,
-) -> HrResult<T> {
+) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHCreateItemInKnownFolder(
@@ -410,9 +425,10 @@ pub fn SHCreateShellItemArray(
 /// [`SHCreateShellItemArrayFromShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateshellitemarrayfromshellitem)
 /// function.
 #[must_use]
-pub fn SHCreateShellItemArrayFromShellItem<T: shell_IShellItemArray>(
-	item: &impl shell_IShellItem,
-) -> HrResult<T> {
+pub fn SHCreateShellItemArrayFromShellItem<T>(item: &impl shell_IShellItem) -> HrResult<T>
+where
+	T: shell_IShellItemArray,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHCreateShellItemArrayFromShellItem(item.ptr(), pcvoid(&T::IID), queried.as_mut())
@@ -479,10 +495,10 @@ pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreeP
 /// [`SHGetPropertyStoreFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromidlist)
 /// function.
 #[must_use]
-pub fn SHGetPropertyStoreFromIDList<T: oleaut_IPropertyStore>(
-	pidl: &PIDL,
-	flags: co::GPS,
-) -> HrResult<T> {
+pub fn SHGetPropertyStoreFromIDList<T>(pidl: &PIDL, flags: co::GPS) -> HrResult<T>
+where
+	T: oleaut_IPropertyStore,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHGetPropertyStoreFromIDList(
@@ -499,11 +515,14 @@ pub fn SHGetPropertyStoreFromIDList<T: oleaut_IPropertyStore>(
 /// [`SHGetPropertyStoreFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromparsingname)
 /// function.
 #[must_use]
-pub fn SHGetPropertyStoreFromParsingName<T: oleaut_IPropertyStore>(
+pub fn SHGetPropertyStoreFromParsingName<T>(
 	path: &str,
 	bind_ctx: Option<&impl ole_IBindCtx>,
 	flags: co::GPS,
-) -> HrResult<T> {
+) -> HrResult<T>
+where
+	T: oleaut_IPropertyStore,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::SHGetPropertyStoreFromParsingName(

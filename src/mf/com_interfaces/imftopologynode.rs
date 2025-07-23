@@ -117,7 +117,10 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	/// [`IMFTopologyNode::GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopologynode-getobject)
 	/// method.
 	#[must_use]
-	fn GetObject<T: ole_IUnknown>(&self) -> HrResult<T> {
+	fn GetObject<T>(&self) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe { (vt::<IMFTopologyNodeVT>(self).GetObject)(self.ptr(), queried.as_mut()) })
 			.to_hrresult()

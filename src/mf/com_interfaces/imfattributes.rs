@@ -308,7 +308,10 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::GetUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getunknown)
 	/// method.
 	#[must_use]
-	fn GetUnknown<T: ole_IUnknown>(&self, guid_key: &GUID) -> HrResult<T> {
+	fn GetUnknown<T>(&self, guid_key: &GUID) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<IMFAttributesVT>(self).GetUnknown)(

@@ -63,11 +63,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn BindToHandler<T: ole_IUnknown>(
-		&self,
-		bind_ctx: Option<&impl ole_IBindCtx>,
-		bhid: &co::BHID,
-	) -> HrResult<T> {
+	fn BindToHandler<T>(&self, bind_ctx: Option<&impl ole_IBindCtx>, bhid: &co::BHID) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
 		let mut queried = unsafe { T::null() };
 		HrRet(unsafe {
 			(vt::<IShellItemVT>(self).BindToHandler)(

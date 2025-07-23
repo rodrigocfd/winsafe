@@ -91,11 +91,14 @@ pub fn CoCreateGuid() -> HrResult<GUID> {
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
-pub fn CoCreateInstance<T: ole_IUnknown>(
+pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
 	iunk_outer: Option<&impl ole_IUnknown>,
 	cls_context: co::CLSCTX,
-) -> HrResult<T> {
+) -> HrResult<T>
+where
+	T: ole_IUnknown,
+{
 	let mut queried = unsafe { T::null() };
 	HrRet(unsafe {
 		ffi::CoCreateInstance(
@@ -159,7 +162,10 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 /// Note that this function will lock the COM object, returning a
 /// [`CoLockObjectExternalGuard`](crate::guard::CoLockObjectExternalGuard). The
 /// unlocking is automatically performed by the guard when it goes out of scope.
-pub fn CoLockObjectExternal<T: ole_IUnknown>(obj: &T) -> HrResult<CoLockObjectExternalGuard<T>> {
+pub fn CoLockObjectExternal<T>(obj: &T) -> HrResult<CoLockObjectExternalGuard<T>>
+where
+	T: ole_IUnknown,
+{
 	unsafe {
 		HrRet(ffi::CoLockObjectExternal(obj.ptr(), 1, 0))
 			.to_hrresult()
