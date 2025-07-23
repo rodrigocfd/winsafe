@@ -6,6 +6,7 @@ pub mod hdm;
 pub mod lvm;
 pub mod mcm;
 pub mod pbm;
+pub mod psm;
 pub mod sb;
 pub mod stm;
 pub mod tbm;

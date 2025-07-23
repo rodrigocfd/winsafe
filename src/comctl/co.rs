@@ -562,6 +562,13 @@ const_bitflag! { ICC: u32;
 	WIN95_CLASSES 0x0000_00ff
 }
 
+const_ordinary! { ID_PB: u32;
+	/// [`psm::GetResult`](crate::msg::psm::GetResult) return type (`i32`).
+	=>
+	RESTARTWINDOWS 0x2
+	REBOOTSYSTEM Self::RESTARTWINDOWS.0 | 0x1
+}
+
 const_ordinary! { IDB: usize;
 	/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
 	=>
@@ -1502,6 +1509,18 @@ const_ordinary! { PBST: u32;
 	PAUSED 0x0003
 }
 
+const_ordinary! { PSBTN: u32;
+	/// [`psm::PressButton`](crate::msg::psm::PressButton) `index` (`u32`).
+	=>
+	BACK 0
+	NEXT 1
+	FINISH 2
+	OK 3
+	APPLYNOW 4
+	CANCEL 5
+	HELP 6
+}
+
 const_bitflag! { PSH: u32;
 	/// [`PROPSHEETHEADER`](crate::PROPSHEETHEADER) `dwFlags` (`u32`).
 	=>
@@ -1536,7 +1555,7 @@ const_bitflag! { PSH: u32;
 }
 
 const_wm! { PSM;
-	/// Property pages
+	/// Property sheet
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-messages)
 	/// (`u32`).
 	=>
@@ -1611,6 +1630,26 @@ const_bitflag! { PSP: u32;
 	USEHEADERTITLE 0x0000_1000
 	USEHEADERSUBTITLE 0x0000_2000
 	USEFUSIONCONTEXT 0x0000_4000
+}
+
+const_bitflag! { PSWIZB: u32;
+	/// [`psm::EnableWizButtons`](crate::msg::psm::EnableWizButtons) buttons
+	/// (`u32`).
+	=>
+	BACK 0x0000_0001
+	NEXT 0x0000_0002
+	FINISH 0x0000_0004
+	DISABLEDFINISH 0x0000_0008
+	CANCEL 0x0000_0010
+}
+
+const_ordinary! { PSWIZBF: u32;
+	/// [`psm::SetWizButtons`](crate::msg::psm::SetWizButtons) `elev_icon`
+	/// (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ELEVATIONREQUIRED 0x0000_0001
 }
 
 const_wm! { RB;

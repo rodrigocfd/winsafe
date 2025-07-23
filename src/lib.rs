@@ -205,6 +205,15 @@ pub mod msg {
 	}
 
 	#[cfg(feature = "comctl")]
+	pub mod psm {
+		//! Property sheet
+		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-messages),
+		//! whose constants have [`PSM`](crate::co::PSM) prefix.
+
+		pub use super::super::comctl::messages::psm::*;
+	}
+
+	#[cfg(feature = "comctl")]
 	pub mod sb {
 		//! Status bar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
