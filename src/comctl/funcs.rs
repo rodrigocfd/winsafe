@@ -26,6 +26,12 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 
 /// [`PropertySheet`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-propertysheetw)
 /// function.
+///
+/// # Safety
+///
+/// This function will use pointers declared in
+/// [`PROPSHEETHEADER`](crate::PROPSHEETHEADER), make sure these pointers are
+/// correct.
 pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 	let ret = unsafe { ffi::PropertySheetW(pcvoid(header)) };
 	match GetLastError() {
