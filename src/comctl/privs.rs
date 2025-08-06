@@ -30,7 +30,7 @@ const_values_num_privs! {
 	MCM_FIRST u32 = 0x1000
 	MCN_FIRST i32 = -746
 	NM_FIRST i32 = 0
-	PSN_FIRST i32 = 200
+	PSN_FIRST i32 = -200
 	RBN_FIRST i32 = -831
 	SBN_FIRST i32 = -880
 	TBN_FIRST i32 = -700
