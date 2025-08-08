@@ -137,7 +137,13 @@ impl DlgBase {
 		}
 
 		if let Some(user_ret) = user_ret {
-			Ok(user_ret)
+			match p.msg_id {
+				co::WM::GETDLGCODE => unsafe {
+					hwnd.SetWindowLongPtr(co::GWLP::DWLP_MSGRESULT, user_ret); // WM_GETDLGCODE special case
+					Ok(1) // TRUE
+				},
+				_ => Ok(user_ret),
+			}
 		} else if at_least_one_before || at_least_one_after {
 			Ok(1) // TRUE
 		} else {
