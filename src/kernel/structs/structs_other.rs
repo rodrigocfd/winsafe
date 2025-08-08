@@ -178,7 +178,7 @@ impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
 	///
 	/// Panics if `ValueType` field is invalid.
 	#[must_use]
-	pub fn Values(&self) -> ClaimSecurityAttr {
+	pub fn Values(&self) -> ClaimSecurityAttr<'_> {
 		unsafe {
 			match self.ValueType {
 				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::INT64 => ClaimSecurityAttr::Int64(

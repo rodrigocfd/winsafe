@@ -99,7 +99,7 @@ impl HINSTANCE {
 	///     .GetClassInfoEx("SOME_CLASS_NAME")?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	pub fn GetClassInfoEx(&self, class_name: &str) -> SysResult<(ATOM, WNDCLASSEX)> {
+	pub fn GetClassInfoEx(&self, class_name: &str) -> SysResult<(ATOM, WNDCLASSEX<'_>)> {
 		let mut wcx = WNDCLASSEX::default();
 		match unsafe {
 			ffi::GetClassInfoExW(

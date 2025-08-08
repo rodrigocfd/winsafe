@@ -162,7 +162,7 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 /// Note that this function will lock the COM object, returning a
 /// [`CoLockObjectExternalGuard`](crate::guard::CoLockObjectExternalGuard). The
 /// unlocking is automatically performed by the guard when it goes out of scope.
-pub fn CoLockObjectExternal<T>(obj: &T) -> HrResult<CoLockObjectExternalGuard<T>>
+pub fn CoLockObjectExternal<T>(obj: &T) -> HrResult<CoLockObjectExternalGuard<'_, T>>
 where
 	T: ole_IUnknown,
 {

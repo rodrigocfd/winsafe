@@ -247,7 +247,7 @@ pub struct SID_AND_ATTRIBUTES_HASH<'a> {
 impl_default!(SID_AND_ATTRIBUTES_HASH, 'a);
 
 impl<'a> SID_AND_ATTRIBUTES_HASH<'a> {
-	pub_fn_array_buf_get_set!('a, SidAttr, set_SidAttr, SidCount, SID_AND_ATTRIBUTES);
+	pub_fn_array_buf_get_set!('a, SidAttr, set_SidAttr, SidCount, SID_AND_ATTRIBUTES<'_>);
 }
 
 /// [`SID_IDENTIFIER_AUTHORITY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_identifier_authority)

@@ -30,7 +30,7 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::GetBindOptions`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-getbindoptions)
 	/// method.
 	#[must_use]
-	fn GetBindOptions(&self) -> HrResult<BIND_OPTS3> {
+	fn GetBindOptions(&self) -> HrResult<BIND_OPTS3<'_, '_, '_, '_, '_, '_, '_, '_>> {
 		let mut bo = BIND_OPTS3::default();
 		HrRet(unsafe { (vt::<IBindCtxVT>(self).GetBindOptions)(self.ptr(), pvoid(&mut bo)) })
 			.to_hrresult()

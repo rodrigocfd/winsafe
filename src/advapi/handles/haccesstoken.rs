@@ -145,7 +145,7 @@ impl HACCESSTOKEN {
 	pub fn GetTokenInformation(
 		&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
-	) -> SysResult<TokenInfo> {
+	) -> SysResult<TokenInfo<'_, '_, '_, '_, '_, '_>> {
 		let mut num_bytes = 0u32;
 		match BoolRet(unsafe {
 			ffi::GetTokenInformation(

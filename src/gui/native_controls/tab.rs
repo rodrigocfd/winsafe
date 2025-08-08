@@ -206,7 +206,7 @@ impl Tab {
 
 	/// Item methods.
 	#[must_use]
-	pub const fn items(&self) -> TabItems {
+	pub const fn items(&self) -> TabItems<'_> {
 		TabItems::new(self)
 	}
 

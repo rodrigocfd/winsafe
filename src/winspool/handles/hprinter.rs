@@ -115,7 +115,9 @@ impl HPRINTER {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_2`](crate::PRINTER_INFO_2).
 	#[must_use]
-	pub fn GetPrinter2(&self) -> SysResult<PRINTER_INFO_2> {
+	pub fn GetPrinter2(
+		&self,
+	) -> SysResult<PRINTER_INFO_2<'_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_, '_>> {
 		let mut nfo = PRINTER_INFO_2::default();
 		let mut needed = 0u32;
 
@@ -135,7 +137,7 @@ impl HPRINTER {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_3`](crate::PRINTER_INFO_3).
 	#[must_use]
-	pub fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3> {
+	pub fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3<'_>> {
 		let mut nfo = PRINTER_INFO_3::default();
 		let mut needed = 0u32;
 
@@ -155,7 +157,7 @@ impl HPRINTER {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_4`](crate::PRINTER_INFO_4).
 	#[must_use]
-	pub fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4> {
+	pub fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4<'_, '_>> {
 		let mut nfo = PRINTER_INFO_4::default();
 		let mut needed = 0u32;
 
