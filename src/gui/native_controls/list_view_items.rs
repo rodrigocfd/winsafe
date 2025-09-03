@@ -69,16 +69,15 @@ impl<'a, T> ListViewItems<'a, T> {
 
 		let mut lvi = LVITEM::default();
 		lvi.iItem = 0x0fff_ffff; // insert as the last item
-		lvi.mask = co::LVIF::TEXT;
+		lvi.mask = co::LVIF::TEXT | co::LVIF::IMAGE;
 
 		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
 		lvi.set_pszText(Some(&mut wtext));
 
-		if let Some(icon_index) = icon_index {
-			// will it have an icon?
-			lvi.mask |= co::LVIF::IMAGE;
-			lvi.iImage = icon_index as _;
-		}
+		lvi.iImage = match icon_index {
+			Some(i) => i as _,
+			None => -1,
+		};
 
 		if TypeId::of::<T>() != TypeId::of::<()>() {
 			// user defined the generic type
@@ -259,21 +258,13 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// Returns the last item, if any.
 	pub fn last(&self) -> Option<ListViewItem<'a, T>> {
 		let count = self.count();
-		if count > 0 {
-			Some(self.get(count - 1))
-		} else {
-			None
-		}
+		if count > 0 { Some(self.get(count - 1)) } else { None }
 	}
 
 	/// Returns the last selected item, if any.
 	pub fn last_selected(&self) -> Option<ListViewItem<'a, T>> {
 		let count = self.selected_count();
-		if count > 0 {
-			Some(self.get(count - 1))
-		} else {
-			None
-		}
+		if count > 0 { Some(self.get(count - 1)) } else { None }
 	}
 
 	/// Sets or remove the selection for all items by sending an
