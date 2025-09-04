@@ -2297,8 +2297,9 @@ const_ordinary! { SB_REQ: u16;
 const_ordinary! { SBB: i32;
 	/// [`HWND::EnableScrollBar`](crate::HWND::EnableScrollBar),
 	/// [`HWND::GetScrollInfo`](crate::HWND::GetScrollInfo),
-	/// [`HWND::SetScrollInfo`](crate::HWND::SetScrollInfo) and
-	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) `bar` (`i32`).
+	/// [`HWND::SetScrollInfo`](crate::HWND::SetScrollInfo),
+	/// [`HWND::SetScrollRange`](crate::HWND::SetScrollRange) and
+	/// [`HWND::ShowScrollBar`](crate::HWND::ShowScrollBar) `bar` (`i32`).
 	///
 	/// Originally has `SB` prefix.
 	=>

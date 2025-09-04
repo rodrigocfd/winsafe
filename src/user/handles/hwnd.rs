@@ -1510,6 +1510,12 @@ impl HWND {
 		unsafe { ffi::SetScrollInfo(self.ptr(), bar.raw(), pcvoid(si), redraw as _) }
 	}
 
+	/// [`ShowScrollBar`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showscrollbar)
+	/// function.
+	pub fn ShowScrollBar(&self, bar: co::SBB, show: bool) -> SysResult<()> {
+		BoolRet(unsafe { ffi::ShowScrollBar(self.ptr(), bar.raw(), show as _) }).to_sysresult()
+	}
+
 	/// [`SetScrollPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setscrollpos)
 	/// function.
 	pub fn SetScrollPos(&self, b: co::SBB, pos: i32, redraw: bool) -> SysResult<i32> {

@@ -269,6 +269,7 @@ extern_sys! { "user32";
 	ShowCaret(HANDLE) -> BOOL
 	ShowCursor(BOOL) -> i32
 	ShowOwnedPopups(HANDLE, BOOL) -> BOOL
+	ShowScrollBar(HANDLE, i32, BOOL) -> BOOL
 	ShowWindow(HANDLE, i32) -> BOOL
 	ShowWindowAsync(HANDLE, i32) -> BOOL
 	ShutdownBlockReasonCreate(HANDLE, PCSTR) -> BOOL
