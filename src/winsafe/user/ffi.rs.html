@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\ffi.rs`."><title>ffi.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-069232aa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (7d82b83ed 2025-08-06)" data-channel="nightly" data-search-js="search-fa3e91e5.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-68b7e25d.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-eebb9057.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\user/</div>ffi.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\ffi.rs`."><title>ffi.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (07d246fc6 2025-08-31)" data-channel="nightly" data-search-js="search-449aa9bf.js" data-stringdex-js="stringdex-0e748618.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\user/</div>ffi.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a><span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
 <a href=#4 id=4 data-nosnippet>4</a>	ChooseColorW(PVOID) -&gt; BOOL
@@ -269,33 +269,34 @@
 <a href=#269 id=269 data-nosnippet>269</a>	ShowCaret(HANDLE) -&gt; BOOL
 <a href=#270 id=270 data-nosnippet>270</a>	ShowCursor(BOOL) -&gt; i32
 <a href=#271 id=271 data-nosnippet>271</a>	ShowOwnedPopups(HANDLE, BOOL) -&gt; BOOL
-<a href=#272 id=272 data-nosnippet>272</a>	ShowWindow(HANDLE, i32) -&gt; BOOL
-<a href=#273 id=273 data-nosnippet>273</a>	ShowWindowAsync(HANDLE, i32) -&gt; BOOL
-<a href=#274 id=274 data-nosnippet>274</a>	ShutdownBlockReasonCreate(HANDLE, PCSTR) -&gt; BOOL
-<a href=#275 id=275 data-nosnippet>275</a>	ShutdownBlockReasonDestroy(HANDLE) -&gt; BOOL
-<a href=#276 id=276 data-nosnippet>276</a>	ShutdownBlockReasonQuery(HANDLE, PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
-<a href=#277 id=277 data-nosnippet>277</a>	SoundSentry() -&gt; BOOL
-<a href=#278 id=278 data-nosnippet>278</a>	SubtractRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
-<a href=#279 id=279 data-nosnippet>279</a>	SwapMouseButton(BOOL) -&gt; BOOL
-<a href=#280 id=280 data-nosnippet>280</a>	SwitchDesktop(HANDLE) -&gt; BOOL
-<a href=#281 id=281 data-nosnippet>281</a>	SystemParametersInfoW(u32, u32, PVOID, u32) -&gt; BOOL
-<a href=#282 id=282 data-nosnippet>282</a>	TileWindows(HANDLE, u32, PCVOID, u32, PCVOID) -&gt; u16
-<a href=#283 id=283 data-nosnippet>283</a>	TrackMouseEvent(PVOID) -&gt; BOOL
-<a href=#284 id=284 data-nosnippet>284</a>	TrackPopupMenu(HANDLE, u32, i32, i32, i32, HANDLE, PCVOID) -&gt; BOOL
-<a href=#285 id=285 data-nosnippet>285</a>	TranslateAcceleratorW(HANDLE, HANDLE, PVOID) -&gt; i32
-<a href=#286 id=286 data-nosnippet>286</a>	TranslateMessage(PCVOID) -&gt; BOOL
-<a href=#287 id=287 data-nosnippet>287</a>	UnhookWindowsHookEx(HANDLE) -&gt; BOOL
-<a href=#288 id=288 data-nosnippet>288</a>	UnionRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
-<a href=#289 id=289 data-nosnippet>289</a>	UnregisterClassW(PCSTR, HANDLE) -&gt; BOOL
-<a href=#290 id=290 data-nosnippet>290</a>	UnregisterHotKey(HANDLE, i32) -&gt; BOOL
-<a href=#291 id=291 data-nosnippet>291</a>	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -&gt; BOOL
-<a href=#292 id=292 data-nosnippet>292</a>	UpdateWindow(HANDLE) -&gt; BOOL
-<a href=#293 id=293 data-nosnippet>293</a>	ValidateRect(HANDLE, PCVOID) -&gt; BOOL
-<a href=#294 id=294 data-nosnippet>294</a>	ValidateRgn(HANDLE, HANDLE) -&gt; BOOL
-<a href=#295 id=295 data-nosnippet>295</a>	WaitForInputIdle(HANDLE, u32) -&gt; u32
-<a href=#296 id=296 data-nosnippet>296</a>	WaitMessage() -&gt; BOOL
-<a href=#297 id=297 data-nosnippet>297</a>	WindowFromDC(HANDLE) -&gt; HANDLE
-<a href=#298 id=298 data-nosnippet>298</a>	WindowFromPhysicalPoint(i32, i32) -&gt; HANDLE
-<a href=#299 id=299 data-nosnippet>299</a>	WindowFromPoint(i32, i32) -&gt; HANDLE
-<a href=#300 id=300 data-nosnippet>300</a>	WinHelpW(HANDLE, PCSTR, u32, usize) -&gt; BOOL
-<a href=#301 id=301 data-nosnippet>301</a>}</code></pre></div></section></main></body></html>
+<a href=#272 id=272 data-nosnippet>272</a>	ShowScrollBar(HANDLE, i32, BOOL) -&gt; BOOL
+<a href=#273 id=273 data-nosnippet>273</a>	ShowWindow(HANDLE, i32) -&gt; BOOL
+<a href=#274 id=274 data-nosnippet>274</a>	ShowWindowAsync(HANDLE, i32) -&gt; BOOL
+<a href=#275 id=275 data-nosnippet>275</a>	ShutdownBlockReasonCreate(HANDLE, PCSTR) -&gt; BOOL
+<a href=#276 id=276 data-nosnippet>276</a>	ShutdownBlockReasonDestroy(HANDLE) -&gt; BOOL
+<a href=#277 id=277 data-nosnippet>277</a>	ShutdownBlockReasonQuery(HANDLE, PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+<a href=#278 id=278 data-nosnippet>278</a>	SoundSentry() -&gt; BOOL
+<a href=#279 id=279 data-nosnippet>279</a>	SubtractRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
+<a href=#280 id=280 data-nosnippet>280</a>	SwapMouseButton(BOOL) -&gt; BOOL
+<a href=#281 id=281 data-nosnippet>281</a>	SwitchDesktop(HANDLE) -&gt; BOOL
+<a href=#282 id=282 data-nosnippet>282</a>	SystemParametersInfoW(u32, u32, PVOID, u32) -&gt; BOOL
+<a href=#283 id=283 data-nosnippet>283</a>	TileWindows(HANDLE, u32, PCVOID, u32, PCVOID) -&gt; u16
+<a href=#284 id=284 data-nosnippet>284</a>	TrackMouseEvent(PVOID) -&gt; BOOL
+<a href=#285 id=285 data-nosnippet>285</a>	TrackPopupMenu(HANDLE, u32, i32, i32, i32, HANDLE, PCVOID) -&gt; BOOL
+<a href=#286 id=286 data-nosnippet>286</a>	TranslateAcceleratorW(HANDLE, HANDLE, PVOID) -&gt; i32
+<a href=#287 id=287 data-nosnippet>287</a>	TranslateMessage(PCVOID) -&gt; BOOL
+<a href=#288 id=288 data-nosnippet>288</a>	UnhookWindowsHookEx(HANDLE) -&gt; BOOL
+<a href=#289 id=289 data-nosnippet>289</a>	UnionRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
+<a href=#290 id=290 data-nosnippet>290</a>	UnregisterClassW(PCSTR, HANDLE) -&gt; BOOL
+<a href=#291 id=291 data-nosnippet>291</a>	UnregisterHotKey(HANDLE, i32) -&gt; BOOL
+<a href=#292 id=292 data-nosnippet>292</a>	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -&gt; BOOL
+<a href=#293 id=293 data-nosnippet>293</a>	UpdateWindow(HANDLE) -&gt; BOOL
+<a href=#294 id=294 data-nosnippet>294</a>	ValidateRect(HANDLE, PCVOID) -&gt; BOOL
+<a href=#295 id=295 data-nosnippet>295</a>	ValidateRgn(HANDLE, HANDLE) -&gt; BOOL
+<a href=#296 id=296 data-nosnippet>296</a>	WaitForInputIdle(HANDLE, u32) -&gt; u32
+<a href=#297 id=297 data-nosnippet>297</a>	WaitMessage() -&gt; BOOL
+<a href=#298 id=298 data-nosnippet>298</a>	WindowFromDC(HANDLE) -&gt; HANDLE
+<a href=#299 id=299 data-nosnippet>299</a>	WindowFromPhysicalPoint(i32, i32) -&gt; HANDLE
+<a href=#300 id=300 data-nosnippet>300</a>	WindowFromPoint(i32, i32) -&gt; HANDLE
+<a href=#301 id=301 data-nosnippet>301</a>	WinHelpW(HANDLE, PCSTR, u32, usize) -&gt; BOOL
+<a href=#302 id=302 data-nosnippet>302</a>}</code></pre></div></section></main></body></html>
