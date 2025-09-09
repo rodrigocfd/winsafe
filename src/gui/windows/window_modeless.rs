@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{privs::*, *};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -74,6 +74,18 @@ impl WindowModeless {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
 		Self(RawDlg::Dlg(DlgModeless::new(parent, dlg_id, position)))
+	}
+
+	/// Exposes methods to handle the basic window messages, plus timer and
+	/// native control notifications.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
+	#[must_use]
+	pub fn on(&self) -> &WindowEventsAll {
+		self.as_ref().on()
 	}
 
 	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)

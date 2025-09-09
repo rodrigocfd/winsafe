@@ -17,6 +17,7 @@ mod trackbar_events;
 mod tree_view_events;
 mod up_down_events;
 mod window_events;
+mod window_events_all;
 
 pub(in crate::gui) use base_ctrl_events::BaseCtrlEvents;
 
@@ -36,3 +37,4 @@ pub use trackbar_events::TrackbarEvents;
 pub use tree_view_events::TreeViewEvents;
 pub use up_down_events::UpDownEvents;
 pub use window_events::WindowEvents;
+pub use window_events_all::WindowEventsAll;

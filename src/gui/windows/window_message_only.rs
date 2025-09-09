@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{privs::*, *};
+use crate::gui::{events::*, privs::*, *};
 use crate::prelude::*;
 use crate::user::privs::*;
 
@@ -75,5 +75,17 @@ impl WindowMessageOnly {
 			IdMenu::None,
 			&hinst,
 		);
+	}
+
+	/// Exposes methods to handle the basic window messages, plus timer and
+	/// native control notifications.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
+	#[must_use]
+	pub fn on(&self) -> &WindowEventsAll {
+		self.as_ref().on()
 	}
 }

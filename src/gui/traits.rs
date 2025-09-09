@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::msg::*;
 
 /// Any window. Exposes the underlying window handle.
@@ -60,18 +60,6 @@ pub trait GuiWindow: Send {
 /// ```
 #[allow(private_bounds)]
 pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
-	/// Exposes methods to handle the basic window messages, plus timer and
-	/// native control notifications.
-	///
-	/// # Panics
-	///
-	/// Panics if the window is already created. Events must be set before
-	/// window creation.
-	#[must_use]
-	fn on(&self) -> &WindowEvents {
-		self.as_ref().on()
-	}
-
 	/// This method calls [`std::thread::spawn`], but it allows the returning of
 	/// an error value. This error value will be forwarded to the original UI
 	/// thread, allowing it to be caught at

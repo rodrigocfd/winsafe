@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{privs::*, *};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -76,6 +76,18 @@ impl WindowModal {
 			RawDlg::Raw(r) => r.show_modal(parent),
 			RawDlg::Dlg(d) => Ok(d.show_modal(parent)),
 		}
+	}
+
+	/// Exposes methods to handle the basic window messages, plus timer and
+	/// native control notifications.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
+	#[must_use]
+	pub fn on(&self) -> &WindowEventsAll {
+		self.as_ref().on()
 	}
 
 	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)

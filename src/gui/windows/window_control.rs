@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{privs::*, *};
+use crate::gui::{events::*, privs::*, *};
 use crate::prelude::*;
 
 /// Switches between raw and dialog implementations.
@@ -92,5 +92,17 @@ impl WindowControl {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
 		Self(RawDlg::Dlg(DlgControl::new(parent, dlg_id, position, resize_behavior, ctrl_id)))
+	}
+
+	/// Exposes methods to handle the basic window messages, plus timer and
+	/// native control notifications.
+	///
+	/// # Panics
+	///
+	/// Panics if the window is already created. Events must be set before
+	/// window creation.
+	#[must_use]
+	pub fn on(&self) -> &WindowEventsAll {
+		self.as_ref().on()
 	}
 }

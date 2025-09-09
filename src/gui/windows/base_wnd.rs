@@ -17,9 +17,9 @@ pub(in crate::gui) struct BaseWnd {
 	hwnd: HWND,
 	wnd_ty: WndTy,
 	layout: Layout,
-	before_events: WindowEvents,
-	user_events: WindowEvents,
-	after_events: WindowEvents,
+	before_events: WindowEventsAll,
+	user_events: WindowEventsAll,
+	after_events: WindowEventsAll,
 }
 
 impl BaseWnd {
@@ -31,9 +31,9 @@ impl BaseWnd {
 			hwnd: HWND::NULL,
 			wnd_ty,
 			layout: Layout::new(),
-			before_events: WindowEvents::new(wnd_ty),
-			user_events: WindowEvents::new(wnd_ty),
-			after_events: WindowEvents::new(wnd_ty),
+			before_events: WindowEventsAll::new(wnd_ty),
+			user_events: WindowEventsAll::new(wnd_ty),
+			after_events: WindowEventsAll::new(wnd_ty),
 		};
 		new_self.default_message_handlers();
 		new_self
@@ -52,18 +52,18 @@ impl BaseWnd {
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn before_on(&self) -> &WindowEvents {
+	pub(in crate::gui) fn before_on(&self) -> &WindowEventsAll {
 		&self.before_events
 	}
 	#[must_use]
-	pub(in crate::gui) fn on(&self) -> &WindowEvents {
+	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
 		&self.user_events // user events can be overriden; only the last one is executed
 	}
 	#[must_use]
-	pub(in crate::gui) fn after_on(&self) -> &WindowEvents {
+	pub(in crate::gui) fn after_on(&self) -> &WindowEventsAll {
 		&self.after_events
 	}
 
