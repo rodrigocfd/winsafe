@@ -6,17 +6,17 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct HeaderObj {
 	base: BaseCtrl,
-	events: HeaderEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { Header: HeaderObj => HeaderEvents;
+native_ctrl! { Header: HeaderObj => GuiEventsHeader;
 	/// Native
 	/// [header](https://learn.microsoft.com/en-us/windows/win32/controls/header-controls)
 	/// control.
@@ -35,7 +35,7 @@ impl Header {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(HeaderObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: HeaderEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -83,7 +83,7 @@ impl Header {
 	) -> Self {
 		let new_self = Self(Arc::pin(HeaderObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: HeaderEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -107,7 +107,7 @@ impl Header {
 		let ctrl_id = auto_id::next();
 		let new_self = Self(Arc::pin(HeaderObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: HeaderEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

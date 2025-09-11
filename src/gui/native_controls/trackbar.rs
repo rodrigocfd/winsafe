@@ -4,17 +4,17 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct TrackbarObj {
 	base: BaseCtrl,
-	events: TrackbarEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { Trackbar: TrackbarObj => TrackbarEvents;
+native_ctrl! { Trackbar: TrackbarObj => GuiEventsTrackbar;
 	/// Native
 	/// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
 	/// control.
@@ -33,7 +33,7 @@ impl Trackbar {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(TrackbarObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TrackbarEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -82,7 +82,7 @@ impl Trackbar {
 	) -> Self {
 		let new_self = Self(Arc::pin(TrackbarObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TrackbarEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

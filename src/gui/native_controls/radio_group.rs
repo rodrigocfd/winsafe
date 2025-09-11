@@ -4,12 +4,12 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::decl::*;
-use crate::gui::{events::*, *};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 struct RadioGroupObj {
 	radios: Vec<RadioButton>,
-	events: RadioGroupEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
@@ -55,7 +55,7 @@ impl RadioGroup {
 
 		Self(Arc::pin(RadioGroupObj {
 			radios,
-			events: RadioGroupEvents::new(parent, ctrl_ids),
+			events: BaseCtrlEvents::new_many(parent, ctrl_ids),
 			_pin: PhantomPinned,
 		}))
 	}
@@ -85,7 +85,7 @@ impl RadioGroup {
 
 		Self(Arc::pin(RadioGroupObj {
 			radios,
-			events: RadioGroupEvents::new(parent, ctrl_ids),
+			events: BaseCtrlEvents::new_many(parent, ctrl_ids),
 			_pin: PhantomPinned,
 		}))
 	}
@@ -97,7 +97,7 @@ impl RadioGroup {
 	/// Panics if the controls are already created. Events must be set before
 	/// control creation.
 	#[must_use]
-	pub fn on(&self) -> &RadioGroupEvents {
+	pub fn on(&self) -> &impl GuiEventsRadioGroup {
 		if *self.0.radios[0].hwnd() != HWND::NULL {
 			panic!("Cannot add events after control creation.");
 		}

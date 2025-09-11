@@ -34,6 +34,7 @@ mod up_down;
 
 pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::base_ctrl::BaseCtrl;
+	pub(in crate::gui) use super::tree_view_items::{TreeViewChildItemIter, TreeViewItemIter};
 }
 
 pub mod decl {

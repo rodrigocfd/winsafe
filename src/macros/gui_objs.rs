@@ -3,7 +3,7 @@
 /// Declares a native control, optionally with a single generic parameter.
 macro_rules! native_ctrl {
 	(
-		$name:ident : $innerobj:ty $( , $genp:tt )? $( => $events:ty )?;
+		$name:ident : $innerobj:ty $( , $genp:tt )? $( => $events:ident )?;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -48,7 +48,7 @@ macro_rules! native_ctrl {
 			/// Panics if the control or the parent window are already created. Events
 			/// must be set before control and parent window creation.
 			#[must_use]
-			pub fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
+			pub fn on_subclass(&self) -> &impl crate::prelude::GuiEventsWindow {
 				self.0.base.on_subclass()
 			}
 
@@ -60,7 +60,7 @@ macro_rules! native_ctrl {
 				/// Panics if the control is already created. Events must be set before
 				/// control creation.
 				#[must_use]
-				pub fn on(&self) -> &$events {
+				pub fn on(&self) -> &impl $events {
 					if *self.hwnd() != crate::HWND::NULL {
 						panic!("Cannot add events after control creation.");
 					}

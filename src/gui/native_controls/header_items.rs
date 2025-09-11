@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{iterators::*, *};
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -64,5 +64,50 @@ impl<'a> HeaderItems<'a> {
 	pub fn last(&self) -> SysResult<Option<HeaderItem<'a>>> {
 		let count = self.count()?;
 		Ok(if count > 0 { Some(self.get(count - 1)) } else { None })
+	}
+}
+
+struct HeaderItemIter<'a> {
+	owner: &'a Header,
+	front_idx: u32,
+	past_back_idx: u32,
+}
+
+impl<'a> Iterator for HeaderItemIter<'a> {
+	type Item = HeaderItem<'a>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for HeaderItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
+	}
+}
+
+impl<'a> HeaderItemIter<'a> {
+	#[must_use]
+	fn new(owner: &'a Header) -> SysResult<Self> {
+		Ok(Self {
+			owner,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<HeaderItem<'a>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let item = self.owner.items().get(our_idx);
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }

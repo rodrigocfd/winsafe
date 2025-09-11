@@ -4,7 +4,7 @@ use crate::msg::*;
 
 /// Message to be used on `expect()` of internal calls, which are not supposed
 /// to fail.
-pub(crate) const DONTFAIL: &str = "GUI internals are not supposed to fail.";
+pub(in crate::gui) const DONTFAIL: &str = "GUI internals are not supposed to fail.";
 
 /// Identifies whether a window is dialog-based.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -49,7 +49,7 @@ pub(in crate::gui) mod quit_error {
 	pub(in crate::gui) fn post_quit_error(src_msg: WndMsg, err: Box<dyn Error + Send + Sync>) {
 		{
 			let mut msg_error = QUIT_ERROR.lock().unwrap();
-			*msg_error = Some(MsgError::new(src_msg, err)); // store the error, so Base::run_main_loop() can grab it
+			*msg_error = Some(MsgError::new(src_msg, err)); // store the error, so the main window loop can grab it
 		};
 		PostQuitMessage(-1); // this -1 will be discarded in the main loop
 	}

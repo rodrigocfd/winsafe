@@ -1,30 +1,27 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 
-/// Exposes date and time picker control
+/// This trait is enabled with the `gui` feature, and exposes date and time
+/// picker control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
 /// is the real responsible for the child event handling.
 ///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct DateTimePickerEvents(BaseCtrlEvents);
-
-impl DateTimePickerEvents {
-	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEvents::new(parent, ctrl_id))
-	}
-
-	pub_fn_nfy_noparm_noret! { dtn_close_up, co::DTN::CLOSEUP;
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait GuiEventsDateTimePicker: priv_ctrl_events::GuiEvents {
+	fn_nfy_noparm_noret! { dtn_close_up, co::DTN::CLOSEUP;
 		/// [`DTN_CLOSEUP`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-closeup)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { dtn_date_time_change, co::DTN::DATETIMECHANGE, NMDATETIMECHANGE;
+	fn_nfy_withparm_noret! { dtn_date_time_change, co::DTN::DATETIMECHANGE, NMDATETIMECHANGE;
 		/// [`DTN_DATETIMECHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
 		///
@@ -47,38 +44,40 @@ impl DateTimePickerEvents {
 		/// ```
 	}
 
-	pub_fn_nfy_noparm_noret! { dtn_drop_down, co::DTN::DROPDOWN;
+	fn_nfy_noparm_noret! { dtn_drop_down, co::DTN::DROPDOWN;
 		/// [`DTN_DROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-dropdown)
 		/// notification.
 	}
 
-	pub_fn_nfy_withmutparm_noret! { dtn_format, co::DTN::FORMAT, NMDATETIMEFORMAT;
+	fn_nfy_withmutparm_noret! { dtn_format, co::DTN::FORMAT, NMDATETIMEFORMAT;
 		/// [`DTN_FORMAT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-format)
 		/// notification.
 	}
 
-	pub_fn_nfy_withmutparm_noret! { dtn_format_query, co::DTN::FORMATQUERY, NMDATETIMEFORMATQUERY;
+	fn_nfy_withmutparm_noret! { dtn_format_query, co::DTN::FORMATQUERY, NMDATETIMEFORMATQUERY;
 		/// [`DTN_FORMATQUERY`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-formatquery)
 		/// notification.
 	}
 
-	pub_fn_nfy_withmutparm_noret! { dtn_user_string, co::DTN::USERSTRING, NMDATETIMESTRING;
+	fn_nfy_withmutparm_noret! { dtn_user_string, co::DTN::USERSTRING, NMDATETIMESTRING;
 		/// [`DTN_USERSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-userstring)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { dtn_wm_key_down, co::DTN::WMKEYDOWN, NMDATETIMEWMKEYDOWN;
+	fn_nfy_withparm_noret! { dtn_wm_key_down, co::DTN::WMKEYDOWN, NMDATETIMEWMKEYDOWN;
 		/// [`DTN_WMKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-wmkeydown)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS;
+	fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-date-time)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS;
+	fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS;
 		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-date-time-)
 		/// notification.
 	}
 }
+
+impl GuiEventsDateTimePicker for BaseCtrlEvents {}

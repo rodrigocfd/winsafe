@@ -5,16 +5,16 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::prelude::*;
 
 struct ComboBoxObj {
 	base: BaseCtrl,
-	events: ComboBoxEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { ComboBox: ComboBoxObj => ComboBoxEvents;
+native_ctrl! { ComboBox: ComboBoxObj => GuiEventsComboBox;
 	/// Native
 	/// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 	/// control.
@@ -65,7 +65,7 @@ impl ComboBox {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(ComboBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ComboBoxEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -118,7 +118,7 @@ impl ComboBox {
 
 		let new_self = Self(Arc::pin(ComboBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ComboBoxEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

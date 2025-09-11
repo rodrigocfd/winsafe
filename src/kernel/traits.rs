@@ -109,9 +109,16 @@ pub trait Handle:
 	}
 }
 
-/// A system error which can be formatted with
+/// This trait is enabled with the `kernel` feature, and is implemented by all
+/// system error types which can be formatted with
 /// [`FormatMessage`](crate::FormatMessage), exhibiting a description string
 /// provided by the OS.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait SystemError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
 	/// [`FormatMessage`](crate::FormatMessage).

@@ -6,18 +6,18 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct TabObj {
 	base: BaseCtrl,
-	events: TabEvents,
+	events: BaseCtrlEvents,
 	children: Vec<(String, Box<dyn AsRef<WindowControl>>)>, // title + content
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { Tab: TabObj => TabEvents;
+native_ctrl! { Tab: TabObj => GuiEventsTab;
 	/// Native
 	/// [tab](https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls)
 	/// control.
@@ -39,7 +39,7 @@ impl Tab {
 
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TabEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			children,
 			_pin: PhantomPinned,
 		}));
@@ -93,7 +93,7 @@ impl Tab {
 	) -> Self {
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TabEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			children: items,
 			_pin: PhantomPinned,
 		}));

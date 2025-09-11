@@ -10,7 +10,6 @@ mod raw_control;
 mod raw_main;
 mod raw_modal;
 mod raw_modeless;
-mod raw_opts;
 mod window_control;
 mod window_main;
 mod window_message_only;
@@ -34,7 +33,10 @@ pub(in crate::gui) mod privs {
 
 pub mod decl {
 	pub use super::layout::{Horz, Vert};
-	pub use super::raw_opts::*;
+	pub use super::raw_control::WindowControlOpts;
+	pub use super::raw_main::WindowMainOpts;
+	pub use super::raw_modal::WindowModalOpts;
+	pub use super::raw_modeless::WindowModelessOpts;
 	pub use super::window_control::WindowControl;
 	pub use super::window_main::WindowMain;
 	pub use super::window_message_only::WindowMessageOnly;

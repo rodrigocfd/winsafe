@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct DateTimePickerObj {
 	base: BaseCtrl,
-	events: DateTimePickerEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { DateTimePicker: DateTimePickerObj => DateTimePickerEvents;
+native_ctrl! { DateTimePicker: DateTimePickerObj => GuiEventsDateTimePicker;
 	/// Native
 	/// [date and time picker](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 	/// control.
@@ -34,7 +34,7 @@ impl DateTimePicker {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(DateTimePickerObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: DateTimePickerEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -103,7 +103,7 @@ impl DateTimePicker {
 	) -> Self {
 		let new_self = Self(Arc::pin(DateTimePickerObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: DateTimePickerEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

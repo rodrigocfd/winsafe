@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct MonthCalendarObj {
 	base: BaseCtrl,
-	events: MonthCalendarEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { MonthCalendar: MonthCalendarObj => MonthCalendarEvents;
+native_ctrl! { MonthCalendar: MonthCalendarObj => GuiEventsMonthCalendar;
 	/// Native
 	/// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 	/// control.
@@ -34,7 +34,7 @@ impl MonthCalendar {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(MonthCalendarObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: MonthCalendarEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -99,7 +99,7 @@ impl MonthCalendar {
 	) -> Self {
 		let new_self = Self(Arc::pin(MonthCalendarObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: MonthCalendarEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

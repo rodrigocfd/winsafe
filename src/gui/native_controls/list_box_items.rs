@@ -1,5 +1,6 @@
+use crate::co;
 use crate::decl::*;
-use crate::gui::{iterators::*, *};
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -141,5 +142,171 @@ impl<'a> ListBoxItems<'a> {
 		}
 
 		Ok(buf.to_string())
+	}
+}
+
+struct ListBoxItemIter<'a> {
+	owner: &'a ListBox,
+	front_idx: u32,
+	past_back_idx: u32,
+	buffer: WString,
+}
+
+impl<'a> Iterator for ListBoxItemIter<'a> {
+	type Item = SysResult<String>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for ListBoxItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
+	}
+}
+
+impl<'a> ListBoxItemIter<'a> {
+	#[must_use]
+	fn new(owner: &'a ListBox) -> SysResult<Self> {
+		Ok(Self {
+			owner,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
+			buffer: WString::new(),
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		// First, get number of chars, without terminating null.
+		let num_chars = match unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetTextLen { index: our_idx })
+		} {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				return Some(Err(e));
+			},
+			Ok(n) => n as usize,
+		};
+
+		// Then allocate the buffer and get the chars.
+		self.buffer = WString::new_alloc_buf(num_chars + 1);
+		if let Err(e) = unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetText { index: our_idx, text: &mut self.buffer })
+		} {
+			(self.front_idx, self.past_back_idx) = (0, 0); // halt
+			return Some(Err(e));
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+
+		Some(Ok(self.buffer.to_string()))
+	}
+}
+
+struct ListBoxSelItemIter<'a> {
+	owner: &'a ListBox,
+	indexes: Vec<u32>,
+	front_idx: u32,
+	past_back_idx: u32,
+	buffer: WString,
+}
+
+impl<'a> Iterator for ListBoxSelItemIter<'a> {
+	type Item = SysResult<(u32, String)>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for ListBoxSelItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
+	}
+}
+
+impl<'a> ListBoxSelItemIter<'a> {
+	#[must_use]
+	fn new(owner: &'a ListBox) -> SysResult<Self> {
+		let style: co::LBS = owner.hwnd().style().into();
+		let allow_multiple = style.has(co::LBS::EXTENDEDSEL) || style.has(co::LBS::MULTIPLESEL);
+		let indexes = if allow_multiple {
+			let num_indexes = unsafe { owner.hwnd().SendMessage(lb::GetSelCount {}) }?;
+
+			let mut indexes = vec![0; num_indexes as _];
+			unsafe {
+				owner
+					.hwnd()
+					.SendMessage(lb::GetSelItems { buffer: &mut indexes })
+			}?;
+			indexes
+		} else {
+			match unsafe { owner.hwnd().SendMessage(lb::GetCurSel {}) } {
+				Some(index) => vec![index], // single selection: at max 1
+				None => Vec::<u32>::new(),
+			}
+		};
+		let count = indexes.len();
+
+		Ok(Self {
+			owner,
+			indexes,
+			front_idx: 0,
+			past_back_idx: count as _,
+			buffer: WString::new(),
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<(u32, String)>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+		let cur_sel_index = self.indexes[our_idx as usize];
+
+		// First, get number of chars, without terminating null.
+		let num_chars = match unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetTextLen { index: cur_sel_index })
+		} {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				return Some(Err(e));
+			},
+			Ok(n) => n as usize,
+		};
+
+		// Then allocate the buffer and get the chars.
+		self.buffer = WString::new_alloc_buf(num_chars + 1);
+		if let Err(e) = unsafe {
+			self.owner.hwnd().SendMessage(lb::GetText {
+				index: cur_sel_index,
+				text: &mut self.buffer,
+			})
+		} {
+			(self.front_idx, self.past_back_idx) = (0, 0); // halt
+			return Some(Err(e));
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+
+		Some(Ok((cur_sel_index, self.buffer.to_string())))
 	}
 }

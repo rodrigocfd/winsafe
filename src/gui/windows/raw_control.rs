@@ -2,6 +2,7 @@ use std::marker::PhantomPinned;
 use std::pin::Pin;
 use std::sync::Arc;
 
+use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::prelude::*;
@@ -84,5 +85,93 @@ impl RawControl {
 	#[must_use]
 	pub(in crate::gui) fn ctrl_id(&self) -> u16 {
 		self.0.ctrl_id
+	}
+}
+
+/// Options to create a [`WindowControl`](crate::gui::WindowControl)
+/// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).
+pub struct WindowControlOpts {
+	/// Window class name to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to an auto-generated string.
+	pub class_name: String,
+	/// Window class styles to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `co::CS::DBLCLKS`.
+	pub class_style: co::CS,
+	/// Window main icon to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Icon::None`.
+	pub class_icon: Icon,
+	/// Window cursor to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Cursor::Idc(co::IDC::ARROW)`.
+	pub class_cursor: Cursor,
+	/// Window background brush to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Brush::Color(co::COLOR::WINDOW)`.
+	pub class_bg_brush: Brush,
+
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `gui::dpi(0, 0)`.
+	pub position: (i32, i32),
+	/// Width and height of window to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `gui::dpi(100, 80)`.
+	pub size: (i32, i32),
+	/// Window styles to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `WS::CHILD | WS::TABSTOP | WS::GROUP | WS::VISIBLE | WS::CLIPCHILDREN | WS::CLIPSIBLINGS`.
+	pub style: co::WS,
+	/// Extended window styles to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `WS_EX::LEFT`.
+	///
+	/// Suggestion:
+	/// * `WS_EX::CLIENTEDGE` to have a border.
+	pub ex_style: co::WS_EX,
+
+	/// The control ID.
+	///
+	/// Defaults to an auto-generated ID.
+	pub ctrl_id: u16,
+	/// Horizontal and vertical behavior of the control when the parent window
+	/// is resized.
+	///
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
+	pub resize_behavior: (Horz, Vert),
+}
+
+impl Default for WindowControlOpts {
+	fn default() -> Self {
+		Self {
+			class_name: "".to_owned(),
+			class_style: co::CS::DBLCLKS,
+			class_icon: Icon::None,
+			class_cursor: Cursor::Idc(co::IDC::ARROW),
+			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
+			position: dpi(0, 0),
+			size: dpi(100, 80),
+			style: co::WS::CHILD
+				| co::WS::TABSTOP
+				| co::WS::GROUP
+				| co::WS::VISIBLE
+				| co::WS::CLIPCHILDREN
+				| co::WS::CLIPSIBLINGS,
+			ex_style: co::WS_EX::LEFT,
+			ctrl_id: 0,
+			resize_behavior: (Horz::None, Vert::None),
+		}
 	}
 }

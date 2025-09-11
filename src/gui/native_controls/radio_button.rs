@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct RadioButtonObj {
 	base: BaseCtrl,
-	events: ButtonEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { RadioButton: RadioButtonObj => ButtonEvents;
+native_ctrl! { RadioButton: RadioButtonObj => GuiEventsButton;
 	/// Native
 	/// [radio button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 	/// control.
@@ -34,7 +34,7 @@ impl RadioButton {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(RadioButtonObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ButtonEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -85,7 +85,7 @@ impl RadioButton {
 	) -> Self {
 		let new_self = Self(Arc::pin(RadioButtonObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ButtonEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

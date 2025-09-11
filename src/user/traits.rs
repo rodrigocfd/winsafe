@@ -1,6 +1,7 @@
 use crate::msg::*;
 
-/// Parameters of a message which can be sent. Implemented by
+/// This trait is enabled with the `gui` feature, and is implemented by the
+/// parameters of messages which can be sent. Implemented by
 /// [all defined messages](crate::msg).
 ///
 /// Allows the conversion to the generic [`WndMsg`](crate::msg::WndMsg)
@@ -9,6 +10,12 @@ use crate::msg::*;
 /// Used in functions like
 /// [`SendMessage`](crate::HWND::SendMessage) and
 /// [`DefWindowProc`](crate::HWND::DefWindowProc).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;
@@ -29,12 +36,19 @@ pub trait MsgSend {
 	fn as_generic_wm(&mut self) -> WndMsg;
 }
 
-/// Parameters of a message which can be sent and handled (received).
-/// Implemented by [`WndMsg`](crate::msg::WndMsg) and all
-/// [msg::wm](`crate::msg::wm`) messages.
+/// This trait is enabled with the `gui` feature, and is implemented by the
+/// parameters of messages which can be sent and handled (received). Implemented
+/// by [`WndMsg`](crate::msg::WndMsg) and all [msg::wm](`crate::msg::wm`)
+/// messages.
 ///
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait MsgSendRecv: MsgSend {
 	/// Unmarshaling method which converts the generic
 	/// [`WndMsg`](crate::msg::WndMsg) parameters struct into the specific

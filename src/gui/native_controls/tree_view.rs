@@ -8,18 +8,18 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct TreeViewObj<T> {
 	base: BaseCtrl,
-	events: TreeViewEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 	_data: PhantomData<T>,
 }
 
-native_ctrl! { TreeView: TreeViewObj<T>, T => TreeViewEvents;
+native_ctrl! { TreeView: TreeViewObj<T>, T => GuiEventsTreeView;
 	/// Native
 	/// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 	/// control.
@@ -43,7 +43,7 @@ impl<T> TreeView<T> {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(TreeViewObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TreeViewEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 			_data: PhantomData,
 		}));
@@ -88,7 +88,7 @@ impl<T> TreeView<T> {
 	) -> Self {
 		let new_self = Self(Arc::pin(TreeViewObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: TreeViewEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 			_data: PhantomData,
 		}));

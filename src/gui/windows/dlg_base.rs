@@ -100,15 +100,15 @@ impl DlgBase {
 			co::WM::INITDIALOG => {
 				// first message being handled
 				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
-				let ptr_self = msg.additional_data as *mut Self;
+				let ptr_self = msg.additional_data as *const Self;
 				unsafe {
 					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
 				}
-				let ref_self = unsafe { &mut *ptr_self };
+				let ref_self = unsafe { &*ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
 			},
-			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *mut Self, // retrieve
+			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *const Self, // retrieve
 		};
 
 		// If no pointer stored, then no processing is done.
@@ -116,7 +116,7 @@ impl DlgBase {
 		if ptr_self.is_null() {
 			return Ok(0); // FALSE
 		}
-		let ref_self = unsafe { &mut *ptr_self };
+		let ref_self = unsafe { &*ptr_self };
 
 		// Execute before-user closures, keep track if at least one was executed.
 		let at_least_one_before = ref_self.base.process_before_messages(p)?;

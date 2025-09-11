@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct UpDownObj {
 	base: BaseCtrl,
-	events: UpDownEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { UpDown: UpDownObj => UpDownEvents;
+native_ctrl! { UpDown: UpDownObj => GuiEventsUpDown;
 	/// Native
 	/// [up-down](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-controls)
 	/// control.
@@ -71,7 +71,7 @@ impl UpDown {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(UpDownObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: UpDownEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -123,7 +123,7 @@ impl UpDown {
 	) -> Self {
 		let new_self = Self(Arc::pin(UpDownObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: UpDownEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

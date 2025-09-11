@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{collections::*, events::*, privs::*};
+use crate::gui::{collections::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -31,13 +31,13 @@ pub enum SbPart {
 
 struct StatusBarObj {
 	base: BaseCtrl,
-	events: StatusBarEvents,
+	events: BaseCtrlEvents,
 	parts_info: UnsafeCell<Vec<SbPart>>,
 	right_edges: UnsafeCell<Vec<i32>>, // buffer to speed up resize calls
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { StatusBar: StatusBarObj => StatusBarEvents;
+native_ctrl! { StatusBar: StatusBarObj => GuiEventsStatusBar;
 	/// Native
 	/// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
 	/// control, which has one or more parts.
@@ -74,7 +74,7 @@ impl StatusBar {
 		let ctrl_id = auto_id::next();
 		let new_self = Self(Arc::pin(StatusBarObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: StatusBarEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			parts_info: UnsafeCell::new(parts.to_vec()),
 			right_edges: UnsafeCell::new(vec![0; parts.len()]),
 			_pin: PhantomPinned,

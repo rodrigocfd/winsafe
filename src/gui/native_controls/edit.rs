@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct EditObj {
 	base: BaseCtrl,
-	events: EditEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { Edit: EditObj => EditEvents;
+native_ctrl! { Edit: EditObj => GuiEventsEdit;
 	/// Native
 	/// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 	/// (text box) control.
@@ -52,7 +52,7 @@ impl Edit {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(EditObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: EditEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -97,7 +97,7 @@ impl Edit {
 	) -> Self {
 		let new_self = Self(Arc::pin(EditObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: EditEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

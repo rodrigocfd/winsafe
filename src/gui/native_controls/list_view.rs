@@ -8,20 +8,20 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct ListViewObj<T> {
 	base: BaseCtrl,
-	events: ListViewEvents,
+	events: BaseCtrlEvents,
 	context_menu: Option<DestroyMenuGuard>, // the context menu itself is the 1st submenu
 	header: UnsafeCell<Option<Header>>, // if doesn't exist, will be set to None on WM_CREATE and WM_INITDIALOG
 	_pin: PhantomPinned,
 	_data: PhantomData<T>,
 }
 
-native_ctrl! { ListView: ListViewObj<T>, T => ListViewEvents;
+native_ctrl! { ListView: ListViewObj<T>, T => GuiEventsListView;
 	/// Native
 	/// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// control. Not to be confused with the simpler
@@ -52,7 +52,7 @@ impl<T> ListView<T> {
 
 		let new_self = Self(Arc::pin(ListViewObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ListViewEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			context_menu,
 			header: UnsafeCell::new(Some(Header::from_list_view(parent))), // initially does exist
 			_pin: PhantomPinned,
@@ -122,7 +122,7 @@ impl<T> ListView<T> {
 	) -> Self {
 		let new_self = Self(Arc::pin(ListViewObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ListViewEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			context_menu: context_menu_id.map(|id| {
 				parent
 					.hwnd()

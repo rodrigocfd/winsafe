@@ -5,16 +5,16 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 struct LabelObj {
 	base: BaseCtrl,
-	events: LabelEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { Label: LabelObj => LabelEvents;
+native_ctrl! { Label: LabelObj => GuiEventsLabel;
 	/// Native
 	/// [label](https://learn.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 	/// control.
@@ -33,7 +33,7 @@ impl Label {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(LabelObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: LabelEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -81,7 +81,7 @@ impl Label {
 	) -> Self {
 		let new_self = Self(Arc::pin(LabelObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: LabelEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

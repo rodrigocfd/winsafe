@@ -146,15 +146,15 @@ impl RawBase {
 			co::WM::NCCREATE => {
 				// first message being handled
 				let msg = unsafe { wm::NcCreate::from_generic_wm(p) };
-				let ptr_self = msg.createstruct.lpCreateParams as *mut Self;
+				let ptr_self = msg.createstruct.lpCreateParams as *const Self;
 				unsafe {
 					hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 				}
-				let ref_self = unsafe { &mut *ptr_self };
+				let ref_self = unsafe { &*ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
 			},
-			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
+			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *const Self, // retrieve
 		};
 
 		// If no pointer stored, then no processing is done.
@@ -162,7 +162,7 @@ impl RawBase {
 		if ptr_self.is_null() {
 			return Ok(unsafe { hwnd.DefWindowProc(p) });
 		}
-		let ref_self = unsafe { &mut *ptr_self };
+		let ref_self = unsafe { &*ptr_self };
 
 		// Execute before-user closures, keep track if at least one was executed.
 		let at_least_one_before = ref_self.base.process_before_messages(p)?;

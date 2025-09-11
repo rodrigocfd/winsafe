@@ -1,30 +1,26 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 
-/// Exposes month calendar control
+/// This trait is enabled with the `gui` feature, and exposes month calendar control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
 /// is the real responsible for the child event handling.
 ///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct MonthCalendarEvents(BaseCtrlEvents);
-
-impl MonthCalendarEvents {
-	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEvents::new(parent, ctrl_id))
-	}
-
-	pub_fn_nfy_withparm_noret! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE;
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait GuiEventsMonthCalendar: priv_ctrl_events::GuiEvents {
+	fn_nfy_withparm_noret! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE;
 		/// [`MCN_GETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE;
+	fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE;
 		/// [`MCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
 		/// notification.
 		///
@@ -48,18 +44,20 @@ impl MonthCalendarEvents {
 		/// ```
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE;
+	fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE;
 		/// [`MCN_SELECT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-select)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE;
+	fn_nfy_withparm_noret! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE;
 		/// [`MCN_VIEWCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-viewchange)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
+	fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-monthcal-)
 		/// notification.
 	}
 }
+
+impl GuiEventsMonthCalendar for BaseCtrlEvents {}

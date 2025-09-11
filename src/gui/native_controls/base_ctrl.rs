@@ -2,7 +2,7 @@ use std::cell::UnsafeCell;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -12,7 +12,7 @@ use crate::prelude::*;
 pub(in crate::gui) struct BaseCtrl {
 	ctrl_id: u16,
 	hwnd: UnsafeCell<HWND>,
-	subclass_events: WindowEvents,
+	subclass_events: BaseWndEvents,
 }
 
 static mut BASE_SUBCLASS_ID: usize = 0; // incremented each time a new subclass is installed
@@ -23,7 +23,7 @@ impl BaseCtrl {
 		Self {
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
-			subclass_events: WindowEvents::new(WndTy::Raw),
+			subclass_events: BaseWndEvents::new(WndTy::Raw),
 		}
 	}
 
@@ -38,7 +38,7 @@ impl BaseCtrl {
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
+	pub(in crate::gui) fn on_subclass(&self) -> &BaseWndEvents {
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add subclass events after control creation.");
 		}
@@ -153,8 +153,9 @@ impl BaseCtrl {
 		}
 
 		if p.msg_id == co::WM::NCDESTROY {
-			// always check
-			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?; // https://devblogs.microsoft.com/oldnewthing/20031111-00/?p=41883
+			// Always check.
+			// https://devblogs.microsoft.com/oldnewthing/20031111-00/?p=41883
+			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
 			if !ptr_self.is_null() {
 				let ref_self = unsafe { &*ptr_self };
 				ref_self.subclass_events.clear(); // prevents circular references

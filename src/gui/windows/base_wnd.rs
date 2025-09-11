@@ -1,6 +1,8 @@
+use std::cell::UnsafeCell;
+
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -14,12 +16,12 @@ struct ThreadPack {
 /// Stores the message closures which are added internally and by the user.
 /// These closures are called by wndproc and dlgproc.
 pub(in crate::gui) struct BaseWnd {
-	hwnd: HWND,
+	hwnd: UnsafeCell<HWND>,
 	wnd_ty: WndTy,
 	layout: Layout,
-	before_events: WindowEventsAll,
-	user_events: WindowEventsAll,
-	after_events: WindowEventsAll,
+	before_events: BaseWndEvents,
+	user_events: BaseWndEvents,
+	after_events: BaseWndEvents,
 }
 
 impl BaseWnd {
@@ -28,12 +30,12 @@ impl BaseWnd {
 	#[must_use]
 	pub(in crate::gui) fn new(wnd_ty: WndTy) -> Self {
 		let new_self = Self {
-			hwnd: HWND::NULL,
+			hwnd: UnsafeCell::new(HWND::NULL),
 			wnd_ty,
 			layout: Layout::new(),
-			before_events: WindowEventsAll::new(wnd_ty),
-			user_events: WindowEventsAll::new(wnd_ty),
-			after_events: WindowEventsAll::new(wnd_ty),
+			before_events: BaseWndEvents::new(wnd_ty),
+			user_events: BaseWndEvents::new(wnd_ty),
+			after_events: BaseWndEvents::new(wnd_ty),
 		};
 		new_self.default_message_handlers();
 		new_self
@@ -45,25 +47,25 @@ impl BaseWnd {
 	}
 	#[must_use]
 	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
-		&self.hwnd
+		unsafe { &*self.hwnd.get() }
 	}
-	pub(in crate::gui) fn set_hwnd(&mut self, hwnd: HWND) {
-		self.hwnd = hwnd
+	pub(in crate::gui) fn set_hwnd(&self, hwnd: HWND) {
+		*unsafe { &mut *self.hwnd.get() } = hwnd;
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn before_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn before_on(&self) -> &BaseWndEvents {
 		&self.before_events
 	}
 	#[must_use]
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		if self.hwnd != HWND::NULL {
+	pub(in crate::gui) fn on(&self) -> &BaseWndEvents {
+		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
 		&self.user_events // user events can be overriden; only the last one is executed
 	}
 	#[must_use]
-	pub(in crate::gui) fn after_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn after_on(&self) -> &BaseWndEvents {
 		&self.after_events
 	}
 
@@ -84,14 +86,14 @@ impl BaseWnd {
 	}
 
 	pub(in crate::gui) fn add_to_layout(&self, hchild: &HWND, resize_behavior: (Horz, Vert)) {
-		self.layout.add_child(&self.hwnd, hchild, resize_behavior);
+		self.layout.add_child(&self.hwnd(), hchild, resize_behavior);
 	}
 
 	pub(in crate::gui) fn spawn_thread<F>(&self, func: F)
 	where
 		F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
-		let hwnd = unsafe { self.hwnd.raw_copy() };
+		let hwnd = unsafe { self.hwnd().raw_copy() };
 		std::thread::spawn(move || {
 			func().unwrap_or_else(|err| {
 				// If the user func returned an error, create another function
@@ -125,13 +127,15 @@ impl BaseWnd {
 
 		// Bypass any modals and send straight to main window. This avoids any
 		// blind spots of unhandled messages by a modal being created/destroyed.
-		self.hwnd.GetAncestor(co::GA::ROOTOWNER).map(|hwnd| unsafe {
-			hwnd.SendMessage(WndMsg {
-				msg_id: Self::WM_UI_THREAD,
-				wparam: Self::WM_UI_THREAD.raw() as _,
-				lparam: ptr_pack as _, // send pointer
+		self.hwnd()
+			.GetAncestor(co::GA::ROOTOWNER)
+			.map(|hwnd| unsafe {
+				hwnd.SendMessage(WndMsg {
+					msg_id: Self::WM_UI_THREAD,
+					wparam: Self::WM_UI_THREAD.raw() as _,
+					lparam: ptr_pack as _, // send pointer
+				});
 			});
-		});
 	}
 
 	pub(in crate::gui) fn default_message_handlers(&self) {
@@ -218,7 +222,7 @@ impl BaseWnd {
 				return Ok(0); // raw modals will always return 0
 			}
 
-			if self.hwnd == HWND::NULL || !self.hwnd.IsWindow() {
+			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop
 			}
 
@@ -232,7 +236,7 @@ impl BaseWnd {
 			// Try to process keyboard actions for child controls.
 			if process_dlg_msgs && hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if self.hwnd == HWND::NULL {
+				if *self.hwnd() == HWND::NULL {
 					return Ok(0); // our modal was destroyed, terminate loop
 				} else {
 					continue;
@@ -244,7 +248,7 @@ impl BaseWnd {
 				DispatchMessage(&msg);
 			}
 
-			if self.hwnd == HWND::NULL || !self.hwnd.IsWindow() {
+			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop
 			}
 		}

@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -78,15 +78,14 @@ impl WindowModal {
 		}
 	}
 
-	/// Exposes methods to handle the basic window messages, plus timer and
-	/// native control notifications.
+	/// Exposes methods to handle window messages.
 	///
 	/// # Panics
 	///
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	#[must_use]
-	pub fn on(&self) -> &WindowEventsAll {
+	pub fn on(&self) -> &impl GuiEventsParent {
 		self.as_ref().on()
 	}
 

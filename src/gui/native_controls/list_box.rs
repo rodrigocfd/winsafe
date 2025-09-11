@@ -4,17 +4,17 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::{collections::*, events::*, privs::*, *};
+use crate::gui::{collections::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct ListBoxObj {
 	base: BaseCtrl,
-	events: ListBoxEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { ListBox: ListBoxObj => ListBoxEvents;
+native_ctrl! { ListBox: ListBoxObj => GuiEventsListBox;
 	/// Native
 	/// [list box](https://learn.microsoft.com/en-us/windows/win32/controls/about-list-boxes)
 	/// control. Not to be confused with the more complex
@@ -34,7 +34,7 @@ impl ListBox {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(ListBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ListBoxEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -79,7 +79,7 @@ impl ListBox {
 	) -> Self {
 		let new_self = Self(Arc::pin(ListBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ListBoxEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

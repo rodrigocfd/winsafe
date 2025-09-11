@@ -120,3 +120,94 @@ impl RawModal {
 			.map(|_| ())
 	}
 }
+
+/// Options to create a [`WindowModal`](crate::gui::WindowModal)
+/// programmatically with [`WindowModal::new`](crate::gui::WindowModal::new).
+pub struct WindowModalOpts {
+	/// Window class name to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to an auto-generated string.
+	pub class_name: String,
+	/// Window class styles to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `co::CS::DBLCLKS`.
+	pub class_style: co::CS,
+	/// Window main icon to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Icon::None`.
+	pub class_icon: Icon,
+	/// Window cursor to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Cursor::Idc(co::IDC::ARROW)`.
+	pub class_cursor: Cursor,
+	/// Window background brush to be
+	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
+	///
+	/// Defaults to `gui::Brush::Color(co::COLOR::BTNFACE)`.
+	pub class_bg_brush: Brush,
+
+	/// Window title to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to empty string.
+	pub title: String,
+	/// Width and height of window client area, in pixels, to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// Does not include title bar or borders.
+	///
+	/// Defaults to `gui::dpi(500, 400)`.
+	pub size: (i32, i32),
+	/// Window styles to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `WS::CAPTION | WS::SYSMENU | WS::CLIPCHILDREN | WS::BORDER | WS::VISIBLE`.
+	///
+	/// Suggestions:
+	/// * `WS::SIZEBOX` to make the window resizable;
+	/// * `WS::MAXIMIZEBOX` to have a maximize button.
+	pub style: co::WS,
+	/// Extended window styles to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to `WS_EX::LEFT | WS_EX::DLGMODALFRAME`.
+	pub ex_style: co::WS_EX,
+	/// In most applications, the window loop calls
+	/// [`IsDialogMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
+	/// so child control messages will properly work. However, this has the side
+	/// effect of inhibiting
+	/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
+	/// messages from being sent to the window procedure. So, applications which
+	/// do not have child controls and deal directly with character processing –
+	/// like text editors – will never be able to receive `WM_CHAR`.
+	///
+	/// This flag, when `true`, will enable the normal `IsDialogMessage` call in
+	/// the window loop. When `false`, the call will be suppressed.
+	///
+	/// Defaults to `true`.
+	pub process_dlg_msgs: bool,
+}
+
+impl Default for WindowModalOpts {
+	fn default() -> Self {
+		Self {
+			class_name: "".to_owned(),
+			class_style: co::CS::DBLCLKS,
+			class_icon: Icon::None,
+			class_cursor: Cursor::Idc(co::IDC::ARROW),
+			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
+			title: "".to_owned(),
+			size: dpi(500, 400),
+			style: co::WS::CAPTION
+				| co::WS::SYSMENU
+				| co::WS::CLIPCHILDREN
+				| co::WS::BORDER
+				| co::WS::VISIBLE,
+			ex_style: co::WS_EX::LEFT | co::WS_EX::DLGMODALFRAME,
+			process_dlg_msgs: true,
+		}
+	}
+}

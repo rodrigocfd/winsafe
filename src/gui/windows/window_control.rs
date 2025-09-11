@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 /// Switches between raw and dialog implementations.
@@ -94,15 +94,14 @@ impl WindowControl {
 		Self(RawDlg::Dlg(DlgControl::new(parent, dlg_id, position, resize_behavior, ctrl_id)))
 	}
 
-	/// Exposes methods to handle the basic window messages, plus timer and
-	/// native control notifications.
+	/// Exposes methods to handle window messages.
 	///
 	/// # Panics
 	///
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	#[must_use]
-	pub fn on(&self) -> &WindowEventsAll {
+	pub fn on(&self) -> &impl GuiEventsParent {
 		self.as_ref().on()
 	}
 }

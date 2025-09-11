@@ -5,17 +5,17 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, *};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 struct CheckBoxObj {
 	base: BaseCtrl,
-	events: ButtonEvents,
+	events: BaseCtrlEvents,
 	_pin: PhantomPinned,
 }
 
-native_ctrl! { CheckBox: CheckBoxObj => ButtonEvents;
+native_ctrl! { CheckBox: CheckBoxObj => GuiEventsButton;
 	/// Native
 	/// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 	/// control, actually a variation of the ordinary
@@ -35,7 +35,7 @@ impl CheckBox {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(Arc::pin(CheckBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ButtonEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 
@@ -85,7 +85,7 @@ impl CheckBox {
 	) -> Self {
 		let new_self = Self(Arc::pin(CheckBoxObj {
 			base: BaseCtrl::new(ctrl_id),
-			events: ButtonEvents::new(parent, ctrl_id),
+			events: BaseCtrlEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
 		}));
 

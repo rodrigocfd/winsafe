@@ -4,7 +4,8 @@ use crate::decl::*;
 use crate::gui::privs::*;
 use crate::msg::*;
 
-/// Any window. Exposes the underlying window handle.
+/// This trait is enabled with the `gui` feature, and is implemented by all
+/// windows. Exposes the underlying window handle.
 ///
 /// Prefer importing this trait through the prelude:
 ///
@@ -51,7 +52,8 @@ pub trait GuiWindow: Send {
 	fn as_any(&self) -> &dyn Any;
 }
 
-/// Any window which can host child controls.
+/// This trait is enabled with the `gui` feature, and is implemented by all
+/// windows which can host child controls.
 ///
 /// Prefer importing this trait through the prelude:
 ///
@@ -194,7 +196,8 @@ pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	}
 }
 
-/// Any child control.
+/// This trait is enabled with the `gui` feature, and is implemented by all
+/// child controls.
 ///
 /// Prefer importing this trait through the prelude:
 ///

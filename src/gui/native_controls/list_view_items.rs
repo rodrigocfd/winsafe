@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{iterators::*, *};
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -353,5 +353,67 @@ impl<'a, T> ListViewItems<'a, T> {
 		let item1 = data.0.items().get(lparam1 as _);
 		let item2 = data.0.items().get(lparam2 as _);
 		data.1(item1, item2) as _
+	}
+}
+
+struct ListViewItemIter<'a, T: 'static> {
+	owner: &'a ListView<T>,
+	front_idx: u32,
+	past_back_idx: u32,
+	is_sel: bool,
+}
+
+impl<'a, T> Iterator for ListViewItemIter<'a, T> {
+	type Item = ListViewItem<'a, T>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.grab(true)
+	}
+}
+impl<'a, T> DoubleEndedIterator for ListViewItemIter<'a, T> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
+	}
+}
+
+impl<'a, T> ListViewItemIter<'a, T> {
+	#[must_use]
+	fn new(owner: &'a ListView<T>, is_sel: bool) -> Self {
+		Self {
+			owner,
+			front_idx: 0,
+			past_back_idx: owner.items().count(),
+			is_sel,
+		}
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<ListViewItem<'a, T>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+
+		let mut our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+		let mut item = self.owner.items().get(our_idx);
+
+		// LVNI_SELECTED|LVNI_PREVIOUS flags don't seem to work together, so we check each item manually.
+		while self.is_sel && !item.is_selected() {
+			if is_front {
+				self.front_idx += 1;
+			} else {
+				self.past_back_idx -= 1;
+			}
+			if self.front_idx == self.past_back_idx {
+				return None;
+			}
+			our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+			item = self.owner.items().get(our_idx);
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }

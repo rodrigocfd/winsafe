@@ -1,34 +1,30 @@
 use crate::co;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 
-/// Exposes edit control
+/// This trait is enabled with the `gui` feature, and exposes edit control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
 /// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
 /// is the real responsible for the child event handling.
 ///
-/// You cannot directly instantiate this object, it is created internally by the
-/// control.
-pub struct EditEvents(BaseCtrlEvents);
-
-impl EditEvents {
-	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEvents::new(parent, ctrl_id))
-	}
-
-	pub_fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC;
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait GuiEventsEdit: priv_ctrl_events::GuiEvents {
+	fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC;
 		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC;
+	fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC;
 		/// [`EN_ALIGN_RTL_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_change, co::EN::CHANGE;
+	fn_cmd_noparm_noret! { en_change, co::EN::CHANGE;
 		/// [`EN_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-change)
 		/// command notification.
 		///
@@ -54,38 +50,40 @@ impl EditEvents {
 		/// ```
 	}
 
-	pub_fn_cmd_noparm_noret! { en_err_space, co::EN::ERRSPACE;
+	fn_cmd_noparm_noret! { en_err_space, co::EN::ERRSPACE;
 		/// [`EN_ERRSPACE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-errspace)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_h_scroll, co::EN::HSCROLL;
+	fn_cmd_noparm_noret! { en_h_scroll, co::EN::HSCROLL;
 		/// [`EN_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-hscroll)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_kill_focus, co::EN::KILLFOCUS;
+	fn_cmd_noparm_noret! { en_kill_focus, co::EN::KILLFOCUS;
 		/// [`EN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-killfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_max_text, co::EN::MAXTEXT;
+	fn_cmd_noparm_noret! { en_max_text, co::EN::MAXTEXT;
 		/// [`EN_MAXTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_set_focus, co::EN::SETFOCUS;
+	fn_cmd_noparm_noret! { en_set_focus, co::EN::SETFOCUS;
 		/// [`EN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-setfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_update, co::EN::UPDATE;
+	fn_cmd_noparm_noret! { en_update, co::EN::UPDATE;
 		/// [`EN_UPDATE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_v_scroll, co::EN::VSCROLL;
+	fn_cmd_noparm_noret! { en_v_scroll, co::EN::VSCROLL;
 		/// [`EN_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-vscroll)
 		/// command notification.
 	}
 }
+
+impl GuiEventsEdit for BaseCtrlEvents {}
