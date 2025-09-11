@@ -1622,6 +1622,22 @@ const_nm! { PSN;
 	QUERYINITIALFOCUS PSN_FIRST - 13
 }
 
+const_ordinary! { PSNRET: u32;
+	/// [`PSN_APPLY`](crate::gui::events::WindowEvents::psn_apply) return type
+	/// (`u32`).
+	=>
+	/// Changes made to this page are valid and have been applied. If all pages
+	/// return this, the property sheet can be destroyed.
+	NOERROR 0
+	/// The property sheet will not be destroyed, and focus will be returned to
+	/// this page.
+	INVALID 1
+	/// The property sheet will not be destroyed, and focus will be returned to
+	/// the page that had focus when the button was pressed.
+	INVALID_NOCHANGEPAGE 2
+	MESSAGEHANDLED 3
+}
+
 const_bitflag! { PSP: u32;
 	/// [`PROPSHEETPAGE`](crate::PROPSHEETPAGE) `dwFlags` (`u32`).
 	=>
