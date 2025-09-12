@@ -69,14 +69,12 @@ impl BaseWnd {
 		&self.after_events
 	}
 
-	pub(in crate::gui) fn process_before_messages(&self, p: WndMsg) -> AnyResult<bool> {
-		self.before_events.process_all_messages(p)
-	}
-	pub(in crate::gui) fn process_user_message(&self, p: WndMsg) -> Option<AnyResult<isize>> {
-		self.user_events.process_last_message(p)
-	}
-	pub(in crate::gui) fn process_after_messages(&self, p: WndMsg) -> AnyResult<bool> {
-		self.after_events.process_all_messages(p)
+	pub(in crate::gui) fn process_msgs(&self, p: WndMsg) -> AnyResult<(bool, Option<isize>, bool)> {
+		Ok((
+			self.before_events.process_all_messages(p)?,
+			self.user_events.process_last_message(p).transpose()?,
+			self.after_events.process_all_messages(p)?,
+		))
 	}
 
 	pub(in crate::gui) fn clear_messages(&self) {

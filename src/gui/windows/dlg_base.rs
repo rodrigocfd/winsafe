@@ -119,13 +119,9 @@ impl DlgBase {
 		let ref_self = unsafe { &*ptr_self };
 
 		// Execute before-user closures, keep track if at least one was executed.
-		let at_least_one_before = ref_self.base.process_before_messages(p)?;
-
 		// Execute user closure, if any.
-		let user_ret = ref_self.base.process_user_message(p).transpose()?;
-
 		// Execute post-user closures, keep track if at least one was executed.
-		let at_least_one_after = ref_self.base.process_after_messages(p)?;
+		let (at_least_one_before, user_ret, at_least_one_after) = ref_self.base.process_msgs(p)?;
 
 		// Always check.
 		if p.msg_id == co::WM::NCDESTROY {
