@@ -90,8 +90,8 @@ impl WindowModeless {
 	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
 	/// message. This is the safest way to close any popup window, because
 	/// you'll able to process the
-	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
-	/// like if the user clicked the window "X" button.
+	/// [`wm_close`](crate::prelude::GuiEventsWindow::wm_close) event, just like
+	/// if the user clicked the window "X" button.
 	pub fn close(&self) {
 		unsafe {
 			self.hwnd().PostMessage(wm::Close {}).ok(); // ignore errors

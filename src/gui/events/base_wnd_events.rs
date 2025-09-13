@@ -1032,7 +1032,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 
 	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 	/// message, sent only to non-dialog windows. Dialog windows must handle
-	/// [`wm_init_dialog`](crate::gui::events::WindowEvents::wm_init_dialog)
+	/// [`wm_init_dialog`](crate::prelude::GuiEventsParent::wm_init_dialog)
 	/// instead.
 	///
 	/// # Examples
@@ -1063,7 +1063,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 	fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog;
 		/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 		/// message, sent only to dialog windows. Non-dialog windows must handle
-		/// [`wm_create`](crate::gui::events::WindowEvents::wm_create) instead.
+		/// [`wm_create`](crate::prelude::GuiEventsParent::wm_create) instead.
 		///
 		/// Return `true` to set the focus to the first control in the dialog.
 		///

@@ -8,8 +8,8 @@ use crate::prelude::*;
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
 ///
 /// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
+/// [`GuiEventsParent`](crate::prelude::GuiEventsParent) of the parent window,
+/// who is the real responsible for the child event handling.
 ///
 /// Prefer importing this trait through the prelude:
 ///

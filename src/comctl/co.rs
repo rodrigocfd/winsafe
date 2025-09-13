@@ -1623,8 +1623,8 @@ const_nm! { PSN;
 }
 
 const_ordinary! { PSNRET: u32;
-	/// [`PSN_APPLY`](crate::gui::events::WindowEvents::psn_apply) return type
-	/// (`u32`).
+	/// [`PSN_APPLY`](crate::prelude::GuiEventsPropSheetPage::psn_apply) return
+	/// type (`u32`).
 	=>
 	/// Changes made to this page are valid and have been applied. If all pages
 	/// return this, the property sheet can be destroyed.

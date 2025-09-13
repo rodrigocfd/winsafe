@@ -1547,7 +1547,7 @@ impl HWND {
 	/// [`HWND::KillTimer`](crate::HWND::KillTimer).
 	///
 	/// The timer calls – either
-	/// [`wm_timer`](crate::gui::events::WindowEvents::wm_timer) message or
+	/// [`wm_timer`](crate::prelude::GuiEventsWindow::wm_timer) message or
 	/// callback function – will continuously be executed until you call
 	/// `KillTimer`. If you don't call `KillTimer`, the timer calls will
 	/// continue until the window is destroyed – at this point, any remaining

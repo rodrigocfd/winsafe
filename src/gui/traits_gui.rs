@@ -73,8 +73,8 @@ pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	/// # Examples
 	///
 	/// The example below shows the event of a
-	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
-	/// spawns a new thread.
+	/// [button click](crate::prelude::GuiEventsButton::bn_clicked) which spawns
+	/// a new thread.
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, gui};
@@ -138,8 +138,8 @@ pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	/// # Examples
 	///
 	/// The example below shows the event of a
-	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
-	/// starts a long task in a parallel thread. As it progresses, the status is
+	/// [button click](crate::prelude::GuiEventsButton::bn_clicked) which starts
+	/// a long task in a parallel thread. As it progresses, the status is
 	/// printed at the windows's titlebar.
 	///
 	/// ```no_run

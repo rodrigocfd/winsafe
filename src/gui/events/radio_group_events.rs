@@ -6,8 +6,8 @@ use crate::gui::privs::*;
 /// for a [`RadioGroup`](crate::gui::RadioGroup).
 ///
 /// These event methods are just proxies to the
-/// [`WindowEvents`](crate::gui::events::WindowEvents) of the parent window, who
-/// is the real responsible for the child event handling.
+/// [`GuiEventsParent`](crate::prelude::GuiEventsParent) of the parent window,
+/// who is the real responsible for the child event handling.
 ///
 /// Prefer importing this trait through the prelude:
 ///
