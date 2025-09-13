@@ -21,6 +21,90 @@ native_ctrl! { Tab: TabObj => GuiEventsTab;
 	/// Native
 	/// [tab](https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls)
 	/// control.
+	///
+	/// # Examples
+	///
+	/// The example below creates a main window with a Tab control, which has
+	/// one child item. The child item has its own struct, and its own child
+	/// controls.
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, co, gui, prelude::*};
+	///
+	/// fn main() {
+	///     if let Err(e) = MainWindow::create_and_run() {
+	///         eprintln!("{}", e);
+	///     }
+	/// }
+	///
+	/// #[derive(Clone)]
+	/// struct MainWindow {
+	///     wnd: gui::WindowMain,
+	///     tab: gui::Tab,
+	/// }
+	/// impl MainWindow {
+	///     fn create_and_run() -> w::AnyResult<i32> {
+	///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
+	///             title: "Main window",
+	///             size: gui::dpi(300, 150),
+	///             ..Default::default()
+	///         });
+	///         let tab = gui::Tab::new(
+	///             &wnd,
+	///             gui::TabOpts {
+	///                 position: gui::dpi(10, 10),
+	///                 size: gui::dpi(250, 100),
+	///                 items: &[("First tab", TabContents1::new(&wnd).into())],
+	///                 ..Default::default()
+	///             },
+	///         );
+	///
+	///         let new_self = Self { wnd, tab };
+	///         new_self.events();
+	///
+	///         new_self.wnd.run_main(None)
+	///     }
+	///
+	///     fn events(&self) {}
+	/// }
+	///
+	/// #[derive(Clone)]
+	/// struct TabContents1 {
+	///     wnd: gui::WindowControl,
+	///     btn: gui::Button,
+	/// }
+	/// impl Into<gui::WindowControl> for TabContents1 {
+	///     fn into(self) -> gui::WindowControl {
+	///         self.wnd.clone() // so we can pass our custom struct to Tab::new()
+	///     }
+	/// }
+	/// impl TabContents1 {
+	///     fn new(parent: &(impl GuiParent + 'static)) -> Self {
+	///         let wnd = gui::WindowControl::new(
+	///             parent,
+	///             gui::WindowControlOpts {
+	///                 size: gui::dpi(250, 200),
+	///                 ex_style: co::WS_EX::CONTROLPARENT, // so the focus rotation works properly
+	///                 ..Default::default()
+	///             },
+	///         );
+	///         let btn = gui::Button::new(
+	///             &wnd,
+	///             gui::ButtonOpts {
+	///                 text: "&Button",
+	///                 position: gui::dpi(20, 20),
+	///                 ..Default::default()
+	///             },
+	///         );
+	///
+	///         let new_self = Self { wnd, btn };
+	///         new_self.events();
+	///         new_self
+	///     }
+	///
+	///     fn events(&self) {}
+	/// }
+	/// ```
 }
 
 impl Tab {
