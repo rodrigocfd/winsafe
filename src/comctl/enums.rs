@@ -24,11 +24,12 @@ impl BmpIconCurMeta {
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		unsafe {
+			use BmpIconCurMeta::*;
 			std::mem::transmute(match self {
-				BmpIconCurMeta::Bmp(hbmp) => hbmp.ptr(),
-				BmpIconCurMeta::Icon(hicon) => hicon.ptr(),
-				BmpIconCurMeta::Cur(hcur) => hcur.ptr(),
-				BmpIconCurMeta::Meta(hdc) => hdc.ptr(),
+				Bmp(hbmp) => hbmp.ptr(),
+				Icon(hicon) => hicon.ptr(),
+				Cur(hcur) => hcur.ptr(),
+				Meta(hdc) => hdc.ptr(),
 			})
 		}
 	}
@@ -72,10 +73,11 @@ impl ClrDefNone {
 	/// Converts the contents into an `u32`.
 	#[must_use]
 	pub const fn as_u32(&self) -> u32 {
+		use ClrDefNone::*;
 		match self {
-			Self::Clr(c) => c.raw(),
-			Self::None => CLR_NONE,
-			Self::Default => CLR_DEFAULT,
+			Clr(c) => c.raw(),
+			None => CLR_NONE,
+			Default => CLR_DEFAULT,
 		}
 	}
 }
@@ -143,13 +145,14 @@ impl<'a> IconRes<'a> {
 	/// Returns the `HINSTANCE`, if any, and a pointer to the raw data content.
 	#[must_use]
 	pub fn as_ptr(&self) -> (HINSTANCE, *const u16) {
+		use IconRes::*;
 		match self {
-			Self::None => (HINSTANCE::NULL, std::ptr::null()),
-			Self::Res(hinst, id_str) => (unsafe { hinst.raw_copy() }, id_str.as_ptr()),
-			Self::Warn => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() as _)),
-			Self::Error => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() as _)),
-			Self::Info => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() as _)),
-			Self::Shield => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() as _)),
+			None => (HINSTANCE::NULL, std::ptr::null()),
+			Res(hinst, id_str) => (unsafe { hinst.raw_copy() }, id_str.as_ptr()),
+			Warn => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() as _)),
+			Error => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() as _)),
+			Info => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() as _)),
+			Shield => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() as _)),
 		}
 	}
 }
@@ -169,10 +172,11 @@ pub enum IdxCbNone {
 
 impl From<IdxCbNone> for isize {
 	fn from(v: IdxCbNone) -> Self {
+		use IdxCbNone::*;
 		match v {
-			IdxCbNone::Idx(idx) => idx as _,
-			IdxCbNone::Cb => I_IMAGECALLBACK,
-			IdxCbNone::None => I_IMAGENONE,
+			Idx(idx) => idx as _,
+			Cb => I_IMAGECALLBACK,
+			None => I_IMAGENONE,
 		}
 	}
 }
@@ -274,9 +278,10 @@ pub enum TreeitemTvi {
 
 impl From<TreeitemTvi> for isize {
 	fn from(v: TreeitemTvi) -> Self {
+		use TreeitemTvi::*;
 		match v {
-			TreeitemTvi::Treeitem(htreeitem) => htreeitem.ptr() as _,
-			TreeitemTvi::Tvi(tvi) => tvi.raw(),
+			Treeitem(htreeitem) => htreeitem.ptr() as _,
+			Tvi(tvi) => tvi.raw(),
 		}
 	}
 }

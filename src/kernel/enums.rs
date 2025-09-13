@@ -58,9 +58,10 @@ pub enum IdStr {
 
 impl std::fmt::Display for IdStr {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		use IdStr::*;
 		match self {
-			Self::Id(rt) => write!(f, "ID: {}", rt),
-			Self::Str(str) => write!(f, "Str: {}", str),
+			Id(rt) => write!(f, "ID: {}", rt),
+			Str(str) => write!(f, "Str: {}", str),
 		}
 	}
 }
@@ -90,9 +91,10 @@ impl IdStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -153,9 +155,10 @@ pub enum RtStr {
 
 impl std::fmt::Display for RtStr {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		use RtStr::*;
 		match self {
-			Self::Rt(rt) => write!(f, "RT: {}", rt),
-			Self::Str(str) => write!(f, "Str: {}", str),
+			Rt(rt) => write!(f, "RT: {}", rt),
+			Str(str) => write!(f, "Str: {}", str),
 		}
 	}
 }
@@ -185,9 +188,10 @@ impl RtStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use RtStr::*;
 		match self {
-			Self::Rt(id) => MAKEINTRESOURCE(id.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Rt(id) => MAKEINTRESOURCE(id.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }

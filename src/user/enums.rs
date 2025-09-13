@@ -22,20 +22,22 @@ impl AccelMenuCtrl {
 	/// Returns the control ID.
 	#[must_use]
 	pub const fn ctrl_id(&self) -> u16 {
+		use AccelMenuCtrl::*;
 		match self {
-			AccelMenuCtrl::Accel(id) => *id,
-			AccelMenuCtrl::Menu(id) => *id,
-			AccelMenuCtrl::Ctrl { notif_code: _, ctrl_id, ctrl_hwnd: _ } => *ctrl_id,
+			Accel(id) => *id,
+			Menu(id) => *id,
+			Ctrl { notif_code: _, ctrl_id, ctrl_hwnd: _ } => *ctrl_id,
 		}
 	}
 
 	/// Returns the notification code.
 	#[must_use]
 	pub const fn code(&self) -> co::CMD {
+		use AccelMenuCtrl::*;
 		match self {
-			AccelMenuCtrl::Accel(_) => co::CMD::Accel,
-			AccelMenuCtrl::Menu(_) => co::CMD::Menu,
-			AccelMenuCtrl::Ctrl { notif_code, ctrl_id: _, ctrl_hwnd: _ } => *notif_code,
+			Accel(_) => co::CMD::Accel,
+			Menu(_) => co::CMD::Menu,
+			Ctrl { notif_code, ctrl_id: _, ctrl_hwnd: _ } => *notif_code,
 		}
 	}
 }
@@ -65,9 +67,10 @@ impl AtomStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use AtomStr::*;
 		match self {
-			Self::Atom(atom) => MAKEINTRESOURCE(u16::from(*atom) as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Atom(atom) => MAKEINTRESOURCE(u16::from(*atom) as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -88,9 +91,10 @@ impl BmpIcon {
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		unsafe {
+			use BmpIcon::*;
 			std::mem::transmute(match self {
-				BmpIcon::Bmp(hbmp) => hbmp.ptr(),
-				BmpIcon::Icon(hicon) => hicon.ptr(),
+				Bmp(hbmp) => hbmp.ptr(),
+				Icon(hicon) => hicon.ptr(),
 			})
 		}
 	}
@@ -120,11 +124,12 @@ impl BmpPtrStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use BmpPtrStr::*;
 		match self {
-			Self::Bmp(hbmp) => hbmp.ptr() as _,
-			Self::Ptr(lp) => *lp as _,
-			Self::Str(ws) => ws.as_ptr(),
-			Self::None => std::ptr::null(),
+			Bmp(hbmp) => hbmp.ptr() as _,
+			Ptr(lp) => *lp as _,
+			Str(ws) => ws.as_ptr(),
+			None => std::ptr::null(),
 		}
 	}
 }
@@ -153,9 +158,10 @@ pub enum GmidxEnum {
 
 impl From<GmidxEnum> for u32 {
 	fn from(v: GmidxEnum) -> Self {
+		use GmidxEnum::*;
 		match v {
-			GmidxEnum::Gmidx(idx) => idx,
-			GmidxEnum::Enum(es) => es.raw(),
+			Gmidx(idx) => idx,
+			Enum(es) => es.raw(),
 		}
 	}
 }
@@ -199,9 +205,10 @@ impl HwndHmenu {
 	/// Converts the contents into an `isize`.
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
+		use HwndHmenu::*;
 		match self {
-			HwndHmenu::Hwnd(hwnd) => hwnd.ptr() as _,
-			HwndHmenu::Hmenu(hmenu) => hmenu.ptr() as _,
+			Hwnd(hwnd) => hwnd.ptr() as _,
+			Hmenu(hmenu) => hmenu.ptr() as _,
 		}
 	}
 }
@@ -224,10 +231,11 @@ impl HwndPlace {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
+		use HwndPlace::*;
 		match self {
-			Self::Hwnd(hwnd) => hwnd.ptr(),
-			Self::Place(v) => v.raw() as _,
-			Self::None => std::ptr::null_mut(),
+			Hwnd(hwnd) => hwnd.ptr(),
+			Place(v) => v.raw() as _,
+			None => std::ptr::null_mut(),
 		}
 	}
 }
@@ -248,10 +256,11 @@ impl HwndPointId {
 	/// Converts the contents into an `isize`.
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
+		use HwndPointId::*;
 		match self {
-			HwndPointId::Hwnd(hwnd) => hwnd.ptr() as _,
-			HwndPointId::Point(pt) => u32::from(*pt) as _,
-			HwndPointId::Id(id) => *id as _,
+			Hwnd(hwnd) => hwnd.ptr() as _,
+			Point(pt) => u32::from(*pt) as _,
+			Id(id) => *id as _,
 		}
 	}
 }
@@ -279,10 +288,11 @@ impl IdIdcStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdIdcStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idc(idc) => MAKEINTRESOURCE(idc.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Idc(idc) => MAKEINTRESOURCE(idc.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -310,10 +320,11 @@ impl IdIdiStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdIdiStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idi(idi) => MAKEINTRESOURCE(idi.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Idi(idi) => MAKEINTRESOURCE(idi.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -335,20 +346,22 @@ impl<'a> IdMenu<'a> {
 	/// Returns a pointer to the raw data content.
 	#[must_use]
 	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
+		use IdMenu::*;
 		match self {
-			Self::Id(id) => *id as _,
-			Self::Menu(hMenu) => hMenu.ptr(),
-			Self::None => std::ptr::null_mut(),
+			Id(id) => *id as _,
+			Menu(hMenu) => hMenu.ptr(),
+			None => std::ptr::null_mut(),
 		}
 	}
 
 	/// Converts the raw data into an `usize`.
 	#[must_use]
 	pub fn as_usize(&self) -> usize {
+		use IdMenu::*;
 		match self {
-			IdMenu::Id(id) => *id as _,
-			IdMenu::Menu(hMenu) => hMenu.ptr() as _,
-			IdMenu::None => 0,
+			Id(id) => *id as _,
+			Menu(hMenu) => hMenu.ptr() as _,
+			None => 0,
 		}
 	}
 }
@@ -380,18 +393,20 @@ impl IdPos {
 	/// Returns whether value is `Pos`.
 	#[must_use]
 	pub const fn is_by_pos(self) -> bool {
+		use IdPos::*;
 		match self {
-			IdPos::Id(_) => false,
-			IdPos::Pos(_) => true,
+			Id(_) => false,
+			Pos(_) => true,
 		}
 	}
 
 	/// Returns the ID or the position as a plain `u32`.
 	#[must_use]
 	pub const fn id_or_pos_u32(self) -> u32 {
+		use IdPos::*;
 		match self {
-			IdPos::Id(id) => id as _,
-			IdPos::Pos(pos) => pos,
+			Id(id) => id as _,
+			Pos(pos) => pos,
 		}
 	}
 
@@ -399,9 +414,10 @@ impl IdPos {
 	/// [`MF::BYPOSITION`](crate::co::MF::BYPOSITION) if value is `Pos`.
 	#[must_use]
 	pub const fn mf_flag(self) -> co::MF {
+		use IdPos::*;
 		match self {
-			IdPos::Id(_) => co::MF::BYCOMMAND,
-			IdPos::Pos(_) => co::MF::BYPOSITION,
+			Id(_) => co::MF::BYCOMMAND,
+			Pos(_) => co::MF::BYPOSITION,
 		}
 	}
 }

@@ -100,10 +100,11 @@ impl Brush {
 	/// Converts the contents of `Brush` to `HBRUSH`.
 	#[must_use]
 	pub fn as_hbrush(&self) -> HBRUSH {
+		use Brush::*;
 		match self {
-			Brush::Color(c) => HBRUSH::from_sys_color(*c),
-			Brush::Handle(h) => unsafe { h.raw_copy() },
-			Brush::None => HBRUSH::NULL,
+			Color(c) => HBRUSH::from_sys_color(*c),
+			Handle(h) => unsafe { h.raw_copy() },
+			None => HBRUSH::NULL,
 		}
 	}
 }
@@ -130,12 +131,13 @@ impl Cursor {
 	#[must_use]
 	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> SysResult<HCURSOR> {
 		unsafe {
+			use Cursor::*;
 			Ok(match self {
-				Cursor::Handle(h) => h.raw_copy(),
-				Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?.leak(),
-				Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?.leak(),
-				Cursor::None => HCURSOR::NULL,
-				Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?.leak(),
+				Handle(h) => h.raw_copy(),
+				Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?.leak(),
+				Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?.leak(),
+				None => HCURSOR::NULL,
+				Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?.leak(),
 			})
 		}
 	}
@@ -163,12 +165,13 @@ impl Icon {
 	#[must_use]
 	pub fn as_hicon(&self, hinst: &HINSTANCE) -> SysResult<HICON> {
 		unsafe {
+			use Icon::*;
 			Ok(match self {
-				Icon::Handle(h) => h.raw_copy(),
-				Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?.leak(),
-				Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?.leak(),
-				Icon::None => HICON::NULL,
-				Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?.leak(),
+				Handle(h) => h.raw_copy(),
+				Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?.leak(),
+				Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?.leak(),
+				None => HICON::NULL,
+				Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?.leak(),
 			})
 		}
 	}

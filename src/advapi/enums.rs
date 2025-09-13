@@ -40,8 +40,9 @@ pub enum RegistryValue {
 
 impl std::fmt::Display for RegistryValue {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		use RegistryValue::*;
 		match self {
-			Self::Binary(b) => write!(
+			Binary(b) => write!(
 				f,
 				"[REG_BINARY] {}",
 				b.iter()
@@ -49,11 +50,11 @@ impl std::fmt::Display for RegistryValue {
 					.collect::<Vec<_>>()
 					.join(" "),
 			),
-			Self::Dword(n) => write!(f, "[REG_DWORD] {}", *n),
-			Self::Qword(n) => write!(f, "[REG_QWORD] {}", *n),
-			Self::Sz(s) => write!(f, "[REG_SZ] \"{}\"", s),
-			Self::ExpandSz(s) => write!(f, "[REG_EXPAND_SZ] \"{}\"", s),
-			Self::MultiSz(v) => write!(
+			Dword(n) => write!(f, "[REG_DWORD] {}", *n),
+			Qword(n) => write!(f, "[REG_QWORD] {}", *n),
+			Sz(s) => write!(f, "[REG_SZ] \"{}\"", s),
+			ExpandSz(s) => write!(f, "[REG_EXPAND_SZ] \"{}\"", s),
+			MultiSz(v) => write!(
 				f,
 				"[REG_MULTI_SZ] {}",
 				v.iter()
@@ -61,7 +62,7 @@ impl std::fmt::Display for RegistryValue {
 					.collect::<Vec<_>>()
 					.join(", "),
 			),
-			Self::None => write!(f, "[REG_NONE]"),
+			None => write!(f, "[REG_NONE]"),
 		}
 	}
 }
@@ -120,23 +121,24 @@ impl RegistryValue {
 	/// Returns a pointer to the raw data, along with the raw data length.
 	#[must_use]
 	pub fn as_ptr_with_len(&self, str_buf: &mut WString) -> (*const std::ffi::c_void, u32) {
+		use RegistryValue::*;
 		match self {
-			Self::Binary(b) => (b.as_ptr() as _, b.len() as _),
-			Self::Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
-			Self::Qword(n) => (n as *const _ as _, std::mem::size_of::<u64>() as _),
-			Self::Sz(s) => {
+			Binary(b) => (b.as_ptr() as _, b.len() as _),
+			Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
+			Qword(n) => (n as *const _ as _, std::mem::size_of::<u64>() as _),
+			Sz(s) => {
 				*str_buf = WString::from_str(s);
 				Self::as_ptr_with_len_str(&str_buf)
 			},
-			Self::ExpandSz(s) => {
+			ExpandSz(s) => {
 				*str_buf = WString::from_str(s);
 				Self::as_ptr_with_len_str(&str_buf)
 			},
-			Self::MultiSz(v) => {
+			MultiSz(v) => {
 				*str_buf = WString::from_str_vec(v);
 				Self::as_ptr_with_len_str(&str_buf)
 			},
-			Self::None => (std::ptr::null(), 0),
+			None => (std::ptr::null(), 0),
 		}
 	}
 
@@ -150,14 +152,15 @@ impl RegistryValue {
 	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
 	#[must_use]
 	pub const fn reg_type(&self) -> co::REG {
+		use RegistryValue::*;
 		match self {
-			Self::Binary(_) => co::REG::BINARY,
-			Self::Dword(_) => co::REG::DWORD,
-			Self::Qword(_) => co::REG::QWORD,
-			Self::Sz(_) => co::REG::SZ,
-			Self::ExpandSz(_) => co::REG::EXPAND_SZ,
-			Self::MultiSz(_) => co::REG::MULTI_SZ,
-			Self::None => co::REG::NONE,
+			Binary(_) => co::REG::BINARY,
+			Dword(_) => co::REG::DWORD,
+			Qword(_) => co::REG::QWORD,
+			Sz(_) => co::REG::SZ,
+			ExpandSz(_) => co::REG::EXPAND_SZ,
+			MultiSz(_) => co::REG::MULTI_SZ,
+			None => co::REG::NONE,
 		}
 	}
 }

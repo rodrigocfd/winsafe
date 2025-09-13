@@ -49,8 +49,9 @@ impl HttpInfo {
 	/// Panics if the value is not `HttpInfo::Number64`.
 	#[must_use]
 	pub const fn unwrap_number64(&self) -> u64 {
+		use HttpInfo::*;
 		match self {
-			Self::Number64(n) => *n,
+			Number64(n) => *n,
 			_ => panic!("HttpInfo does not contain Number64."),
 		}
 	}
@@ -66,8 +67,9 @@ impl HttpInfo {
 	/// Panics if the value is not `HttpInfo::Str`.
 	#[must_use]
 	pub fn unwrap_str(&self) -> String {
+		use HttpInfo::*;
 		match self {
-			Self::Str(s) => s.clone(),
+			Str(s) => s.clone(),
 			_ => panic!("HttpInfo does not contain Str."),
 		}
 	}
@@ -83,8 +85,9 @@ impl HttpInfo {
 	/// Panics if the value is not `HttpInfo::Time`.
 	#[must_use]
 	pub const fn unwrap_time(&self) -> SYSTEMTIME {
+		use HttpInfo::*;
 		match self {
-			Self::Time(st) => *st,
+			Time(st) => *st,
 			_ => panic!("HttpInfo does not contain Time."),
 		}
 	}

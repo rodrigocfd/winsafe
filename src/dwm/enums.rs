@@ -46,31 +46,32 @@ impl DwmAttr {
 	/// Returns the correspondent [`co::DWMWA`](crate::co::DWMWA) flag.
 	#[must_use]
 	pub const fn flag(&self) -> co::DWMWA {
+		use DwmAttr::*;
 		match self {
-			Self::NcRenderingEnabled(_) => co::DWMWA::NCRENDERING_ENABLED,
-			Self::NcRenderingPolicy(_) => co::DWMWA::NCRENDERING_POLICY,
-			Self::TransitionsForceDisabled(_) => co::DWMWA::TRANSITIONS_FORCEDISABLED,
-			Self::AllowNcPaint(_) => co::DWMWA::ALLOW_NCPAINT,
-			Self::CaptionButtonBounds(_) => co::DWMWA::CAPTION_BUTTON_BOUNDS,
-			Self::NonClientRtlLayout(_) => co::DWMWA::NONCLIENT_RTL_LAYOUT,
-			Self::ForceIconicRepresentation(_) => co::DWMWA::FORCE_ICONIC_REPRESENTATION,
-			Self::Flip3dPolicy(_) => co::DWMWA::FLIP3D_POLICY,
-			Self::ExtendedFrameBounds(_) => co::DWMWA::EXTENDED_FRAME_BOUNDS,
-			Self::HasIconicBitmap(_) => co::DWMWA::HAS_ICONIC_BITMAP,
-			Self::DisallowPeek(_) => co::DWMWA::DISALLOW_PEEK,
-			Self::ExcludedFromPeek(_) => co::DWMWA::EXCLUDED_FROM_PEEK,
-			Self::Cloak(_) => co::DWMWA::CLOAK,
-			Self::Cloaked(_) => co::DWMWA::CLOAKED,
-			Self::FreezeRepresentation(_) => co::DWMWA::FREEZE_REPRESENTATION,
-			Self::PassiveUpdateMode(_) => co::DWMWA::PASSIVE_UPDATE_MODE,
-			Self::UseHostBackdropBrush(_) => co::DWMWA::USE_HOSTBACKDROPBRUSH,
-			Self::UseImmersiveDarkMode(_) => co::DWMWA::USE_IMMERSIVE_DARK_MODE,
-			Self::WindowCornerPreference(_) => co::DWMWA::WINDOW_CORNER_PREFERENCE,
-			Self::BorderColor(_) => co::DWMWA::BORDER_COLOR,
-			Self::CaptionColor(_) => co::DWMWA::CAPTION_COLOR,
-			Self::TextColor(_) => co::DWMWA::TEXT_COLOR,
-			Self::VisibleFrameBorderThickness(_) => co::DWMWA::VISIBLE_FRAME_BORDER_THICKNESS,
-			Self::SystemBackdropType(_) => co::DWMWA::SYSTEMBACKDROP_TYPE,
+			NcRenderingEnabled(_) => co::DWMWA::NCRENDERING_ENABLED,
+			NcRenderingPolicy(_) => co::DWMWA::NCRENDERING_POLICY,
+			TransitionsForceDisabled(_) => co::DWMWA::TRANSITIONS_FORCEDISABLED,
+			AllowNcPaint(_) => co::DWMWA::ALLOW_NCPAINT,
+			CaptionButtonBounds(_) => co::DWMWA::CAPTION_BUTTON_BOUNDS,
+			NonClientRtlLayout(_) => co::DWMWA::NONCLIENT_RTL_LAYOUT,
+			ForceIconicRepresentation(_) => co::DWMWA::FORCE_ICONIC_REPRESENTATION,
+			Flip3dPolicy(_) => co::DWMWA::FLIP3D_POLICY,
+			ExtendedFrameBounds(_) => co::DWMWA::EXTENDED_FRAME_BOUNDS,
+			HasIconicBitmap(_) => co::DWMWA::HAS_ICONIC_BITMAP,
+			DisallowPeek(_) => co::DWMWA::DISALLOW_PEEK,
+			ExcludedFromPeek(_) => co::DWMWA::EXCLUDED_FROM_PEEK,
+			Cloak(_) => co::DWMWA::CLOAK,
+			Cloaked(_) => co::DWMWA::CLOAKED,
+			FreezeRepresentation(_) => co::DWMWA::FREEZE_REPRESENTATION,
+			PassiveUpdateMode(_) => co::DWMWA::PASSIVE_UPDATE_MODE,
+			UseHostBackdropBrush(_) => co::DWMWA::USE_HOSTBACKDROPBRUSH,
+			UseImmersiveDarkMode(_) => co::DWMWA::USE_IMMERSIVE_DARK_MODE,
+			WindowCornerPreference(_) => co::DWMWA::WINDOW_CORNER_PREFERENCE,
+			BorderColor(_) => co::DWMWA::BORDER_COLOR,
+			CaptionColor(_) => co::DWMWA::CAPTION_COLOR,
+			TextColor(_) => co::DWMWA::TEXT_COLOR,
+			VisibleFrameBorderThickness(_) => co::DWMWA::VISIBLE_FRAME_BORDER_THICKNESS,
+			SystemBackdropType(_) => co::DWMWA::SYSTEMBACKDROP_TYPE,
 		}
 	}
 
@@ -81,31 +82,32 @@ impl DwmAttr {
 		buf_u32: &mut u32,
 		buf_rc: &mut RECT,
 	) -> *const std::ffi::c_void {
+		use DwmAttr::*;
 		match self {
-			Self::NcRenderingEnabled(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::NcRenderingPolicy(f) => Self::ptr_of_u32(f.raw(), buf_u32),
-			Self::TransitionsForceDisabled(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::AllowNcPaint(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::CaptionButtonBounds(rc) => Self::ptr_of_rc(*rc, buf_rc),
-			Self::NonClientRtlLayout(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::ForceIconicRepresentation(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::Flip3dPolicy(f) => Self::ptr_of_u32(f.raw(), buf_u32),
-			Self::ExtendedFrameBounds(rc) => Self::ptr_of_rc(*rc, buf_rc),
-			Self::HasIconicBitmap(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::DisallowPeek(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::ExcludedFromPeek(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::Cloak(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::Cloaked(f) => Self::ptr_of_u32(f.raw(), buf_u32),
-			Self::FreezeRepresentation(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::PassiveUpdateMode(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::UseHostBackdropBrush(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::UseImmersiveDarkMode(b) => Self::ptr_of_bool(*b, buf_u32),
-			Self::WindowCornerPreference(f) => Self::ptr_of_u32(f.raw(), buf_u32),
-			Self::BorderColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
-			Self::CaptionColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
-			Self::TextColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
-			Self::VisibleFrameBorderThickness(n) => Self::ptr_of_u32(*n, buf_u32),
-			Self::SystemBackdropType(f) => Self::ptr_of_u32(f.raw(), buf_u32),
+			NcRenderingEnabled(b) => Self::ptr_of_bool(*b, buf_u32),
+			NcRenderingPolicy(f) => Self::ptr_of_u32(f.raw(), buf_u32),
+			TransitionsForceDisabled(b) => Self::ptr_of_bool(*b, buf_u32),
+			AllowNcPaint(b) => Self::ptr_of_bool(*b, buf_u32),
+			CaptionButtonBounds(rc) => Self::ptr_of_rc(*rc, buf_rc),
+			NonClientRtlLayout(b) => Self::ptr_of_bool(*b, buf_u32),
+			ForceIconicRepresentation(b) => Self::ptr_of_bool(*b, buf_u32),
+			Flip3dPolicy(f) => Self::ptr_of_u32(f.raw(), buf_u32),
+			ExtendedFrameBounds(rc) => Self::ptr_of_rc(*rc, buf_rc),
+			HasIconicBitmap(b) => Self::ptr_of_bool(*b, buf_u32),
+			DisallowPeek(b) => Self::ptr_of_bool(*b, buf_u32),
+			ExcludedFromPeek(b) => Self::ptr_of_bool(*b, buf_u32),
+			Cloak(b) => Self::ptr_of_bool(*b, buf_u32),
+			Cloaked(f) => Self::ptr_of_u32(f.raw(), buf_u32),
+			FreezeRepresentation(b) => Self::ptr_of_bool(*b, buf_u32),
+			PassiveUpdateMode(b) => Self::ptr_of_bool(*b, buf_u32),
+			UseHostBackdropBrush(b) => Self::ptr_of_bool(*b, buf_u32),
+			UseImmersiveDarkMode(b) => Self::ptr_of_bool(*b, buf_u32),
+			WindowCornerPreference(f) => Self::ptr_of_u32(f.raw(), buf_u32),
+			BorderColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
+			CaptionColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
+			TextColor(c) => Self::ptr_of_u32(c.raw(), buf_u32),
+			VisibleFrameBorderThickness(n) => Self::ptr_of_u32(*n, buf_u32),
+			SystemBackdropType(f) => Self::ptr_of_u32(f.raw(), buf_u32),
 		}
 	}
 
@@ -129,32 +131,33 @@ impl DwmAttr {
 	/// Returns the size of the inner object.
 	#[must_use]
 	pub(in crate::dwm) const fn sz(&self) -> u32 {
+		use DwmAttr::*;
 		use std::mem::size_of;
 		match self {
-			Self::NcRenderingEnabled(_) => size_of::<BOOL>() as _,
-			Self::NcRenderingPolicy(_) => size_of::<co::DWMNCRENDERINGPOLICY>() as _,
-			Self::TransitionsForceDisabled(_) => size_of::<BOOL>() as _,
-			Self::AllowNcPaint(_) => size_of::<BOOL>() as _,
-			Self::CaptionButtonBounds(_) => size_of::<RECT>() as _,
-			Self::NonClientRtlLayout(_) => size_of::<BOOL>() as _,
-			Self::ForceIconicRepresentation(_) => size_of::<BOOL>() as _,
-			Self::Flip3dPolicy(_) => size_of::<co::DWMFLIP3DWINDOWPOLICY>() as _,
-			Self::ExtendedFrameBounds(_) => size_of::<RECT>() as _,
-			Self::HasIconicBitmap(_) => size_of::<BOOL>() as _,
-			Self::DisallowPeek(_) => size_of::<BOOL>() as _,
-			Self::ExcludedFromPeek(_) => size_of::<BOOL>() as _,
-			Self::Cloak(_) => size_of::<BOOL>() as _,
-			Self::Cloaked(_) => size_of::<co::DWM_CLOAKED>() as _,
-			Self::FreezeRepresentation(_) => size_of::<BOOL>() as _,
-			Self::PassiveUpdateMode(_) => size_of::<BOOL>() as _,
-			Self::UseHostBackdropBrush(_) => size_of::<BOOL>() as _,
-			Self::UseImmersiveDarkMode(_) => size_of::<BOOL>() as _,
-			Self::WindowCornerPreference(_) => size_of::<co::DWMWCP>() as _,
-			Self::BorderColor(_) => size_of::<COLORREF>() as _,
-			Self::CaptionColor(_) => size_of::<COLORREF>() as _,
-			Self::TextColor(_) => size_of::<COLORREF>() as _,
-			Self::VisibleFrameBorderThickness(_) => size_of::<u32>() as _,
-			Self::SystemBackdropType(_) => size_of::<co::DWMSBT>() as _,
+			NcRenderingEnabled(_) => size_of::<BOOL>() as _,
+			NcRenderingPolicy(_) => size_of::<co::DWMNCRENDERINGPOLICY>() as _,
+			TransitionsForceDisabled(_) => size_of::<BOOL>() as _,
+			AllowNcPaint(_) => size_of::<BOOL>() as _,
+			CaptionButtonBounds(_) => size_of::<RECT>() as _,
+			NonClientRtlLayout(_) => size_of::<BOOL>() as _,
+			ForceIconicRepresentation(_) => size_of::<BOOL>() as _,
+			Flip3dPolicy(_) => size_of::<co::DWMFLIP3DWINDOWPOLICY>() as _,
+			ExtendedFrameBounds(_) => size_of::<RECT>() as _,
+			HasIconicBitmap(_) => size_of::<BOOL>() as _,
+			DisallowPeek(_) => size_of::<BOOL>() as _,
+			ExcludedFromPeek(_) => size_of::<BOOL>() as _,
+			Cloak(_) => size_of::<BOOL>() as _,
+			Cloaked(_) => size_of::<co::DWM_CLOAKED>() as _,
+			FreezeRepresentation(_) => size_of::<BOOL>() as _,
+			PassiveUpdateMode(_) => size_of::<BOOL>() as _,
+			UseHostBackdropBrush(_) => size_of::<BOOL>() as _,
+			UseImmersiveDarkMode(_) => size_of::<BOOL>() as _,
+			WindowCornerPreference(_) => size_of::<co::DWMWCP>() as _,
+			BorderColor(_) => size_of::<COLORREF>() as _,
+			CaptionColor(_) => size_of::<COLORREF>() as _,
+			TextColor(_) => size_of::<COLORREF>() as _,
+			VisibleFrameBorderThickness(_) => size_of::<u32>() as _,
+			SystemBackdropType(_) => size_of::<co::DWMSBT>() as _,
 		}
 	}
 
@@ -247,20 +250,21 @@ impl DwmAttr {
 	/// Panics if the value is not `bool`.
 	#[must_use]
 	pub const fn unwrap_bool(&self) -> bool {
+		use DwmAttr::*;
 		match self {
-			Self::NcRenderingEnabled(b) => *b,
-			Self::TransitionsForceDisabled(b) => *b,
-			Self::AllowNcPaint(b) => *b,
-			Self::NonClientRtlLayout(b) => *b,
-			Self::ForceIconicRepresentation(b) => *b,
-			Self::HasIconicBitmap(b) => *b,
-			Self::DisallowPeek(b) => *b,
-			Self::ExcludedFromPeek(b) => *b,
-			Self::Cloak(b) => *b,
-			Self::FreezeRepresentation(b) => *b,
-			Self::PassiveUpdateMode(b) => *b,
-			Self::UseHostBackdropBrush(b) => *b,
-			Self::UseImmersiveDarkMode(b) => *b,
+			NcRenderingEnabled(b) => *b,
+			TransitionsForceDisabled(b) => *b,
+			AllowNcPaint(b) => *b,
+			NonClientRtlLayout(b) => *b,
+			ForceIconicRepresentation(b) => *b,
+			HasIconicBitmap(b) => *b,
+			DisallowPeek(b) => *b,
+			ExcludedFromPeek(b) => *b,
+			Cloak(b) => *b,
+			FreezeRepresentation(b) => *b,
+			PassiveUpdateMode(b) => *b,
+			UseHostBackdropBrush(b) => *b,
+			UseImmersiveDarkMode(b) => *b,
 			_ => panic!("DwmAttr is not a bool."),
 		}
 	}
@@ -276,9 +280,10 @@ impl DwmAttr {
 	/// Panics if the value is not `RECT`.
 	#[must_use]
 	pub const fn unwrap_rect(&self) -> RECT {
+		use DwmAttr::*;
 		match self {
-			Self::CaptionButtonBounds(rc) => *rc,
-			Self::ExtendedFrameBounds(rc) => *rc,
+			CaptionButtonBounds(rc) => *rc,
+			ExtendedFrameBounds(rc) => *rc,
 			_ => panic!("DwmAttr is not a RECT."),
 		}
 	}
@@ -294,10 +299,11 @@ impl DwmAttr {
 	/// Panics if the value is not `COLORREF`.
 	#[must_use]
 	pub const fn unwrap_colorref(&self) -> COLORREF {
+		use DwmAttr::*;
 		match self {
-			Self::BorderColor(c) => *c,
-			Self::CaptionColor(c) => *c,
-			Self::TextColor(c) => *c,
+			BorderColor(c) => *c,
+			CaptionColor(c) => *c,
+			TextColor(c) => *c,
 			_ => panic!("DwmAttr is not a COLORREF."),
 		}
 	}
@@ -312,8 +318,9 @@ impl DwmAttr {
 	/// Panics if the value is not `u32`.
 	#[must_use]
 	pub const fn unwrap_u32(&self) -> u32 {
+		use DwmAttr::*;
 		match self {
-			Self::VisibleFrameBorderThickness(n) => *n,
+			VisibleFrameBorderThickness(n) => *n,
 			_ => panic!("DwmAttr is not an u32."),
 		}
 	}
@@ -331,8 +338,9 @@ impl DwmAttr {
 	/// Panics if the value is not `co::DWMNCRENDERINGPOLICY`.
 	#[must_use]
 	pub const fn unwrap_ncrenderingpolicy(&self) -> co::DWMNCRENDERINGPOLICY {
+		use DwmAttr::*;
 		match self {
-			Self::NcRenderingPolicy(f) => *f,
+			NcRenderingPolicy(f) => *f,
 			_ => panic!("DwmAttr is not a co::DWMNCRENDERINGPOLICY."),
 		}
 	}
@@ -350,8 +358,9 @@ impl DwmAttr {
 	/// Panics if the value is not `co::DWMFLIP3DWINDOWPOLICY`.
 	#[must_use]
 	pub const fn unwrap_flip3dpolicy(&self) -> co::DWMFLIP3DWINDOWPOLICY {
+		use DwmAttr::*;
 		match self {
-			Self::Flip3dPolicy(f) => *f,
+			Flip3dPolicy(f) => *f,
 			_ => panic!("DwmAttr is not a co::DWMFLIP3DWINDOWPOLICY."),
 		}
 	}
@@ -368,8 +377,9 @@ impl DwmAttr {
 	/// Panics if the value is not `co::DWM_CLOAKED`.
 	#[must_use]
 	pub const fn unwrap_cloaked(&self) -> co::DWM_CLOAKED {
+		use DwmAttr::*;
 		match self {
-			Self::Cloaked(f) => *f,
+			Cloaked(f) => *f,
 			_ => panic!("DwmAttr is not a co::DWM_CLOAKED."),
 		}
 	}
@@ -386,8 +396,9 @@ impl DwmAttr {
 	/// Panics if the value is not `co::DWMWCP`.
 	#[must_use]
 	pub const fn unwrap_wcp(&self) -> co::DWMWCP {
+		use DwmAttr::*;
 		match self {
-			Self::WindowCornerPreference(f) => *f,
+			WindowCornerPreference(f) => *f,
 			_ => panic!("DwmAttr is not a co::DWMWCP."),
 		}
 	}
@@ -404,8 +415,9 @@ impl DwmAttr {
 	/// Panics if the value is not `co::DWMSBT`.
 	#[must_use]
 	pub const fn unwrap_sbt(&self) -> co::DWMSBT {
+		use DwmAttr::*;
 		match self {
-			Self::SystemBackdropType(f) => *f,
+			SystemBackdropType(f) => *f,
 			_ => panic!("DwmAttr is not a co::DWMSBT."),
 		}
 	}

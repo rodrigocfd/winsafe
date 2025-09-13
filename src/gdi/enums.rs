@@ -39,10 +39,11 @@ impl IdObmStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdObmStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Obm(obm) => MAKEINTRESOURCE(obm.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Obm(obm) => MAKEINTRESOURCE(obm.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -70,10 +71,11 @@ impl IdOcrStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdOcrStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Ocr(ocr) => MAKEINTRESOURCE(ocr.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Ocr(ocr) => MAKEINTRESOURCE(ocr.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -101,10 +103,11 @@ impl IdOicStr {
 	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
+		use IdOicStr::*;
 		match self {
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Oic(oic) => MAKEINTRESOURCE(oic.raw() as _),
-			Self::Str(ws) => ws.as_ptr(),
+			Id(id) => MAKEINTRESOURCE(*id as _),
+			Oic(oic) => MAKEINTRESOURCE(oic.raw() as _),
+			Str(ws) => ws.as_ptr(),
 		}
 	}
 }
