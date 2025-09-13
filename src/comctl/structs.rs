@@ -1527,7 +1527,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 
 #[allow(unused)]
 pub(in crate::comctl) struct TASKDIALOGCONFIG_buf {
-	pub raw: TASKDIALOGCONFIG_raw,
+	pub(in crate::comctl) raw: TASKDIALOGCONFIG_raw,
 	w_title: WString,
 	w_instruc: WString,
 	w_content: WString,
@@ -1543,37 +1543,37 @@ pub(in crate::comctl) struct TASKDIALOGCONFIG_buf {
 #[repr(C, packed)]
 pub(in crate::comctl) struct TASKDIALOGCONFIG_raw {
 	cbSize: u32,
-	pub hwndParent: HWND,
-	pub hInstance: HINSTANCE,
-	pub dwFlags: co::TDF,
-	pub dwCommonButtons: co::TDCBF,
-	pub pszWindowTitle: *const u16,
-	pub hMainIcon: *const std::ffi::c_void, // union with pszMainIcon
-	pub pszMainInstruction: *const u16,
-	pub pszContent: *const u16,
-	pub cButtons: u32,
-	pub pButtons: *const TASKDIALOG_BUTTON,
-	pub nDefaultButton: i32, // actually co::DLGID, which is u16
-	pub cRadioButtons: u32,
-	pub pRadioButtons: *mut TASKDIALOG_BUTTON,
-	pub nDefaultRadioButton: i32,
-	pub pszVerificationText: *const u16,
-	pub pszExpandedInformation: *const u16,
-	pub pszExpandedControlText: *const u16,
-	pub pszCollapsedControlText: *const u16,
-	pub hFooterIcon: *const std::ffi::c_void, // union with pszFooterIcon
-	pub pszFooter: *const u16,
-	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
-	pub lpCallbackData: usize,
-	pub cxWidth: u32,
+	pub(in crate::comctl) hwndParent: HWND,
+	pub(in crate::comctl) hInstance: HINSTANCE,
+	pub(in crate::comctl) dwFlags: co::TDF,
+	pub(in crate::comctl) dwCommonButtons: co::TDCBF,
+	pub(in crate::comctl) pszWindowTitle: *const u16,
+	pub(in crate::comctl) hMainIcon: *const std::ffi::c_void, // union with pszMainIcon
+	pub(in crate::comctl) pszMainInstruction: *const u16,
+	pub(in crate::comctl) pszContent: *const u16,
+	pub(in crate::comctl) cButtons: u32,
+	pub(in crate::comctl) pButtons: *const TASKDIALOG_BUTTON,
+	pub(in crate::comctl) nDefaultButton: i32, // actually co::DLGID, which is u16
+	pub(in crate::comctl) cRadioButtons: u32,
+	pub(in crate::comctl) pRadioButtons: *mut TASKDIALOG_BUTTON,
+	pub(in crate::comctl) nDefaultRadioButton: i32,
+	pub(in crate::comctl) pszVerificationText: *const u16,
+	pub(in crate::comctl) pszExpandedInformation: *const u16,
+	pub(in crate::comctl) pszExpandedControlText: *const u16,
+	pub(in crate::comctl) pszCollapsedControlText: *const u16,
+	pub(in crate::comctl) hFooterIcon: *const std::ffi::c_void, // union with pszFooterIcon
+	pub(in crate::comctl) pszFooter: *const u16,
+	pub(in crate::comctl) pfCallback: Option<PFTASKDIALOGCALLBACK>,
+	pub(in crate::comctl) lpCallbackData: usize,
+	pub(in crate::comctl) cxWidth: u32,
 }
 
 impl_default!(TASKDIALOGCONFIG_raw, cbSize);
 
 #[repr(C, packed)]
 pub(in crate::comctl) struct TASKDIALOG_BUTTON {
-	pub nButtonID: i32,
-	pub pszButtonText: *const u16,
+	pub(in crate::comctl) nButtonID: i32,
+	pub(in crate::comctl) pszButtonText: *const u16,
 }
 
 impl_default!(TASKDIALOG_BUTTON);
