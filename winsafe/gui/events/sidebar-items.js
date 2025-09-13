@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"struct":["ButtonEvents","ComboBoxEvents","DateTimePickerEvents","EditEvents","HeaderEvents","LabelEvents","ListBoxEvents","ListViewEvents","MonthCalendarEvents","RadioGroupEvents","StatusBarEvents","TabEvents","TrackbarEvents","TreeViewEvents","UpDownEvents","WindowEvents"]};

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\windows\window_modal.rs`."><title>window_modal.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (07d246fc6 2025-08-31)" data-channel="nightly" data-search-js="search-449aa9bf.js" data-stringdex-js="stringdex-0e748618.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\windows/</div>window_modal.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-2"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::any::Any;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\windows\window_modal.rs`."><title>window_modal.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (12eb345e5 2025-09-07)" data-channel="nightly" data-search-js="search-d846cb6c.js" data-stringdex-js="stringdex-5af928a3.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\windows/</div>window_modal.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::any::Any;
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::gui::{privs::<span class="kw-2">*</span>, <span class="kw-2">*</span>};
@@ -63,7 +63,7 @@
 <a href=#63 id=63 data-nosnippet>63</a>	///
 <a href=#64 id=64 data-nosnippet>64</a>	/// Note that, if the user clicks the "X" to close the modal, the default
 <a href=#65 id=65 data-nosnippet>65</a>	/// behavior is to call `EndDialog(0)`. To override this behavior, handle
-<a href=#66 id=66 data-nosnippet>66</a>	/// the modal's [`wm_close`](crate::gui::events::WindowEvents::wm_close)
+<a href=#66 id=66 data-nosnippet>66</a>	/// the modal's [`wm_close`](crate::prelude::GuiEventsWindow::wm_close)
 <a href=#67 id=67 data-nosnippet>67</a>	/// yourself.
 <a href=#68 id=68 data-nosnippet>68</a>	///
 <a href=#69 id=69 data-nosnippet>69</a>	/// # Panics
@@ -78,14 +78,25 @@
 <a href=#78 id=78 data-nosnippet>78</a>		}
 <a href=#79 id=79 data-nosnippet>79</a>	}
 <a href=#80 id=80 data-nosnippet>80</a>
-<a href=#81 id=81 data-nosnippet>81</a>	<span class="doccomment">/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
-<a href=#82 id=82 data-nosnippet>82</a>	/// message. This is the safest way to close any popup window, because
-<a href=#83 id=83 data-nosnippet>83</a>	/// you'll able to process the
-<a href=#84 id=84 data-nosnippet>84</a>	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
-<a href=#85 id=85 data-nosnippet>85</a>	/// like if the user clicked the window "X" button.
-<a href=#86 id=86 data-nosnippet>86</a>	</span><span class="kw">pub fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-<a href=#87 id=87 data-nosnippet>87</a>		<span class="kw">unsafe </span>{
-<a href=#88 id=88 data-nosnippet>88</a>			<span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap();
-<a href=#89 id=89 data-nosnippet>89</a>		}
+<a href=#81 id=81 data-nosnippet>81</a>	<span class="doccomment">/// Exposes methods to handle window messages.
+<a href=#82 id=82 data-nosnippet>82</a>	///
+<a href=#83 id=83 data-nosnippet>83</a>	/// # Panics
+<a href=#84 id=84 data-nosnippet>84</a>	///
+<a href=#85 id=85 data-nosnippet>85</a>	/// Panics if the window is already created. Events must be set before
+<a href=#86 id=86 data-nosnippet>86</a>	/// window creation.
+<a href=#87 id=87 data-nosnippet>87</a>	</span><span class="attr">#[must_use]
+<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">pub fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiEventsParent {
+<a href=#89 id=89 data-nosnippet>89</a>		<span class="self">self</span>.as_ref().on()
 <a href=#90 id=90 data-nosnippet>90</a>	}
-<a href=#91 id=91 data-nosnippet>91</a>}</code></pre></div></section></main></body></html>
+<a href=#91 id=91 data-nosnippet>91</a>
+<a href=#92 id=92 data-nosnippet>92</a>	<span class="doccomment">/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
+<a href=#93 id=93 data-nosnippet>93</a>	/// message. This is the safest way to close any popup window, because
+<a href=#94 id=94 data-nosnippet>94</a>	/// you'll able to process the
+<a href=#95 id=95 data-nosnippet>95</a>	/// [`wm_close`](crate::prelude::GuiEventsWindow::wm_close) event, just like
+<a href=#96 id=96 data-nosnippet>96</a>	/// if the user clicked the window "X" button.
+<a href=#97 id=97 data-nosnippet>97</a>	</span><span class="kw">pub fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+<a href=#98 id=98 data-nosnippet>98</a>		<span class="kw">unsafe </span>{
+<a href=#99 id=99 data-nosnippet>99</a>			<span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap();
+<a href=#100 id=100 data-nosnippet>100</a>		}
+<a href=#101 id=101 data-nosnippet>101</a>	}
+<a href=#102 id=102 data-nosnippet>102</a>}</code></pre></div></section></main></body></html>

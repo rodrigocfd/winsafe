@@ -1,11 +1,11 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (07d246fc6 2025-08-31)" data-channel="nightly" data-search-js="search-449aa9bf.js" data-stringdex-js="stringdex-0e748618.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>list_view_items.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::any::TypeId;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (12eb345e5 2025-09-07)" data-channel="nightly" data-search-js="search-d846cb6c.js" data-stringdex-js="stringdex-5af928a3.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>list_view_items.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::any::TypeId;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>std::cell::RefCell;
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>std::cmp::Ordering;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span>std::rc::Rc;
 <a href=#5 id=5 data-nosnippet>5</a>
 <a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<a href=#8 id=8 data-nosnippet>8</a><span class="kw">use </span><span class="kw">crate</span>::gui::{iterators::<span class="kw-2">*</span>, <span class="kw-2">*</span>};
+<a href=#8 id=8 data-nosnippet>8</a><span class="kw">use </span><span class="kw">crate</span>::gui::<span class="kw-2">*</span>;
 <a href=#9 id=9 data-nosnippet>9</a><span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <a href=#10 id=10 data-nosnippet>10</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#11 id=11 data-nosnippet>11</a>
@@ -354,4 +354,66 @@
 <a href=#354 id=354 data-nosnippet>354</a>		<span class="kw">let </span>item2 = data.<span class="number">0</span>.items().get(lparam2 <span class="kw">as _</span>);
 <a href=#355 id=355 data-nosnippet>355</a>		data.<span class="number">1</span>(item1, item2) <span class="kw">as _
 <a href=#356 id=356 data-nosnippet>356</a>	</span>}
-<a href=#357 id=357 data-nosnippet>357</a>}</code></pre></div></section></main></body></html>
+<a href=#357 id=357 data-nosnippet>357</a>}
+<a href=#358 id=358 data-nosnippet>358</a>
+<a href=#359 id=359 data-nosnippet>359</a><span class="kw">struct </span>ListViewItemIter&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+<a href=#360 id=360 data-nosnippet>360</a>	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
+<a href=#361 id=361 data-nosnippet>361</a>	front_idx: u32,
+<a href=#362 id=362 data-nosnippet>362</a>	past_back_idx: u32,
+<a href=#363 id=363 data-nosnippet>363</a>	is_sel: bool,
+<a href=#364 id=364 data-nosnippet>364</a>}
+<a href=#365 id=365 data-nosnippet>365</a>
+<a href=#366 id=366 data-nosnippet>366</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Iterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+<a href=#367 id=367 data-nosnippet>367</a>	<span class="kw">type </span>Item = ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;;
+<a href=#368 id=368 data-nosnippet>368</a>
+<a href=#369 id=369 data-nosnippet>369</a>	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+<a href=#370 id=370 data-nosnippet>370</a>		<span class="self">self</span>.grab(<span class="bool-val">true</span>)
+<a href=#371 id=371 data-nosnippet>371</a>	}
+<a href=#372 id=372 data-nosnippet>372</a>}
+<a href=#373 id=373 data-nosnippet>373</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; DoubleEndedIterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+<a href=#374 id=374 data-nosnippet>374</a>	<span class="kw">fn </span>next_back(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
+<a href=#375 id=375 data-nosnippet>375</a>		<span class="self">self</span>.grab(<span class="bool-val">false</span>)
+<a href=#376 id=376 data-nosnippet>376</a>	}
+<a href=#377 id=377 data-nosnippet>377</a>}
+<a href=#378 id=378 data-nosnippet>378</a>
+<a href=#379 id=379 data-nosnippet>379</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+<a href=#380 id=380 data-nosnippet>380</a>	<span class="attr">#[must_use]
+<a href=#381 id=381 data-nosnippet>381</a>	</span><span class="kw">fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, is_sel: bool) -&gt; <span class="self">Self </span>{
+<a href=#382 id=382 data-nosnippet>382</a>		<span class="self">Self </span>{
+<a href=#383 id=383 data-nosnippet>383</a>			owner,
+<a href=#384 id=384 data-nosnippet>384</a>			front_idx: <span class="number">0</span>,
+<a href=#385 id=385 data-nosnippet>385</a>			past_back_idx: owner.items().count(),
+<a href=#386 id=386 data-nosnippet>386</a>			is_sel,
+<a href=#387 id=387 data-nosnippet>387</a>		}
+<a href=#388 id=388 data-nosnippet>388</a>	}
+<a href=#389 id=389 data-nosnippet>389</a>
+<a href=#390 id=390 data-nosnippet>390</a>	<span class="kw">fn </span>grab(<span class="kw-2">&amp;mut </span><span class="self">self</span>, is_front: bool) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; {
+<a href=#391 id=391 data-nosnippet>391</a>		<span class="kw">if </span><span class="self">self</span>.front_idx == <span class="self">self</span>.past_back_idx {
+<a href=#392 id=392 data-nosnippet>392</a>			<span class="kw">return </span><span class="prelude-val">None</span>;
+<a href=#393 id=393 data-nosnippet>393</a>		}
+<a href=#394 id=394 data-nosnippet>394</a>
+<a href=#395 id=395 data-nosnippet>395</a>		<span class="kw">let </span><span class="kw-2">mut </span>our_idx = <span class="kw">if </span>is_front { <span class="self">self</span>.front_idx } <span class="kw">else </span>{ <span class="self">self</span>.past_back_idx - <span class="number">1 </span>};
+<a href=#396 id=396 data-nosnippet>396</a>		<span class="kw">let </span><span class="kw-2">mut </span>item = <span class="self">self</span>.owner.items().get(our_idx);
+<a href=#397 id=397 data-nosnippet>397</a>
+<a href=#398 id=398 data-nosnippet>398</a>		<span class="comment">// LVNI_SELECTED|LVNI_PREVIOUS flags don't seem to work together, so we check each item manually.
+<a href=#399 id=399 data-nosnippet>399</a>		</span><span class="kw">while </span><span class="self">self</span>.is_sel &amp;&amp; !item.is_selected() {
+<a href=#400 id=400 data-nosnippet>400</a>			<span class="kw">if </span>is_front {
+<a href=#401 id=401 data-nosnippet>401</a>				<span class="self">self</span>.front_idx += <span class="number">1</span>;
+<a href=#402 id=402 data-nosnippet>402</a>			} <span class="kw">else </span>{
+<a href=#403 id=403 data-nosnippet>403</a>				<span class="self">self</span>.past_back_idx -= <span class="number">1</span>;
+<a href=#404 id=404 data-nosnippet>404</a>			}
+<a href=#405 id=405 data-nosnippet>405</a>			<span class="kw">if </span><span class="self">self</span>.front_idx == <span class="self">self</span>.past_back_idx {
+<a href=#406 id=406 data-nosnippet>406</a>				<span class="kw">return </span><span class="prelude-val">None</span>;
+<a href=#407 id=407 data-nosnippet>407</a>			}
+<a href=#408 id=408 data-nosnippet>408</a>			our_idx = <span class="kw">if </span>is_front { <span class="self">self</span>.front_idx } <span class="kw">else </span>{ <span class="self">self</span>.past_back_idx - <span class="number">1 </span>};
+<a href=#409 id=409 data-nosnippet>409</a>			item = <span class="self">self</span>.owner.items().get(our_idx);
+<a href=#410 id=410 data-nosnippet>410</a>		}
+<a href=#411 id=411 data-nosnippet>411</a>
+<a href=#412 id=412 data-nosnippet>412</a>		<span class="kw">if </span>is_front {
+<a href=#413 id=413 data-nosnippet>413</a>			<span class="self">self</span>.front_idx += <span class="number">1</span>;
+<a href=#414 id=414 data-nosnippet>414</a>		} <span class="kw">else </span>{
+<a href=#415 id=415 data-nosnippet>415</a>			<span class="self">self</span>.past_back_idx -= <span class="number">1</span>;
+<a href=#416 id=416 data-nosnippet>416</a>		}
+<a href=#417 id=417 data-nosnippet>417</a>		<span class="prelude-val">Some</span>(item)
+<a href=#418 id=418 data-nosnippet>418</a>	}
+<a href=#419 id=419 data-nosnippet>419</a>}</code></pre></div></section></main></body></html>

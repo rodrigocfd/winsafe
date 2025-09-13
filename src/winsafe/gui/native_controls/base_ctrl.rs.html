@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\base_ctrl.rs`."><title>base_ctrl.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (07d246fc6 2025-08-31)" data-channel="nightly" data-search-js="search-449aa9bf.js" data-stringdex-js="stringdex-0e748618.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>base_ctrl.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::UnsafeCell;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\base_ctrl.rs`."><title>base_ctrl.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.91.0-nightly (12eb345e5 2025-09-07)" data-channel="nightly" data-search-js="search-d846cb6c.js" data-stringdex-js="stringdex-5af928a3.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>base_ctrl.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::UnsafeCell;
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
 <a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#8 id=8 data-nosnippet>8</a>
@@ -12,7 +12,7 @@
 <a href=#12 id=12 data-nosnippet>12</a></span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>BaseCtrl {
 <a href=#13 id=13 data-nosnippet>13</a>	ctrl_id: u16,
 <a href=#14 id=14 data-nosnippet>14</a>	hwnd: UnsafeCell&lt;HWND&gt;,
-<a href=#15 id=15 data-nosnippet>15</a>	subclass_events: WindowEvents,
+<a href=#15 id=15 data-nosnippet>15</a>	subclass_events: BaseWndEvents,
 <a href=#16 id=16 data-nosnippet>16</a>}
 <a href=#17 id=17 data-nosnippet>17</a>
 <a href=#18 id=18 data-nosnippet>18</a><span class="kw">static </span><span class="kw-2">mut </span>BASE_SUBCLASS_ID: usize = <span class="number">0</span>; <span class="comment">// incremented each time a new subclass is installed
@@ -23,7 +23,7 @@
 <a href=#23 id=23 data-nosnippet>23</a>		<span class="self">Self </span>{
 <a href=#24 id=24 data-nosnippet>24</a>			ctrl_id,
 <a href=#25 id=25 data-nosnippet>25</a>			hwnd: UnsafeCell::new(HWND::NULL),
-<a href=#26 id=26 data-nosnippet>26</a>			subclass_events: WindowEvents::new(WndTy::Raw),
+<a href=#26 id=26 data-nosnippet>26</a>			subclass_events: BaseWndEvents::new(WndTy::Raw),
 <a href=#27 id=27 data-nosnippet>27</a>		}
 <a href=#28 id=28 data-nosnippet>28</a>	}
 <a href=#29 id=29 data-nosnippet>29</a>
@@ -38,7 +38,7 @@
 <a href=#38 id=38 data-nosnippet>38</a>	}
 <a href=#39 id=39 data-nosnippet>39</a>
 <a href=#40 id=40 data-nosnippet>40</a>	<span class="attr">#[must_use]
-<a href=#41 id=41 data-nosnippet>41</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
+<a href=#41 id=41 data-nosnippet>41</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>BaseWndEvents {
 <a href=#42 id=42 data-nosnippet>42</a>		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.hwnd() != HWND::NULL {
 <a href=#43 id=43 data-nosnippet>43</a>			<span class="macro">panic!</span>(<span class="string">"Cannot add subclass events after control creation."</span>);
 <a href=#44 id=44 data-nosnippet>44</a>		}
@@ -153,17 +153,18 @@
 <a href=#153 id=153 data-nosnippet>153</a>		}
 <a href=#154 id=154 data-nosnippet>154</a>
 <a href=#155 id=155 data-nosnippet>155</a>		<span class="kw">if </span>p.msg_id == co::WM::NCDESTROY {
-<a href=#156 id=156 data-nosnippet>156</a>			<span class="comment">// always check
-<a href=#157 id=157 data-nosnippet>157</a>			</span>hwnd.RemoveWindowSubclass(<span class="self">Self</span>::subclass_proc, subclass_id)<span class="question-mark">?</span>; <span class="comment">// https://devblogs.microsoft.com/oldnewthing/20031111-00/?p=41883
-<a href=#158 id=158 data-nosnippet>158</a>			</span><span class="kw">if </span>!ptr_self.is_null() {
-<a href=#159 id=159 data-nosnippet>159</a>				<span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>ptr_self };
-<a href=#160 id=160 data-nosnippet>160</a>				ref_self.subclass_events.clear(); <span class="comment">// prevents circular references
-<a href=#161 id=161 data-nosnippet>161</a>			</span>}
-<a href=#162 id=162 data-nosnippet>162</a>		}
-<a href=#163 id=163 data-nosnippet>163</a>
-<a href=#164 id=164 data-nosnippet>164</a>		<span class="prelude-val">Ok</span>(<span class="kw">match </span>user_ret {
-<a href=#165 id=165 data-nosnippet>165</a>			<span class="prelude-val">Some</span>(user_ret) =&gt; user_ret,
-<a href=#166 id=166 data-nosnippet>166</a>			<span class="prelude-val">None </span>=&gt; <span class="kw">unsafe </span>{ hwnd.DefSubclassProc(p) },
-<a href=#167 id=167 data-nosnippet>167</a>		})
-<a href=#168 id=168 data-nosnippet>168</a>	}
-<a href=#169 id=169 data-nosnippet>169</a>}</code></pre></div></section></main></body></html>
+<a href=#156 id=156 data-nosnippet>156</a>			<span class="comment">// Always check.
+<a href=#157 id=157 data-nosnippet>157</a>			// https://devblogs.microsoft.com/oldnewthing/20031111-00/?p=41883
+<a href=#158 id=158 data-nosnippet>158</a>			</span>hwnd.RemoveWindowSubclass(<span class="self">Self</span>::subclass_proc, subclass_id)<span class="question-mark">?</span>;
+<a href=#159 id=159 data-nosnippet>159</a>			<span class="kw">if </span>!ptr_self.is_null() {
+<a href=#160 id=160 data-nosnippet>160</a>				<span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>ptr_self };
+<a href=#161 id=161 data-nosnippet>161</a>				ref_self.subclass_events.clear(); <span class="comment">// prevents circular references
+<a href=#162 id=162 data-nosnippet>162</a>			</span>}
+<a href=#163 id=163 data-nosnippet>163</a>		}
+<a href=#164 id=164 data-nosnippet>164</a>
+<a href=#165 id=165 data-nosnippet>165</a>		<span class="prelude-val">Ok</span>(<span class="kw">match </span>user_ret {
+<a href=#166 id=166 data-nosnippet>166</a>			<span class="prelude-val">Some</span>(user_ret) =&gt; user_ret,
+<a href=#167 id=167 data-nosnippet>167</a>			<span class="prelude-val">None </span>=&gt; <span class="kw">unsafe </span>{ hwnd.DefSubclassProc(p) },
+<a href=#168 id=168 data-nosnippet>168</a>		})
+<a href=#169 id=169 data-nosnippet>169</a>	}
+<a href=#170 id=170 data-nosnippet>170</a>}</code></pre></div></section></main></body></html>
