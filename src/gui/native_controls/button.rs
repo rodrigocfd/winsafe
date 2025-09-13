@@ -46,13 +46,13 @@ native_ctrl! { Button: ButtonObj => GuiEventsButton;
 	///     #[must_use]
 	///     fn create_and_run() -> w::AnyResult<i32> {
 	///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
-	///             title: "Main window".to_owned(),
+	///             title: "Main window",
 	///             ..Default::default()
 	///         });
 	///         let btn = gui::Button::new(
 	///             &wnd,
 	///             gui::ButtonOpts {
-	///                 text: "&Click me".to_owned(),
+	///                 text: "&Click me",
 	///                 position: gui::dpi(20, 20),
 	///                 ..Default::default()
 	///             },
@@ -94,6 +94,7 @@ impl Button {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let text2 = opts.text.to_owned();
 		parent
 			.as_ref()
 			.before_on()
@@ -101,7 +102,7 @@ impl Button {
 				self2.0.base.create_window(
 					opts.window_ex_style,
 					"BUTTON",
-					Some(&opts.text),
+					Some(&text2),
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
 					SIZE::with(opts.width, opts.height),
@@ -160,12 +161,12 @@ impl Button {
 
 /// Options to create a [`Button`](crate::gui::Button) programmatically with
 /// [`Button::new`](crate::gui::Button::new).
-pub struct ButtonOpts {
+pub struct ButtonOpts<'a> {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
-	pub text: String,
+	pub text: &'a str,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -213,10 +214,10 @@ pub struct ButtonOpts {
 	pub resize_behavior: (Horz, Vert),
 }
 
-impl Default for ButtonOpts {
+impl<'a> Default for ButtonOpts<'a> {
 	fn default() -> Self {
 		Self {
-			text: "".to_owned(),
+			text: "",
 			position: dpi(0, 0),
 			width: dpi_x(88),
 			height: dpi_y(26),

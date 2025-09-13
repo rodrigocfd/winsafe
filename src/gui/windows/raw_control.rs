@@ -34,6 +34,7 @@ impl RawControl {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let opts2: WindowControlOptsObj = opts.into();
 		parent
 			.as_ref()
 			.before_on()
@@ -41,19 +42,19 @@ impl RawControl {
 				let hinst = parent2.hwnd().hinstance();
 				let atom = self2.0.raw_base.register_class(
 					&hinst,
-					&opts.class_name,
-					opts.class_style,
-					&opts.class_icon,
-					&opts.class_bg_brush,
-					&opts.class_cursor,
+					&opts2.class_name,
+					opts2.class_style,
+					&opts2.class_icon,
+					&opts2.class_bg_brush,
+					&opts2.class_cursor,
 				);
 				self2.0.raw_base.create_window(
-					opts.ex_style,
+					opts2.ex_style,
 					atom,
 					None,
-					opts.style,
-					opts.position.into(),
-					opts.size.into(),
+					opts2.style,
+					opts2.position.into(),
+					opts2.size.into(),
 					Some(parent2.hwnd()),
 					IdMenu::Id(ctrl_id),
 					&hinst,
@@ -61,7 +62,7 @@ impl RawControl {
 
 				parent2
 					.as_ref()
-					.add_to_layout(self2.0.raw_base.base().hwnd(), opts.resize_behavior);
+					.add_to_layout(self2.0.raw_base.base().hwnd(), opts2.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -90,12 +91,12 @@ impl RawControl {
 
 /// Options to create a [`WindowControl`](crate::gui::WindowControl)
 /// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).
-pub struct WindowControlOpts {
+pub struct WindowControlOpts<'a> {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
-	pub class_name: String,
+	pub class_name: &'a str,
 	/// Window class styles to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -153,10 +154,10 @@ pub struct WindowControlOpts {
 	pub resize_behavior: (Horz, Vert),
 }
 
-impl Default for WindowControlOpts {
+impl<'a> Default for WindowControlOpts<'a> {
 	fn default() -> Self {
 		Self {
-			class_name: "".to_owned(),
+			class_name: "",
 			class_style: co::CS::DBLCLKS,
 			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
@@ -174,4 +175,35 @@ impl Default for WindowControlOpts {
 			resize_behavior: (Horz::None, Vert::None),
 		}
 	}
+}
+
+impl<'a> Into<WindowControlOptsObj> for WindowControlOpts<'a> {
+	fn into(self) -> WindowControlOptsObj {
+		WindowControlOptsObj {
+			class_name: self.class_name.to_owned(),
+			class_style: self.class_style,
+			class_icon: self.class_icon,
+			class_cursor: self.class_cursor,
+			class_bg_brush: self.class_bg_brush,
+			position: self.position,
+			size: self.size,
+			style: self.style,
+			ex_style: self.ex_style,
+			resize_behavior: self.resize_behavior,
+		}
+	}
+}
+
+/// To be stored inside the object.
+struct WindowControlOptsObj {
+	class_name: String,
+	class_style: co::CS,
+	class_icon: Icon,
+	class_cursor: Cursor,
+	class_bg_brush: Brush,
+	position: (i32, i32),
+	size: (i32, i32),
+	style: co::WS,
+	ex_style: co::WS_EX,
+	resize_behavior: (Horz, Vert),
 }

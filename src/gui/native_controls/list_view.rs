@@ -61,6 +61,7 @@ impl<T> ListView<T> {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let columns2 = opts.owned_columns();
 		parent
 			.as_ref()
 			.before_on()
@@ -84,7 +85,7 @@ impl<T> ListView<T> {
 				{
 					*unsafe { &mut *self2.0.header.get() } = None; // no header, delete it
 				}
-				for (text, cx) in opts.columns.iter() {
+				for (text, cx) in columns2.iter() {
 					self2.cols().add(text, *cx)?;
 				}
 				parent2
@@ -398,7 +399,7 @@ impl<T> ListView<T> {
 
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).
-pub struct ListViewOpts {
+pub struct ListViewOpts<'a> {
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -459,10 +460,10 @@ pub struct ListViewOpts {
 	/// mode.
 	///
 	/// Defaults to none.
-	pub columns: Vec<(String, i32)>,
+	pub columns: &'a [(&'a str, i32)],
 }
 
-impl Default for ListViewOpts {
+impl<'a> Default for ListViewOpts<'a> {
 	fn default() -> Self {
 		Self {
 			position: dpi(0, 0),
@@ -474,7 +475,17 @@ impl Default for ListViewOpts {
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 			context_menu: None,
-			columns: Vec::new(),
+			columns: &[],
 		}
+	}
+}
+
+impl<'a> ListViewOpts<'a> {
+	#[must_use]
+	fn owned_columns(&self) -> Vec<(String, i32)> {
+		self.columns
+			.iter()
+			.map(|(text, width)| ((*text).to_owned(), *width))
+			.collect()
 	}
 }

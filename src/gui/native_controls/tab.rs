@@ -13,7 +13,7 @@ use crate::prelude::*;
 struct TabObj {
 	base: BaseCtrl,
 	events: BaseCtrlEvents,
-	children: Vec<(String, Box<dyn AsRef<WindowControl>>)>, // title + content
+	children: Vec<(String, WindowControl)>, // title + content
 	_pin: PhantomPinned,
 }
 
@@ -33,14 +33,15 @@ impl Tab {
 	/// dynamically create a `Tab` in an event closure.
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: TabOpts) -> Self {
-		let mut opts = opts;
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let children = opts.items.drain(..).collect::<Vec<_>>();
-
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
 			events: BaseCtrlEvents::new(parent, ctrl_id),
-			children,
+			children: opts
+				.items
+				.iter()
+				.map(|(title, wnd)| ((*title).to_owned(), wnd.clone()))
+				.collect::<Vec<_>>(),
 			_pin: PhantomPinned,
 		}));
 
@@ -89,12 +90,15 @@ impl Tab {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
+		items: &[(&str, WindowControl)],
 	) -> Self {
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
 			events: BaseCtrlEvents::new(parent, ctrl_id),
-			children: items,
+			children: items
+				.iter()
+				.map(|(title, wnd)| ((*title).to_owned(), wnd.clone()))
+				.collect::<Vec<_>>(),
 			_pin: PhantomPinned,
 		}));
 
@@ -149,7 +153,7 @@ impl Tab {
 			.enumerate()
 			.filter(|(i, _)| *i != index as usize)
 			.for_each(|(_, (_, item))| {
-				item.as_ref().as_ref().hwnd().ShowWindow(co::SW::HIDE); // hide all others
+				item.hwnd().ShowWindow(co::SW::HIDE); // hide all others
 			});
 
 		if let Some((_, item)) = self.0.children.get(index as usize) {
@@ -167,9 +171,7 @@ impl Tab {
 				});
 			}
 
-			item.as_ref()
-				.as_ref()
-				.hwnd()
+			item.hwnd()
 				.SetWindowPos(
 					HwndPlace::None,
 					POINT::with(rc.left, rc.top),
@@ -224,7 +226,7 @@ impl Tab {
 
 /// Options to create a [`Tab`](crate::gui::Tab) programmatically with
 /// [`Tab::new`](crate::gui::Tab::new).
-pub struct TabOpts {
+pub struct TabOpts<'a> {
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -276,10 +278,10 @@ pub struct TabOpts {
 	/// style.
 	///
 	/// Defaults to none.
-	pub items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
+	pub items: &'a [(&'a str, WindowControl)],
 }
 
-impl Default for TabOpts {
+impl<'a> Default for TabOpts<'a> {
 	fn default() -> Self {
 		Self {
 			position: dpi(0, 0),
@@ -290,7 +292,7 @@ impl Default for TabOpts {
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::new(),
+			items: &[],
 		}
 	}
 }

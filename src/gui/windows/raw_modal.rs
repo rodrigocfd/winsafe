@@ -10,7 +10,7 @@ use crate::prelude::*;
 
 struct RawModalObj {
 	raw_base: RawBase,
-	opts: WindowModalOpts,
+	opts: WindowModalOptsObj,
 	hchild_prev_focus_parent: UnsafeCell<HWND>,
 	_pin: PhantomPinned,
 }
@@ -26,7 +26,7 @@ impl RawModal {
 	pub(in crate::gui) fn new(opts: WindowModalOpts) -> Self {
 		let new_self = Self(Arc::pin(RawModalObj {
 			raw_base: RawBase::new(),
-			opts,
+			opts: opts.into(),
 			hchild_prev_focus_parent: UnsafeCell::new(HWND::NULL),
 			_pin: PhantomPinned,
 		}));
@@ -123,12 +123,12 @@ impl RawModal {
 
 /// Options to create a [`WindowModal`](crate::gui::WindowModal)
 /// programmatically with [`WindowModal::new`](crate::gui::WindowModal::new).
-pub struct WindowModalOpts {
+pub struct WindowModalOpts<'a> {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
-	pub class_name: String,
+	pub class_name: &'a str,
 	/// Window class styles to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -154,7 +154,7 @@ pub struct WindowModalOpts {
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
-	pub title: String,
+	pub title: &'a str,
 	/// Width and height of window client area, in pixels, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Does not include title bar or borders.
@@ -191,15 +191,15 @@ pub struct WindowModalOpts {
 	pub process_dlg_msgs: bool,
 }
 
-impl Default for WindowModalOpts {
+impl<'a> Default for WindowModalOpts<'a> {
 	fn default() -> Self {
 		Self {
-			class_name: "".to_owned(),
+			class_name: "",
 			class_style: co::CS::DBLCLKS,
 			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
-			title: "".to_owned(),
+			title: "",
 			size: dpi(500, 400),
 			style: co::WS::CAPTION
 				| co::WS::SYSMENU
@@ -210,4 +210,35 @@ impl Default for WindowModalOpts {
 			process_dlg_msgs: true,
 		}
 	}
+}
+
+impl<'a> Into<WindowModalOptsObj> for WindowModalOpts<'a> {
+	fn into(self) -> WindowModalOptsObj {
+		WindowModalOptsObj {
+			class_name: self.class_name.to_owned(),
+			class_style: self.class_style,
+			class_icon: self.class_icon,
+			class_cursor: self.class_cursor,
+			class_bg_brush: self.class_bg_brush,
+			title: self.title.to_owned(),
+			size: self.size,
+			style: self.style,
+			ex_style: self.ex_style,
+			process_dlg_msgs: self.process_dlg_msgs,
+		}
+	}
+}
+
+/// To be stored inside the object.
+struct WindowModalOptsObj {
+	class_name: String,
+	class_style: co::CS,
+	class_icon: Icon,
+	class_cursor: Cursor,
+	class_bg_brush: Brush,
+	title: String,
+	size: (i32, i32),
+	style: co::WS,
+	ex_style: co::WS_EX,
+	process_dlg_msgs: bool,
 }

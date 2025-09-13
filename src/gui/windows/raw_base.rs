@@ -144,7 +144,7 @@ impl RawBase {
 	fn wnd_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
 			co::WM::NCCREATE => {
-				// first message being handled
+				// First message being handled.
 				let msg = unsafe { wm::NcCreate::from_generic_wm(p) };
 				let ptr_self = msg.createstruct.lpCreateParams as *const Self;
 				unsafe {

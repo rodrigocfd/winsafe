@@ -98,7 +98,7 @@ impl DlgBase {
 	fn dlg_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
 			co::WM::INITDIALOG => {
-				// first message being handled
+				// First message being handled.
 				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
 				let ptr_self = msg.additional_data as *const Self;
 				unsafe {

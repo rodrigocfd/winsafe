@@ -105,27 +105,26 @@ winsafe = { version = "0.0.25", features = ["gui"] }
 ```rust
 #![windows_subsystem = "windows"]
 
-use winsafe::{self as w, prelude::*, gui};
+use winsafe::{self as w, gui, prelude::*};
 
 fn main() {
-    let my = MyWindow::new(); // instantiate our main window
-    if let Err(e) = my.wnd.run_main(None) { // ... and run it
+    if let Err(e) = MyWindow::create_and_run() {
         eprintln!("{}", e);
     }
 }
 
-
 #[derive(Clone)]
 pub struct MyWindow {
-    wnd:       gui::WindowMain, // responsible for managing the window
-    btn_hello: gui::Button,     // a button
+    wnd: gui::WindowMain,   // responsible for managing the window
+    btn_hello: gui::Button, // a button
 }
 
 impl MyWindow {
-    pub fn new() -> Self {
-        let wnd = gui::WindowMain::new( // instantiate the window manager
+    pub fn create_and_run() -> w::AnyResult<i32> {
+        let wnd = gui::WindowMain::new(
+            // instantiate the window manager
             gui::WindowMainOpts {
-                title: "My window title".to_owned(),
+                title: "My window title",
                 size: gui::dpi(300, 150),
                 ..Default::default() // leave all other options as default
             },
@@ -134,7 +133,7 @@ impl MyWindow {
         let btn_hello = gui::Button::new(
             &wnd, // the window manager is the parent of our button
             gui::ButtonOpts {
-                text: "&Click me".to_owned(),
+                text: "&Click me",
                 position: gui::dpi(20, 20),
                 ..Default::default()
             },
@@ -142,7 +141,8 @@ impl MyWindow {
 
         let new_self = Self { wnd, btn_hello };
         new_self.events(); // attach our events
-        new_self
+
+        new_self.wnd.run_main(None) // show the main window; will block until closed
     }
 
     fn events(&self) {

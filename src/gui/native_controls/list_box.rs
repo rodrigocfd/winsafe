@@ -40,6 +40,7 @@ impl ListBox {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let items2 = opts.owned_items();
 		parent
 			.as_ref()
 			.before_on()
@@ -54,7 +55,7 @@ impl ListBox {
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
-				self2.items().add(&opts.items)?;
+				self2.items().add(&items2)?;
 				parent2
 					.as_ref()
 					.add_to_layout(self2.hwnd(), opts.resize_behavior);
@@ -114,7 +115,7 @@ impl ListBox {
 
 /// Options to create a [`ListBox`](crate::gui::ListBox) programmatically with
 /// [`ListBox::new`](crate::gui::ListBox::new).
-pub struct ListBoxOpts {
+pub struct ListBoxOpts<'a> {
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -157,10 +158,10 @@ pub struct ListBoxOpts {
 	/// Items to be added.
 	///
 	/// Defaults to none.
-	pub items: Vec<String>,
+	pub items: &'a [&'a str],
 }
 
-impl Default for ListBoxOpts {
+impl<'a> Default for ListBoxOpts<'a> {
 	fn default() -> Self {
 		Self {
 			position: dpi(0, 0),
@@ -170,7 +171,14 @@ impl Default for ListBoxOpts {
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::<String>::new(),
+			items: &[],
 		}
+	}
+}
+
+impl<'a> ListBoxOpts<'a> {
+	#[must_use]
+	fn owned_items(&self) -> Vec<String> {
+		self.items.iter().map(|item| (*item).to_owned()).collect()
 	}
 }

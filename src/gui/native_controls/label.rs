@@ -39,6 +39,7 @@ impl Label {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let text2 = opts.text.to_owned();
 		parent
 			.as_ref()
 			.before_on()
@@ -46,11 +47,11 @@ impl Label {
 				self2.0.base.create_window(
 					opts.window_ex_style,
 					"STATIC",
-					Some(&opts.text),
+					Some(&text2),
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
 					if opts.size == (0, 0) {
-						text_calc::bound_box(&text_calc::remove_accel_ampersands(&opts.text))
+						text_calc::bound_box(&text_calc::remove_accel_ampersands(&text2))
 					} else {
 						opts.size.into()
 					},
@@ -115,12 +116,12 @@ impl Label {
 
 /// Options to create a [`Label`](crate::gui::Label) programmatically with
 /// [`Label::new`](crate::gui::Label::new).
-pub struct LabelOpts {
+pub struct LabelOpts<'a> {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to "Label".
-	pub text: String,
+	pub text: &'a str,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -159,10 +160,10 @@ pub struct LabelOpts {
 	pub resize_behavior: (Horz, Vert),
 }
 
-impl Default for LabelOpts {
+impl<'a> Default for LabelOpts<'a> {
 	fn default() -> Self {
 		Self {
-			text: "Label".to_owned(),
+			text: "Label",
 			position: dpi(0, 0),
 			size: (0, 0), // will resize to fit the text
 			control_style: co::SS::LEFT | co::SS::NOTIFY,

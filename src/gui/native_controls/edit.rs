@@ -58,6 +58,7 @@ impl Edit {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let text2 = opts.text.to_owned();
 		parent
 			.as_ref()
 			.before_on()
@@ -65,7 +66,7 @@ impl Edit {
 				self2.0.base.create_window(
 					opts.window_ex_style,
 					"EDIT",
-					Some(&opts.text),
+					Some(&text2),
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
 					SIZE::with(opts.width, opts.height),
@@ -216,12 +217,12 @@ impl Edit {
 
 /// Options to create an [`Edit`](crate::gui::Edit) programmatically with
 /// [`Edit::new`](crate::gui::Edit::new).
-pub struct EditOpts {
+pub struct EditOpts<'a> {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
-	pub text: String,
+	pub text: &'a str,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -275,10 +276,10 @@ pub struct EditOpts {
 	pub resize_behavior: (Horz, Vert),
 }
 
-impl Default for EditOpts {
+impl<'a> Default for EditOpts<'a> {
 	fn default() -> Self {
 		Self {
-			text: "".to_owned(),
+			text: "",
 			position: dpi(0, 0),
 			width: dpi_x(100),
 			height: dpi_y(23),

@@ -31,6 +31,7 @@ impl RawModeless {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let opts2: WindowModelessOptsObj = opts.into();
 		parent
 			.as_ref()
 			.before_on()
@@ -38,11 +39,11 @@ impl RawModeless {
 				let hinst = parent2.hwnd().hinstance();
 				let atom = self2.0.raw_base.register_class(
 					&hinst,
-					&opts.class_name,
-					opts.class_style,
-					&opts.class_icon,
-					&opts.class_bg_brush,
-					&opts.class_cursor,
+					&opts2.class_name,
+					opts2.class_style,
+					&opts2.class_icon,
+					&opts2.class_bg_brush,
+					&opts2.class_cursor,
 				);
 
 				let rc_parent = parent2
@@ -51,12 +52,15 @@ impl RawModeless {
 					.expect(DONTFAIL);
 
 				self2.0.raw_base.create_window(
-					opts.ex_style,
+					opts2.ex_style,
 					atom,
-					None,
-					opts.style,
-					POINT::with(opts.position.0 + rc_parent.left, opts.position.1 + rc_parent.top),
-					opts.size.into(),
+					Some(&opts2.title),
+					opts2.style,
+					POINT::with(
+						opts2.position.0 + rc_parent.left,
+						opts2.position.1 + rc_parent.top,
+					),
+					opts2.size.into(),
 					Some(parent2.hwnd()),
 					IdMenu::None,
 					&hinst,
@@ -77,12 +81,12 @@ impl RawModeless {
 /// Options to create a [`WindowModeless`](crate::gui::WindowModeless)
 /// programmatically with
 /// [`WindowModeless::new`](crate::gui::WindowModeless::new).
-pub struct WindowModelessOpts {
+pub struct WindowModelessOpts<'a> {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
 	/// Defaults to an auto-generated string.
-	pub class_name: String,
+	pub class_name: &'a str,
 	/// Window class styles to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -108,7 +112,7 @@ pub struct WindowModelessOpts {
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
-	pub title: String,
+	pub title: &'a str,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -136,15 +140,15 @@ pub struct WindowModelessOpts {
 	pub ex_style: co::WS_EX,
 }
 
-impl Default for WindowModelessOpts {
+impl<'a> Default for WindowModelessOpts<'a> {
 	fn default() -> Self {
 		Self {
-			class_name: "".to_owned(),
+			class_name: "",
 			class_style: co::CS::DBLCLKS,
 			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
-			title: "".to_owned(),
+			title: "",
 			position: dpi(0, 0),
 			size: dpi(220, 150),
 			style: co::WS::CAPTION
@@ -155,4 +159,35 @@ impl Default for WindowModelessOpts {
 			ex_style: co::WS_EX::LEFT | co::WS_EX::TOOLWINDOW,
 		}
 	}
+}
+
+impl<'a> Into<WindowModelessOptsObj> for WindowModelessOpts<'a> {
+	fn into(self) -> WindowModelessOptsObj {
+		WindowModelessOptsObj {
+			class_name: self.class_name.to_owned(),
+			class_style: self.class_style,
+			class_icon: self.class_icon,
+			class_cursor: self.class_cursor,
+			class_bg_brush: self.class_bg_brush,
+			title: self.title.to_owned(),
+			position: self.position,
+			size: self.size,
+			style: self.style,
+			ex_style: self.ex_style,
+		}
+	}
+}
+
+/// To be stored inside the object.
+struct WindowModelessOptsObj {
+	class_name: String,
+	class_style: co::CS,
+	class_icon: Icon,
+	class_cursor: Cursor,
+	class_bg_brush: Brush,
+	title: String,
+	position: (i32, i32),
+	size: (i32, i32),
+	style: co::WS,
+	ex_style: co::WS_EX,
 }

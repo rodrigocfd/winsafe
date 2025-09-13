@@ -41,6 +41,7 @@ impl Header {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let items2 = opts.owned_items();
 		parent
 			.as_ref()
 			.before_on()
@@ -55,7 +56,7 @@ impl Header {
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
-				for (text, width) in opts.items.iter() {
+				for (text, width) in items2.iter() {
 					self2.items().add(text, *width)?;
 				}
 				parent2
@@ -182,7 +183,7 @@ impl Header {
 
 /// Options to create a [`Header`](crate::gui::Header) programmatically with
 /// [`Header::new`](crate::gui::Header::new).
-pub struct HeaderOpts {
+pub struct HeaderOpts<'a> {
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -229,10 +230,10 @@ pub struct HeaderOpts {
 	/// the width.
 	///
 	/// Defaults to none.
-	pub items: Vec<(String, i32)>,
+	pub items: &'a [(&'a str, i32)],
 }
 
-impl Default for HeaderOpts {
+impl<'a> Default for HeaderOpts<'a> {
 	fn default() -> Self {
 		Self {
 			position: dpi(0, 0),
@@ -247,7 +248,17 @@ impl Default for HeaderOpts {
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::new(),
+			items: &[],
 		}
+	}
+}
+
+impl<'a> HeaderOpts<'a> {
+	#[must_use]
+	fn owned_items(&self) -> Vec<(String, i32)> {
+		self.items
+			.iter()
+			.map(|(text, width)| ((*text).to_owned(), *width))
+			.collect()
 	}
 }

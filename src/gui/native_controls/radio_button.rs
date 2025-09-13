@@ -40,6 +40,7 @@ impl RadioButton {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let text2 = opts.text.to_owned();
 		parent
 			.as_ref()
 			.before_on()
@@ -47,7 +48,7 @@ impl RadioButton {
 				self2.0.base.create_window(
 					opts.window_ex_style,
 					"BUTTON",
-					Some(&opts.text),
+					Some(&text2),
 					if is_first {
 						opts.window_style | co::WS::GROUP | co::WS::TABSTOP
 					} else {
@@ -55,9 +56,7 @@ impl RadioButton {
 					} | opts.control_style.into(),
 					opts.position.into(),
 					if opts.size == (0, 0) {
-						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(
-							&opts.text,
-						))
+						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(&text2))
 					} else {
 						opts.size.into()
 					},
@@ -164,12 +163,12 @@ impl RadioButton {
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
 /// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
 #[derive(Clone)]
-pub struct RadioButtonOpts {
+pub struct RadioButtonOpts<'a> {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to empty string.
-	pub text: String,
+	pub text: &'a str,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -217,10 +216,10 @@ pub struct RadioButtonOpts {
 	pub selected: bool,
 }
 
-impl Default for RadioButtonOpts {
+impl<'a> Default for RadioButtonOpts<'a> {
 	fn default() -> Self {
 		Self {
-			text: "".to_owned(),
+			text: "",
 			position: (0, 0),
 			size: (0, 0), // will resize to fit the text
 			control_style: co::BS::AUTORADIOBUTTON,

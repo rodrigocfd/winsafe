@@ -43,7 +43,7 @@ enum RawDlg {
 ///     #[must_use]
 ///     fn create_and_run() -> w::AnyResult<i32> {
 ///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
-///             title: "Main window".to_owned(),
+///             title: "Main window",
 ///             ..Default::default()
 ///         });
 ///

@@ -45,11 +45,11 @@ impl ComboBox {
 	///     gui::ComboBoxOpts {
 	///         position: (10, 10),
 	///         width: 140,
-	///         items: vec![
-	///             "Avocado".to_owned(),
-	///             "Banana".to_owned(),
-	///             "Grape".to_owned(),
-	///             "Orange".to_owned(),
+	///         items: &[
+	///             "Avocado",
+	///             "Banana",
+	///             "Grape",
+	///             "Orange",
 	///         ],
 	///         selected_item: Some(0),
 	///         ..Default::default()
@@ -71,6 +71,7 @@ impl ComboBox {
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
+		let items2 = opts.owned_items();
 		parent
 			.as_ref()
 			.before_on()
@@ -85,7 +86,7 @@ impl ComboBox {
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
-				self2.items().add(&opts.items)?;
+				self2.items().add(&items2)?;
 				self2.items().select(opts.selected_item);
 				parent2
 					.as_ref()
@@ -144,7 +145,7 @@ impl ComboBox {
 
 /// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
 /// [`ComboBox::new`](crate::gui::ComboBox::new).
-pub struct ComboBoxOpts {
+pub struct ComboBoxOpts<'a> {
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -192,14 +193,14 @@ pub struct ComboBoxOpts {
 	/// Items to be added.
 	///
 	/// Defaults to none.
-	pub items: Vec<String>,
+	pub items: &'a [&'a str],
 	/// Index of the item initially selected. The item must exist.
 	///
 	/// Defaults to `None`.
 	pub selected_item: Option<u32>,
 }
 
-impl Default for ComboBoxOpts {
+impl<'a> Default for ComboBoxOpts<'a> {
 	fn default() -> Self {
 		Self {
 			position: dpi(0, 0),
@@ -209,8 +210,15 @@ impl Default for ComboBoxOpts {
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::new(),
+			items: &[],
 			selected_item: None,
 		}
+	}
+}
+
+impl<'a> ComboBoxOpts<'a> {
+	#[must_use]
+	fn owned_items(&self) -> Vec<String> {
+		self.items.iter().map(|item| (*item).to_owned()).collect()
 	}
 }
