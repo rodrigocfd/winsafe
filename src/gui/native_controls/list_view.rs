@@ -34,6 +34,69 @@ native_ctrl! { ListView: ListViewObj<T>, T => GuiEventsListView;
 	///
 	/// You can have access to the internal header of the list view by creating
 	/// a [`Header`](crate::gui::Header) object.
+	///
+	/// # Examples
+	///
+	/// The example below creates a main window with a list view, which has two
+	/// columns.
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, co, gui, prelude::*};
+	///
+	/// fn main() {
+	///     if let Err(e) = MainWindow::create_and_run() {
+	///         eprintln!("{}", e);
+	///     }
+	/// }
+	///
+	/// #[derive(Clone)]
+	/// struct MainWindow {
+	///     wnd: gui::WindowMain,
+	///     lst: gui::ListView,
+	/// }
+	///
+	/// impl MainWindow {
+	///     fn create_and_run() -> w::AnyResult<i32> {
+	///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
+	///             title: "Main window",
+	///             size: gui::dpi(300, 150),
+	///             ..Default::default()
+	///         });
+	///         let lst = gui::ListView::new(
+	///             &wnd,
+	///             gui::ListViewOpts {
+	///                 size: gui::dpi(260, 120),
+	///                 position: gui::dpi(10, 10),
+	///                 columns: &[("First", 100), ("Second", 100)],
+	///                 ..Default::default()
+	///             },
+	///         );
+	///
+	///         let new_self = Self { wnd, lst };
+	///         new_self.events();
+	///
+	///         new_self.wnd.run_main(None)
+	///     }
+	///
+	///     fn events(&self) {
+	///         let self2 = self.clone();
+	///         self.wnd.on().wm_create(move |_| {
+	///             self2.lst.items().add(&["Hello", "World"], None, ())?;
+	///             self2.lst.items().add(&["Another", "Line"], None, ())?;
+	///             self2.lst.items().add(&["Third", "Row"], None, ())?;
+	///             Ok(0)
+	///         });
+	///
+	///         let self2 = self.clone();
+	///         self.lst.on().lvn_item_changed(move |_| {
+	///             let num_selec = self2.lst.items().selected_count();
+	///             let text = format!("{num_selec} selected");
+	///             self2.wnd.hwnd().SetWindowText(&text)?;
+	///             Ok(())
+	///         });
+	///     }
+	/// }
+	/// ```
 }
 
 impl<T> ListView<T> {
