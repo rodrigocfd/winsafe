@@ -14,7 +14,7 @@ pub mod decl {
 	pub use super::com_interfaces::decl::*;
 	pub use super::enums::*;
 	pub use super::funcs::*;
-	pub use super::structs::decl::*;
+	pub use super::structs::*;
 }
 
 pub mod traits {
