@@ -44,7 +44,7 @@ impl RawControl {
 					&hinst,
 					&opts2.class_name,
 					opts2.class_style,
-					&opts2.class_icon,
+					&Icon::None,
 					&opts2.class_bg_brush,
 					&opts2.class_cursor,
 				);
@@ -102,11 +102,6 @@ pub struct WindowControlOpts<'a> {
 	///
 	/// Defaults to `co::CS::DBLCLKS`.
 	pub class_style: co::CS,
-	/// Window main icon to be
-	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
-	///
-	/// Defaults to `gui::Icon::None`.
-	pub class_icon: Icon,
 	/// Window cursor to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -159,7 +154,6 @@ impl<'a> Default for WindowControlOpts<'a> {
 		Self {
 			class_name: "",
 			class_style: co::CS::DBLCLKS,
-			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
 			position: dpi(0, 0),
@@ -182,7 +176,6 @@ impl<'a> Into<WindowControlOptsObj> for WindowControlOpts<'a> {
 		WindowControlOptsObj {
 			class_name: self.class_name.to_owned(),
 			class_style: self.class_style,
-			class_icon: self.class_icon,
 			class_cursor: self.class_cursor,
 			class_bg_brush: self.class_bg_brush,
 			position: self.position,
@@ -198,7 +191,6 @@ impl<'a> Into<WindowControlOptsObj> for WindowControlOpts<'a> {
 struct WindowControlOptsObj {
 	class_name: String,
 	class_style: co::CS,
-	class_icon: Icon,
 	class_cursor: Cursor,
 	class_bg_brush: Brush,
 	position: (i32, i32),
