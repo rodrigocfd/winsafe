@@ -26,6 +26,7 @@ mod status_bar_parts;
 mod tab;
 mod tab_item;
 mod tab_items;
+mod tab_page;
 mod trackbar;
 mod tree_view;
 mod tree_view_item;
@@ -58,6 +59,7 @@ pub mod decl {
 	pub use super::status_bar_part::StatusBarPart;
 	pub use super::tab::{Tab, TabOpts};
 	pub use super::tab_item::TabItem;
+	pub use super::tab_page::{TabPage, TabPageOpts};
 	pub use super::trackbar::{Trackbar, TrackbarOpts};
 	pub use super::tree_view::{TreeView, TreeViewOpts};
 	pub use super::tree_view_item::TreeViewItem;

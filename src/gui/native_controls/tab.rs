@@ -13,7 +13,7 @@ use crate::prelude::*;
 struct TabObj {
 	base: BaseCtrl,
 	events: BaseCtrlEvents,
-	children: Vec<(String, WindowControl)>, // title + content
+	pages: Vec<(String, TabPage)>, // title + content
 	_pin: PhantomPinned,
 }
 
@@ -46,15 +46,17 @@ native_ctrl! { Tab: TabObj => GuiEventsTab;
 	///     fn create_and_run() -> w::AnyResult<i32> {
 	///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
 	///             title: "Main window",
-	///             size: gui::dpi(300, 150),
+	///             size:  gui::dpi(300, 150),
 	///             ..Default::default()
 	///         });
 	///         let tab = gui::Tab::new(
 	///             &wnd,
 	///             gui::TabOpts {
 	///                 position: gui::dpi(10, 10),
-	///                 size: gui::dpi(250, 100),
-	///                 items: &[("First tab", TabContents1::new(&wnd).into())],
+	///                 size:     gui::dpi(250, 100),
+	///                 pages:    &[
+	///                     ("First tab", TabContents1::new(&wnd).into()),
+	///                 ],
 	///                 ..Default::default()
 	///             },
 	///         );
@@ -70,28 +72,24 @@ native_ctrl! { Tab: TabObj => GuiEventsTab;
 	///
 	/// #[derive(Clone)]
 	/// struct TabContents1 {
-	///     wnd: gui::WindowControl,
+	///     wnd: gui::TabPage,
 	///     btn: gui::Button,
 	/// }
-	/// impl Into<gui::WindowControl> for TabContents1 {
-	///     fn into(self) -> gui::WindowControl {
+	/// impl Into<gui::TabPage> for TabContents1 {
+	///     fn into(self) -> gui::TabPage {
 	///         self.wnd.clone() // so we can pass our custom struct to Tab::new()
 	///     }
 	/// }
 	/// impl TabContents1 {
 	///     fn new(parent: &(impl GuiParent + 'static)) -> Self {
-	///         let wnd = gui::WindowControl::new(
+	///         let wnd = gui::TabPage::new(
 	///             parent,
-	///             gui::WindowControlOpts {
-	///                 size: gui::dpi(250, 200),
-	///                 ex_style: co::WS_EX::CONTROLPARENT, // so the focus rotation works properly
-	///                 ..Default::default()
-	///             },
+	///             gui::TabPageOpts::default(),
 	///         );
 	///         let btn = gui::Button::new(
 	///             &wnd,
 	///             gui::ButtonOpts {
-	///                 text: "&Button",
+	///                 text:     "&Button",
 	///                 position: gui::dpi(20, 20),
 	///                 ..Default::default()
 	///             },
@@ -121,8 +119,8 @@ impl Tab {
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
 			events: BaseCtrlEvents::new(parent, ctrl_id),
-			children: opts
-				.items
+			pages: opts
+				.pages
 				.iter()
 				.map(|(title, wnd)| ((*title).to_owned(), wnd.clone()))
 				.collect::<Vec<_>>(),
@@ -148,7 +146,7 @@ impl Tab {
 				if opts.control_ex_style != co::TCS_EX::NoValue {
 					self2.set_extended_style(true, opts.control_ex_style);
 				}
-				self2.0.children.iter().for_each(|(text, _)| unsafe {
+				self2.0.pages.iter().for_each(|(text, _)| unsafe {
 					self2.items().add(text); // add the tabs
 				});
 				self2.display_tab(0); // 1st tab selected by default
@@ -174,12 +172,12 @@ impl Tab {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		items: &[(&str, WindowControl)],
+		pages: &[(&str, TabPage)],
 	) -> Self {
 		let new_self = Self(Arc::pin(TabObj {
 			base: BaseCtrl::new(ctrl_id),
 			events: BaseCtrlEvents::new(parent, ctrl_id),
-			children: items
+			pages: pages
 				.iter()
 				.map(|(title, wnd)| ((*title).to_owned(), wnd.clone()))
 				.collect::<Vec<_>>(),
@@ -190,7 +188,7 @@ impl Tab {
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2);
-			self2.0.children.iter().for_each(|(text, _)| unsafe {
+			self2.0.pages.iter().for_each(|(text, _)| unsafe {
 				self2.items().add(text); // add the tabs
 			});
 			self2.display_tab(0); // 1st tab selected by default
@@ -232,7 +230,7 @@ impl Tab {
 
 	fn display_tab(&self, index: u32) {
 		self.0
-			.children
+			.pages
 			.iter()
 			.enumerate()
 			.filter(|(i, _)| *i != index as usize)
@@ -240,7 +238,7 @@ impl Tab {
 				item.hwnd().ShowWindow(co::SW::HIDE); // hide all others
 			});
 
-		if let Some((_, item)) = self.0.children.get(index as usize) {
+		if let Some((_, item)) = self.0.pages.get(index as usize) {
 			let mut rc = self
 				.hwnd()
 				.GetParent()
@@ -353,16 +351,11 @@ pub struct TabOpts<'a> {
 	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 
-	/// Items to be added as soon as the control is created. The tuple contains
+	/// Pages to be added as soon as the control is created. The tuple contains
 	/// the title of the tab and the window to be rendered inside of it.
 	///
-	/// Note that, in o order to make the focus rotation work properly, the
-	/// child windows must be created with the
-	/// [`co::WS_EX::CONTROLPARENT`](crate::co::WS_EX::CONTROLPARENT) extended
-	/// style.
-	///
 	/// Defaults to none.
-	pub items: &'a [(&'a str, WindowControl)],
+	pub pages: &'a [(&'a str, TabPage)],
 }
 
 impl<'a> Default for TabOpts<'a> {
@@ -376,7 +369,7 @@ impl<'a> Default for TabOpts<'a> {
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: &[],
+			pages: &[],
 		}
 	}
 }
