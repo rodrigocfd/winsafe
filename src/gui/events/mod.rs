@@ -9,6 +9,7 @@ mod label_events;
 mod list_box_events;
 mod list_view_events;
 mod month_calendar_events;
+mod prop_sheet_page_events;
 mod radio_group_events;
 mod status_bar_events;
 mod tab_events;
@@ -32,6 +33,7 @@ pub mod traits {
 	pub use super::list_box_events::GuiEventsListBox;
 	pub use super::list_view_events::GuiEventsListView;
 	pub use super::month_calendar_events::GuiEventsMonthCalendar;
+	pub use super::prop_sheet_page_events::GuiEventsPropSheetPage;
 	pub use super::radio_group_events::GuiEventsRadioGroup;
 	pub use super::status_bar_events::GuiEventsStatusBar;
 	pub use super::tab_events::GuiEventsTab;

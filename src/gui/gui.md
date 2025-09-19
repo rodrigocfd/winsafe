@@ -27,6 +27,7 @@ Native controls are hosted by windows, and receive various types of user input.
 * [`ListView`] (grid);
 * [`MonthCalendar`];
 * [`ProgressBar`];
+* [`PropSheet`];
 * [`RadioButton`];
 * [`StatusBar`];
 * [`Tab`];

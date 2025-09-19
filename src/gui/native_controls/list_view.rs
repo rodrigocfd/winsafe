@@ -32,8 +32,8 @@ native_ctrl! { ListView: ListViewObj<T>, T => GuiEventsListView;
 	/// `()` as the type. Internally, this storage is implemented with pointers
 	/// in the item's `LPARAM` fields.
 	///
-	/// You can have access to the internal header of the list view by creating
-	/// a [`Header`](crate::gui::Header) object.
+	/// You also have access to the embedded [`Header`](crate::gui::Header)
+	/// control, which renders the columns.
 	///
 	/// # Examples
 	///

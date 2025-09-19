@@ -18,6 +18,8 @@ mod list_view_item;
 mod list_view_items;
 mod month_calendar;
 mod progress_bar;
+mod prop_sheet;
+mod prop_sheet_page;
 mod radio_button;
 mod radio_group;
 mod status_bar;
@@ -53,6 +55,8 @@ pub mod decl {
 	pub use super::list_view_item::ListViewItem;
 	pub use super::month_calendar::{MonthCalendar, MonthCalendarOpts};
 	pub use super::progress_bar::{ProgressBar, ProgressBarOpts};
+	pub use super::prop_sheet::{PropSheet, PropSheetOpts};
+	pub use super::prop_sheet_page::PropSheetPage;
 	pub use super::radio_button::{RadioButton, RadioButtonOpts};
 	pub use super::radio_group::RadioGroup;
 	pub use super::status_bar::{SbPart, StatusBar};

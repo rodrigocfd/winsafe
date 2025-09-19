@@ -111,25 +111,35 @@ impl DlgBase {
 			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *const Self, // retrieve
 		};
 
-		// If no pointer stored, then no processing is done.
-		// Prevents processing before WM_INITDIALOG and after WM_NCDESTROY.
 		if ptr_self.is_null() {
-			return Ok(0); // FALSE
+			// If no pointer stored, then no processing is done.
+			// Prevents processing before WM_INITDIALOG and after WM_NCDESTROY.
+			Ok(0) // FALSE
+		} else {
+			let ref_self = unsafe { &*ptr_self };
+			Self::dlg_proc_proc2(&ref_self.base, hwnd, p)
 		}
-		let ref_self = unsafe { &*ptr_self };
+	}
 
+	/// Continues the dlg_proc_proc function. Split because PropSheetPage also
+	/// uses it.
+	pub(in crate::gui) fn dlg_proc_proc2(
+		base: &BaseWnd,
+		hwnd: HWND,
+		p: WndMsg,
+	) -> AnyResult<isize> {
 		// Execute before-user closures, keep track if at least one was executed.
 		// Execute user closure, if any.
 		// Execute post-user closures, keep track if at least one was executed.
-		let (at_least_one_before, user_ret, at_least_one_after) = ref_self.base.process_msgs(p)?;
+		let (at_least_one_before, user_ret, at_least_one_after) = base.process_msgs(p)?;
 
 		// Always check.
 		if p.msg_id == co::WM::NCDESTROY {
 			unsafe {
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
 			}
-			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
-			ref_self.base.clear_messages(); // prevents circular references
+			base.set_hwnd(HWND::NULL); // clear stored HWND
+			base.clear_messages(); // prevents circular references
 		}
 
 		if let Some(user_ret) = user_ret {

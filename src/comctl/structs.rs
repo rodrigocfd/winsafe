@@ -1160,6 +1160,10 @@ pub struct PBRANGE {
 
 /// [`PROPSHEETHEADER`](https://learn.microsoft.com/en-us/windows/win32/controls/pss-propsheetheader)
 /// struct.
+///
+/// This struct is passed to [`PropertySheet`](crate::PropertySheet), which is
+/// very unsafe. Prefer using the [`gui::PropSheet`](crate::gui::PropSheet) high
+/// level abstraction.
 #[repr(C)]
 pub struct PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	dwSize: u32,
@@ -1179,7 +1183,7 @@ pub struct PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	_pszIcon: PhantomData<&'a u16>,
 	_pszTitle: PhantomData<&'b mut u16>,
 	_pStartPage: PhantomData<&'c mut u16>,
-	_ppsp_phpage: PhantomData<&'d [PROPSHEETPAGE<'d, 'd, 'd, 'd, 'd, 'd, 'd>]>,
+	_ppsp_phpage: PhantomData<&'d [PROPSHEETPAGE]>,
 	_pszbmWatermark: PhantomData<&'e mut u16>,
 	_pszbmHeader: PhantomData<&'f mut u16>,
 }
@@ -1257,84 +1261,29 @@ impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 
 /// [`PROPSHEETPAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/pss-propsheetpage)
 /// struct.
+///
+/// This struct is passed to [`PropertySheet`](crate::PropertySheet), which is
+/// very unsafe. Prefer using the [`gui::PropSheet`](crate::gui::PropSheet) high
+/// level abstraction.
 #[repr(C)]
-pub struct PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+pub struct PROPSHEETPAGE {
 	dwSize: u32,
 	pub dwFlags: co::PSP,
 	pub hInstance: HINSTANCE,
-	pszTemplate_pResource: *mut std::ffi::c_void, // union
-	hIcon_pszIcon: *mut std::ffi::c_void,         // union
-	pszTitle: *mut u16,
+	pub pszTemplate_pResource: *mut std::ffi::c_void, // union
+	pub hIcon_pszIcon: *mut std::ffi::c_void,         // union
+	pub pszTitle: *const u16,
 	pub pfnDlgProc: Option<DLGPROC>,
 	pub lParam: isize,
 	pub pfnCallback: Option<LPFNPSPCALLBACK>,
-	pcRefParent: *mut u32,
-	pszHeaderTitle: *mut u16,
-	pszHeaderSubTitle: *mut u16,
+	pub pcRefParent: *mut u32,
+	pub pszHeaderTitle: *const u16,
+	pub pszHeaderSubTitle: *const u16,
 	pub hActCtx: HACTCTX,
-	hbmHeader_pszbmHeader: *mut std::ffi::c_void, // union
-
-	_pszTemplate: PhantomData<&'a mut u16>,
-	_pszIcon: PhantomData<&'b mut u16>,
-	_pszTitle: PhantomData<&'c mut u16>,
-	_pcRefParent: PhantomData<&'d mut u32>,
-	_pszHeaderTitle: PhantomData<&'e mut u16>,
-	_pszHeaderSubTitle: PhantomData<&'f mut u16>,
-	_pszbmHeader: PhantomData<&'g u16>,
+	pub hbmHeader_pszbmHeader: *mut std::ffi::c_void, // union
 }
 
-impl_default!(PROPSHEETPAGE, dwSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
-
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
-	/// Sets the `pszTemplate` field, which is part of an union.
-	pub fn set_pszTemplate(&mut self, buf: &'a mut IdStr) {
-		self.pszTemplate_pResource = match buf {
-			IdStr::Id(id) => *id as _,
-			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
-		};
-	}
-
-	/// Sets the `pResource` field, which is part of an union.
-	pub const fn set_pResource(&mut self, r: &DLGTEMPLATE) {
-		self.pszTemplate_pResource = r as *const _ as _;
-	}
-
-	/// Sets the `hIcon` field, which is part of an union.
-	pub const fn set_hIcon(&mut self, hicon: HICON) {
-		self.hIcon_pszIcon = hicon.ptr();
-	}
-
-	/// Sets the `pszIcon` field, which is part of an union.
-	pub fn set_pszIcon(&mut self, buf: &'b mut IdStr) {
-		self.hIcon_pszIcon = match buf {
-			IdStr::Id(id) => *id as _,
-			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
-		};
-	}
-
-	pub_fn_string_ptr_get_set!('c, pszTitle, set_pszTitle);
-
-	/// Sets the `pcRefParent` field.
-	pub const fn set_pcRefParent(&mut self, ref_count: &'d mut u32) {
-		self.pcRefParent = ref_count;
-	}
-
-	pub_fn_string_ptr_get_set!('e, pszHeaderTitle, set_pszHeaderTitle);
-	pub_fn_string_ptr_get_set!('f, pszHeaderSubTitle, set_pszHeaderSubTitle);
-
-	/// Sets the `hbmHeader` field, which is part of an union.
-	pub const fn set_hbmHeader(&mut self, hbm: HBITMAP) {
-		self.hbmHeader_pszbmHeader = hbm.ptr();
-	}
-
-	/// Sets the `pszbmHeader` field, which is part of an union.
-	pub fn set_pszbmHeader(&mut self, buf: &'g mut IdStr) {
-		self.hbmHeader_pszbmHeader = match buf {
-			IdStr::Id(id) => *id as _,
-			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
-		};
-	}
-}
+impl_default!(PROPSHEETPAGE, dwSize);
 
 /// [`PSHNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/ns-prsht-pshnotify)
 /// struct.

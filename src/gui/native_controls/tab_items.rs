@@ -26,7 +26,7 @@ impl<'a> TabItems<'a> {
 	///
 	/// By adding a tab item manually, you are responsible for all the message
 	/// handling. Prefer adding items automatically by filling the
-	/// [`TabOpts::items`](crate::gui::TabOpts::items) member when calling the
+	/// [`TabOpts::pages`](crate::gui::TabOpts::pages) member when calling the
 	/// [`Tab::new`](crate::gui::Tab::new) function.
 	pub unsafe fn add(&self, title: &str) -> TabItem<'a> {
 		let mut wtitle = WString::from_str(title);
