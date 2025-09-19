@@ -38,6 +38,14 @@ const_bitflag! { TASK_LOGON: u32;
 	INTERACTIVE_TOKEN_OR_PASSWORD 6
 }
 
+const_ordinary! { TASK_RUNLEVEL_TYPE: u32;
+	/// [`TASK_RUNLEVEL_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_runlevel_type)
+	/// enumeration (`u32`).
+	=>
+	LUA 0
+	HIGHEST 1
+}
+
 const_ordinary! { TASK_STATE: u32;
 	/// [`TASK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_state)
 	/// enumeration (`u32`).

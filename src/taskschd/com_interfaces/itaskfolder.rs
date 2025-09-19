@@ -50,6 +50,21 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		/// method.
 	}
 
+	/// [`ITaskFolder::GetTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-gettask)
+	/// method.
+	fn GetTask(&self, path: &str) -> HrResult<IRegisteredTask> {
+		let mut queried = unsafe { IRegisteredTask::null() };
+		HrRet(unsafe {
+			(vt::<ITaskFolderVT>(self).GetTask)(
+				self.ptr(),
+				BSTR::SysAllocString(path)?.as_ptr(),
+				queried.as_mut(),
+			)
+		})
+		.to_hrresult()
+		.map(|_| queried)
+	}
+
 	/// [`ITaskFolder::RegisterTaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-registertaskdefinition)
 	/// method.
 	fn RegisterTaskDefinition(

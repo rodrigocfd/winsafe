@@ -35,6 +35,11 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		/// method.
 	}
 
+	fn_com_interface_get! { get_Principal: ITaskDefinitionVT => IPrincipal;
+		/// [`ITaskDefinition::get_Principal`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_principal)
+		/// method.
+	}
+
 	fn_com_interface_get! { get_RegistrationInfo: ITaskDefinitionVT => IRegistrationInfo;
 		/// [`ITaskDefinition::get_RegistrationInfo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_registrationinfo)
 		/// method.
