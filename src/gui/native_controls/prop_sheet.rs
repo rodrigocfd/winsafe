@@ -33,7 +33,7 @@ struct PropSheetObj {
 ///
 /// fn main() {
 ///     let ps = gui::PropSheet::new(gui::PropSheetOpts {
-///         title: "Shiver",
+///         title: "Main title",
 ///         pages: &[
 ///             ("First page", FirstPage::new().into()),
 ///         ],
