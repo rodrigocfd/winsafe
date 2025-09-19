@@ -27,8 +27,7 @@ pub fn ask_update_stats(
 fn write_readme(readme_md: &str, stats: &stats::Stats) -> w::AnyResult<()> {
 	let (contents, num_bytes) = {
 		let f = w::FileMapped::open(readme_md, w::FileAccess::ExistingReadOnly)?;
-		let num_bytes = f.size();
-		(w::WString::parse(f.as_slice())?.to_string(), num_bytes)
+		(w::WString::parse(f.as_slice())?.to_string(), f.size())
 	};
 
 	let mut final_str = String::with_capacity(num_bytes as _); // will replace the README.md contents
@@ -39,13 +38,13 @@ fn write_readme(readme_md: &str, stats: &stats::Stats) -> w::AnyResult<()> {
 		.position(|line| line.starts_with("| Functions | "))
 		.unwrap();
 	lines[0..idx_line_start].iter().for_each(|line| {
-		final_str.push_str(line);
+		final_str.push_str(line); // copy all lines before the block
 		final_str.push_str("\r\n");
 	});
-	final_str.push_str(&stats.to_string());
+	final_str.push_str(&stats.to_string()); // copy new block
 	final_str.push_str("\r\n");
 	lines[idx_line_start + 7..].iter().for_each(|line| {
-		final_str.push_str(line);
+		final_str.push_str(line); // copy all lines after the block
 		final_str.push_str("\r\n");
 	});
 

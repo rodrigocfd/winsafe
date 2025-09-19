@@ -8,7 +8,7 @@ mod stats;
 use dlg_main::DlgMain;
 
 fn main() {
-	if let Err(e) = (|| DlgMain::new()?.run())() {
+	if let Err(e) = DlgMain::create_and_run() {
 		eprintln!("{}", e);
 	}
 }

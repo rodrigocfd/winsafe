@@ -14,7 +14,7 @@ pub struct DlgMain {
 }
 
 impl DlgMain {
-	pub fn new() -> w::SysResult<Self> {
+	pub fn create_and_run() -> w::AnyResult<i32> {
 		use gui::{Horz as H, Vert as V};
 
 		let wnd = gui::WindowMain::new_dlg(ids::DLG_MAIN, Some(ids::ICO_MAIN), None);
@@ -38,7 +38,7 @@ impl DlgMain {
 			mono_font,
 		};
 		new_self.events();
-		Ok(new_self)
+		new_self.wnd.run_main(None)
 	}
 
 	fn events(&self) {
@@ -120,9 +120,5 @@ impl DlgMain {
 			self2.btn_run.hwnd().EnableWindow(true);
 			Ok(())
 		});
-	}
-
-	pub fn run(&self) -> w::AnyResult<i32> {
-		self.wnd.run_main(None)
 	}
 }
