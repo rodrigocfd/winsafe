@@ -5,6 +5,10 @@ use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
+/// A page of a [`Tab`](crate::gui::Tab) control, which can handle events. Can
+/// be programmatically created or load a dialog resource from a `.res` file.
+/// Passed to [`TabOpts`](crate::gui::TabOpts) and
+/// [`Tab::new_dlg`](crate::gui::Tab::new_dlg).
 #[derive(Clone)]
 pub struct TabPage {
 	wnd: WindowControl,
@@ -30,8 +34,6 @@ impl GuiWindow for TabPage {
 
 impl GuiParent for TabPage {}
 
-/// A page of a [`Tab`](crate::gui::Tab) control, which can handle events. Can
-/// be programmatically created or load a dialog resource from a `.res` file.
 impl TabPage {
 	/// Instantiates a new `TabPage` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
