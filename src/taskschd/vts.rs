@@ -109,6 +109,23 @@ pub struct ILogonTriggerVT {
 }
 
 #[repr(C)]
+pub struct IPrincipalVT {
+	pub IDispatchVT: IDispatchVT,
+	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
+	pub get_DisplayName: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_DisplayName: fn(COMPTR, PCSTR) -> HRES,
+	pub get_UserId: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_UserId: fn(COMPTR, PCSTR) -> HRES,
+	pub get_LogonType: fn(COMPTR, *mut u32) -> HRES,
+	pub put_LogonType: fn(COMPTR, u32) -> HRES,
+	pub get_GroupId: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_GroupId: fn(COMPTR, PCSTR) -> HRES,
+	pub get_RunLevel: fn(COMPTR, *mut u32) -> HRES,
+	pub put_RunLevel: fn(COMPTR, u32) -> HRES,
+}
+
+#[repr(C)]
 pub struct IRegisteredTaskVT {
 	pub IDispatchVT: IDispatchVT,
 	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,

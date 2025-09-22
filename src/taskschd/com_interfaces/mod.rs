@@ -8,6 +8,7 @@ mod ieventtrigger;
 mod iexecaction;
 mod iidletrigger;
 mod ilogontrigger;
+mod iprincipal;
 mod iregisteredtask;
 mod iregistrationinfo;
 mod itaskdefinition;
@@ -27,6 +28,7 @@ pub mod decl {
 	pub use super::iexecaction::IExecAction;
 	pub use super::iidletrigger::IIdleTrigger;
 	pub use super::ilogontrigger::ILogonTrigger;
+	pub use super::iprincipal::IPrincipal;
 	pub use super::iregisteredtask::IRegisteredTask;
 	pub use super::iregistrationinfo::IRegistrationInfo;
 	pub use super::itaskdefinition::ITaskDefinition;
@@ -47,6 +49,7 @@ pub mod traits {
 	pub use super::iexecaction::taskschd_IExecAction;
 	pub use super::iidletrigger::taskschd_IIdleTrigger;
 	pub use super::ilogontrigger::taskschd_ILogonTrigger;
+	pub use super::iprincipal::taskschd_IPrincipal;
 	pub use super::iregisteredtask::taskschd_IRegisteredTask;
 	pub use super::iregistrationinfo::taskschd_IRegistrationInfo;
 	pub use super::itaskdefinition::taskschd_ITaskDefinition;
