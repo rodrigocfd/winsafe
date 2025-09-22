@@ -43,8 +43,8 @@ pub trait taskschd_IPrincipal: oleaut_IDispatch {
 	/// [`IPrincipal::get_RunLevel`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iprincipal-get_runlevel)
 	/// method.
 	#[must_use]
-	fn get_RunLevel(&self) -> HrResult<co::TASK_RUNLEVEL_TYPE> {
-		let mut rl = co::TASK_RUNLEVEL_TYPE::default();
+	fn get_RunLevel(&self) -> HrResult<co::TASK_RUNLEVEL> {
+		let mut rl = co::TASK_RUNLEVEL::default();
 		HrRet(unsafe { (vt::<IPrincipalVT>(self).get_RunLevel)(self.ptr(), rl.as_mut()) })
 			.to_hrresult()
 			.map(|_| rl)
@@ -52,7 +52,7 @@ pub trait taskschd_IPrincipal: oleaut_IDispatch {
 
 	/// [`IPrincipal::put_RunLevel`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iprincipal-put_runlevel)
 	/// method.
-	fn put_RunLevel(&self, run_level: co::TASK_RUNLEVEL_TYPE) -> HrResult<()> {
+	fn put_RunLevel(&self, run_level: co::TASK_RUNLEVEL) -> HrResult<()> {
 		HrRet(unsafe { (vt::<IPrincipalVT>(self).put_RunLevel)(self.ptr(), run_level.raw()) })
 			.to_hrresult()
 	}
