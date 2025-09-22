@@ -114,15 +114,12 @@ impl<T> TreeView<T> {
 			.after_on()
 			.wm_notify(self.ctrl_id(), co::TVN::DELETEITEM, move |p| {
 				let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
-				let rc_ptr = self2
-					.items()
-					.get(&nmtv.itemOld.hItem)
-					.data_lparam()
-					.expect(DONTFAIL);
+				let item = self2.items().get(&nmtv.itemOld.hItem);
 
-				if !rc_ptr.is_null() {
-					let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
+				if let Some(rc_ptr) = item.data_lparam() {
+					let _ = unsafe { Rc::from_raw(rc_ptr) }; // drop the stored Rc
 				}
+
 				Ok(0) // ignored
 			});
 
@@ -163,11 +160,11 @@ impl<T> TreeView<T> {
 			tvix.iImage = icon_index as _;
 		}
 
-		// User defined an actual type?
 		if TypeId::of::<T>() != TypeId::of::<()>() {
+			// User has defined a generic type, so we store the object right away.
 			tvix.mask |= co::TVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
-			tvix.lParam = Rc::into_raw(rc_data) as _;
+			tvix.lParam = Rc::into_raw(rc_data) as _; // store the Rc pointer
 		}
 
 		let mut tvis = TVINSERTSTRUCT::default();

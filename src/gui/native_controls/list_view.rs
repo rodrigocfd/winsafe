@@ -278,15 +278,12 @@ impl<T> ListView<T> {
 			.after_on()
 			.wm_notify(self.ctrl_id(), co::LVN::DELETEITEM, move |p| {
 				let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
-				let rc_ptr = self2
-					.items()
-					.get(nmlv.iItem as _)
-					.data_lparam()
-					.expect(DONTFAIL);
+				let item = self2.items().get(nmlv.iItem as _);
 
-				if !rc_ptr.is_null() {
-					let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
+				if let Some(rc_ptr) = item.data_lparam() {
+					let _ = unsafe { Rc::from_raw(rc_ptr) }; // drop the stored Rc
 				}
+
 				Ok(0) // ignored
 			});
 	}

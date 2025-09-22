@@ -66,27 +66,27 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// my_list.items().add(&["foo"], None, person)?;
 	///
 	/// // Retrieve and modify item data.
-	/// let rc_person = my_list.items().get(0).data()?;
+	/// let rc_person = my_list.items().get(0).data();
 	/// rc_person.try_borrow_mut()?.age = 60;
 	/// # w::AnyResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
+	pub fn data(&self) -> Rc<RefCell<T>> {
 		if TypeId::of::<T>() == TypeId::of::<()>() {
 			panic!("ListView<()> will hold no data."); // user didn't define the generic type
 		}
 
-		let rc_ptr = self.data_lparam()?;
-		if rc_ptr.is_null() {
-			panic!("ListViewItem with invalid index, no data.");
+		match self.data_lparam() {
+			None => panic!("ListViewItem with invalid index, no data."),
+			Some(rc_ptr) => {
+				let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
+				Rc::clone(&rc_obj)
+			},
 		}
-
-		let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
-		Ok(Rc::clone(&rc_obj))
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> SysResult<*mut RefCell<T>> {
+	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::PARAM;
@@ -94,13 +94,14 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::GetItem { lvitem: &mut lvi })?;
+				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
+				.expect("ListViewItem with invalid index, no data.");
 		}
 
-		Ok(match lvi.lParam {
-			0 => std::ptr::null_mut(),
-			lp => lp as _,
-		})
+		match lvi.lParam {
+			0 => None,
+			lp => Some(lp as _), // return the stored Rc pointer
+		}
 	}
 
 	/// Deletes the item by sending an

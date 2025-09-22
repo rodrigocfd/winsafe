@@ -55,22 +55,22 @@ impl<'a, T> TreeViewItem<'a, T> {
 	///
 	/// Panics if the item index is invalid.
 	#[must_use]
-	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
+	pub fn data(&self) -> Rc<RefCell<T>> {
 		if TypeId::of::<T>() == TypeId::of::<()>() {
 			panic!("TreeView<()> will hold no data."); // user didn't define the generic type
 		}
 
-		let rc_ptr = self.data_lparam()?;
-		if rc_ptr.is_null() {
-			panic!("TreeViewItem with invalid index, no data.");
+		match self.data_lparam() {
+			None => panic!("TreeViewItem with invalid index, no data."),
+			Some(rc_ptr) => {
+				let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
+				Rc::clone(&rc_obj)
+			},
 		}
-
-		let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
-		Ok(Rc::clone(&rc_obj))
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> SysResult<*mut RefCell<T>> {
+	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
 		let mut tvix = TVITEMEX::default();
 		tvix.hItem = unsafe { self.hitem.raw_copy() };
 		tvix.mask = co::TVIF::PARAM;
@@ -78,13 +78,14 @@ impl<'a, T> TreeViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvix })?;
+				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
+				.expect("TreeViewItem with invalid index, no data.");
 		}
 
-		Ok(match tvix.lParam {
-			0 => std::ptr::null_mut(),
-			lp => lp as _,
-		})
+		match tvix.lParam {
+			0 => None,
+			lp => Some(lp as _), // return the stored Rc pointer
+		}
 	}
 
 	/// Deletes the item by sending a

@@ -80,10 +80,10 @@ impl<'a, T> ListViewItems<'a, T> {
 		};
 
 		if TypeId::of::<T>() != TypeId::of::<()>() {
-			// user defined the generic type
+			// User has defined a generic type, so we store the object right away.
 			lvi.mask |= co::LVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
-			lvi.lParam = Rc::into_raw(rc_data) as _;
+			lvi.lParam = Rc::into_raw(rc_data) as _; // store the Rc pointer
 		}
 
 		let new_idx = unsafe {
