@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::msg::*;
+use crate::prelude::*;
 
 /// Message to be used on `expect()` of internal calls, which are not supposed
 /// to fail.
@@ -29,6 +30,45 @@ impl WndTy {
 		match self {
 			Self::Raw => 0,
 			Self::Dlg => 1, // TRUE
+		}
+	}
+}
+
+/// Global horizontal and vertical system DPI factor, cached.
+pub(in crate::gui) static mut DPI: (i32, i32) = (0, 0);
+
+/// Stuff that should run before anything else.
+pub(in crate::gui) fn initial_gui_setup() {
+	if unsafe { DPI } == (0, 0) {
+		if IsWindowsVistaOrGreater().expect(DONTFAIL) {
+			SetProcessDPIAware().expect(DONTFAIL);
+		}
+
+		InitCommonControls();
+
+		if IsWindows8OrGreater().expect(DONTFAIL) {
+			// https://github.com/rodrigocfd/winsafe-examples/issues/6
+			let mut b_val = 0; // FALSE
+			match unsafe {
+				HPROCESS::GetCurrentProcess().SetUserObjectInformation(
+					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, // SetTimer() safety
+					&mut b_val,
+				)
+			} {
+				Err(e) if e == co::ERROR::INVALID_PARAMETER => {
+					// Do nothing: Wine doesn't support SetUserObjectInformation for now.
+					// https://bugs.winehq.org/show_bug.cgi?id=54951
+				},
+				Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"), // should never happen
+				_ => {},
+			}
+		}
+
+		let hdc_screen = HWND::NULL.GetDC().expect(DONTFAIL);
+		let x = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSX);
+		let y = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSY);
+		unsafe {
+			DPI = (x, y);
 		}
 	}
 }
@@ -62,7 +102,7 @@ pub(in crate::gui) mod ui_font {
 	use crate::gui::privs::*;
 	use crate::msg::*;
 
-	/// Global UI font object.
+	/// Global UI font object, cached.
 	static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
 
 	// Returns the global UI font, creating it of not yet.

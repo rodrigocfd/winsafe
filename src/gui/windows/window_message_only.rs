@@ -49,6 +49,8 @@ impl WindowMessageOnly {
 	}
 
 	fn create(&self, parent: Option<&WindowMessageOnly>) {
+		initial_gui_setup();
+
 		let hinst = HINSTANCE::GetModuleHandle(None).expect(DONTFAIL);
 		let atom = self.0.register_class(
 			&hinst,

@@ -48,31 +48,17 @@ impl MsgError {
 	}
 }
 
-/// Global horizontal and vertical system DPI factor.
-static mut DPI: (i32, i32) = (0, 0);
-
-fn cache_dpi() {
-	if unsafe { DPI } == (0, 0) {
-		let hdc_screen = HWND::NULL.GetDC().expect(DONTFAIL);
-		let x = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSX);
-		let y = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSY);
-		unsafe {
-			DPI = (x, y);
-		}
-	}
-}
-
 /// Returns the value adjusted according to the current horizontal system DPI,
 /// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
 pub fn dpi_x(x_val: i32) -> i32 {
-	cache_dpi();
+	initial_gui_setup();
 	MulDiv(x_val.into(), unsafe { DPI }.0, 96)
 }
 
 /// Returns the value adjusted according to the current vertical system DPI,
 /// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
 pub fn dpi_y(x_val: i32) -> i32 {
-	cache_dpi();
+	initial_gui_setup();
 	MulDiv(x_val.into(), unsafe { DPI }.0, 96)
 }
 

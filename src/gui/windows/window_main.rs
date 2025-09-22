@@ -116,29 +116,7 @@ impl WindowMain {
 	///
 	/// Panics if the creation process fails.
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> AnyResult<i32> {
-		if IsWindowsVistaOrGreater().expect(DONTFAIL) {
-			SetProcessDPIAware().expect(DONTFAIL);
-		}
-
-		InitCommonControls();
-
-		if IsWindows8OrGreater().expect(DONTFAIL) {
-			// https://github.com/rodrigocfd/winsafe-examples/issues/6
-			let mut b_val = 0; // FALSE
-			match unsafe {
-				HPROCESS::GetCurrentProcess().SetUserObjectInformation(
-					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, // SetTimer() safety
-					&mut b_val,
-				)
-			} {
-				Err(e) if e == co::ERROR::INVALID_PARAMETER => {
-					// Do nothing: Wine doesn't support SetUserObjectInformation for now.
-					// https://bugs.winehq.org/show_bug.cgi?id=54951
-				},
-				Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"), // should never happen
-				_ => {},
-			}
-		}
+		initial_gui_setup();
 
 		let hinst = HINSTANCE::GetModuleHandle(None).expect(DONTFAIL);
 		let res = match &self.0 {
