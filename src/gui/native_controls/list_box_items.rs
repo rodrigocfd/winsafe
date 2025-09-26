@@ -34,14 +34,12 @@ impl<'a> ListBoxItems<'a> {
 	/// # w::SysResult::Ok(())
 	/// ```
 	pub fn add(&self, items: &[impl AsRef<str>]) -> SysResult<()> {
-		for text in items.iter() {
-			unsafe {
-				self.owner
-					.hwnd()
-					.SendMessage(lb::AddString { text: WString::from_str(text.as_ref()) })?;
-			}
-		}
-		Ok(())
+		items.iter().try_for_each(|text| unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::AddString { text: WString::from_str(text.as_ref()) })
+				.map(|_| ())
+		})
 	}
 
 	/// Retrieves the number of items by sending an
