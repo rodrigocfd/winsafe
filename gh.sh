@@ -10,21 +10,27 @@ NC='\033[0m'
 
 T0=$(date +%s%N)
 
-GHP=../_winsafe-gh-pages # target gh-pages repo folder
+TARGET_DOC=../_target/doc     # generated docs folder
+GH_PAGES=../_winsafe-gh-pages # gh-pages repo folder
+
+echo -e "${BLUE}Cleaning doc folder...${NC}"
+cd $TARGET_DOC
+rm -rf ./*
+cd -
 
 echo -e "${BLUE}Generating docs locally...${NC}"
 RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
 
 echo -e "${BLUE}Removing previous HTML files...${NC}"
-cd $GHP
-git rm -r .
+cd $GH_PAGES
+rm -rf ./*
+cd -
 
 echo -e "${BLUE}Moving generated HTML files...${NC}"
-cd -
-mv ./target/doc/* $GHP/.
+mv $TARGET_DOC/* $GH_PAGES/.
 
 echo -e "${BLUE}Performing git add...${NC}"
-cd -
+cd $GH_PAGES
 git add .
 
 echo -e "${BLUE}Committing changes...${NC}"
