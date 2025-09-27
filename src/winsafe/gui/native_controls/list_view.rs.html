@@ -342,210 +342,211 @@
 <a href=#342 id=342 data-nosnippet>342</a>		ListViewCols::new(<span class="self">self</span>)
 <a href=#343 id=343 data-nosnippet>343</a>	}
 <a href=#344 id=344 data-nosnippet>344</a>
-<a href=#345 id=345 data-nosnippet>345</a>	<span class="doccomment">/// Returns a handle to the first submenu of the context menu owned by the
-<a href=#346 id=346 data-nosnippet>346</a>	/// list view, if any.
-<a href=#347 id=347 data-nosnippet>347</a>	///
-<a href=#348 id=348 data-nosnippet>348</a>	/// The first submenu is the one to be effectively displayed by the control.
-<a href=#349 id=349 data-nosnippet>349</a>	</span><span class="attr">#[must_use]
-<a href=#350 id=350 data-nosnippet>350</a>	</span><span class="kw">pub fn </span>context_menu(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;HMENU&gt; {
-<a href=#351 id=351 data-nosnippet>351</a>		<span class="self">self</span>.<span class="number">0
-<a href=#352 id=352 data-nosnippet>352</a>			</span>.context_menu
-<a href=#353 id=353 data-nosnippet>353</a>			.as_ref()
-<a href=#354 id=354 data-nosnippet>354</a>			.map(|hmenu| hmenu.GetSubMenu(<span class="number">0</span>).unwrap())
-<a href=#355 id=355 data-nosnippet>355</a>	}
-<a href=#356 id=356 data-nosnippet>356</a>
-<a href=#357 id=357 data-nosnippet>357</a>	<span class="doccomment">/// Retrieves the current view by sending an
-<a href=#358 id=358 data-nosnippet>358</a>	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
-<a href=#359 id=359 data-nosnippet>359</a>	</span><span class="attr">#[must_use]
-<a href=#360 id=360 data-nosnippet>360</a>	</span><span class="kw">pub fn </span>current_view(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::LV_VIEW {
-<a href=#361 id=361 data-nosnippet>361</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::GetView {}) }
-<a href=#362 id=362 data-nosnippet>362</a>	}
-<a href=#363 id=363 data-nosnippet>363</a>
-<a href=#364 id=364 data-nosnippet>364</a>	<span class="doccomment">/// Returns the embedded [`Header`](crate::gui::Header) of the list view, if
-<a href=#365 id=365 data-nosnippet>365</a>	/// any.
-<a href=#366 id=366 data-nosnippet>366</a>	///
-<a href=#367 id=367 data-nosnippet>367</a>	/// The `Header` is tried to be initialized during the internal
-<a href=#368 id=368 data-nosnippet>368</a>	/// [`wm::Create`](crate::msg::wm::Create) and
-<a href=#369 id=369 data-nosnippet>369</a>	/// [`wm::InitDialog`](crate::msg::wm::InitDialog) processing. If the list
-<a href=#370 id=370 data-nosnippet>370</a>	/// view doesn't happen to have a header – only report view lists have
-<a href=#371 id=371 data-nosnippet>371</a>	/// headers –, the internal `Header` is removed, and this method will
-<a href=#372 id=372 data-nosnippet>372</a>	/// forever return `None`.
-<a href=#373 id=373 data-nosnippet>373</a>	///
-<a href=#374 id=374 data-nosnippet>374</a>	/// This means you may call `header()` to add events to the internal
-<a href=#375 id=375 data-nosnippet>375</a>	/// `Header`, but if the list view has no header, these events will simply be
-<a href=#376 id=376 data-nosnippet>376</a>	/// discarded.
-<a href=#377 id=377 data-nosnippet>377</a>	///
-<a href=#378 id=378 data-nosnippet>378</a>	/// # Examples
-<a href=#379 id=379 data-nosnippet>379</a>	///
-<a href=#380 id=380 data-nosnippet>380</a>	/// ```no_run
-<a href=#381 id=381 data-nosnippet>381</a>	/// use winsafe::{self as w, prelude::*, gui};
-<a href=#382 id=382 data-nosnippet>382</a>	///
-<a href=#383 id=383 data-nosnippet>383</a>	/// let my_list: gui::ListView; // initialized somewhere
-<a href=#384 id=384 data-nosnippet>384</a>	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-<a href=#385 id=385 data-nosnippet>385</a>	/// # let my_list = gui::ListView::&lt;()&gt;::new(&amp;wnd, gui::ListViewOpts::default());
-<a href=#386 id=386 data-nosnippet>386</a>	///
-<a href=#387 id=387 data-nosnippet>387</a>	/// let my_list2 = my_list.clone();
-<a href=#388 id=388 data-nosnippet>388</a>	/// my_list.header().unwrap().on().hdn_item_click(move |p| {
-<a href=#389 id=389 data-nosnippet>389</a>	///     let h = my_list2.header().unwrap().items().get(p.iItem as _);
-<a href=#390 id=390 data-nosnippet>390</a>	///     println!("Col: {}", h.text());
-<a href=#391 id=391 data-nosnippet>391</a>	///     Ok(())
-<a href=#392 id=392 data-nosnippet>392</a>	/// });
-<a href=#393 id=393 data-nosnippet>393</a>	/// ```
-<a href=#394 id=394 data-nosnippet>394</a>	</span><span class="attr">#[must_use]
-<a href=#395 id=395 data-nosnippet>395</a>	</span><span class="kw">pub fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Header&gt; {
-<a href=#396 id=396 data-nosnippet>396</a>		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.<span class="number">0</span>.header.get() }.as_ref()
-<a href=#397 id=397 data-nosnippet>397</a>	}
-<a href=#398 id=398 data-nosnippet>398</a>
-<a href=#399 id=399 data-nosnippet>399</a>	<span class="doccomment">/// Retrieves one of the associated image lists by sending an
-<a href=#400 id=400 data-nosnippet>400</a>	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
-<a href=#401 id=401 data-nosnippet>401</a>	///
-<a href=#402 id=402 data-nosnippet>402</a>	/// Image lists are lazy-initialized: the first time you call this method
-<a href=#403 id=403 data-nosnippet>403</a>	/// for a given image list, it will be created and assigned with
-<a href=#404 id=404 data-nosnippet>404</a>	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList).
-<a href=#405 id=405 data-nosnippet>405</a>	///
-<a href=#406 id=406 data-nosnippet>406</a>	/// The image list is owned by the control.
-<a href=#407 id=407 data-nosnippet>407</a>	</span><span class="attr">#[must_use]
-<a href=#408 id=408 data-nosnippet>408</a>	</span><span class="kw">pub fn </span>image_list(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: co::LVSIL) -&gt; HrResult&lt;HIMAGELIST&gt; {
-<a href=#409 id=409 data-nosnippet>409</a>		<span class="kw">match unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::GetImageList { kind }) } {
-<a href=#410 id=410 data-nosnippet>410</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(h), <span class="comment">// already created
-<a href=#411 id=411 data-nosnippet>411</a>			</span><span class="prelude-val">None </span>=&gt; {
-<a href=#412 id=412 data-nosnippet>412</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
-<a href=#413 id=413 data-nosnippet>413</a>				</span><span class="kw">let </span>sz = <span class="kw">match </span>kind {
-<a href=#414 id=414 data-nosnippet>414</a>					co::LVSIL::NORMAL =&gt; SIZE::with(<span class="number">32</span>, <span class="number">32</span>),
-<a href=#415 id=415 data-nosnippet>415</a>					<span class="kw">_ </span>=&gt; SIZE::with(<span class="number">16</span>, <span class="number">16</span>),
-<a href=#416 id=416 data-nosnippet>416</a>				};
-<a href=#417 id=417 data-nosnippet>417</a>				<span class="kw">let </span>h = HIMAGELIST::Create(sz, co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
-<a href=#418 id=418 data-nosnippet>418</a>				<span class="kw">unsafe </span>{
-<a href=#419 id=419 data-nosnippet>419</a>					<span class="self">self</span>.hwnd()
-<a href=#420 id=420 data-nosnippet>420</a>						.SendMessage(lvm::SetImageList { himagelist: <span class="prelude-val">Some</span>(h.raw_copy()), kind });
-<a href=#421 id=421 data-nosnippet>421</a>				}
-<a href=#422 id=422 data-nosnippet>422</a>				<span class="prelude-val">Ok</span>(h)
-<a href=#423 id=423 data-nosnippet>423</a>			},
-<a href=#424 id=424 data-nosnippet>424</a>		}
-<a href=#425 id=425 data-nosnippet>425</a>	}
-<a href=#426 id=426 data-nosnippet>426</a>
-<a href=#427 id=427 data-nosnippet>427</a>	<span class="doccomment">/// Item methods.
-<a href=#428 id=428 data-nosnippet>428</a>	</span><span class="attr">#[must_use]
-<a href=#429 id=429 data-nosnippet>429</a>	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewItems&lt;<span class="lifetime">'_</span>, T&gt; {
-<a href=#430 id=430 data-nosnippet>430</a>		ListViewItems::new(<span class="self">self</span>)
-<a href=#431 id=431 data-nosnippet>431</a>	}
-<a href=#432 id=432 data-nosnippet>432</a>
-<a href=#433 id=433 data-nosnippet>433</a>	<span class="doccomment">/// Sets the current view by sending an
-<a href=#434 id=434 data-nosnippet>434</a>	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
-<a href=#435 id=435 data-nosnippet>435</a>	</span><span class="kw">pub fn </span>set_current_view(<span class="kw-2">&amp;</span><span class="self">self</span>, view: co::LV_VIEW) -&gt; SysResult&lt;()&gt; {
-<a href=#436 id=436 data-nosnippet>436</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::SetView { view }) }
-<a href=#437 id=437 data-nosnippet>437</a>	}
-<a href=#438 id=438 data-nosnippet>438</a>
-<a href=#439 id=439 data-nosnippet>439</a>	<span class="doccomment">/// Sets or unsets the given extended list view styles by sending an
-<a href=#440 id=440 data-nosnippet>440</a>	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
-<a href=#441 id=441 data-nosnippet>441</a>	/// message.
-<a href=#442 id=442 data-nosnippet>442</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, set: bool, ex_style: co::LVS_EX) {
-<a href=#443 id=443 data-nosnippet>443</a>		<span class="kw">unsafe </span>{
-<a href=#444 id=444 data-nosnippet>444</a>			<span class="self">self</span>.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
-<a href=#445 id=445 data-nosnippet>445</a>				mask: ex_style,
-<a href=#446 id=446 data-nosnippet>446</a>				style: <span class="kw">if </span>set { ex_style } <span class="kw">else </span>{ co::LVS_EX::NoValue },
-<a href=#447 id=447 data-nosnippet>447</a>			});
-<a href=#448 id=448 data-nosnippet>448</a>		}
-<a href=#449 id=449 data-nosnippet>449</a>	}
-<a href=#450 id=450 data-nosnippet>450</a>
-<a href=#451 id=451 data-nosnippet>451</a>	<span class="doccomment">/// Allows or disallows the redrawing of the control by sending a
-<a href=#452 id=452 data-nosnippet>452</a>	/// [`wm::SetRedraw`](crate::msg::wm::SetRedraw) message.
-<a href=#453 id=453 data-nosnippet>453</a>	</span><span class="kw">pub fn </span>set_redraw(<span class="kw-2">&amp;</span><span class="self">self</span>, can_redraw: bool) {
-<a href=#454 id=454 data-nosnippet>454</a>		<span class="kw">unsafe </span>{
-<a href=#455 id=455 data-nosnippet>455</a>			<span class="self">self</span>.hwnd().SendMessage(wm::SetRedraw { can_redraw });
-<a href=#456 id=456 data-nosnippet>456</a>		}
-<a href=#457 id=457 data-nosnippet>457</a>	}
-<a href=#458 id=458 data-nosnippet>458</a>}
-<a href=#459 id=459 data-nosnippet>459</a>
-<a href=#460 id=460 data-nosnippet>460</a><span class="doccomment">/// Options to create a [`ListView`](crate::gui::ListView) programmatically with
-<a href=#461 id=461 data-nosnippet>461</a>/// [`ListView::new`](crate::gui::ListView::new).
-<a href=#462 id=462 data-nosnippet>462</a></span><span class="kw">pub struct </span>ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
-<a href=#463 id=463 data-nosnippet>463</a>	<span class="doccomment">/// Left and top position coordinates of control within parent's client
-<a href=#464 id=464 data-nosnippet>464</a>	/// area, to be
-<a href=#465 id=465 data-nosnippet>465</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#466 id=466 data-nosnippet>466</a>	///
-<a href=#467 id=467 data-nosnippet>467</a>	/// Defaults to `gui::dpi(0, 0)`.
-<a href=#468 id=468 data-nosnippet>468</a>	</span><span class="kw">pub </span>position: (i32, i32),
-<a href=#469 id=469 data-nosnippet>469</a>	<span class="doccomment">/// Width and height of control to be
-<a href=#470 id=470 data-nosnippet>470</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#471 id=471 data-nosnippet>471</a>	///
-<a href=#472 id=472 data-nosnippet>472</a>	/// Defaults to `gui::dpi(120, 120)`.
-<a href=#473 id=473 data-nosnippet>473</a>	</span><span class="kw">pub </span>size: (i32, i32),
-<a href=#474 id=474 data-nosnippet>474</a>	<span class="doccomment">/// List view styles to be
-<a href=#475 id=475 data-nosnippet>475</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#476 id=476 data-nosnippet>476</a>	///
-<a href=#477 id=477 data-nosnippet>477</a>	/// Since the image list is always managed by the control itself,
-<a href=#478 id=478 data-nosnippet>478</a>	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
-<a href=#479 id=479 data-nosnippet>479</a>	/// always be unset.
-<a href=#480 id=480 data-nosnippet>480</a>	///
-<a href=#481 id=481 data-nosnippet>481</a>	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS`.
-<a href=#482 id=482 data-nosnippet>482</a>	</span><span class="kw">pub </span>control_style: co::LVS,
-<a href=#483 id=483 data-nosnippet>483</a>	<span class="doccomment">/// Extended list view styles to be
-<a href=#484 id=484 data-nosnippet>484</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#485 id=485 data-nosnippet>485</a>	///
-<a href=#486 id=486 data-nosnippet>486</a>	/// Defaults to `LVS_EX::FULLROWSELECT`.
-<a href=#487 id=487 data-nosnippet>487</a>	</span><span class="kw">pub </span>control_ex_style: co::LVS_EX,
-<a href=#488 id=488 data-nosnippet>488</a>	<span class="doccomment">/// Window styles to be
-<a href=#489 id=489 data-nosnippet>489</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#490 id=490 data-nosnippet>490</a>	///
-<a href=#491 id=491 data-nosnippet>491</a>	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
-<a href=#492 id=492 data-nosnippet>492</a>	</span><span class="kw">pub </span>window_style: co::WS,
-<a href=#493 id=493 data-nosnippet>493</a>	<span class="doccomment">/// Extended window styles to be
-<a href=#494 id=494 data-nosnippet>494</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#495 id=495 data-nosnippet>495</a>	///
-<a href=#496 id=496 data-nosnippet>496</a>	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
-<a href=#497 id=497 data-nosnippet>497</a>	</span><span class="kw">pub </span>window_ex_style: co::WS_EX,
-<a href=#498 id=498 data-nosnippet>498</a>
-<a href=#499 id=499 data-nosnippet>499</a>	<span class="doccomment">/// The control ID.
-<a href=#500 id=500 data-nosnippet>500</a>	///
-<a href=#501 id=501 data-nosnippet>501</a>	/// Defaults to an auto-generated ID.
-<a href=#502 id=502 data-nosnippet>502</a>	</span><span class="kw">pub </span>ctrl_id: u16,
-<a href=#503 id=503 data-nosnippet>503</a>	<span class="doccomment">/// Horizontal and vertical behavior of the control when the parent window
-<a href=#504 id=504 data-nosnippet>504</a>	/// is resized.
-<a href=#505 id=505 data-nosnippet>505</a>	///
-<a href=#506 id=506 data-nosnippet>506</a>	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
-<a href=#507 id=507 data-nosnippet>507</a>	</span><span class="kw">pub </span>resize_behavior: (Horz, Vert),
-<a href=#508 id=508 data-nosnippet>508</a>
-<a href=#509 id=509 data-nosnippet>509</a>	<span class="doccomment">/// Context popup menu.
-<a href=#510 id=510 data-nosnippet>510</a>	///
-<a href=#511 id=511 data-nosnippet>511</a>	/// This menu will be owned by the control, which will automatically destroy
-<a href=#512 id=512 data-nosnippet>512</a>	/// it.
-<a href=#513 id=513 data-nosnippet>513</a>	///
-<a href=#514 id=514 data-nosnippet>514</a>	/// The first submenu is the one which will be effectively displayed as the
-<a href=#515 id=515 data-nosnippet>515</a>	/// context menu.
-<a href=#516 id=516 data-nosnippet>516</a>	///
-<a href=#517 id=517 data-nosnippet>517</a>	/// Defaults to `None`.
-<a href=#518 id=518 data-nosnippet>518</a>	</span><span class="kw">pub </span>context_menu: <span class="prelude-ty">Option</span>&lt;DestroyMenuGuard&gt;,
-<a href=#519 id=519 data-nosnippet>519</a>	<span class="doccomment">/// Text and width of columns to be added. The columns only show in report
-<a href=#520 id=520 data-nosnippet>520</a>	/// mode.
-<a href=#521 id=521 data-nosnippet>521</a>	///
-<a href=#522 id=522 data-nosnippet>522</a>	/// Defaults to none.
-<a href=#523 id=523 data-nosnippet>523</a>	</span><span class="kw">pub </span>columns: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, i32)],
-<a href=#524 id=524 data-nosnippet>524</a>}
-<a href=#525 id=525 data-nosnippet>525</a>
-<a href=#526 id=526 data-nosnippet>526</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
-<a href=#527 id=527 data-nosnippet>527</a>	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-<a href=#528 id=528 data-nosnippet>528</a>		<span class="self">Self </span>{
-<a href=#529 id=529 data-nosnippet>529</a>			position: dpi(<span class="number">0</span>, <span class="number">0</span>),
-<a href=#530 id=530 data-nosnippet>530</a>			size: dpi(<span class="number">120</span>, <span class="number">120</span>),
-<a href=#531 id=531 data-nosnippet>531</a>			control_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS,
-<a href=#532 id=532 data-nosnippet>532</a>			control_ex_style: co::LVS_EX::FULLROWSELECT,
-<a href=#533 id=533 data-nosnippet>533</a>			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
-<a href=#534 id=534 data-nosnippet>534</a>			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
-<a href=#535 id=535 data-nosnippet>535</a>			ctrl_id: <span class="number">0</span>,
-<a href=#536 id=536 data-nosnippet>536</a>			resize_behavior: (Horz::None, Vert::None),
-<a href=#537 id=537 data-nosnippet>537</a>			context_menu: <span class="prelude-val">None</span>,
-<a href=#538 id=538 data-nosnippet>538</a>			columns: <span class="kw-2">&amp;</span>[],
-<a href=#539 id=539 data-nosnippet>539</a>		}
-<a href=#540 id=540 data-nosnippet>540</a>	}
-<a href=#541 id=541 data-nosnippet>541</a>}
-<a href=#542 id=542 data-nosnippet>542</a>
-<a href=#543 id=543 data-nosnippet>543</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
-<a href=#544 id=544 data-nosnippet>544</a>	<span class="attr">#[must_use]
-<a href=#545 id=545 data-nosnippet>545</a>	</span><span class="kw">fn </span>owned_columns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;(String, i32)&gt; {
-<a href=#546 id=546 data-nosnippet>546</a>		<span class="self">self</span>.columns
-<a href=#547 id=547 data-nosnippet>547</a>			.iter()
-<a href=#548 id=548 data-nosnippet>548</a>			.map(|(text, width)| ((<span class="kw-2">*</span>text).to_owned(), <span class="kw-2">*</span>width))
-<a href=#549 id=549 data-nosnippet>549</a>			.collect()
-<a href=#550 id=550 data-nosnippet>550</a>	}
-<a href=#551 id=551 data-nosnippet>551</a>}</code></pre></div></section></main></body></html>
+<a href=#345 id=345 data-nosnippet>345</a>	<span class="doccomment">/// The context submenu is optionally set in
+<a href=#346 id=346 data-nosnippet>346</a>	/// [`ListView::new`](crate::gui::ListView::new) or
+<a href=#347 id=347 data-nosnippet>347</a>	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg). If set, this
+<a href=#348 id=348 data-nosnippet>348</a>	/// method returns a handle to its first submenu, because the first submenu
+<a href=#349 id=349 data-nosnippet>349</a>	/// is the one to be effectively displayed by the control.
+<a href=#350 id=350 data-nosnippet>350</a>	</span><span class="attr">#[must_use]
+<a href=#351 id=351 data-nosnippet>351</a>	</span><span class="kw">pub fn </span>context_menu(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;HMENU&gt; {
+<a href=#352 id=352 data-nosnippet>352</a>		<span class="self">self</span>.<span class="number">0
+<a href=#353 id=353 data-nosnippet>353</a>			</span>.context_menu
+<a href=#354 id=354 data-nosnippet>354</a>			.as_ref()
+<a href=#355 id=355 data-nosnippet>355</a>			.map(|hmenu| hmenu.GetSubMenu(<span class="number">0</span>).unwrap())
+<a href=#356 id=356 data-nosnippet>356</a>	}
+<a href=#357 id=357 data-nosnippet>357</a>
+<a href=#358 id=358 data-nosnippet>358</a>	<span class="doccomment">/// Retrieves the current view by sending an
+<a href=#359 id=359 data-nosnippet>359</a>	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
+<a href=#360 id=360 data-nosnippet>360</a>	</span><span class="attr">#[must_use]
+<a href=#361 id=361 data-nosnippet>361</a>	</span><span class="kw">pub fn </span>current_view(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::LV_VIEW {
+<a href=#362 id=362 data-nosnippet>362</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::GetView {}) }
+<a href=#363 id=363 data-nosnippet>363</a>	}
+<a href=#364 id=364 data-nosnippet>364</a>
+<a href=#365 id=365 data-nosnippet>365</a>	<span class="doccomment">/// Returns the embedded [`Header`](crate::gui::Header) of the list view, if
+<a href=#366 id=366 data-nosnippet>366</a>	/// any.
+<a href=#367 id=367 data-nosnippet>367</a>	///
+<a href=#368 id=368 data-nosnippet>368</a>	/// The `Header` is tried to be initialized during the internal
+<a href=#369 id=369 data-nosnippet>369</a>	/// [`wm::Create`](crate::msg::wm::Create) and
+<a href=#370 id=370 data-nosnippet>370</a>	/// [`wm::InitDialog`](crate::msg::wm::InitDialog) processing. If the list
+<a href=#371 id=371 data-nosnippet>371</a>	/// view doesn't happen to have a header – only report view lists have
+<a href=#372 id=372 data-nosnippet>372</a>	/// headers –, the internal `Header` is removed, and this method will
+<a href=#373 id=373 data-nosnippet>373</a>	/// forever return `None`.
+<a href=#374 id=374 data-nosnippet>374</a>	///
+<a href=#375 id=375 data-nosnippet>375</a>	/// This means you may call `header()` to add events to the internal
+<a href=#376 id=376 data-nosnippet>376</a>	/// `Header`, but if the list view has no header, these events will simply be
+<a href=#377 id=377 data-nosnippet>377</a>	/// discarded.
+<a href=#378 id=378 data-nosnippet>378</a>	///
+<a href=#379 id=379 data-nosnippet>379</a>	/// # Examples
+<a href=#380 id=380 data-nosnippet>380</a>	///
+<a href=#381 id=381 data-nosnippet>381</a>	/// ```no_run
+<a href=#382 id=382 data-nosnippet>382</a>	/// use winsafe::{self as w, prelude::*, gui};
+<a href=#383 id=383 data-nosnippet>383</a>	///
+<a href=#384 id=384 data-nosnippet>384</a>	/// let my_list: gui::ListView; // initialized somewhere
+<a href=#385 id=385 data-nosnippet>385</a>	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+<a href=#386 id=386 data-nosnippet>386</a>	/// # let my_list = gui::ListView::&lt;()&gt;::new(&amp;wnd, gui::ListViewOpts::default());
+<a href=#387 id=387 data-nosnippet>387</a>	///
+<a href=#388 id=388 data-nosnippet>388</a>	/// let my_list2 = my_list.clone();
+<a href=#389 id=389 data-nosnippet>389</a>	/// my_list.header().unwrap().on().hdn_item_click(move |p| {
+<a href=#390 id=390 data-nosnippet>390</a>	///     let h = my_list2.header().unwrap().items().get(p.iItem as _);
+<a href=#391 id=391 data-nosnippet>391</a>	///     println!("Col: {}", h.text());
+<a href=#392 id=392 data-nosnippet>392</a>	///     Ok(())
+<a href=#393 id=393 data-nosnippet>393</a>	/// });
+<a href=#394 id=394 data-nosnippet>394</a>	/// ```
+<a href=#395 id=395 data-nosnippet>395</a>	</span><span class="attr">#[must_use]
+<a href=#396 id=396 data-nosnippet>396</a>	</span><span class="kw">pub fn </span>header(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Header&gt; {
+<a href=#397 id=397 data-nosnippet>397</a>		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.<span class="number">0</span>.header.get() }.as_ref()
+<a href=#398 id=398 data-nosnippet>398</a>	}
+<a href=#399 id=399 data-nosnippet>399</a>
+<a href=#400 id=400 data-nosnippet>400</a>	<span class="doccomment">/// Retrieves one of the associated image lists by sending an
+<a href=#401 id=401 data-nosnippet>401</a>	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+<a href=#402 id=402 data-nosnippet>402</a>	///
+<a href=#403 id=403 data-nosnippet>403</a>	/// Image lists are lazy-initialized: the first time you call this method
+<a href=#404 id=404 data-nosnippet>404</a>	/// for a given image list, it will be created and assigned with
+<a href=#405 id=405 data-nosnippet>405</a>	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList).
+<a href=#406 id=406 data-nosnippet>406</a>	///
+<a href=#407 id=407 data-nosnippet>407</a>	/// The image list is owned by the control.
+<a href=#408 id=408 data-nosnippet>408</a>	</span><span class="attr">#[must_use]
+<a href=#409 id=409 data-nosnippet>409</a>	</span><span class="kw">pub fn </span>image_list(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: co::LVSIL) -&gt; HrResult&lt;HIMAGELIST&gt; {
+<a href=#410 id=410 data-nosnippet>410</a>		<span class="kw">match unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::GetImageList { kind }) } {
+<a href=#411 id=411 data-nosnippet>411</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(h), <span class="comment">// already created
+<a href=#412 id=412 data-nosnippet>412</a>			</span><span class="prelude-val">None </span>=&gt; {
+<a href=#413 id=413 data-nosnippet>413</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
+<a href=#414 id=414 data-nosnippet>414</a>				</span><span class="kw">let </span>sz = <span class="kw">match </span>kind {
+<a href=#415 id=415 data-nosnippet>415</a>					co::LVSIL::NORMAL =&gt; SIZE::with(<span class="number">32</span>, <span class="number">32</span>),
+<a href=#416 id=416 data-nosnippet>416</a>					<span class="kw">_ </span>=&gt; SIZE::with(<span class="number">16</span>, <span class="number">16</span>),
+<a href=#417 id=417 data-nosnippet>417</a>				};
+<a href=#418 id=418 data-nosnippet>418</a>				<span class="kw">let </span>h = HIMAGELIST::Create(sz, co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
+<a href=#419 id=419 data-nosnippet>419</a>				<span class="kw">unsafe </span>{
+<a href=#420 id=420 data-nosnippet>420</a>					<span class="self">self</span>.hwnd()
+<a href=#421 id=421 data-nosnippet>421</a>						.SendMessage(lvm::SetImageList { himagelist: <span class="prelude-val">Some</span>(h.raw_copy()), kind });
+<a href=#422 id=422 data-nosnippet>422</a>				}
+<a href=#423 id=423 data-nosnippet>423</a>				<span class="prelude-val">Ok</span>(h)
+<a href=#424 id=424 data-nosnippet>424</a>			},
+<a href=#425 id=425 data-nosnippet>425</a>		}
+<a href=#426 id=426 data-nosnippet>426</a>	}
+<a href=#427 id=427 data-nosnippet>427</a>
+<a href=#428 id=428 data-nosnippet>428</a>	<span class="doccomment">/// Item methods.
+<a href=#429 id=429 data-nosnippet>429</a>	</span><span class="attr">#[must_use]
+<a href=#430 id=430 data-nosnippet>430</a>	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewItems&lt;<span class="lifetime">'_</span>, T&gt; {
+<a href=#431 id=431 data-nosnippet>431</a>		ListViewItems::new(<span class="self">self</span>)
+<a href=#432 id=432 data-nosnippet>432</a>	}
+<a href=#433 id=433 data-nosnippet>433</a>
+<a href=#434 id=434 data-nosnippet>434</a>	<span class="doccomment">/// Sets the current view by sending an
+<a href=#435 id=435 data-nosnippet>435</a>	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
+<a href=#436 id=436 data-nosnippet>436</a>	</span><span class="kw">pub fn </span>set_current_view(<span class="kw-2">&amp;</span><span class="self">self</span>, view: co::LV_VIEW) -&gt; SysResult&lt;()&gt; {
+<a href=#437 id=437 data-nosnippet>437</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(lvm::SetView { view }) }
+<a href=#438 id=438 data-nosnippet>438</a>	}
+<a href=#439 id=439 data-nosnippet>439</a>
+<a href=#440 id=440 data-nosnippet>440</a>	<span class="doccomment">/// Sets or unsets the given extended list view styles by sending an
+<a href=#441 id=441 data-nosnippet>441</a>	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
+<a href=#442 id=442 data-nosnippet>442</a>	/// message.
+<a href=#443 id=443 data-nosnippet>443</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, set: bool, ex_style: co::LVS_EX) {
+<a href=#444 id=444 data-nosnippet>444</a>		<span class="kw">unsafe </span>{
+<a href=#445 id=445 data-nosnippet>445</a>			<span class="self">self</span>.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
+<a href=#446 id=446 data-nosnippet>446</a>				mask: ex_style,
+<a href=#447 id=447 data-nosnippet>447</a>				style: <span class="kw">if </span>set { ex_style } <span class="kw">else </span>{ co::LVS_EX::NoValue },
+<a href=#448 id=448 data-nosnippet>448</a>			});
+<a href=#449 id=449 data-nosnippet>449</a>		}
+<a href=#450 id=450 data-nosnippet>450</a>	}
+<a href=#451 id=451 data-nosnippet>451</a>
+<a href=#452 id=452 data-nosnippet>452</a>	<span class="doccomment">/// Allows or disallows the redrawing of the control by sending a
+<a href=#453 id=453 data-nosnippet>453</a>	/// [`wm::SetRedraw`](crate::msg::wm::SetRedraw) message.
+<a href=#454 id=454 data-nosnippet>454</a>	</span><span class="kw">pub fn </span>set_redraw(<span class="kw-2">&amp;</span><span class="self">self</span>, can_redraw: bool) {
+<a href=#455 id=455 data-nosnippet>455</a>		<span class="kw">unsafe </span>{
+<a href=#456 id=456 data-nosnippet>456</a>			<span class="self">self</span>.hwnd().SendMessage(wm::SetRedraw { can_redraw });
+<a href=#457 id=457 data-nosnippet>457</a>		}
+<a href=#458 id=458 data-nosnippet>458</a>	}
+<a href=#459 id=459 data-nosnippet>459</a>}
+<a href=#460 id=460 data-nosnippet>460</a>
+<a href=#461 id=461 data-nosnippet>461</a><span class="doccomment">/// Options to create a [`ListView`](crate::gui::ListView) programmatically with
+<a href=#462 id=462 data-nosnippet>462</a>/// [`ListView::new`](crate::gui::ListView::new).
+<a href=#463 id=463 data-nosnippet>463</a></span><span class="kw">pub struct </span>ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#464 id=464 data-nosnippet>464</a>	<span class="doccomment">/// Left and top position coordinates of control within parent's client
+<a href=#465 id=465 data-nosnippet>465</a>	/// area, to be
+<a href=#466 id=466 data-nosnippet>466</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#467 id=467 data-nosnippet>467</a>	///
+<a href=#468 id=468 data-nosnippet>468</a>	/// Defaults to `gui::dpi(0, 0)`.
+<a href=#469 id=469 data-nosnippet>469</a>	</span><span class="kw">pub </span>position: (i32, i32),
+<a href=#470 id=470 data-nosnippet>470</a>	<span class="doccomment">/// Width and height of control to be
+<a href=#471 id=471 data-nosnippet>471</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#472 id=472 data-nosnippet>472</a>	///
+<a href=#473 id=473 data-nosnippet>473</a>	/// Defaults to `gui::dpi(120, 120)`.
+<a href=#474 id=474 data-nosnippet>474</a>	</span><span class="kw">pub </span>size: (i32, i32),
+<a href=#475 id=475 data-nosnippet>475</a>	<span class="doccomment">/// List view styles to be
+<a href=#476 id=476 data-nosnippet>476</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#477 id=477 data-nosnippet>477</a>	///
+<a href=#478 id=478 data-nosnippet>478</a>	/// Since the image list is always managed by the control itself,
+<a href=#479 id=479 data-nosnippet>479</a>	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
+<a href=#480 id=480 data-nosnippet>480</a>	/// always be unset.
+<a href=#481 id=481 data-nosnippet>481</a>	///
+<a href=#482 id=482 data-nosnippet>482</a>	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS`.
+<a href=#483 id=483 data-nosnippet>483</a>	</span><span class="kw">pub </span>control_style: co::LVS,
+<a href=#484 id=484 data-nosnippet>484</a>	<span class="doccomment">/// Extended list view styles to be
+<a href=#485 id=485 data-nosnippet>485</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#486 id=486 data-nosnippet>486</a>	///
+<a href=#487 id=487 data-nosnippet>487</a>	/// Defaults to `LVS_EX::FULLROWSELECT`.
+<a href=#488 id=488 data-nosnippet>488</a>	</span><span class="kw">pub </span>control_ex_style: co::LVS_EX,
+<a href=#489 id=489 data-nosnippet>489</a>	<span class="doccomment">/// Window styles to be
+<a href=#490 id=490 data-nosnippet>490</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#491 id=491 data-nosnippet>491</a>	///
+<a href=#492 id=492 data-nosnippet>492</a>	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
+<a href=#493 id=493 data-nosnippet>493</a>	</span><span class="kw">pub </span>window_style: co::WS,
+<a href=#494 id=494 data-nosnippet>494</a>	<span class="doccomment">/// Extended window styles to be
+<a href=#495 id=495 data-nosnippet>495</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#496 id=496 data-nosnippet>496</a>	///
+<a href=#497 id=497 data-nosnippet>497</a>	/// Defaults to `WS_EX::LEFT | WS_EX::CLIENTEDGE`.
+<a href=#498 id=498 data-nosnippet>498</a>	</span><span class="kw">pub </span>window_ex_style: co::WS_EX,
+<a href=#499 id=499 data-nosnippet>499</a>
+<a href=#500 id=500 data-nosnippet>500</a>	<span class="doccomment">/// The control ID.
+<a href=#501 id=501 data-nosnippet>501</a>	///
+<a href=#502 id=502 data-nosnippet>502</a>	/// Defaults to an auto-generated ID.
+<a href=#503 id=503 data-nosnippet>503</a>	</span><span class="kw">pub </span>ctrl_id: u16,
+<a href=#504 id=504 data-nosnippet>504</a>	<span class="doccomment">/// Horizontal and vertical behavior of the control when the parent window
+<a href=#505 id=505 data-nosnippet>505</a>	/// is resized.
+<a href=#506 id=506 data-nosnippet>506</a>	///
+<a href=#507 id=507 data-nosnippet>507</a>	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
+<a href=#508 id=508 data-nosnippet>508</a>	</span><span class="kw">pub </span>resize_behavior: (Horz, Vert),
+<a href=#509 id=509 data-nosnippet>509</a>
+<a href=#510 id=510 data-nosnippet>510</a>	<span class="doccomment">/// Context popup menu.
+<a href=#511 id=511 data-nosnippet>511</a>	///
+<a href=#512 id=512 data-nosnippet>512</a>	/// This menu will be owned by the control, which will automatically destroy
+<a href=#513 id=513 data-nosnippet>513</a>	/// it.
+<a href=#514 id=514 data-nosnippet>514</a>	///
+<a href=#515 id=515 data-nosnippet>515</a>	/// The first submenu is the one which will be effectively displayed as the
+<a href=#516 id=516 data-nosnippet>516</a>	/// context menu.
+<a href=#517 id=517 data-nosnippet>517</a>	///
+<a href=#518 id=518 data-nosnippet>518</a>	/// Defaults to `None`.
+<a href=#519 id=519 data-nosnippet>519</a>	</span><span class="kw">pub </span>context_menu: <span class="prelude-ty">Option</span>&lt;DestroyMenuGuard&gt;,
+<a href=#520 id=520 data-nosnippet>520</a>	<span class="doccomment">/// Text and width of columns to be added. The columns only show in report
+<a href=#521 id=521 data-nosnippet>521</a>	/// mode.
+<a href=#522 id=522 data-nosnippet>522</a>	///
+<a href=#523 id=523 data-nosnippet>523</a>	/// Defaults to none.
+<a href=#524 id=524 data-nosnippet>524</a>	</span><span class="kw">pub </span>columns: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str, i32)],
+<a href=#525 id=525 data-nosnippet>525</a>}
+<a href=#526 id=526 data-nosnippet>526</a>
+<a href=#527 id=527 data-nosnippet>527</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Default <span class="kw">for </span>ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#528 id=528 data-nosnippet>528</a>	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+<a href=#529 id=529 data-nosnippet>529</a>		<span class="self">Self </span>{
+<a href=#530 id=530 data-nosnippet>530</a>			position: dpi(<span class="number">0</span>, <span class="number">0</span>),
+<a href=#531 id=531 data-nosnippet>531</a>			size: dpi(<span class="number">120</span>, <span class="number">120</span>),
+<a href=#532 id=532 data-nosnippet>532</a>			control_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS,
+<a href=#533 id=533 data-nosnippet>533</a>			control_ex_style: co::LVS_EX::FULLROWSELECT,
+<a href=#534 id=534 data-nosnippet>534</a>			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
+<a href=#535 id=535 data-nosnippet>535</a>			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
+<a href=#536 id=536 data-nosnippet>536</a>			ctrl_id: <span class="number">0</span>,
+<a href=#537 id=537 data-nosnippet>537</a>			resize_behavior: (Horz::None, Vert::None),
+<a href=#538 id=538 data-nosnippet>538</a>			context_menu: <span class="prelude-val">None</span>,
+<a href=#539 id=539 data-nosnippet>539</a>			columns: <span class="kw-2">&amp;</span>[],
+<a href=#540 id=540 data-nosnippet>540</a>		}
+<a href=#541 id=541 data-nosnippet>541</a>	}
+<a href=#542 id=542 data-nosnippet>542</a>}
+<a href=#543 id=543 data-nosnippet>543</a>
+<a href=#544 id=544 data-nosnippet>544</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewOpts&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#545 id=545 data-nosnippet>545</a>	<span class="attr">#[must_use]
+<a href=#546 id=546 data-nosnippet>546</a>	</span><span class="kw">fn </span>owned_columns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;(String, i32)&gt; {
+<a href=#547 id=547 data-nosnippet>547</a>		<span class="self">self</span>.columns
+<a href=#548 id=548 data-nosnippet>548</a>			.iter()
+<a href=#549 id=549 data-nosnippet>549</a>			.map(|(text, width)| ((<span class="kw-2">*</span>text).to_owned(), <span class="kw-2">*</span>width))
+<a href=#550 id=550 data-nosnippet>550</a>			.collect()
+<a href=#551 id=551 data-nosnippet>551</a>	}
+<a href=#552 id=552 data-nosnippet>552</a>}</code></pre></div></section></main></body></html>
