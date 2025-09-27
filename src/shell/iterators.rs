@@ -1,3 +1,4 @@
+use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
@@ -6,51 +7,70 @@ use crate::shell::ffi;
 pub(in crate::shell) struct HdropIter<'a> {
 	hdrop: &'a HDROP,
 	buffer: WString,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a> Iterator for HdropIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match unsafe {
-			ffi::DragQueryFileW(
-				self.hdrop.ptr(),
-				self.current,
-				self.buffer.as_mut_ptr(),
-				self.buffer.buf_len() as _,
-			)
-		} {
-			0 => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(GetLastError()))
-			},
-			_ => {
-				self.current += 1;
-				Some(Ok(self.buffer.to_string()))
-			},
-		}
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for HdropIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
 impl<'a> HdropIter<'a> {
 	#[must_use]
 	pub(in crate::shell) fn new(hdrop: &'a HDROP) -> SysResult<Self> {
-		let count = unsafe {
-			ffi::DragQueryFileW(hdrop.ptr(), 0xffff_ffff, std::ptr::null_mut(), 0) // preliminar call to retrieve the file count
-		};
+		let count =
+			unsafe { ffi::DragQueryFileW(hdrop.ptr(), 0xffff_ffff, std::ptr::null_mut(), 0) };
+		if count == 0 {
+			let err = GetLastError();
+			if err != co::ERROR::SUCCESS {
+				return Err(err);
+			}
+		}
 
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
-			count,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: count,
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		match unsafe {
+			ffi::DragQueryFileW(
+				self.hdrop.ptr(),
+				our_idx,
+				self.buffer.as_mut_ptr(),
+				self.buffer.buf_len() as _,
+			)
+		} {
+			0 => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				Some(Err(GetLastError()))
+			},
+			_ => {
+				if is_front {
+					self.front_idx += 1;
+				} else {
+					self.past_back_idx -= 1;
+				}
+				Some(Ok(self.buffer.to_string()))
+			},
+		}
 	}
 }
 

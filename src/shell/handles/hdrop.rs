@@ -45,8 +45,10 @@ impl HDROP {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn DragQueryFile(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + '_> {
-		Ok(HdropIter::new(self)?)
+	pub fn DragQueryFile(
+		&self,
+	) -> SysResult<impl DoubleEndedIterator<Item = SysResult<String>> + '_> {
+		HdropIter::new(self)
 	}
 
 	/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
