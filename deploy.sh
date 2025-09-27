@@ -6,11 +6,11 @@ echo "Compiling $EXE..."
 RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target x86_64-pc-windows-msvc
 
 echo "Replacing old $EXE..."
-mv ./target/x86_64-pc-windows-msvc/release/$EXE /d/Stuff/apps/_audio\ tools/.
+mv -f /d/Stuff/Core/rs/_target/x86_64-pc-windows-msvc/release/$EXE /d/Stuff/apps/_audio\ tools/.
 
-echo "Cleaning up..."
-rm -rf ./target/release
-rm -rf ./target/x86_64-pc-windows-msvc
+# echo "Cleaning up..."
+# rm -rf ./target/release
+# rm -rf ./target/x86_64-pc-windows-msvc
 
 print_elapsed () {
 	MIN=$(( ($1 - ($1 % (60 * 1000))) / (1000 * 60) ))
