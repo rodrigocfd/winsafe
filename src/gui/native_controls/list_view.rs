@@ -342,10 +342,11 @@ impl<T> ListView<T> {
 		ListViewCols::new(self)
 	}
 
-	/// Returns a handle to the first submenu of the context menu owned by the
-	/// list view, if any.
-	///
-	/// The first submenu is the one to be effectively displayed by the control.
+	/// The context submenu is optionally set in
+	/// [`ListView::new`](crate::gui::ListView::new) or
+	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg). If set, this
+	/// method returns a handle to its first submenu, because the first submenu
+	/// is the one to be effectively displayed by the control.
 	#[must_use]
 	pub fn context_menu(&self) -> Option<HMENU> {
 		self.0

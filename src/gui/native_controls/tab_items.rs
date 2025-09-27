@@ -72,6 +72,12 @@ impl<'a> TabItems<'a> {
 		TabItem::new(self.owner, index)
 	}
 
+	/// Returns an iterator over all items.
+	#[must_use]
+	pub fn iter(&self) -> SysResult<impl DoubleEndedIterator<Item = TabItem<'a>> + 'a> {
+		TabItemIter::new(self.owner)
+	}
+
 	/// Returns the focused item by sending a
 	/// [`tcm::GetCurFocus`](crate::msg::tcm::GetCurFocus) message.
 	#[must_use]
@@ -84,5 +90,50 @@ impl<'a> TabItems<'a> {
 	#[must_use]
 	pub fn selected(&self) -> Option<TabItem<'a>> {
 		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurSel {}) }.map(|i| self.get(i))
+	}
+}
+
+struct TabItemIter<'a> {
+	owner: &'a Tab,
+	front_idx: u32,
+	past_back_idx: u32,
+}
+
+impl<'a> Iterator for TabItemIter<'a> {
+	type Item = TabItem<'a>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for TabItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
+	}
+}
+
+impl<'a> TabItemIter<'a> {
+	#[must_use]
+	fn new(owner: &'a Tab) -> SysResult<Self> {
+		Ok(Self {
+			owner,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<TabItem<'a>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let item = self.owner.items().get(our_idx);
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }
