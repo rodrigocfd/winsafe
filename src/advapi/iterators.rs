@@ -1,11 +1,11 @@
 use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 
 pub(in crate::advapi) struct HkeyKeyIter<'a> {
 	hkey: &'a HKEY,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 	name_buffer: WString,
 }
 
@@ -41,51 +41,36 @@ impl<'a> HkeyKeyIter<'a> {
 
 		Ok(Self {
 			hkey,
-			front_idx: 0,
-			past_back_idx: num_keys,
+			double_idx: DoubleIterIndex::new(num_keys),
 			name_buffer: WString::new_alloc_buf(max_key_name_len as usize + 1),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match unsafe {
-			co::ERROR::from_raw(ffi::RegEnumKeyExW(
-				self.hkey.ptr(),
-				our_idx,
-				self.name_buffer.as_mut_ptr(),
-				&mut len_buffer,
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-			) as _)
-		} {
-			co::ERROR::SUCCESS => {
-				if is_front {
-					self.front_idx += 1;
-				} else {
-					self.past_back_idx -= 1;
-				}
-				Some(Ok(self.name_buffer.to_string()))
-			},
-			e => {
-				(self.front_idx, self.past_back_idx) = (0, 0); // halt
-				Some(Err(e))
-			},
-		}
+		self.double_idx.grab(is_front, |cur_idx| {
+			let mut len_buffer = self.name_buffer.buf_len() as u32;
+			match unsafe {
+				co::ERROR::from_raw(ffi::RegEnumKeyExW(
+					self.hkey.ptr(),
+					cur_idx,
+					self.name_buffer.as_mut_ptr(),
+					&mut len_buffer,
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+				) as _)
+			} {
+				co::ERROR::SUCCESS => DoubleIter::Yield(Ok(self.name_buffer.to_string())),
+				e => DoubleIter::YieldLast(Err(e)),
+			}
+		})
 	}
 }
 
 pub(in crate::advapi) struct HkeyValueIter<'a> {
 	hkey: &'a HKEY,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 	name_buffer: WString,
 }
 
@@ -121,46 +106,34 @@ impl<'a> HkeyValueIter<'a> {
 
 		Ok(Self {
 			hkey,
-			front_idx: 0,
-			past_back_idx: num_vals,
+			double_idx: DoubleIterIndex::new(num_vals),
 			name_buffer: WString::new_alloc_buf(max_val_name_len as usize + 1),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<SysResult<(String, co::REG)>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		let mut raw_data_type = 0u32;
-		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match unsafe {
-			co::ERROR::from_raw(ffi::RegEnumValueW(
-				self.hkey.ptr(),
-				our_idx,
-				self.name_buffer.as_mut_ptr(),
-				&mut len_buffer,
-				std::ptr::null_mut(),
-				&mut raw_data_type,
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-			) as _)
-		} {
-			co::ERROR::SUCCESS => {
-				if is_front {
-					self.front_idx += 1;
-				} else {
-					self.past_back_idx -= 1;
-				}
-				Some(Ok((self.name_buffer.to_string(), unsafe {
-					co::REG::from_raw(raw_data_type)
-				})))
-			},
-			e => {
-				(self.front_idx, self.past_back_idx) = (0, 0); // halt
-				Some(Err(e))
-			},
-		}
+		self.double_idx.grab(is_front, |cur_idx| {
+			let mut raw_data_type = 0u32;
+			let mut len_buffer = self.name_buffer.buf_len() as u32;
+			match unsafe {
+				co::ERROR::from_raw(ffi::RegEnumValueW(
+					self.hkey.ptr(),
+					cur_idx,
+					self.name_buffer.as_mut_ptr(),
+					&mut len_buffer,
+					std::ptr::null_mut(),
+					&mut raw_data_type,
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+				) as _)
+			} {
+				co::ERROR::SUCCESS => {
+					DoubleIter::Yield(Ok((self.name_buffer.to_string(), unsafe {
+						co::REG::from_raw(raw_data_type)
+					})))
+				},
+				e => DoubleIter::YieldLast(Err(e)),
+			}
+		})
 	}
 }

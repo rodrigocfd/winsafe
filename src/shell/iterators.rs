@@ -6,9 +6,8 @@ use crate::shell::ffi;
 
 pub(in crate::shell) struct HdropIter<'a> {
 	hdrop: &'a HDROP,
+	double_idx: DoubleIterIndex,
 	buffer: WString,
-	front_idx: u32,
-	past_back_idx: u32,
 }
 
 impl<'a> Iterator for HdropIter<'a> {
@@ -38,39 +37,25 @@ impl<'a> HdropIter<'a> {
 
 		Ok(Self {
 			hdrop,
+			double_idx: DoubleIterIndex::new(count),
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
-			front_idx: 0,
-			past_back_idx: count,
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		match unsafe {
-			ffi::DragQueryFileW(
-				self.hdrop.ptr(),
-				our_idx,
-				self.buffer.as_mut_ptr(),
-				self.buffer.buf_len() as _,
-			)
-		} {
-			0 => {
-				(self.front_idx, self.past_back_idx) = (0, 0); // halt
-				Some(Err(GetLastError()))
-			},
-			_ => {
-				if is_front {
-					self.front_idx += 1;
-				} else {
-					self.past_back_idx -= 1;
-				}
-				Some(Ok(self.buffer.to_string()))
-			},
-		}
+		self.double_idx.grab(is_front, |cur_idx| {
+			match unsafe {
+				ffi::DragQueryFileW(
+					self.hdrop.ptr(),
+					cur_idx,
+					self.buffer.as_mut_ptr(),
+					self.buffer.buf_len() as _,
+				)
+			} {
+				0 => DoubleIter::YieldLast(Err(GetLastError())),
+				_ => DoubleIter::Yield(Ok(self.buffer.to_string())),
+			}
+		})
 	}
 }
 
@@ -110,8 +95,7 @@ where
 	I: shell_IShellItemArray,
 {
 	shi_arr: &'a I,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a, I> Iterator for IshellitemarrayIter<'a, I>
@@ -139,33 +123,17 @@ where
 {
 	#[must_use]
 	pub(in crate::shell) fn new(shi_arr: &'a I) -> HrResult<Self> {
-		let count = shi_arr.GetCount()?;
 		Ok(Self {
 			shi_arr,
-			front_idx: 0,
-			past_back_idx: count,
+			double_idx: DoubleIterIndex::new(shi_arr.GetCount()?),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<HrResult<IShellItem>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		match self.shi_arr.GetItemAt(our_idx) {
-			Err(e) => {
-				(self.front_idx, self.past_back_idx) = (0, 0); // halt
-				Some(Err(e))
-			},
-			Ok(shell_item) => {
-				if is_front {
-					self.front_idx += 1;
-				} else {
-					self.past_back_idx -= 1;
-				}
-				Some(Ok(shell_item))
-			},
-		}
+		self.double_idx
+			.grab(is_front, |cur_idx| match self.shi_arr.GetItemAt(cur_idx) {
+				Err(e) => DoubleIter::YieldLast(Err(e)),
+				Ok(shell_item) => DoubleIter::Yield(Ok(shell_item)),
+			})
 	}
 }

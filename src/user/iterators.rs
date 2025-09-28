@@ -56,8 +56,7 @@ impl<'a> EnumdisplaydevicesIter<'a> {
 
 pub(in crate::user) struct HmenuIteritems<'a> {
 	hmenu: &'a HMENU,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a> Iterator for HmenuIteritems<'a> {
@@ -78,23 +77,14 @@ impl<'a> HmenuIteritems<'a> {
 	pub(in crate::user) fn new(hmenu: &'a HMENU) -> SysResult<Self> {
 		Ok(Self {
 			hmenu,
-			front_idx: 0,
-			past_back_idx: hmenu.GetMenuItemCount()?,
+			double_idx: DoubleIterIndex::new(hmenu.GetMenuItemCount()?),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<SysResult<MenuItemInfo>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		let nfo = self.hmenu.item_info(IdPos::Pos(our_idx));
-		if is_front {
-			self.front_idx += 1;
-		} else {
-			self.past_back_idx -= 1;
-		}
-		Some(nfo)
+		self.double_idx.grab(is_front, |cur_idx| {
+			let nfo = self.hmenu.item_info(IdPos::Pos(cur_idx));
+			DoubleIter::Yield(nfo)
+		})
 	}
 }

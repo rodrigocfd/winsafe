@@ -1,5 +1,6 @@
 use crate::decl::*;
 use crate::gui::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -129,8 +130,7 @@ impl<'a> ComboBoxItems<'a> {
 
 struct ComboBoxItemIter<'a> {
 	owner: &'a ComboBox,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 	buffer: WString,
 }
 
@@ -152,48 +152,35 @@ impl<'a> ComboBoxItemIter<'a> {
 	fn new(owner: &'a ComboBox) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			front_idx: 0,
-			past_back_idx: owner.items().count()?,
+			double_idx: DoubleIterIndex::new(owner.items().count()?),
 			buffer: WString::new(),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+		self.double_idx.grab(is_front, |cur_idx| {
+			// First, get number of chars, without terminating null.
+			let num_chars = match unsafe {
+				self.owner
+					.hwnd()
+					.SendMessage(cb::GetLbTextLen { index: cur_idx })
+			} {
+				Err(e) => {
+					return DoubleIter::YieldLast(Err(e)); // failed
+				},
+				Ok(n) => n as usize,
+			};
 
-		// First, get number of chars, without terminating null.
-		let num_chars = match unsafe {
-			self.owner
-				.hwnd()
-				.SendMessage(cb::GetLbTextLen { index: our_idx })
-		} {
-			Err(e) => {
-				(self.front_idx, self.past_back_idx) = (0, 0); // halt
-				return Some(Err(e));
-			},
-			Ok(n) => n as usize,
-		};
-
-		// Then allocate the buffer and get the chars.
-		self.buffer = WString::new_alloc_buf(num_chars + 1);
-		if let Err(e) = unsafe {
-			self.owner
-				.hwnd()
-				.SendMessage(cb::GetLbText { index: our_idx, text: &mut self.buffer })
-		} {
-			(self.front_idx, self.past_back_idx) = (0, 0); // halt
-			return Some(Err(e));
-		}
-
-		if is_front {
-			self.front_idx += 1;
-		} else {
-			self.past_back_idx -= 1;
-		}
-
-		Some(Ok(self.buffer.to_string()))
+			// Then allocate the buffer and get the chars.
+			self.buffer = WString::new_alloc_buf(num_chars + 1);
+			match unsafe {
+				self.owner
+					.hwnd()
+					.SendMessage(cb::GetLbText { index: cur_idx, text: &mut self.buffer })
+			} {
+				Err(e) => DoubleIter::YieldLast(Err(e)), // failed
+				Ok(_) => DoubleIter::Yield(Ok(self.buffer.to_string())),
+			}
+		})
 	}
 }

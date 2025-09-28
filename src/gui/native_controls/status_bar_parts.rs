@@ -1,4 +1,5 @@
 use crate::gui::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -89,8 +90,7 @@ impl<'a> StatusBarParts<'a> {
 
 struct StatusBarPartIter<'a> {
 	owner: &'a StatusBar,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a> Iterator for StatusBarPartIter<'a> {
@@ -111,23 +111,14 @@ impl<'a> StatusBarPartIter<'a> {
 	fn new(owner: &'a StatusBar) -> Self {
 		Self {
 			owner,
-			front_idx: 0,
-			past_back_idx: owner.parts().count(),
+			double_idx: DoubleIterIndex::new(owner.parts().count()),
 		}
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<StatusBarPart<'a>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		let part = self.owner.parts().get(our_idx);
-		if is_front {
-			self.front_idx += 1;
-		} else {
-			self.past_back_idx -= 1;
-		}
-		Some(part)
+		self.double_idx.grab(is_front, |cur_idx| {
+			let part = self.owner.parts().get(cur_idx);
+			DoubleIter::Yield(part)
+		})
 	}
 }

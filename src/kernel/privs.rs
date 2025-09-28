@@ -164,6 +164,54 @@ pub(crate) const fn vec_ptr<T>(v: &[T]) -> *const T {
 	if v.is_empty() { std::ptr::null() } else { v.as_ptr() }
 }
 
+/// Value returned to `DoubleIterIndex`'s callback.
+pub(crate) enum DoubleIter<T> {
+	/// Yield this value and keep going.
+	Yield(T),
+	/// Yield this value and halt immediately.
+	YieldLast(T),
+}
+
+/// Controls the indexes of a [`DoubleEndedIterator`].
+pub(crate) struct DoubleIterIndex {
+	front_idx: u32,
+	past_back_idx: u32,
+}
+
+impl DoubleIterIndex {
+	#[must_use]
+	pub(crate) const fn new(item_count: u32) -> Self {
+		Self { front_idx: 0, past_back_idx: item_count }
+	}
+
+	#[must_use]
+	pub(crate) fn grab<F, T>(&mut self, is_front: bool, f: F) -> Option<T>
+	where
+		F: FnOnce(u32) -> DoubleIter<T>,
+	{
+		if self.front_idx == self.past_back_idx {
+			return None; // iterator already exhausted
+		}
+
+		let cur_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		match f(cur_idx) {
+			DoubleIter::Yield(val) => {
+				if is_front {
+					self.front_idx += 1;
+				} else {
+					self.past_back_idx -= 1;
+				}
+				Some(val)
+			},
+			DoubleIter::YieldLast(val) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				Some(val)
+			},
+		}
+	}
+}
+
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
 #[must_use]
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {

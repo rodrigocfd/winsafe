@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -69,8 +70,7 @@ impl<'a> HeaderItems<'a> {
 
 struct HeaderItemIter<'a> {
 	owner: &'a Header,
-	front_idx: u32,
-	past_back_idx: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a> Iterator for HeaderItemIter<'a> {
@@ -91,23 +91,14 @@ impl<'a> HeaderItemIter<'a> {
 	fn new(owner: &'a Header) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			front_idx: 0,
-			past_back_idx: owner.items().count()?,
+			double_idx: DoubleIterIndex::new(owner.items().count()?),
 		})
 	}
 
 	fn grab(&mut self, is_front: bool) -> Option<HeaderItem<'a>> {
-		if self.front_idx == self.past_back_idx {
-			return None;
-		}
-		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
-
-		let item = self.owner.items().get(our_idx);
-		if is_front {
-			self.front_idx += 1;
-		} else {
-			self.past_back_idx -= 1;
-		}
-		Some(item)
+		self.double_idx.grab(is_front, |cur_idx| {
+			let item = self.owner.items().get(cur_idx);
+			DoubleIter::Yield(item)
+		})
 	}
 }
