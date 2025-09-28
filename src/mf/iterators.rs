@@ -1,4 +1,5 @@
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 pub(in crate::mf) struct ImfcollectionIter<'a, I>
@@ -6,8 +7,7 @@ where
 	I: mf_IMFCollection,
 {
 	collection: &'a I,
-	count: u32,
-	current: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a, I> Iterator for ImfcollectionIter<'a, I>
@@ -17,27 +17,15 @@ where
 	type Item = HrResult<IUnknown>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match self.collection.GetElement(self.current) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(element) => match element {
-				Some(element) => {
-					self.current += 1;
-					Some(Ok(element))
-				},
-				None => {
-					// if a null pointer is returned, interpret as the end
-					self.current = self.count; // no further iterations will be made
-					None
-				},
-			},
-		}
+		self.grab(true)
+	}
+}
+impl<'a, I> DoubleEndedIterator for ImfcollectionIter<'a, I>
+where
+	I: mf_IMFCollection,
+{
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -47,7 +35,21 @@ where
 {
 	#[must_use]
 	pub(in crate::mf) fn new(collection: &'a I) -> HrResult<Self> {
-		let count = collection.GetElementCount()?;
-		Ok(Self { collection, count, current: 0 })
+		Ok(Self {
+			collection,
+			double_idx: DoubleIterIndex::new(collection.GetElementCount()?),
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<HrResult<IUnknown>> {
+		self.double_idx.grab(is_front, |cur_idx| {
+			match self.collection.GetElement(cur_idx) {
+				Ok(elem) => match elem {
+					Some(elem) => DoubleIter::Yield(Ok(elem)),
+					None => DoubleIter::Halt, // if a null pointer is returned, interpret as the end
+				},
+				Err(e) => DoubleIter::YieldLast(Err(e)),
+			}
+		})
 	}
 }

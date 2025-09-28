@@ -131,7 +131,7 @@ impl RadioGroup {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = &RadioButton> {
+	pub fn iter(&self) -> impl DoubleEndedIterator<Item = &RadioButton> {
 		self.0.radios.iter()
 	}
 

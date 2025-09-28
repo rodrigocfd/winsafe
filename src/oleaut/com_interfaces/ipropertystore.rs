@@ -52,7 +52,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<co::PKEY>> + '_> {
+	fn iter(&self) -> HrResult<impl DoubleEndedIterator<Item = HrResult<co::PKEY>> + '_> {
 		Ok(IpropertystoreIter::new(self)?)
 	}
 

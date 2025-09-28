@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 pub(in crate::oleaut) struct IpropertystoreIter<'a, I>
@@ -7,8 +8,7 @@ where
 	I: oleaut_IPropertyStore,
 {
 	prop_st: &'a I,
-	count: u32,
-	current: u32,
+	double_idx: DoubleIterIndex,
 }
 
 impl<'a, I> Iterator for IpropertystoreIter<'a, I>
@@ -18,20 +18,15 @@ where
 	type Item = HrResult<co::PKEY>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match self.prop_st.GetAt(self.current) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(pkey) => {
-				self.current += 1;
-				Some(Ok(pkey))
-			},
-		}
+		self.grab(true)
+	}
+}
+impl<'a, I> DoubleEndedIterator for IpropertystoreIter<'a, I>
+where
+	I: oleaut_IPropertyStore,
+{
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -41,7 +36,17 @@ where
 {
 	#[must_use]
 	pub(in crate::oleaut) fn new(prop_st: &'a I) -> HrResult<Self> {
-		let count = prop_st.GetCount()?;
-		Ok(Self { prop_st, count, current: 0 })
+		Ok(Self {
+			prop_st,
+			double_idx: DoubleIterIndex::new(prop_st.GetCount()?),
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<HrResult<co::PKEY>> {
+		self.double_idx
+			.grab(is_front, |cur_idx| match self.prop_st.GetAt(cur_idx) {
+				Ok(pkey) => DoubleIter::Yield(Ok(pkey)),
+				Err(e) => DoubleIter::YieldLast(Err(e)),
+			})
 	}
 }

@@ -170,6 +170,8 @@ pub(crate) enum DoubleIter<T> {
 	Yield(T),
 	/// Yield this value and halt immediately.
 	YieldLast(T),
+	/// Halt immediately.
+	Halt,
 }
 
 /// Controls the indexes of a [`DoubleEndedIterator`].
@@ -207,6 +209,10 @@ impl DoubleIterIndex {
 			DoubleIter::YieldLast(val) => {
 				(self.front_idx, self.past_back_idx) = (0, 0); // halt
 				Some(val)
+			},
+			DoubleIter::Halt => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				None
 			},
 		}
 	}
