@@ -6,7 +6,7 @@
 	"configurations": [
 		{
 			"type": "cppvsdbg",
-			"program": "${workspaceRoot}/target/debug/${workspaceFolderBasename}",
+			"program": "${workspaceRoot}/../_target/debug/${workspaceFolderBasename}.exe",
 			"request": "launch",
 			"name": "Debug executable",
 			"args": [],
