@@ -131,7 +131,7 @@
 <a href=#131 id=131 data-nosnippet>131</a>	/// # w::SysResult::Ok(())
 <a href=#132 id=132 data-nosnippet>132</a>	/// ```
 <a href=#133 id=133 data-nosnippet>133</a>	</span><span class="attr">#[must_use]
-<a href=#134 id=134 data-nosnippet>134</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="kw-2">&amp;</span>RadioButton&gt; {
+<a href=#134 id=134 data-nosnippet>134</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>DoubleEndedIterator&lt;Item = <span class="kw-2">&amp;</span>RadioButton&gt; {
 <a href=#135 id=135 data-nosnippet>135</a>		<span class="self">self</span>.<span class="number">0</span>.radios.iter()
 <a href=#136 id=136 data-nosnippet>136</a>	}
 <a href=#137 id=137 data-nosnippet>137</a>
