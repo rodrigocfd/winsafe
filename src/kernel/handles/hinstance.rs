@@ -249,7 +249,16 @@ impl HINSTANCE {
 	#[must_use]
 	pub fn GetProcAddress(&self, proc_name: &str) -> SysResult<*const std::ffi::c_void> {
 		PtrRet(unsafe {
-			ffi::GetProcAddress(self.ptr(), vec_ptr(&str_to_iso88591(proc_name))) as _
+			ffi::GetProcAddress(
+				self.ptr(),
+				vec_ptr(
+					&proc_name // convert to ISO-8859-1 string
+						.chars()
+						.map(|ch| ch as u8)
+						.chain(std::iter::once(0)) // append a terminating null
+						.collect::<Vec<_>>(),
+				),
+			) as _
 		})
 		.to_sysresult()
 		.map(|ptr| ptr as _)

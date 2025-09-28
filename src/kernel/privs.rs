@@ -212,15 +212,6 @@ impl DoubleIterIndex {
 	}
 }
 
-/// Converts a string to an ISO-8859-1 null-terminated byte array.
-#[must_use]
-pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
-	s.chars()
-		.map(|ch| ch as u8)
-		.chain(std::iter::once(0)) // append a terminating null
-		.collect()
-}
-
 /// Parses a null-delimited multi-string, ending with two terminating nulls.
 ///
 /// # Safety
