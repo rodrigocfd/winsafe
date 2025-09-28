@@ -14,9 +14,11 @@ TARGET_DOC=../_target/doc     # generated docs folder
 GH_PAGES=../_winsafe-gh-pages # gh-pages repo folder
 
 echo -e "${BLUE}Cleaning doc folder...${NC}"
-cd $TARGET_DOC
-rm -rf ./*
-cd -
+if [ -d $TARGET_DOC ]; then
+	cd $TARGET_DOC
+	rm -rf ./*
+	cd -
+fi
 
 echo -e "${BLUE}Generating docs locally...${NC}"
 RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
