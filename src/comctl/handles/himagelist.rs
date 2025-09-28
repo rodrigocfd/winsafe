@@ -32,7 +32,7 @@ impl HIMAGELIST {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = HrResult<DestroyIconGuard>> + '_ {
+	pub fn iter(&self) -> impl DoubleEndedIterator<Item = HrResult<DestroyIconGuard>> + '_ {
 		HimagelistIter::new(self)
 	}
 
