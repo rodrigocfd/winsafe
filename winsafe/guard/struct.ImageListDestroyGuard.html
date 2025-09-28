@@ -37,7 +37,9 @@ It’s an opaque pointer to an internal Windows structure, and no
 dereferencings should be attempted.</p>
 <p>This method can be used as an escape hatch to interoperate with
 other libraries.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.iter" class="method"><a class="src rightside" href="../../src/winsafe/comctl\handles/himagelist.rs.html#35-37">Source</a><h4 class="code-header">pub fn <a href="#method.iter" class="fn">iter</a>(&amp;self) -&gt; impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/iterator/trait.Iterator.html" title="trait core::iter::traits::iterator::Iterator">Iterator</a>&lt;Item = <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="struct" href="struct.DestroyIconGuard.html" title="struct winsafe::guard::DestroyIconGuard">DestroyIconGuard</a>&gt;&gt; + '_</h4></section></summary><div class="docblock"><p>Returns an iterator over all icons in the image list, by calling
+</div></details><details class="toggle method-toggle" open><summary><section id="method.iter" class="method"><a class="src rightside" href="../../src/winsafe/comctl\handles/himagelist.rs.html#35-37">Source</a><h4 class="code-header">pub fn <a href="#method.iter" class="fn">iter</a>(
+    &amp;self,
+) -&gt; impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/iter/traits/double_ended/trait.DoubleEndedIterator.html" title="trait core::iter::traits::double_ended::DoubleEndedIterator">DoubleEndedIterator</a>&lt;Item = <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="struct" href="struct.DestroyIconGuard.html" title="struct winsafe::guard::DestroyIconGuard">DestroyIconGuard</a>&gt;&gt; + '_</h4></section></summary><div class="docblock"><p>Returns an iterator over all icons in the image list, by calling
 <a href="../struct.HIMAGELIST.html#method.ExtractIcon" title="method winsafe::HIMAGELIST::ExtractIcon"><code>HIMAGELIST::ExtractIcon</code></a> for each
 one.</p>
 <h5 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h5>
