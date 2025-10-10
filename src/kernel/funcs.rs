@@ -5,6 +5,12 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 
+/// [`AttachConsole`](https://learn.microsoft.com/en-us/windows/console/attachconsole)
+/// function.
+pub fn AttachConsole(process: PidParent) -> SysResult<()> {
+	BoolRet(unsafe { ffi::AttachConsole(process.as_u32()) }).to_sysresult()
+}
+
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 ///

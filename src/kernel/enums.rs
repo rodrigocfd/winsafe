@@ -101,6 +101,29 @@ impl IdStr {
 
 /// Variant parameter for:
 ///
+/// * [`AttachConsole`](crate::AttachConsole)
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum PidParent {
+	/// Use the console of the specified process ID.
+	Pid(u32),
+	/// Use the console of the parent of the current process.
+	Parent,
+}
+
+impl PidParent {
+	/// Returns the `u32` value.
+	#[must_use]
+	pub const fn as_u32(&self) -> u32 {
+		use PidParent::*;
+		match self {
+			Pid(pid) => *pid,
+			Parent => ATTACH_PARENT_PROCESS,
+		}
+	}
+}
+
+/// Variant parameter for:
+///
 /// * [`POWERBROADCAST_SETTING`](crate::POWERBROADCAST_SETTING)
 pub enum PowerSetting {
 	AcDcPowerSource(co::SYSTEM_POWER_CONDITION),

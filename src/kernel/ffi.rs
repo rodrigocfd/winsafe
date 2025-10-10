@@ -3,6 +3,7 @@ use crate::kernel::ffi_types::*;
 extern_sys! { "kernel32";
 	ActivateActCtx(HANDLE, *mut usize) -> BOOL
 	AddRefActCtx(HANDLE)
+	AttachConsole(u32) -> BOOL
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL

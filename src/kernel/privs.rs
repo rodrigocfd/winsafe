@@ -6,6 +6,7 @@ use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
 const_values_num_privs! {
+	ATTACH_PARENT_PROCESS u32 = 0xffff_ffff
 	GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS u32 = 0x0000_0004
 	GMEM_INVALID_HANDLE u32 = 0x8000
 	INFINITE u32 = 0xffff_ffff
