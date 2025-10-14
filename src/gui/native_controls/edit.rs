@@ -194,7 +194,7 @@ impl Edit {
 	}
 	/// replacement of text at the current selection/caret position.
 	pub fn replace_sel(&self, text: &str) {
-		let ws = winsafe::WString::from_str(text);
+		let ws = WString::from_str(text);
 		unsafe { log.hwnd().SendMessage(em::ReplaceSel{
 			can_be_undone: false,
 			replacement_text: ws,
@@ -298,4 +298,5 @@ impl<'a> Default for EditOpts<'a> {
 		}
 	}
 }
+
 
