@@ -192,7 +192,14 @@ impl Edit {
 		self.hwnd().SetWindowText(text)?;
 		Ok(())
 	}
-
+	/// replacement of text at the current selection/caret position.
+	pub fn replace_sel(&self, text: &str) {
+		let ws = winsafe::WString::from_str(text);
+		unsafe { log.hwnd().SendMessage(em::ReplaceSel{
+			can_be_undone: false,
+			replacement_text: ws,
+		}) }
+	}
 	/// Displays a balloon tip by sending an
 	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
 	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) -> SysResult<()> {
@@ -291,3 +298,4 @@ impl<'a> Default for EditOpts<'a> {
 		}
 	}
 }
+
