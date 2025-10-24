@@ -60,6 +60,7 @@ impl CheckBox {
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
+				self2.set_state(opts.check_state);
 				parent2
 					.as_ref()
 					.add_to_layout(self2.hwnd(), opts.resize_behavior);
