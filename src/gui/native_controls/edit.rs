@@ -152,6 +152,18 @@ impl Edit {
 		}
 	}
 
+	/// Replaces the currently selected text by sending an
+	/// [`em::ReplaceSel`](crate::msg::em::ReplaceSel) message.
+	pub fn replace_selection(&self, text: &str) {
+		let text16 = WString::from_str(text);
+		unsafe {
+			self.hwnd().SendMessage(em::ReplaceSel {
+				can_be_undone: true,
+				replacement_text: text16,
+			})
+		}
+	}
+
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
