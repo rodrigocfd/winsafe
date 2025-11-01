@@ -152,6 +152,18 @@ impl Edit {
 		}
 	}
 
+	/// Replaces the currently selected text by sending an
+	/// [`em::ReplaceSel`](crate::msg::em::ReplaceSel) message.
+	pub fn replace_selection(&self, text: &str) {
+		let text16 = WString::from_str(text);
+		unsafe {
+			self.hwnd().SendMessage(em::ReplaceSel {
+				can_be_undone: true,
+				replacement_text: text16,
+			})
+		}
+	}
+
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
@@ -192,14 +204,7 @@ impl Edit {
 		self.hwnd().SetWindowText(text)?;
 		Ok(())
 	}
-	/// replacement of text at the current selection/caret position.
-	pub fn replace_sel(&self, text: &str) {
-		let ws = WString::from_str(text);
-		unsafe { log.hwnd().SendMessage(em::ReplaceSel{
-			can_be_undone: false,
-			replacement_text: ws,
-		}) }
-	}
+
 	/// Displays a balloon tip by sending an
 	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
 	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) -> SysResult<()> {
@@ -298,5 +303,3 @@ impl<'a> Default for EditOpts<'a> {
 		}
 	}
 }
-
-
