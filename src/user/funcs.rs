@@ -792,7 +792,7 @@ where
 /// function.
 #[must_use]
 pub fn PtInRect(rc: RECT, pt: POINT) -> bool {
-	unsafe { ffi::PtInRect(pcvoid(&rc), pt.x, pt.y) != 0 }
+	unsafe { ffi::PtInRect(pcvoid(&rc), pt) != 0 }
 }
 
 /// [`RegisterClassEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
