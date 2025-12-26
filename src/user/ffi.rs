@@ -1,4 +1,3 @@
-use crate::decl::POINT;
 use crate::kernel::ffi_types::*;
 
 extern_sys! { "comdlg32";
@@ -217,7 +216,7 @@ extern_sys! { "user32";
 	PostMessageW(HANDLE, u32, usize, isize) -> BOOL
 	PostQuitMessage(i32)
 	PostThreadMessageW(u32, u32, usize, isize) -> BOOL
-	PtInRect(PCVOID, POINT) -> BOOL
+	PtInRect(PCVOID, u64) -> BOOL
 	RealChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL
