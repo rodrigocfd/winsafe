@@ -148,7 +148,7 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn ChildWindowFromPoint(&self, pt: POINT) -> Option<HWND> {
-		PtrRet(unsafe { ffi::ChildWindowFromPoint(self.ptr(), pt.x, pt.y) }).to_opt_handle()
+		PtrRet(unsafe { ffi::ChildWindowFromPoint(self.ptr(), pt.into()) }).to_opt_handle()
 	}
 
 	/// [`ClientToScreen`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
@@ -268,7 +268,7 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn DragDetect(&self, pt: POINT) -> bool {
-		unsafe { ffi::DragDetect(self.ptr(), pt.x, pt.y) != 0 }
+		unsafe { ffi::DragDetect(self.ptr(), pt.into()) != 0 }
 	}
 
 	/// [`DrawCaption`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawcaption)
@@ -1207,14 +1207,8 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn RealChildWindowFromPoint(&self, pt_parent_client_coords: POINT) -> Option<HWND> {
-		PtrRet(unsafe {
-			ffi::RealChildWindowFromPoint(
-				self.ptr(),
-				pt_parent_client_coords.x,
-				pt_parent_client_coords.y,
-			)
-		})
-		.to_opt_handle()
+		PtrRet(unsafe { ffi::RealChildWindowFromPoint(self.ptr(), pt_parent_client_coords.into()) })
+			.to_opt_handle()
 	}
 
 	/// [`RealGetWindowClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
@@ -1826,14 +1820,14 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn WindowFromPhysicalPoint(pt: POINT) -> Option<HWND> {
-		PtrRet(unsafe { ffi::WindowFromPhysicalPoint(pt.x, pt.y) }).to_opt_handle()
+		PtrRet(unsafe { ffi::WindowFromPhysicalPoint(pt.into()) }).to_opt_handle()
 	}
 
 	/// [`WindowFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
 	/// function.
 	#[must_use]
 	pub fn WindowFromPoint(pt: POINT) -> Option<HWND> {
-		PtrRet(unsafe { ffi::WindowFromPoint(pt.x, pt.y) }).to_opt_handle()
+		PtrRet(unsafe { ffi::WindowFromPoint(pt.into()) }).to_opt_handle()
 	}
 
 	/// [`WinHelp`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)

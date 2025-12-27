@@ -24,7 +24,7 @@ impl HMONITOR {
 	/// function.
 	#[must_use]
 	pub fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
-		unsafe { HMONITOR::from_ptr(ffi::MonitorFromPoint(pt.x, pt.y, flags.raw())) }
+		unsafe { HMONITOR::from_ptr(ffi::MonitorFromPoint(pt.into(), flags.raw())) }
 	}
 
 	/// [`MonitorFromRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromrect)

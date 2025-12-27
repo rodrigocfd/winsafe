@@ -909,6 +909,12 @@ impl std::fmt::Display for POINT {
 	}
 }
 
+impl From<POINT> for u64 {
+	fn from(v: POINT) -> Self {
+		MAKEQWORD(v.x as _, v.y as _)
+	}
+}
+
 impl From<POINT> for u32 {
 	fn from(v: POINT) -> Self {
 		MAKEDWORD(v.x as _, v.y as _)

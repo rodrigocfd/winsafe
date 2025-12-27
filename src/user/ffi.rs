@@ -36,7 +36,7 @@ extern_sys! { "user32";
 	ChangeDisplaySettingsW(PVOID, u32) -> i32
 	CheckMenuItem(HANDLE, u32, u32) -> i32
 	CheckMenuRadioItem(HANDLE, u32, u32, u32, u32) -> BOOL
-	ChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
+	ChildWindowFromPoint(HANDLE, u64) -> HANDLE
 	ClientToScreen(HANDLE, PVOID) -> BOOL
 	ClipCursor(PCVOID) -> BOOL
 	CloseClipboard() -> BOOL
@@ -61,7 +61,7 @@ extern_sys! { "user32";
 	DialogBoxIndirectParamW(HANDLE, PCVOID, HANDLE, PFUNC, isize) -> isize
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
-	DragDetect(HANDLE, i32, i32) -> BOOL
+	DragDetect(HANDLE, u64) -> BOOL
 	DrawCaption(HANDLE, HANDLE, PCVOID, u32) -> BOOL
 	DrawFocusRect(HANDLE, PCVOID) -> BOOL
 	DrawMenuBar(HANDLE) -> BOOL
@@ -203,7 +203,7 @@ extern_sys! { "user32";
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
 	MessageBeep(u32) -> BOOL
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -> i32
-	MonitorFromPoint(i32, i32, u32) -> HANDLE
+	MonitorFromPoint(u64, u32) -> HANDLE
 	MonitorFromRect(PCVOID, u32) -> HANDLE
 	MonitorFromWindow(HANDLE, u32) -> HANDLE
 	MoveWindow(HANDLE, i32, i32, i32, i32, BOOL) -> BOOL
@@ -217,7 +217,7 @@ extern_sys! { "user32";
 	PostQuitMessage(i32)
 	PostThreadMessageW(u32, u32, usize, isize) -> BOOL
 	PtInRect(PCVOID, u64) -> BOOL
-	RealChildWindowFromPoint(HANDLE, i32, i32) -> HANDLE
+	RealChildWindowFromPoint(HANDLE, u64) -> HANDLE
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL
 	RegisterClassExW(PCVOID) -> u16
@@ -296,7 +296,7 @@ extern_sys! { "user32";
 	WaitForInputIdle(HANDLE, u32) -> u32
 	WaitMessage() -> BOOL
 	WindowFromDC(HANDLE) -> HANDLE
-	WindowFromPhysicalPoint(i32, i32) -> HANDLE
-	WindowFromPoint(i32, i32) -> HANDLE
+	WindowFromPhysicalPoint(u64) -> HANDLE
+	WindowFromPoint(u64) -> HANDLE
 	WinHelpW(HANDLE, PCSTR, u32, usize) -> BOOL
 }
