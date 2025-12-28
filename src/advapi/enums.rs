@@ -118,7 +118,7 @@ impl RegistryValue {
 		}
 	}
 
-	/// Returns a pointer to the raw data, along with the raw data length.
+	/// Returns a pointer to the raw data, along with the raw data length in bytes.
 	#[must_use]
 	pub fn as_ptr_with_len(&self, str_buf: &mut WString) -> (*const std::ffi::c_void, u32) {
 		use RegistryValue::*;
@@ -127,26 +127,25 @@ impl RegistryValue {
 			Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
 			Qword(n) => (n as *const _ as _, std::mem::size_of::<u64>() as _),
 			Sz(s) => {
-				*str_buf = WString::from_str(s);
-				Self::as_ptr_with_len_str(&str_buf)
+				*str_buf = WString::from_str(s); // serialize the string into the external buffer
+				let buf_sz = (str_buf.str_len() + 1) * std::mem::size_of::<u16>(); // count terminating null
+				(str_buf.as_ptr() as _, buf_sz as _)
 			},
 			ExpandSz(s) => {
-				*str_buf = WString::from_str(s);
-				Self::as_ptr_with_len_str(&str_buf)
+				*str_buf = WString::from_str(s); // serialize the string into the external buffer
+				let buf_sz = (str_buf.str_len() + 1) * std::mem::size_of::<u16>(); // count terminating null
+				(str_buf.as_ptr() as _, buf_sz as _)
 			},
 			MultiSz(v) => {
-				*str_buf = WString::from_str_vec(v);
-				Self::as_ptr_with_len_str(&str_buf)
+				*str_buf = WString::from_str_vec(v); // serialize the string into the external buffer
+				let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
+					.fold(0, |tot, s| tot + s.chars().count() + 1) // include terminating null
+					+ 1; // double terminating null
+				let buf_sz = tot_chars * std::mem::size_of::<u16>();
+				(str_buf.as_ptr() as _, buf_sz as _)
 			},
 			None => (std::ptr::null(), 0),
 		}
-	}
-
-	fn as_ptr_with_len_str(str_buf: &WString) -> (*const std::ffi::c_void, u32) {
-		(
-			str_buf.as_ptr() as _,
-			(str_buf.buf_len() * std::mem::size_of::<u16>()) as _, // will include terminating null
-		)
 	}
 
 	/// Returns the correspondent [`co::REG`](crate::co::REG) constant.
