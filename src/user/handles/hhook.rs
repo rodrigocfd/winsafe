@@ -12,12 +12,6 @@ handle! { HHOOK;
 }
 
 impl HHOOK {
-	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
-	/// function.
-	pub fn CallNextHookEx(&self, code: co::WH, wparam: usize, lparam: isize) -> isize {
-		unsafe { ffi::CallNextHookEx(self.ptr(), code.raw(), wparam, lparam) }
-	}
-
 	/// [`SetWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
 	/// function.
 	pub fn SetWindowsHookEx(

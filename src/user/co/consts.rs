@@ -3171,7 +3171,7 @@ const_ordinary! { WDA: u32;
 }
 
 const_ordinary! { WH: i32;
-	/// [`HHOOK::CallNextHookEx`](crate::HHOOK::CallNextHookEx) `code` and
+	/// [`HHOOK::CallNextHookEx`](crate::CallNextHookEx) `code` and
 	/// [`HHOOK::SetWindowsHookEx`](crate::HHOOK::SetWindowsHookEx) `hook_id`
 	/// (`i32`).
 	=>
