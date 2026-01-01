@@ -232,7 +232,7 @@
 <a href=#232 id=232 data-nosnippet>232</a>		///
 <a href=#233 id=233 data-nosnippet>233</a>		/// Return type: `()`.
 <a href=#234 id=234 data-nosnippet>234</a>		</span><span class="kw">pub struct </span><span class="macro-nonterminal">$name </span>{
-<a href=#235 id=235 data-nosnippet>235</a>			<span class="kw">pub </span>vkey_code: <span class="kw">crate</span>::co::VK,
+<a href=#235 id=235 data-nosnippet>235</a>			<span class="kw">pub </span>vkey_code: <span class="kw">crate</span>::co::MK,
 <a href=#236 id=236 data-nosnippet>236</a>			<span class="kw">pub </span>coords: <span class="kw">crate</span>::POINT,
 <a href=#237 id=237 data-nosnippet>237</a>		}
 <a href=#238 id=238 data-nosnippet>238</a>
@@ -255,7 +255,7 @@
 <a href=#255 id=255 data-nosnippet>255</a>		<span class="kw">impl </span><span class="kw">crate</span>::prelude::MsgSendRecv <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 <a href=#256 id=256 data-nosnippet>256</a>			<span class="kw">unsafe fn </span>from_generic_wm(p: <span class="kw">crate</span>::msg::WndMsg) -&gt; <span class="self">Self </span>{
 <a href=#257 id=257 data-nosnippet>257</a>				<span class="self">Self </span>{
-<a href=#258 id=258 data-nosnippet>258</a>					vkey_code: <span class="kw">unsafe </span>{ <span class="kw">crate</span>::co::VK::from_raw(p.wparam <span class="kw">as _</span>) },
+<a href=#258 id=258 data-nosnippet>258</a>					vkey_code: <span class="kw">unsafe </span>{ <span class="kw">crate</span>::co::MK::from_raw(p.wparam <span class="kw">as _</span>) },
 <a href=#259 id=259 data-nosnippet>259</a>					coords: <span class="kw">crate</span>::POINT {
 <a href=#260 id=260 data-nosnippet>260</a>						x: <span class="kw">crate</span>::LOWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>,
 <a href=#261 id=261 data-nosnippet>261</a>						y: <span class="kw">crate</span>::HIWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>,
