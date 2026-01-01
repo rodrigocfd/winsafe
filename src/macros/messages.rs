@@ -232,7 +232,7 @@ macro_rules! pub_struct_msg_button {
 		///
 		/// Return type: `()`.
 		pub struct $name {
-			pub vkey_code: crate::co::VK,
+			pub vkey_code: crate::co::MK,
 			pub coords: crate::POINT,
 		}
 
@@ -255,7 +255,7 @@ macro_rules! pub_struct_msg_button {
 		impl crate::prelude::MsgSendRecv for $name {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				Self {
-					vkey_code: unsafe { crate::co::VK::from_raw(p.wparam as _) },
+					vkey_code: unsafe { crate::co::MK::from_raw(p.wparam as _) },
 					coords: crate::POINT {
 						x: crate::LOWORD(p.lparam as _) as _,
 						y: crate::HIWORD(p.lparam as _) as _,
