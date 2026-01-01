@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\utilities\w_string.rs`."><title>w_string.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (9f32ccf35 2025-09-21)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel\utilities/</div>w_string.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cmp::Ordering;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\utilities\w_string.rs`."><title>w_string.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-80aa586b.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0-nightly (a6525d526 2025-12-21)" data-channel="nightly" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-3e30299d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel\utilities/</div>w_string.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cmp::Ordering;
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -321,7 +321,7 @@
 <a href=#321 id=321 data-nosnippet>321</a>
 <a href=#322 id=322 data-nosnippet>322</a>	<span class="kw">fn </span>parse_ansi(data: <span class="kw-2">&amp;</span>[u8]) -&gt; Vec&lt;u16&gt; {
 <a href=#323 id=323 data-nosnippet>323</a>		data.iter()
-<a href=#324 id=324 data-nosnippet>324</a>			.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// ignore terminating null, if any
+<a href=#324 id=324 data-nosnippet>324</a>			.take_while(|ch| <span class="kw-2">**</span><span class="macro">ch !</span>= <span class="number">0x0000</span>) <span class="comment">// ignore terminating null, if any
 <a href=#325 id=325 data-nosnippet>325</a>			</span>.map(|ch| <span class="kw-2">*</span>ch <span class="kw">as </span>u16) <span class="comment">// raw u8 to u16 conversion
 <a href=#326 id=326 data-nosnippet>326</a>			</span>.collect()
 <a href=#327 id=327 data-nosnippet>327</a>	}
@@ -334,7 +334,7 @@
 <a href=#334 id=334 data-nosnippet>334</a>		};
 <a href=#335 id=335 data-nosnippet>335</a>
 <a href=#336 id=336 data-nosnippet>336</a>		data.chunks(<span class="number">2</span>)
-<a href=#337 id=337 data-nosnippet>337</a>			.take_while(|ch2| <span class="kw-2">**</span>ch2 != [<span class="number">0x00</span>, <span class="number">0x00</span>]) <span class="comment">// ignore terminating null, if any
+<a href=#337 id=337 data-nosnippet>337</a>			.take_while(|ch2| <span class="kw-2">**</span><span class="macro">ch2 !</span>= [<span class="number">0x00</span>, <span class="number">0x00</span>]) <span class="comment">// ignore terminating null, if any
 <a href=#338 id=338 data-nosnippet>338</a>			</span>.map(|ch2| {
 <a href=#339 id=339 data-nosnippet>339</a>				<span class="kw">if </span>is_big_endian {
 <a href=#340 id=340 data-nosnippet>340</a>					u16::from_be_bytes(ch2.try_into().unwrap())
@@ -466,11 +466,11 @@
 <a href=#466 id=466 data-nosnippet>466</a>		} <span class="kw">else </span>{
 <a href=#467 id=467 data-nosnippet>467</a>			<span class="kw">let </span>num_chars = src
 <a href=#468 id=468 data-nosnippet>468</a>				.iter()
-<a href=#469 id=469 data-nosnippet>469</a>				.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
+<a href=#469 id=469 data-nosnippet>469</a>				.take_while(|ch| <span class="kw-2">**</span><span class="macro">ch !</span>= <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
 <a href=#470 id=470 data-nosnippet>470</a>				</span>.count() + <span class="number">1</span>; <span class="comment">// room for terminating null
 <a href=#471 id=471 data-nosnippet>471</a>			</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(num_chars, ForceHeap::No);
 <a href=#472 id=472 data-nosnippet>472</a>			src.iter()
-<a href=#473 id=473 data-nosnippet>473</a>				.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
+<a href=#473 id=473 data-nosnippet>473</a>				.take_while(|ch| <span class="kw-2">**</span><span class="macro">ch !</span>= <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
 <a href=#474 id=474 data-nosnippet>474</a>				</span>.zip(new_self.as_mut_slice())
 <a href=#475 id=475 data-nosnippet>475</a>				.for_each(|(src, dest)| <span class="kw-2">*</span>dest = <span class="kw-2">*</span>src);
 <a href=#476 id=476 data-nosnippet>476</a>			new_self
@@ -566,10 +566,11 @@
 <a href=#566 id=566 data-nosnippet>566</a>				<span class="kw-2">&amp;</span><span class="self">self
 <a href=#567 id=567 data-nosnippet>567</a>					</span>.as_slice()
 <a href=#568 id=568 data-nosnippet>568</a>					.into_iter()
-<a href=#569 id=569 data-nosnippet>569</a>					.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// remove all trailing zeros
+<a href=#569 id=569 data-nosnippet>569</a>					.take_while(|ch| <span class="kw-2">**</span><span class="macro">ch !</span>= <span class="number">0x0000</span>) <span class="comment">// remove all trailing zeros
 <a href=#570 id=570 data-nosnippet>570</a>					</span>.map(|ch| <span class="kw-2">*</span>ch)
 <a href=#571 id=571 data-nosnippet>571</a>					.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;(),
 <a href=#572 id=572 data-nosnippet>572</a>			),
 <a href=#573 id=573 data-nosnippet>573</a>		}
 <a href=#574 id=574 data-nosnippet>574</a>	}
-<a href=#575 id=575 data-nosnippet>575</a>}</code></pre></div></section></main></body></html>
+<a href=#575 id=575 data-nosnippet>575</a>}
+</code></pre></div></section></main></body></html>

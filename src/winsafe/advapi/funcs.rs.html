@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (9f32ccf35 2025-09-21)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-80aa586b.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0-nightly (a6525d526 2025-12-21)" data-channel="nightly" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-3e30299d.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, privs::<span class="kw-2">*</span>};
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -232,7 +232,7 @@
 <a href=#232 id=232 data-nosnippet>232</a>		</span>);
 <a href=#233 id=233 data-nosnippet>233</a>	}
 <a href=#234 id=234 data-nosnippet>234</a>	<span class="kw">let </span>get_size_err = GetLastError();
-<a href=#235 id=235 data-nosnippet>235</a>	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+<a href=#235 id=235 data-nosnippet>235</a>	<span class="kw">if </span><span class="macro">get_size_err !</span>= co::ERROR::INSUFFICIENT_BUFFER {
 <a href=#236 id=236 data-nosnippet>236</a>		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 <a href=#237 id=237 data-nosnippet>237</a>	}
 <a href=#238 id=238 data-nosnippet>238</a>
@@ -307,7 +307,7 @@
 <a href=#307 id=307 data-nosnippet>307</a>	<span class="kw">let </span><span class="kw-2">mut </span>is_equal = <span class="number">0</span>;
 <a href=#308 id=308 data-nosnippet>308</a>	BoolRet(<span class="kw">unsafe </span>{ ffi::EqualDomainSid(pcvoid(sid1), pcvoid(sid2), <span class="kw-2">&amp;mut </span>is_equal) })
 <a href=#309 id=309 data-nosnippet>309</a>		.to_sysresult()
-<a href=#310 id=310 data-nosnippet>310</a>		.map(|<span class="kw">_</span>| is_equal != <span class="number">0</span>)
+<a href=#310 id=310 data-nosnippet>310</a>		.map(|<span class="kw">_</span>| <span class="macro">is_equal !</span>= <span class="number">0</span>)
 <a href=#311 id=311 data-nosnippet>311</a>}
 <a href=#312 id=312 data-nosnippet>312</a>
 <a href=#313 id=313 data-nosnippet>313</a><span class="doccomment">/// [`EqualPrefixSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equalprefixsid)
@@ -431,7 +431,7 @@
 <a href=#431 id=431 data-nosnippet>431</a>		ffi::GetUserNameW(std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>name_sz);
 <a href=#432 id=432 data-nosnippet>432</a>	}
 <a href=#433 id=433 data-nosnippet>433</a>	<span class="kw">let </span>get_size_err = GetLastError();
-<a href=#434 id=434 data-nosnippet>434</a>	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+<a href=#434 id=434 data-nosnippet>434</a>	<span class="kw">if </span><span class="macro">get_size_err !</span>= co::ERROR::INSUFFICIENT_BUFFER {
 <a href=#435 id=435 data-nosnippet>435</a>		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 <a href=#436 id=436 data-nosnippet>436</a>	}
 <a href=#437 id=437 data-nosnippet>437</a>
@@ -466,7 +466,7 @@
 <a href=#466 id=466 data-nosnippet>466</a>
 <a href=#467 id=467 data-nosnippet>467</a>	<span class="kw">unsafe </span>{ ffi::GetWindowsAccountDomainSid(pcvoid(sid), std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>ad_sid_sz) };
 <a href=#468 id=468 data-nosnippet>468</a>	<span class="kw">let </span>get_size_err = GetLastError();
-<a href=#469 id=469 data-nosnippet>469</a>	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+<a href=#469 id=469 data-nosnippet>469</a>	<span class="kw">if </span><span class="macro">get_size_err !</span>= co::ERROR::INSUFFICIENT_BUFFER {
 <a href=#470 id=470 data-nosnippet>470</a>		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 <a href=#471 id=471 data-nosnippet>471</a>	}
 <a href=#472 id=472 data-nosnippet>472</a>
@@ -651,7 +651,7 @@
 <a href=#651 id=651 data-nosnippet>651</a>		);
 <a href=#652 id=652 data-nosnippet>652</a>	}
 <a href=#653 id=653 data-nosnippet>653</a>	<span class="kw">let </span>get_size_err = GetLastError();
-<a href=#654 id=654 data-nosnippet>654</a>	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+<a href=#654 id=654 data-nosnippet>654</a>	<span class="kw">if </span><span class="macro">get_size_err !</span>= co::ERROR::INSUFFICIENT_BUFFER {
 <a href=#655 id=655 data-nosnippet>655</a>		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 <a href=#656 id=656 data-nosnippet>656</a>	}
 <a href=#657 id=657 data-nosnippet>657</a>
@@ -715,7 +715,7 @@
 <a href=#715 id=715 data-nosnippet>715</a>		);
 <a href=#716 id=716 data-nosnippet>716</a>	}
 <a href=#717 id=717 data-nosnippet>717</a>	<span class="kw">let </span>get_size_err = GetLastError();
-<a href=#718 id=718 data-nosnippet>718</a>	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+<a href=#718 id=718 data-nosnippet>718</a>	<span class="kw">if </span><span class="macro">get_size_err !</span>= co::ERROR::INSUFFICIENT_BUFFER {
 <a href=#719 id=719 data-nosnippet>719</a>		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 <a href=#720 id=720 data-nosnippet>720</a>	}
 <a href=#721 id=721 data-nosnippet>721</a>
@@ -805,4 +805,5 @@
 <a href=#805 id=805 data-nosnippet>805</a>/// function.
 <a href=#806 id=806 data-nosnippet>806</a></span><span class="kw">pub fn </span>RegDisablePredefinedCacheEx() -&gt; SysResult&lt;()&gt; {
 <a href=#807 id=807 data-nosnippet>807</a>	ErrorRet(<span class="kw">unsafe </span>{ ffi::RegDisablePredefinedCacheEx() }).to_sysresult()
-<a href=#808 id=808 data-nosnippet>808</a>}</code></pre></div></section></main></body></html>
+<a href=#808 id=808 data-nosnippet>808</a>}
+</code></pre></div></section></main></body></html>

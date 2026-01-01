@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\macros\com.rs`."><title>com.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (9f32ccf35 2025-09-21)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\macros/</div>com.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(unused_macros)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\macros\com.rs`."><title>com.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-80aa586b.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0-nightly (a6525d526 2025-12-21)" data-channel="nightly" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-3e30299d.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\macros/</div>com.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(unused_macros)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="doccomment">/// Declares an ordinary COM interface, and implements ole_IUnknown trait.
 <a href=#4 id=4 data-nosnippet>4</a></span><span class="macro">macro_rules!</span> com_interface {
@@ -16,7 +16,7 @@
 <a href=#16 id=16 data-nosnippet>16</a>			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 <a href=#17 id=17 data-nosnippet>17</a>				<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
 <a href=#18 id=18 data-nosnippet>18</a>					<span class="kw">unsafe </span>{
-<a href=#19 id=19 data-nosnippet>19</a>						<span class="kw">use crate</span>::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
+<a href=#19 id=19 data-nosnippet>19</a>						<span class="kw">use </span>crate::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 <a href=#20 id=20 data-nosnippet>20</a>						(<span class="kw">crate</span>::ole::privs::vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).Release)(<span class="self">self</span>.ptr());
 <a href=#21 id=21 data-nosnippet>21</a>					}
 <a href=#22 id=22 data-nosnippet>22</a>				}
@@ -25,7 +25,7 @@
 <a href=#25 id=25 data-nosnippet>25</a>
 <a href=#26 id=26 data-nosnippet>26</a>		<span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 <a href=#27 id=27 data-nosnippet>27</a>			<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-<a href=#28 id=28 data-nosnippet>28</a>				<span class="kw">use crate</span>::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
+<a href=#28 id=28 data-nosnippet>28</a>				<span class="kw">use </span>crate::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 <a href=#29 id=29 data-nosnippet>29</a>				<span class="kw">unsafe </span>{ (<span class="kw">crate</span>::ole::privs::vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).AddRef)(<span class="self">self</span>.ptr()); }
 <a href=#30 id=30 data-nosnippet>30</a>				<span class="self">Self</span>(<span class="self">self</span>.ptr())
 <a href=#31 id=31 data-nosnippet>31</a>			}
@@ -145,28 +145,28 @@
 <a href=#145 id=145 data-nosnippet>145</a>/// ole_IUnknown trait.
 <a href=#146 id=146 data-nosnippet>146</a></span><span class="macro">macro_rules!</span> com_interface_userdef {
 <a href=#147 id=147 data-nosnippet>147</a>	(
-<a href=#148 id=148 data-nosnippet>148</a>		<span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$</span><span class="kw">impl</span>:<span class="macro-nonterminal">ident</span>, <span class="macro-nonterminal">$guid</span>:expr;
+<a href=#148 id=148 data-nosnippet>148</a>		<span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$impl</span>:ident, <span class="macro-nonterminal">$guid</span>:expr;
 <a href=#149 id=149 data-nosnippet>149</a>		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 <a href=#150 id=150 data-nosnippet>150</a>	) =&gt; {
 <a href=#151 id=151 data-nosnippet>151</a>		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>] </span>)*
 <a href=#152 id=152 data-nosnippet>152</a>		<span class="attr">#[repr(transparent)]
-<a href=#153 id=153 data-nosnippet>153</a>		</span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">*mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>); <span class="comment">// wrap a pointer to the heap-allocated VT struct
+<a href=#153 id=153 data-nosnippet>153</a>		</span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">*mut </span><span class="macro-nonterminal">$impl</span>); <span class="comment">// wrap a pointer to the heap-allocated VT struct
 <a href=#154 id=154 data-nosnippet>154</a>
-<a href=#155 id=155 data-nosnippet>155</a>		</span><span class="kw">unsafe impl </span><span class="macro-nonterminal">Send </span><span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+<a href=#155 id=155 data-nosnippet>155</a>		</span><span class="kw">unsafe impl </span>Send <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 <a href=#156 id=156 data-nosnippet>156</a>
 <a href=#157 id=157 data-nosnippet>157</a>		<span class="kw">impl </span>Drop <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 <a href=#158 id=158 data-nosnippet>158</a>			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 <a href=#159 id=159 data-nosnippet>159</a>				<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
-<a href=#160 id=160 data-nosnippet>160</a>					<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
-<a href=#161 id=161 data-nosnippet>161</a>					<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::Release</span>(ppvt <span class="kw">as _</span>); <span class="comment">// Release() is responsible for freeing the memory
+<a href=#160 id=160 data-nosnippet>160</a>					<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$impl</span>;
+<a href=#161 id=161 data-nosnippet>161</a>					<span class="macro-nonterminal">$impl</span>::Release(ppvt <span class="kw">as _</span>); <span class="comment">// Release() is responsible for freeing the memory
 <a href=#162 id=162 data-nosnippet>162</a>				</span>}
 <a href=#163 id=163 data-nosnippet>163</a>			}
 <a href=#164 id=164 data-nosnippet>164</a>		}
 <a href=#165 id=165 data-nosnippet>165</a>
 <a href=#166 id=166 data-nosnippet>166</a>		<span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 <a href=#167 id=167 data-nosnippet>167</a>			<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-<a href=#168 id=168 data-nosnippet>168</a>				<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
-<a href=#169 id=169 data-nosnippet>169</a>				<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::AddRef</span>(ppvt <span class="kw">as _</span>);
+<a href=#168 id=168 data-nosnippet>168</a>				<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$impl</span>;
+<a href=#169 id=169 data-nosnippet>169</a>				<span class="macro-nonterminal">$impl</span>::AddRef(ppvt <span class="kw">as _</span>);
 <a href=#170 id=170 data-nosnippet>170</a>				<span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>)
 <a href=#171 id=171 data-nosnippet>171</a>			}
 <a href=#172 id=172 data-nosnippet>172</a>		}
@@ -183,8 +183,8 @@
 <a href=#183 id=183 data-nosnippet>183</a>			}
 <a href=#184 id=184 data-nosnippet>184</a>
 <a href=#185 id=185 data-nosnippet>185</a>			<span class="kw">fn </span>ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
-<a href=#186 id=186 data-nosnippet>186</a>				<span class="kw">let </span>p = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
-<a href=#187 id=187 data-nosnippet>187</a>				<span class="macro-nonterminal">p </span><span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
+<a href=#186 id=186 data-nosnippet>186</a>				<span class="kw">let </span>p = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$impl</span>;
+<a href=#187 id=187 data-nosnippet>187</a>				p <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
 <a href=#188 id=188 data-nosnippet>188</a>			</span>}
 <a href=#189 id=189 data-nosnippet>189</a>		}
 <a href=#190 id=190 data-nosnippet>190</a>
@@ -193,7 +193,7 @@
 <a href=#193 id=193 data-nosnippet>193</a>			/// closures to handle events.
 <a href=#194 id=194 data-nosnippet>194</a>			</span><span class="attr">#[must_use]
 <a href=#195 id=195 data-nosnippet>195</a>			</span><span class="kw">pub fn </span>new_impl() -&gt; <span class="self">Self </span>{
-<a href=#196 id=196 data-nosnippet>196</a>				<span class="kw">let </span>box_impl = Box::new(<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::new</span>()); <span class="comment">// alloc the VT struct in the heap
+<a href=#196 id=196 data-nosnippet>196</a>				<span class="kw">let </span>box_impl = Box::new(<span class="macro-nonterminal">$impl</span>::new()); <span class="comment">// alloc the VT struct in the heap
 <a href=#197 id=197 data-nosnippet>197</a>				</span><span class="self">Self</span>(Box::into_raw(box_impl))
 <a href=#198 id=198 data-nosnippet>198</a>			}
 <a href=#199 id=199 data-nosnippet>199</a>		}
@@ -221,7 +221,7 @@
 <a href=#221 id=221 data-nosnippet>221</a><span class="doccomment">/// Declares the static `QueryInterface`, `AddRef` and `Release` methods for an
 <a href=#222 id=222 data-nosnippet>222</a>/// user-defined COM interface implementation.
 <a href=#223 id=223 data-nosnippet>223</a></span><span class="macro">macro_rules!</span> fn_com_userdef_iunknown_impls {
-<a href=#224 id=224 data-nosnippet>224</a>	(<span class="macro-nonterminal">$</span><span class="kw">impl</span>:<span class="macro-nonterminal">ident</span>) =&gt; {
+<a href=#224 id=224 data-nosnippet>224</a>	(<span class="macro-nonterminal">$impl</span>:ident) =&gt; {
 <a href=#225 id=225 data-nosnippet>225</a>		<span class="kw">fn </span>QueryInterface(
 <a href=#226 id=226 data-nosnippet>226</a>			_p: <span class="kw">crate</span>::kernel::ffi_types::COMPTR,
 <a href=#227 id=227 data-nosnippet>227</a>			_riid: <span class="kw">crate</span>::kernel::ffi_types::PCVOID,
@@ -340,4 +340,5 @@
 <a href=#340 id=340 data-nosnippet>340</a>			)*
 <a href=#341 id=341 data-nosnippet>341</a>		}
 <a href=#342 id=342 data-nosnippet>342</a>	};
-<a href=#343 id=343 data-nosnippet>343</a>}</code></pre></div></section></main></body></html>
+<a href=#343 id=343 data-nosnippet>343</a>}
+</code></pre></div></section></main></body></html>

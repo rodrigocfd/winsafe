@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\tbm.rs`."><title>tbm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (9f32ccf35 2025-09-21)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-6dc2a7f3.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>tbm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\tbm.rs`."><title>tbm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-80aa586b.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.94.0-nightly (a6525d526 2025-12-21)" data-channel="nightly" data-search-js="search-9e2438ea.js" data-stringdex-js="stringdex-a3946164.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-3e30299d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-ffcac47a.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>tbm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span><span class="kw">crate</span>::comctl::privs::<span class="kw-2">*</span>;
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
@@ -272,7 +272,7 @@
 <a href=#272 id=272 data-nosnippet>272</a>	<span class="kw">type </span>RetType = bool;
 <a href=#273 id=273 data-nosnippet>273</a>
 <a href=#274 id=274 data-nosnippet>274</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#275 id=275 data-nosnippet>275</a>		v != <span class="number">0
+<a href=#275 id=275 data-nosnippet>275</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#276 id=276 data-nosnippet>276</a>	</span>}
 <a href=#277 id=277 data-nosnippet>277</a>
 <a href=#278 id=278 data-nosnippet>278</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -992,7 +992,7 @@
 <a href=#992 id=992 data-nosnippet>992</a>	<span class="kw">type </span>RetType = bool;
 <a href=#993 id=993 data-nosnippet>993</a>
 <a href=#994 id=994 data-nosnippet>994</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#995 id=995 data-nosnippet>995</a>		v != <span class="number">0
+<a href=#995 id=995 data-nosnippet>995</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#996 id=996 data-nosnippet>996</a>	</span>}
 <a href=#997 id=997 data-nosnippet>997</a>
 <a href=#998 id=998 data-nosnippet>998</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1116,7 +1116,7 @@
 <a href=#1116 id=1116 data-nosnippet>1116</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1117 id=1117 data-nosnippet>1117</a>
 <a href=#1118 id=1118 data-nosnippet>1118</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1119 id=1119 data-nosnippet>1119</a>		v != <span class="number">0
+<a href=#1119 id=1119 data-nosnippet>1119</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1120 id=1120 data-nosnippet>1120</a>	</span>}
 <a href=#1121 id=1121 data-nosnippet>1121</a>
 <a href=#1122 id=1122 data-nosnippet>1122</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1140,7 +1140,7 @@
 <a href=#1140 id=1140 data-nosnippet>1140</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1141 id=1141 data-nosnippet>1141</a>
 <a href=#1142 id=1142 data-nosnippet>1142</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1143 id=1143 data-nosnippet>1143</a>		v != <span class="number">0
+<a href=#1143 id=1143 data-nosnippet>1143</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1144 id=1144 data-nosnippet>1144</a>	</span>}
 <a href=#1145 id=1145 data-nosnippet>1145</a>
 <a href=#1146 id=1146 data-nosnippet>1146</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1164,7 +1164,7 @@
 <a href=#1164 id=1164 data-nosnippet>1164</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1165 id=1165 data-nosnippet>1165</a>
 <a href=#1166 id=1166 data-nosnippet>1166</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1167 id=1167 data-nosnippet>1167</a>		v != <span class="number">0
+<a href=#1167 id=1167 data-nosnippet>1167</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1168 id=1168 data-nosnippet>1168</a>	</span>}
 <a href=#1169 id=1169 data-nosnippet>1169</a>
 <a href=#1170 id=1170 data-nosnippet>1170</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1188,7 +1188,7 @@
 <a href=#1188 id=1188 data-nosnippet>1188</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1189 id=1189 data-nosnippet>1189</a>
 <a href=#1190 id=1190 data-nosnippet>1190</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1191 id=1191 data-nosnippet>1191</a>		v != <span class="number">0
+<a href=#1191 id=1191 data-nosnippet>1191</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1192 id=1192 data-nosnippet>1192</a>	</span>}
 <a href=#1193 id=1193 data-nosnippet>1193</a>
 <a href=#1194 id=1194 data-nosnippet>1194</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1212,7 +1212,7 @@
 <a href=#1212 id=1212 data-nosnippet>1212</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1213 id=1213 data-nosnippet>1213</a>
 <a href=#1214 id=1214 data-nosnippet>1214</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1215 id=1215 data-nosnippet>1215</a>		v != <span class="number">0
+<a href=#1215 id=1215 data-nosnippet>1215</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1216 id=1216 data-nosnippet>1216</a>	</span>}
 <a href=#1217 id=1217 data-nosnippet>1217</a>
 <a href=#1218 id=1218 data-nosnippet>1218</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1236,7 +1236,7 @@
 <a href=#1236 id=1236 data-nosnippet>1236</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1237 id=1237 data-nosnippet>1237</a>
 <a href=#1238 id=1238 data-nosnippet>1238</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1239 id=1239 data-nosnippet>1239</a>		v != <span class="number">0
+<a href=#1239 id=1239 data-nosnippet>1239</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1240 id=1240 data-nosnippet>1240</a>	</span>}
 <a href=#1241 id=1241 data-nosnippet>1241</a>
 <a href=#1242 id=1242 data-nosnippet>1242</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1260,7 +1260,7 @@
 <a href=#1260 id=1260 data-nosnippet>1260</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1261 id=1261 data-nosnippet>1261</a>
 <a href=#1262 id=1262 data-nosnippet>1262</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1263 id=1263 data-nosnippet>1263</a>		v != <span class="number">0
+<a href=#1263 id=1263 data-nosnippet>1263</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1264 id=1264 data-nosnippet>1264</a>	</span>}
 <a href=#1265 id=1265 data-nosnippet>1265</a>
 <a href=#1266 id=1266 data-nosnippet>1266</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1309,7 +1309,7 @@
 <a href=#1309 id=1309 data-nosnippet>1309</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1310 id=1310 data-nosnippet>1310</a>
 <a href=#1311 id=1311 data-nosnippet>1311</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1312 id=1312 data-nosnippet>1312</a>		v != <span class="number">0
+<a href=#1312 id=1312 data-nosnippet>1312</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1313 id=1313 data-nosnippet>1313</a>	</span>}
 <a href=#1314 id=1314 data-nosnippet>1314</a>
 <a href=#1315 id=1315 data-nosnippet>1315</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1432,7 +1432,7 @@
 <a href=#1432 id=1432 data-nosnippet>1432</a>	<span class="kw">type </span>RetType = bool;
 <a href=#1433 id=1433 data-nosnippet>1433</a>
 <a href=#1434 id=1434 data-nosnippet>1434</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1435 id=1435 data-nosnippet>1435</a>		v != <span class="number">0
+<a href=#1435 id=1435 data-nosnippet>1435</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#1436 id=1436 data-nosnippet>1436</a>	</span>}
 <a href=#1437 id=1437 data-nosnippet>1437</a>
 <a href=#1438 id=1438 data-nosnippet>1438</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2092,7 +2092,7 @@
 <a href=#2092 id=2092 data-nosnippet>2092</a>	<span class="kw">type </span>RetType = bool;
 <a href=#2093 id=2093 data-nosnippet>2093</a>
 <a href=#2094 id=2094 data-nosnippet>2094</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2095 id=2095 data-nosnippet>2095</a>		v != <span class="number">0
+<a href=#2095 id=2095 data-nosnippet>2095</a>		<span class="macro">v !</span>= <span class="number">0
 <a href=#2096 id=2096 data-nosnippet>2096</a>	</span>}
 <a href=#2097 id=2097 data-nosnippet>2097</a>
 <a href=#2098 id=2098 data-nosnippet>2098</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2126,4 +2126,5 @@
 <a href=#2126 id=2126 data-nosnippet>2126</a>			lparam: <span class="self">self</span>.visual_style.as_ptr() <span class="kw">as _</span>,
 <a href=#2127 id=2127 data-nosnippet>2127</a>		}
 <a href=#2128 id=2128 data-nosnippet>2128</a>	}
-<a href=#2129 id=2129 data-nosnippet>2129</a>}</code></pre></div></section></main></body></html>
+<a href=#2129 id=2129 data-nosnippet>2129</a>}
+</code></pre></div></section></main></body></html>
