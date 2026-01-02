@@ -122,8 +122,8 @@
 <a href=#122 id=122 data-nosnippet>122</a>/// This function originally takes a [`HHOOK`](crate::HHOOK) as its first
 <a href=#123 id=123 data-nosnippet>123</a>/// parameter, but since it's ignored, it has been ommited here. Thus,
 <a href=#124 id=124 data-nosnippet>124</a>/// `CallNextHookEx` is a free function instead of a `HHOOK` method.
-<a href=#125 id=125 data-nosnippet>125</a></span><span class="kw">pub fn </span>CallNextHookEx(code: co::WH, wparam: usize, lparam: isize) -&gt; isize {
-<a href=#126 id=126 data-nosnippet>126</a>	<span class="kw">unsafe </span>{ ffi::CallNextHookEx(std::ptr::null_mut(), code.raw(), wparam, lparam) }
+<a href=#125 id=125 data-nosnippet>125</a></span><span class="kw">pub fn </span>CallNextHookEx(code: i32, wparam: usize, lparam: isize) -&gt; isize {
+<a href=#126 id=126 data-nosnippet>126</a>	<span class="kw">unsafe </span>{ ffi::CallNextHookEx(std::ptr::null_mut(), code, wparam, lparam) }
 <a href=#127 id=127 data-nosnippet>127</a>}
 <a href=#128 id=128 data-nosnippet>128</a>
 <a href=#129 id=129 data-nosnippet>129</a><span class="doccomment">/// [`ChangeDisplaySettings`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-changedisplaysettingsw)
