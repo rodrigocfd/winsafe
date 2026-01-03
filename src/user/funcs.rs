@@ -737,6 +737,12 @@ pub fn LockWorkStation() -> SysResult<()> {
 	BoolRet(unsafe { ffi::LockWorkStation() }).to_sysresult()
 }
 
+/// [`MapVirtualKeyW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw)
+/// function.
+pub fn MapVirtualKeyW(uCode: u32, uMapType: co::MAPVK) -> u32 {
+	unsafe { ffi::MapVirtualKeyW(uCode, uMapType.raw()) }
+}
+
 /// [`MessageBeep`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
 /// function.
 pub fn MessageBeep(sound_type: co::MBP) -> SysResult<()> {

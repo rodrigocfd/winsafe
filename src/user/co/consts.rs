@@ -1734,6 +1734,18 @@ const_bitflag! { LWA: u32;
 	COLORKEY 0x0000_0001
 }
 
+const_ordinary! { MAPVK: u32;
+	/// [`MapVirtualKeyW`](crate::MapVirtualKeyW) `uMapType` (`u32`).
+	///
+	/// Originally has `MAPVK` prefix.
+	=>
+	VK_TO_VSC 0
+	VSC_TO_VK 1
+	VK_TO_CHAR 2
+	VSC_TO_VK_EX 3
+	VK_TO_VSC_EX 4
+}
+
 const_bitflag! { MB: u32;
 	/// [`HWND::MessageBox`](crate::HWND::MessageBox) `flags` (`u32`).
 	=>

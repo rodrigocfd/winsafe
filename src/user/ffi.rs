@@ -200,6 +200,7 @@ extern_sys! { "user32";
 	LockWorkStation() -> BOOL
 	LogicalToPhysicalPoint(HANDLE, PVOID) -> BOOL
 	MapDialogRect(HANDLE, PVOID) -> BOOL
+	MapVirtualKeyW(u32, u32) -> u32
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
 	MessageBeep(u32) -> BOOL
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -> i32
