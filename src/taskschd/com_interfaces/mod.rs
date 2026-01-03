@@ -14,6 +14,7 @@ mod iregistrationinfo;
 mod itaskdefinition;
 mod itaskfolder;
 mod itaskservice;
+mod itasksettings;
 mod itrigger;
 mod itriggercollection;
 
@@ -34,6 +35,7 @@ pub mod decl {
 	pub use super::itaskdefinition::ITaskDefinition;
 	pub use super::itaskfolder::ITaskFolder;
 	pub use super::itaskservice::ITaskService;
+	pub use super::itasksettings::ITaskSettings;
 	pub use super::itrigger::ITrigger;
 	pub use super::itriggercollection::ITriggerCollection;
 }
@@ -55,6 +57,7 @@ pub mod traits {
 	pub use super::itaskdefinition::taskschd_ITaskDefinition;
 	pub use super::itaskfolder::taskschd_ITaskFolder;
 	pub use super::itaskservice::taskschd_ITaskService;
+	pub use super::itasksettings::taskschd_ITaskSettings;
 	pub use super::itrigger::taskschd_ITrigger;
 	pub use super::itriggercollection::taskschd_ITriggerCollection;
 }
