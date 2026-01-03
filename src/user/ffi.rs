@@ -119,6 +119,7 @@ extern_sys! { "user32";
 	GetGUIThreadInfo(u32, PVOID) -> BOOL
 	GetIconInfo(HANDLE, PVOID) -> BOOL
 	GetIconInfoExW(HANDLE, PVOID) -> BOOL
+	GetKeyNameTextW(i32, PSTR, i32) -> i32
 	GetLastActivePopup(HANDLE) -> HANDLE
 	GetLastInputInfo(PVOID) -> BOOL
 	GetMenu(HANDLE) -> HANDLE
@@ -200,6 +201,7 @@ extern_sys! { "user32";
 	LockWorkStation() -> BOOL
 	LogicalToPhysicalPoint(HANDLE, PVOID) -> BOOL
 	MapDialogRect(HANDLE, PVOID) -> BOOL
+	MapVirtualKeyW(u32, u32) -> u32
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
 	MessageBeep(u32) -> BOOL
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -> i32
