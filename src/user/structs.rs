@@ -710,6 +710,18 @@ impl INPUT {
 	}
 }
 
+/// [`KBDLLHOOKSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct KBDLLHOOKSTRUCT {
+	pub vkCode: co::VK,
+	pub scanCode: u32,
+	pub flags: co::LLKHF,
+	pub time: u32,
+	pub dwExtraInfo: usize,
+}
+
 /// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
 /// struct.
 #[repr(C)]

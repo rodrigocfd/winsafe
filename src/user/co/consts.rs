@@ -1718,6 +1718,19 @@ const_ws! { LBS: u32;
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
+const_bitflag! { LLKHF: u32;
+	/// [`KBDLLHOOKSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)
+	/// `flags` (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	EXTENDEDKEY 0x0001
+	LOWER_IL_INJECTED 0x0002
+	INJECTED 0x0010
+	ALTDOWN 0x0020
+	UP 0x0080
+}
+
 const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
