@@ -2900,6 +2900,8 @@ const_ordinary! { VK: u16;
 	HANJA 0x19
 	/// IME Kanji mode.
 	KANJI 0x19
+	/// IME Off.
+	IME_OFF 0x1a
 	/// ESC key.
 	ESCAPE 0x1b
 	/// IME convert.
