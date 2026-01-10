@@ -715,11 +715,24 @@ impl INPUT {
 #[repr(C)]
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct KBDLLHOOKSTRUCT {
-	pub vkCode: co::VK,
+	vkCode: u32,
 	pub scanCode: u32,
 	pub flags: co::LLKHF,
 	pub time: u32,
 	pub dwExtraInfo: usize,
+}
+
+impl KBDLLHOOKSTRUCT {
+	/// Returns the `vkCode` field.
+	#[must_use]
+	pub const fn vkCode(&self) -> co::VK {
+		unsafe { co::VK::from_raw(self.vkCode as _) }
+	}
+
+	/// Sets the `vkCode` field.
+	pub const fn set_vkCode(&mut self, val: co::VK) {
+		self.vkCode = val.raw() as _;
+	}
 }
 
 /// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
