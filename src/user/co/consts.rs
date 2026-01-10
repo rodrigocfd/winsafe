@@ -1748,7 +1748,7 @@ const_bitflag! { LWA: u32;
 }
 
 const_ordinary! { MAPVK: u32;
-	/// [`MapVirtualKeyW`](crate::MapVirtualKeyW) `uMapType` (`u32`).
+	/// [`MapVirtualKey`](crate::MapVirtualKey) `uMapType` (`u32`).
 	///
 	/// Originally has `MAPVK` prefix.
 	=>

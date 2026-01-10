@@ -748,9 +748,9 @@ pub fn LockWorkStation() -> SysResult<()> {
 	BoolRet(unsafe { ffi::LockWorkStation() }).to_sysresult()
 }
 
-/// [`MapVirtualKeyW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw)
+/// [`MapVirtualKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw)
 /// function.
-pub fn MapVirtualKeyW(uCode: u32, uMapType: co::MAPVK) -> u32 {
+pub fn MapVirtualKey(uCode: u32, uMapType: co::MAPVK) -> u32 {
 	unsafe { ffi::MapVirtualKeyW(uCode, uMapType.raw()) }
 }
 
