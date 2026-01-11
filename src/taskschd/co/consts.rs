@@ -38,7 +38,7 @@ const_bitflag! { TASK_CREATION: u32;
 	IGNORE_REGISTRATION_TRIGGERS 0x20
 }
 
-const_ordinary! { TASK_INSTANCES_POLICY: u32;
+const_ordinary! { TASK_INSTANCES: u32;
 	/// [`TASK_INSTANCES_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_instances_policy)
 	/// enumeration (`u32`).
 	=>

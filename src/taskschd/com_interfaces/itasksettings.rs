@@ -44,7 +44,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_AllowDemandStart(&self) -> HrResult<bool> {
-		let mut allow = i16::default();
+		let mut allow = 0i16;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_AllowDemandStart)(self.ptr(), &mut allow) })
 			.to_hrresult()
 			.map(|_| allow != 0)
@@ -54,7 +54,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_AllowHardTerminate(&self) -> HrResult<bool> {
-		let mut allow = i16::default();
+		let mut allow = 0i16;
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_AllowHardTerminate)(self.ptr(), &mut allow)
 		})
@@ -83,7 +83,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_DisallowStartIfOnBatteries(&self) -> HrResult<bool> {
-		let mut disallow = i16::default();
+		let mut disallow = 0i16;
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_DisallowStartIfOnBatteries)(self.ptr(), &mut disallow)
 		})
@@ -100,7 +100,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_Hidden(&self) -> HrResult<bool> {
-		let mut hidden = i16::default();
+		let mut hidden = 0i16;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_Hidden)(self.ptr(), &mut hidden) })
 			.to_hrresult()
 			.map(|_| hidden != 0)
@@ -109,8 +109,8 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// [`ITaskSettings::get_MultipleInstances`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itasksettings-get_multipleinstances)
 	/// method.
 	#[must_use]
-	fn get_MultipleInstances(&self) -> HrResult<co::TASK_INSTANCES_POLICY> {
-		let mut policy = co::TASK_INSTANCES_POLICY::default();
+	fn get_MultipleInstances(&self) -> HrResult<co::TASK_INSTANCES> {
+		let mut policy = co::TASK_INSTANCES::default();
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_MultipleInstances)(self.ptr(), policy.as_mut())
 		})
@@ -122,7 +122,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_Priority(&self) -> HrResult<i32> {
-		let mut priority = i32::default();
+		let mut priority = 0i32;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_Priority)(self.ptr(), &mut priority) })
 			.to_hrresult()
 			.map(|_| priority)
@@ -137,7 +137,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_RestartCount(&self) -> HrResult<i32> {
-		let mut count = i32::default();
+		let mut count = 0i32;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_RestartCount)(self.ptr(), &mut count) })
 			.to_hrresult()
 			.map(|_| count)
@@ -147,7 +147,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_RunOnlyIfIdle(&self) -> HrResult<bool> {
-		let mut run = i16::default();
+		let mut run = 0i16;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_RunOnlyIfIdle)(self.ptr(), &mut run) })
 			.to_hrresult()
 			.map(|_| run != 0)
@@ -157,7 +157,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_RunOnlyIfNetworkAvailable(&self) -> HrResult<bool> {
-		let mut run = i16::default();
+		let mut run = 0i16;
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_RunOnlyIfNetworkAvailable)(self.ptr(), &mut run)
 		})
@@ -169,7 +169,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_StartWhenAvailable(&self) -> HrResult<bool> {
-		let mut start = i16::default();
+		let mut start = 0i16;
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_StartWhenAvailable)(self.ptr(), &mut start)
 		})
@@ -181,7 +181,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_StopIfGoingOnBatteries(&self) -> HrResult<bool> {
-		let mut stop = i16::default();
+		let mut stop = 0i16;
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).get_StopIfGoingOnBatteries)(self.ptr(), &mut stop)
 		})
@@ -193,7 +193,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_WakeToRun(&self) -> HrResult<bool> {
-		let mut wake = i16::default();
+		let mut wake = 0i16;
 		HrRet(unsafe { (vt::<ITaskSettingsVT>(self).get_WakeToRun)(self.ptr(), &mut wake) })
 			.to_hrresult()
 			.map(|_| wake != 0)
@@ -250,7 +250,7 @@ pub trait taskschd_ITaskSettings: oleaut_IDispatch {
 
 	/// [`ITaskSettings::put_MultipleInstances`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itasksettings-put_multipleinstances)
 	/// method.
-	fn put_MultipleInstances(&self, policy: co::TASK_INSTANCES_POLICY) -> HrResult<()> {
+	fn put_MultipleInstances(&self, policy: co::TASK_INSTANCES) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<ITaskSettingsVT>(self).put_MultipleInstances)(self.ptr(), policy.raw())
 		})

@@ -1749,8 +1749,6 @@ const_bitflag! { LWA: u32;
 
 const_ordinary! { MAPVK: u32;
 	/// [`MapVirtualKey`](crate::MapVirtualKey) `uMapType` (`u32`).
-	///
-	/// Originally has `MAPVK` prefix.
 	=>
 	VK_TO_VSC 0
 	VSC_TO_VK 1
@@ -2913,7 +2911,7 @@ const_ordinary! { VK: u16;
 	HANJA 0x19
 	/// IME Kanji mode.
 	KANJI 0x19
-	/// IME Off.
+	/// IME off.
 	IME_OFF 0x1a
 	/// ESC key.
 	ESCAPE 0x1b
