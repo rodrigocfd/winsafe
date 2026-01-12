@@ -3,7 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/winsafe.svg?style=flat-square)](https://crates.io/crates/winsafe)
 [![Crates.io total downloads](https://img.shields.io/crates/d/winsafe?color=seagreen&style=flat-square)](https://crates.io/crates/winsafe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?label=license&style=flat-square)](https://opensource.org/licenses/MIT)
-[![Lines of code](https://img.shields.io/badge/LoC-78.3k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
+[![Lines of code](https://img.shields.io/badge/LoC-69.0k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
 
 Windows API and GUI in safe, idiomatic Rust.
 
@@ -25,13 +25,13 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 902 |
-| Structs | 263 |
-| Constants | 15,105 |
+| Functions | 904 |
+| Structs | 264 |
+| Constants | 15,128 |
 | Window messages | 684 |
 | Handles | 54 |
-| COM interfaces | 96 |
-| COM methods | 603 |
+| COM interfaces | 97 |
+| COM methods | 636 |
 
 Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
