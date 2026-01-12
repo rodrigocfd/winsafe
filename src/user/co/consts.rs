@@ -1718,6 +1718,19 @@ const_ws! { LBS: u32;
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
+const_bitflag! { LLKHF: u32;
+	/// [`KBDLLHOOKSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-kbdllhookstruct)
+	/// `flags` (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	EXTENDEDKEY 0x0001
+	LOWER_IL_INJECTED 0x0002
+	INJECTED 0x0010
+	ALTDOWN 0x0020
+	UP 0x0080
+}
+
 const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
@@ -1732,6 +1745,16 @@ const_bitflag! { LWA: u32;
 	=>
 	ALPHA 0x0000_0002
 	COLORKEY 0x0000_0001
+}
+
+const_ordinary! { MAPVK: u32;
+	/// [`MapVirtualKey`](crate::MapVirtualKey) `uMapType` (`u32`).
+	=>
+	VK_TO_VSC 0
+	VSC_TO_VK 1
+	VK_TO_CHAR 2
+	VSC_TO_VK_EX 3
+	VK_TO_VSC_EX 4
 }
 
 const_bitflag! { MB: u32;
@@ -2888,6 +2911,8 @@ const_ordinary! { VK: u16;
 	HANJA 0x19
 	/// IME Kanji mode.
 	KANJI 0x19
+	/// IME off.
+	IME_OFF 0x1a
 	/// ESC key.
 	ESCAPE 0x1b
 	/// IME convert.

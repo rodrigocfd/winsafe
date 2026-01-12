@@ -538,6 +538,30 @@ pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
 		.map(|_| gti)
 }
 
+/// [`GetKeyNameText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeynametextw)
+/// function.
+#[must_use]
+pub fn GetKeyNameText(scan_code: u8, is_extended_key: bool, dont_care: bool) -> SysResult<String> {
+	let mut buf = WString::new_alloc_buf(256 + 1);
+	match unsafe {
+		ffi::GetKeyNameTextW(
+			MAKEDWORD(
+				0,
+				MAKEWORD(
+					scan_code,
+					if is_extended_key { 0b0000_0001 } else { 0 }
+						| if dont_care { 0b0000_0010 } else { 0 },
+				),
+			) as _,
+			buf.as_mut_ptr(),
+			buf.buf_len() as _,
+		)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(buf.to_string()),
+	}
+}
+
 /// [`GetLastInputInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastinputinfo)
 /// function.
 #[must_use]
@@ -735,6 +759,12 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 /// function.
 pub fn LockWorkStation() -> SysResult<()> {
 	BoolRet(unsafe { ffi::LockWorkStation() }).to_sysresult()
+}
+
+/// [`MapVirtualKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapvirtualkeyw)
+/// function.
+pub fn MapVirtualKey(uCode: u32, uMapType: co::MAPVK) -> u32 {
+	unsafe { ffi::MapVirtualKeyW(uCode, uMapType.raw()) }
 }
 
 /// [`MessageBeep`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
