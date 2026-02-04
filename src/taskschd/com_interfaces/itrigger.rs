@@ -19,7 +19,7 @@ impl oleaut_IDispatch for ITrigger {}
 impl taskschd_ITrigger for ITrigger {}
 
 /// This trait is enabled with the `taskschd` feature, and provides methods for
-/// [`ITriggerCollection`](crate::ITriggerCollection).
+/// [`ITrigger`](crate::ITrigger).
 ///
 /// Prefer importing this trait through the prelude:
 ///
