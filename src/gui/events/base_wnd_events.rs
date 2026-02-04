@@ -276,7 +276,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::HWND::DestroyWindow).
 	}
 
-	fn_wm_noparm_noret! { wm_context_menu, co::WM::CONTEXTMENU;
+	fn_wm_withparm_noret! { wm_context_menu, co::WM::CONTEXTMENU, wm::ContextMenu;
 		/// [`WM_CONTEXTMENU`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 		/// message.
 	}
