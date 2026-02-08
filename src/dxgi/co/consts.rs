@@ -20,6 +20,14 @@ const_ordinary! { DXGI_COMPUTE_PREEMPTION: u32;
 	INSTRUCTION_BOUNDARY 4
 }
 
+const_ordinary! { DXGI_CREATE_FACTORY: u32;
+	/// [`CreateDXGIFactory2`](crate::CreateDXGIFactory2) `Flags` (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	DEBUG 0x1
+}
+
 const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).

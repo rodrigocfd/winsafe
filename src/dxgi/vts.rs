@@ -57,6 +57,24 @@ pub(crate) struct IDXGIFactory1VT {
 }
 
 #[repr(C)]
+pub(crate) struct IDXGIFactory2VT {
+	pub IDXGIFactory1VT: IDXGIFactory1VT,
+	pub IsWindowedStereoEnabled: fn(COMPTR) -> BOOL,
+	pub CreateSwapChainForHwnd:
+		fn(COMPTR, COMPTR, HANDLE, PCVOID, PCVOID, COMPTR, *mut COMPTR) -> HRES,
+	pub CreateSwapChainForCoreWindow:
+		fn(COMPTR, COMPTR, COMPTR, PCVOID, COMPTR, *mut COMPTR) -> HRES,
+	pub GetSharedResourceAdapterLuid: fn(COMPTR, HANDLE, PVOID) -> HRES,
+	pub RegisterStereoStatusWindow: fn(COMPTR, HANDLE, u32, *mut u32) -> HRES,
+	pub RegisterStereoStatusEvent: fn(COMPTR, HANDLE, *mut u32) -> HRES,
+	pub UnregisterStereoStatus: fn(COMPTR, u32) -> HRES,
+	pub RegisterOcclusionStatusWindow: fn(COMPTR, HANDLE, u32, *mut u32) -> HRES,
+	pub RegisterOcclusionStatusEvent: fn(COMPTR, HANDLE, *mut u32) -> HRES,
+	pub UnregisterOcclusionStatus: fn(COMPTR, u32) -> HRES,
+	pub CreateSwapChainForComposition: fn(COMPTR, COMPTR, PCVOID, COMPTR, *mut COMPTR) -> HRES,
+}
+
+#[repr(C)]
 pub(crate) struct IDXGIKeyedMutexVT {
 	pub IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
 	pub AcquireSync: fn(COMPTR, u64, u32) -> HRES,
