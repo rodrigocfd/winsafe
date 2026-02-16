@@ -1,4 +1,6 @@
-# Runs cargo check on each feature.
+#
+# Runs cargo check on each feature, individually.
+#
 
 FEATS=(
 	advapi
@@ -32,7 +34,7 @@ set -e
 
 print_elapsed () {
 	MIN=$(( ($1 - ($1 % (60 * 1000))) / (1000 * 60) ))
-	SEC=$(( ($TF - ($MIN * 1000 * 60) - ($1 % 1000)) / 1000 ))
+	SEC=$(( ($1 - ($MIN * 1000 * 60) - ($1 % 1000)) / 1000 ))
 	MS=$(( $1 % 1000 ))
 
 	PURP='\033[0;35m'
