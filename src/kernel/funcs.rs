@@ -469,6 +469,16 @@ pub fn GetLastError() -> co::ERROR {
 /// This function retrieves local time; for UTC time use
 /// [`GetSystemTime`](crate::GetSystemTime).
 ///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w};
+///
+/// let st = w::GetLocalTime();
+/// println!("{:04}-{:02}-{:02}",
+///     st.wYear, st.wMonth, st.wDay);
+/// ```
+///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
@@ -775,6 +785,16 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 /// This function retrieves UTC time; for local time use
 /// [`GetLocalTime`](crate::GetLocalTime).
 ///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w};
+///
+/// let st_utc = w::GetSystemTime();
+/// println!("{:04}-{:02}-{:02}",
+///     st_utc.wYear, st_utc.wMonth, st_utc.wDay);
+/// ```
+///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
@@ -968,6 +988,16 @@ pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 
 /// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w};
+///
+/// let msx = w::GlobalMemoryStatusEx()?;
+/// println!("Total mem: {} bytes", msx.ullTotalPhys);
+/// # w::SysResult::Ok(())
+/// ```
 #[must_use]
 pub fn GlobalMemoryStatusEx() -> SysResult<MEMORYSTATUSEX> {
 	let mut msx = MEMORYSTATUSEX::default();
