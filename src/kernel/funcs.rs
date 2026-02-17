@@ -172,11 +172,12 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let expanded = w::ExpandEnvironmentStrings(
-///     "Os %OS%, home %HOMEPATH% and temp %TEMP%",
-/// )?;
+/// let ft_utc = w::GetSystemTimeAsFileTime();
+/// let st_utc = w::FileTimeToSystemTime(&ft_utc)?;
 ///
-/// println!("{}", expanded);
+/// println!("{:04}-{:02}-{:02}",
+///     st_utc.wYear, st_utc.wMonth, st_utc.wDay);
+///
 /// # w::SysResult::Ok(())
 /// ```
 ///
@@ -828,6 +829,14 @@ pub fn GetSystemTime() -> SYSTEMTIME {
 
 /// [`GetSystemTimeAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let ft_utc = w::GetSystemTimeAsFileTime();
+/// ```
 ///
 /// # Related functions
 ///
@@ -1535,6 +1544,17 @@ pub fn SwitchToThread() -> SysResult<()> {
 
 /// [`SystemTimeToFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
 /// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let st_utc = w::GetSystemTime();
+/// let ft_utc = w::SystemTimeToFileTime(&st_utc)?;
+///
+/// # w::SysResult::Ok(())
+/// ```
 ///
 /// # Related functions
 ///
