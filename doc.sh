@@ -68,10 +68,23 @@ git add .
 echo -e "${BLUE}Committing changes...${NC}"
 DEPLOY_TIME=$(date '+%Y-%m-%d %H:%M:%S')
 DEPLOY_MSG="Cargo doc auto deployment $DEPLOY_TIME."
-git commit -m "$DEPLOY_MSG"
+git commit -m "$DEPLOY_MSG" || {
+	echo -e "${GREN}No changes since last publish.${NC}"
+	TF=$((($(date +%s%N) - $T0)/1000000)) # end time
+	print_duration $TF
+	exit 0
+}
+
+echo -e "${BLUE}Squashing...${NC}"
+git reset $(git commit-tree "HEAD^{tree}" -m "$DEPLOY_MSG") # squash into 1 commit
+
+echo -e "${BLUE}Cleaning up...${NC}"
+git fetch origin --prune
+git -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 \
+	-c gc.rerereunresolved=0 -c gc.pruneExpire=now gc # https://stackoverflow.com/a/14729486/6923555
 
 echo -e "${BLUE}Pushing changes to remote...${NC}"
-git push
+git push origin +gh-pages
 
 echo -e "${BLUE}Updating local repo...${NC}"
 cd -
