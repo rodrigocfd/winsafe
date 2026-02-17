@@ -26,7 +26,7 @@ pub fn IsCompositionActive() -> bool {
 /// [`IsThemeDialogTextureEnabled`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemedialogtextureenabled)
 /// function.
 ///
-/// **Note:** This function doesn't exist in x32.
+/// **Note:** This function doesn't exist in 32-bit Windows.
 #[cfg(target_pointer_width = "64")]
 #[must_use]
 pub fn IsThemeDialogTextureEnabled() -> bool {
