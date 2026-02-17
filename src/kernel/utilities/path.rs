@@ -19,10 +19,23 @@ use crate::prelude::*;
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
+/// // Ordinary for loop
 /// for file_path in w::path::dir_list_flat("C:\\Temp") {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
+///
+/// // Collecting into a Vec
+/// let all = w::path::dir_list_flat("C:\\Temp")
+///     .collect::<w::SysResult<Vec<_>>>()?;
+///
+/// // Transforming and collecting into a Vec
+/// let all = w::path::dir_list_flat("C:\\Temp")
+///     .map(|file_path| {
+///         let file_path = file_path?;
+///         Ok(format!("PATH: {}", file_path))
+///     })
+///     .collect::<w::SysResult<Vec<_>>>()?;
 /// # w::SysResult::Ok(())
 /// ```
 #[must_use]
