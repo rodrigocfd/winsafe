@@ -1,0 +1,725 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\co.rs`."><title>co.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../../static.files/storage-e2aeef58.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi/</div>co.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href=#2 id=2 data-nosnippet>2</a>
+<a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
+<a href=#4 id=4 data-nosnippet>4</a>
+<a href=#5 id=5 data-nosnippet>5</a><span class="macro">const_ordinary!</span> { EVENTLOG: u16;
+<a href=#6 id=6 data-nosnippet>6</a>	<span class="doccomment">/// [`HEVENTLOG::ReportEvent`](crate::HEVENTLOG::ReportEvent) `event_type`
+<a href=#7 id=7 data-nosnippet>7</a>	/// [`u16`]. undefined
+<a href=#8 id=8 data-nosnippet>8</a>	</span>=&gt;
+<a href=#9 id=9 data-nosnippet>9</a>	SUCCESS <span class="number">0x0000
+<a href=#10 id=10 data-nosnippet>10</a>	</span>AUDIT_FAILURE <span class="number">0x0010
+<a href=#11 id=11 data-nosnippet>11</a>	</span>AUDIT_SUCCESS <span class="number">0x0008
+<a href=#12 id=12 data-nosnippet>12</a>	</span>ERROR_TYPE <span class="number">0x0001
+<a href=#13 id=13 data-nosnippet>13</a>	</span>INFORMATION_TYPE <span class="number">0x0004
+<a href=#14 id=14 data-nosnippet>14</a>	</span>WARNING_TYPE <span class="number">0x0002
+<a href=#15 id=15 data-nosnippet>15</a></span>}
+<a href=#16 id=16 data-nosnippet>16</a>
+<a href=#17 id=17 data-nosnippet>17</a><span class="macro">const_bitflag!</span> { KEY: u32;
+<a href=#18 id=18 data-nosnippet>18</a>	<span class="doccomment">/// [Registry access rights](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights)
+<a href=#19 id=19 data-nosnippet>19</a>	/// (`u32`).
+<a href=#20 id=20 data-nosnippet>20</a>	</span>=&gt;
+<a href=#21 id=21 data-nosnippet>21</a>	QUERY_VALUE <span class="number">0x0001
+<a href=#22 id=22 data-nosnippet>22</a>	</span>SET_VALUE <span class="number">0x0002
+<a href=#23 id=23 data-nosnippet>23</a>	</span>CREATE_SUB_KEY <span class="number">0x0004
+<a href=#24 id=24 data-nosnippet>24</a>	</span>ENUMERATE_SUB_KEYS <span class="number">0x0008
+<a href=#25 id=25 data-nosnippet>25</a>	</span>NOTIFY <span class="number">0x0010
+<a href=#26 id=26 data-nosnippet>26</a>	</span>CREATE_LINK <span class="number">0x0020
+<a href=#27 id=27 data-nosnippet>27</a>	</span>WOW64_32KEY <span class="number">0x0200
+<a href=#28 id=28 data-nosnippet>28</a>	</span>WOW64_64KEY <span class="number">0x0100
+<a href=#29 id=29 data-nosnippet>29</a>	</span>WOW64_RES <span class="number">0x0300
+<a href=#30 id=30 data-nosnippet>30</a>	</span>READ (STANDARD_RIGHTS::READ.raw() | <span class="self">Self</span>::QUERY_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::ENUMERATE_SUB_KEYS.<span class="number">0 </span>| <span class="self">Self</span>::NOTIFY.<span class="number">0</span>) &amp; !ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#31 id=31 data-nosnippet>31</a>	WRITE (STANDARD_RIGHTS::WRITE.raw() | <span class="self">Self</span>::SET_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::CREATE_SUB_KEY.<span class="number">0</span>) &amp; !ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#32 id=32 data-nosnippet>32</a>	EXECUTE <span class="self">Self</span>::READ.<span class="number">0 </span>&amp; !ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#33 id=33 data-nosnippet>33</a>	ALL_ACCESS (STANDARD_RIGHTS::ALL.raw() | <span class="self">Self</span>::QUERY_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::SET_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::CREATE_SUB_KEY.<span class="number">0 </span>| <span class="self">Self</span>::ENUMERATE_SUB_KEYS.<span class="number">0 </span>| <span class="self">Self</span>::NOTIFY.<span class="number">0 </span>| <span class="self">Self</span>::CREATE_LINK.<span class="number">0</span>) &amp; !ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#34 id=34 data-nosnippet>34</a>}
+<a href=#35 id=35 data-nosnippet>35</a>
+<a href=#36 id=36 data-nosnippet>36</a><span class="macro">const_ordinary!</span> { REG: u32;
+<a href=#37 id=37 data-nosnippet>37</a>	<span class="doccomment">/// Registry
+<a href=#38 id=38 data-nosnippet>38</a>	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
+<a href=#39 id=39 data-nosnippet>39</a>	/// (`u32`).
+<a href=#40 id=40 data-nosnippet>40</a>	</span>=&gt;
+<a href=#41 id=41 data-nosnippet>41</a>	NONE <span class="number">0
+<a href=#42 id=42 data-nosnippet>42</a>	</span>SZ <span class="number">1
+<a href=#43 id=43 data-nosnippet>43</a>	</span>EXPAND_SZ <span class="number">2
+<a href=#44 id=44 data-nosnippet>44</a>	</span>BINARY <span class="number">3
+<a href=#45 id=45 data-nosnippet>45</a>	</span>DWORD <span class="number">4
+<a href=#46 id=46 data-nosnippet>46</a>	</span>DWORD_LITTLE_ENDIAN <span class="number">4
+<a href=#47 id=47 data-nosnippet>47</a>	</span>DWORD_BIG_ENDIAN <span class="number">5
+<a href=#48 id=48 data-nosnippet>48</a>	</span>LINK <span class="number">6
+<a href=#49 id=49 data-nosnippet>49</a>	</span>MULTI_SZ <span class="number">7
+<a href=#50 id=50 data-nosnippet>50</a>	</span>RESOURCE_LIST <span class="number">8
+<a href=#51 id=51 data-nosnippet>51</a>	</span>FULL_RESOURCE_DESCRIPTOR <span class="number">9
+<a href=#52 id=52 data-nosnippet>52</a>	</span>RESOURCE_REQUIREMENTS_LIST <span class="number">10
+<a href=#53 id=53 data-nosnippet>53</a>	</span>QWORD <span class="number">11
+<a href=#54 id=54 data-nosnippet>54</a>	</span>QWORD_LITTLE_ENDIAN <span class="number">11
+<a href=#55 id=55 data-nosnippet>55</a></span>}
+<a href=#56 id=56 data-nosnippet>56</a>
+<a href=#57 id=57 data-nosnippet>57</a><span class="macro">const_ordinary!</span> { REG_DISPOSITION: u32;
+<a href=#58 id=58 data-nosnippet>58</a>	<span class="doccomment">/// [`HKEY::RegCreateKeyEx`](crate::HKEY::RegCreateKeyEx) creation
+<a href=#59 id=59 data-nosnippet>59</a>	/// disposition (`u32`).
+<a href=#60 id=60 data-nosnippet>60</a>	</span>=&gt;
+<a href=#61 id=61 data-nosnippet>61</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#62 id=62 data-nosnippet>62</a>	</span>NoValue <span class="number">0
+<a href=#63 id=63 data-nosnippet>63</a>	</span><span class="doccomment">/// The key did not exist and was created.
+<a href=#64 id=64 data-nosnippet>64</a>	</span>CREATED_NEW_KEY <span class="number">0x0000_0001
+<a href=#65 id=65 data-nosnippet>65</a>	</span><span class="doccomment">/// The key existed and was simply opened without being changed.
+<a href=#66 id=66 data-nosnippet>66</a>	</span>OPENED_EXISTING_KEY <span class="number">0x0000_0002
+<a href=#67 id=67 data-nosnippet>67</a></span>}
+<a href=#68 id=68 data-nosnippet>68</a>
+<a href=#69 id=69 data-nosnippet>69</a><span class="macro">const_bitflag!</span> { REG_OPTION: u32;
+<a href=#70 id=70 data-nosnippet>70</a>	<span class="doccomment">/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `options` (`u32`).
+<a href=#71 id=71 data-nosnippet>71</a>	</span>=&gt;
+<a href=#72 id=72 data-nosnippet>72</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#73 id=73 data-nosnippet>73</a>	</span>NoValue <span class="number">0
+<a href=#74 id=74 data-nosnippet>74</a>	</span>RESERVED <span class="number">0x0000_0000
+<a href=#75 id=75 data-nosnippet>75</a>	</span>NON_VOLATILE <span class="number">0x0000_0000
+<a href=#76 id=76 data-nosnippet>76</a>	</span>VOLATILE <span class="number">0x0000_0001
+<a href=#77 id=77 data-nosnippet>77</a>	</span>CREATE_LINK <span class="number">0x0000_0002
+<a href=#78 id=78 data-nosnippet>78</a>	</span>BACKUP_RESTORE <span class="number">0x0000_0004
+<a href=#79 id=79 data-nosnippet>79</a>	</span>OPEN_LINK <span class="number">0x0000_0008
+<a href=#80 id=80 data-nosnippet>80</a></span>}
+<a href=#81 id=81 data-nosnippet>81</a>
+<a href=#82 id=82 data-nosnippet>82</a><span class="macro">const_ordinary!</span> { REG_RESTORE: u32;
+<a href=#83 id=83 data-nosnippet>83</a>	<span class="doccomment">/// Registry restore
+<a href=#84 id=84 data-nosnippet>84</a>	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
+<a href=#85 id=85 data-nosnippet>85</a>	/// (`u32`).
+<a href=#86 id=86 data-nosnippet>86</a>	///
+<a href=#87 id=87 data-nosnippet>87</a>	/// Originally has `REG` prefix.
+<a href=#88 id=88 data-nosnippet>88</a>	</span>=&gt;
+<a href=#89 id=89 data-nosnippet>89</a>	FORCE_RESTORE <span class="number">0x0000_0008
+<a href=#90 id=90 data-nosnippet>90</a>	</span>WHOLE_HIVE_VOLATILE <span class="number">0x0000_0001
+<a href=#91 id=91 data-nosnippet>91</a></span>}
+<a href=#92 id=92 data-nosnippet>92</a>
+<a href=#93 id=93 data-nosnippet>93</a><span class="macro">const_ordinary!</span> { REG_SAVE: u32;
+<a href=#94 id=94 data-nosnippet>94</a>	<span class="doccomment">/// Registry save
+<a href=#95 id=95 data-nosnippet>95</a>	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
+<a href=#96 id=96 data-nosnippet>96</a>	/// (`u32`).
+<a href=#97 id=97 data-nosnippet>97</a>	///
+<a href=#98 id=98 data-nosnippet>98</a>	/// Originally has `REG` prefix.
+<a href=#99 id=99 data-nosnippet>99</a>	</span>=&gt;
+<a href=#100 id=100 data-nosnippet>100</a>	STANDARD_FORMAT <span class="number">1
+<a href=#101 id=101 data-nosnippet>101</a>	</span>LATEST_FORMAT <span class="number">2
+<a href=#102 id=102 data-nosnippet>102</a>	</span>NO_COMPRESSION <span class="number">4
+<a href=#103 id=103 data-nosnippet>103</a></span>}
+<a href=#104 id=104 data-nosnippet>104</a>
+<a href=#105 id=105 data-nosnippet>105</a><span class="macro">const_ordinary!</span> { RID: u32;
+<a href=#106 id=106 data-nosnippet>106</a>	<span class="doccomment">/// The
+<a href=#107 id=107 data-nosnippet>107</a>	/// [portion](https://learn.microsoft.com/en-us/windows/win32/secgloss/r-gly)
+<a href=#108 id=108 data-nosnippet>108</a>	/// of a [`SID`](crate::SID) that identifies a user or group in relation to
+<a href=#109 id=109 data-nosnippet>109</a>	/// the authority that issued the `SID`.
+<a href=#110 id=110 data-nosnippet>110</a>	///
+<a href=#111 id=111 data-nosnippet>111</a>	/// Originally has `RID` suffix.
+<a href=#112 id=112 data-nosnippet>112</a>	</span>=&gt;
+<a href=#113 id=113 data-nosnippet>113</a>	SECURITY_NULL <span class="number">0x0000_0000
+<a href=#114 id=114 data-nosnippet>114</a>	</span>SECURITY_WORLD <span class="number">0x0000_0000
+<a href=#115 id=115 data-nosnippet>115</a>	</span>SECURITY_LOCAL <span class="number">0x0000_0000
+<a href=#116 id=116 data-nosnippet>116</a>	</span>SECURITY_LOCAL_LOGON <span class="number">0x0000_0001
+<a href=#117 id=117 data-nosnippet>117</a>	</span>SECURITY_CREATOR_OWNER <span class="number">0x0000_0000
+<a href=#118 id=118 data-nosnippet>118</a>	</span>SECURITY_CREATOR_GROUP <span class="number">0x0000_0001
+<a href=#119 id=119 data-nosnippet>119</a>	</span>SECURITY_CREATOR_OWNER_SERVER <span class="number">0x0000_0002
+<a href=#120 id=120 data-nosnippet>120</a>	</span>SECURITY_CREATOR_GROUP_SERVER <span class="number">0x0000_0003
+<a href=#121 id=121 data-nosnippet>121</a>	</span>SECURITY_CREATOR_OWNER_RIGHTS <span class="number">0x0000_0004
+<a href=#122 id=122 data-nosnippet>122</a>
+<a href=#123 id=123 data-nosnippet>123</a>	</span>SECURITY_DIALUP <span class="number">0x0000_0001
+<a href=#124 id=124 data-nosnippet>124</a>	</span>SECURITY_NETWORK <span class="number">0x0000_0002
+<a href=#125 id=125 data-nosnippet>125</a>	</span>SECURITY_BATCH <span class="number">0x0000_0003
+<a href=#126 id=126 data-nosnippet>126</a>	</span>SECURITY_INTERACTIVE <span class="number">0x0000_0004
+<a href=#127 id=127 data-nosnippet>127</a>	</span>SECURITY_LOGON_IDS <span class="number">0x0000_0005
+<a href=#128 id=128 data-nosnippet>128</a>	</span>SECURITY_SERVICE <span class="number">0x0000_0006
+<a href=#129 id=129 data-nosnippet>129</a>	</span>SECURITY_ANONYMOUS_LOGON <span class="number">0x0000_0007
+<a href=#130 id=130 data-nosnippet>130</a>	</span>SECURITY_PROXY <span class="number">0x0000_0008
+<a href=#131 id=131 data-nosnippet>131</a>	</span>SECURITY_ENTERPRISE_CONTROLLERS <span class="number">0x00000_009
+<a href=#132 id=132 data-nosnippet>132</a>	</span>SECURITY_SERVER_LOGON <span class="self">Self</span>::SECURITY_ENTERPRISE_CONTROLLERS.<span class="number">0
+<a href=#133 id=133 data-nosnippet>133</a>	</span>SECURITY_PRINCIPAL_SELF <span class="number">0x0000_000a
+<a href=#134 id=134 data-nosnippet>134</a>	</span>SECURITY_AUTHENTICATED_USER <span class="number">0x0000_000b
+<a href=#135 id=135 data-nosnippet>135</a>	</span>SECURITY_RESTRICTED_CODE <span class="number">0x0000_000c
+<a href=#136 id=136 data-nosnippet>136</a>	</span>SECURITY_TERMINAL_SERVER <span class="number">0x0000_000d
+<a href=#137 id=137 data-nosnippet>137</a>	</span>SECURITY_REMOTE_LOGON <span class="number">0x0000_000e
+<a href=#138 id=138 data-nosnippet>138</a>	</span>SECURITY_THIS_ORGANIZATION <span class="number">0x0000_000f
+<a href=#139 id=139 data-nosnippet>139</a>	</span>SECURITY_IUSER <span class="number">0x0000_0011
+<a href=#140 id=140 data-nosnippet>140</a>	</span>SECURITY_LOCAL_SYSTEM <span class="number">0x0000_0012
+<a href=#141 id=141 data-nosnippet>141</a>	</span>SECURITY_LOCAL_SERVICE <span class="number">0x0000_0013
+<a href=#142 id=142 data-nosnippet>142</a>	</span>SECURITY_NETWORK_SERVICE <span class="number">0x0000_0014
+<a href=#143 id=143 data-nosnippet>143</a>	</span>SECURITY_NT_NON_UNIQUE <span class="number">0x0000_0015
+<a href=#144 id=144 data-nosnippet>144</a>	</span>SECURITY_ENTERPRISE_READONLY_CONTROLLERS <span class="number">0x0000_0016
+<a href=#145 id=145 data-nosnippet>145</a>	</span>SECURITY_BUILTIN_DOMAIN <span class="number">0x0000_0020
+<a href=#146 id=146 data-nosnippet>146</a>	</span>SECURITY_WRITE_RESTRICTED_CODE <span class="number">0x0000_0021
+<a href=#147 id=147 data-nosnippet>147</a>	</span>SECURITY_PACKAGE_BASE <span class="number">0x0000_0040
+<a href=#148 id=148 data-nosnippet>148</a>	</span>SECURITY_PACKAGE_NTLM <span class="number">0x0000_000a
+<a href=#149 id=149 data-nosnippet>149</a>	</span>SECURITY_PACKAGE_SCHANNEL <span class="number">0x0000_000e
+<a href=#150 id=150 data-nosnippet>150</a>	</span>SECURITY_PACKAGE_DIGEST <span class="number">0x0000_0015
+<a href=#151 id=151 data-nosnippet>151</a>	</span>SECURITY_CRED_TYPE_BASE <span class="number">0x0000_0041
+<a href=#152 id=152 data-nosnippet>152</a>	</span>SECURITY_CRED_TYPE_THIS_ORG_CERT <span class="number">0x0000_0001
+<a href=#153 id=153 data-nosnippet>153</a>	</span>SECURITY_MIN_BASE <span class="number">0x0000_0050
+<a href=#154 id=154 data-nosnippet>154</a>	</span>SECURITY_SERVICE_ID_BASE <span class="number">0x0000_0050
+<a href=#155 id=155 data-nosnippet>155</a>	</span>SECURITY_RESERVED_ID_BASE <span class="number">0x0000_0051
+<a href=#156 id=156 data-nosnippet>156</a>	</span>SECURITY_APPPOOL_ID_BASE <span class="number">0x0000_0052
+<a href=#157 id=157 data-nosnippet>157</a>	</span>SECURITY_VIRTUALSERVER_ID_BASE <span class="number">0x0000_0053
+<a href=#158 id=158 data-nosnippet>158</a>	</span>SECURITY_USERMODEDRIVERHOST_ID_BASE <span class="number">0x0000_0054
+<a href=#159 id=159 data-nosnippet>159</a>	</span>SECURITY_CLOUD_INFRASTRUCTURE_SERVICES_ID_BASE <span class="number">0x0000_0055
+<a href=#160 id=160 data-nosnippet>160</a>	</span>SECURITY_WMIHOST_ID_BASE <span class="number">0x0000_0056
+<a href=#161 id=161 data-nosnippet>161</a>	</span>SECURITY_TASK_ID_BASE <span class="number">0x0000_0057
+<a href=#162 id=162 data-nosnippet>162</a>	</span>SECURITY_NFS_ID_BASE <span class="number">0x0000_0058
+<a href=#163 id=163 data-nosnippet>163</a>	</span>SECURITY_COM_ID_BASE <span class="number">0x0000_0059
+<a href=#164 id=164 data-nosnippet>164</a>	</span>SECURITY_WINDOW_MANAGER_BASE <span class="number">0x0000_005a
+<a href=#165 id=165 data-nosnippet>165</a>	</span>SECURITY_RDV_GFX_BASE <span class="number">0x0000_005b
+<a href=#166 id=166 data-nosnippet>166</a>	</span>SECURITY_DASHOST_ID_BASE <span class="number">0x0000_005c
+<a href=#167 id=167 data-nosnippet>167</a>	</span>SECURITY_USERMANAGER_ID_BASE <span class="number">0x0000_005d
+<a href=#168 id=168 data-nosnippet>168</a>	</span>SECURITY_WINRM_ID_BASE <span class="number">0x0000_005e
+<a href=#169 id=169 data-nosnippet>169</a>	</span>SECURITY_CCG_ID_BASE <span class="number">0x0000_005f
+<a href=#170 id=170 data-nosnippet>170</a>	</span>SECURITY_UMFD_BASE <span class="number">0x0000_0060
+<a href=#171 id=171 data-nosnippet>171</a>	</span>SECURITY_MAX_BASE <span class="number">0x0000_006f
+<a href=#172 id=172 data-nosnippet>172</a>	</span>SECURITY_MAX_ALWAYS_FILTERED <span class="number">0x0000_03e7
+<a href=#173 id=173 data-nosnippet>173</a>	</span>SECURITY_MIN_NEVER_FILTERED <span class="number">0x0000_03e8
+<a href=#174 id=174 data-nosnippet>174</a>	</span>SECURITY_OTHER_ORGANIZATION <span class="number">0x0000_03e8
+<a href=#175 id=175 data-nosnippet>175</a>	</span>SECURITY_WINDOWSMOBILE_ID_BASE <span class="number">0x0000_0070
+<a href=#176 id=176 data-nosnippet>176</a>	</span>SECURITY_LOCAL_ACCOUNT <span class="number">0x0000_0071
+<a href=#177 id=177 data-nosnippet>177</a>	</span>SECURITY_LOCAL_ACCOUNT_AND_ADMIN <span class="number">0x0000_0072
+<a href=#178 id=178 data-nosnippet>178</a>
+<a href=#179 id=179 data-nosnippet>179</a>	</span>DOMAIN_GROUP_AUTHORIZATION_DATA_IS_COMPOUNDED <span class="number">0x0000_01f0
+<a href=#180 id=180 data-nosnippet>180</a>	</span>DOMAIN_GROUP_AUTHORIZATION_DATA_CONTAINS_CLAIMS <span class="number">0x0000_01f1
+<a href=#181 id=181 data-nosnippet>181</a>	</span>DOMAIN_GROUP_ENTERPRISE_READONLY_DOMAIN_CONTROLLERS <span class="number">0x0000_01f2
+<a href=#182 id=182 data-nosnippet>182</a>	</span>DOMAIN_USER_ADMIn <span class="number">0x0000_01f4
+<a href=#183 id=183 data-nosnippet>183</a>	</span>DOMAIN_USER_GUEST <span class="number">0x0000_01f5
+<a href=#184 id=184 data-nosnippet>184</a>	</span>DOMAIN_USER_KRBTGT <span class="number">0x0000_01f6
+<a href=#185 id=185 data-nosnippet>185</a>	</span>DOMAIN_USER_DEFAULT_ACCOUNT <span class="number">0x0000_01f7
+<a href=#186 id=186 data-nosnippet>186</a>	</span>DOMAIN_USER_WDAG_ACCOUNT <span class="number">0x0000_01f8
+<a href=#187 id=187 data-nosnippet>187</a>	</span>DOMAIN_GROUP_ADMINS <span class="number">0x0000_0200
+<a href=#188 id=188 data-nosnippet>188</a>	</span>DOMAIN_GROUP_USERS <span class="number">0x0000_0201
+<a href=#189 id=189 data-nosnippet>189</a>	</span>DOMAIN_GROUP_GUESTS <span class="number">0x0000_0202
+<a href=#190 id=190 data-nosnippet>190</a>	</span>DOMAIN_GROUP_COMPUTERS <span class="number">0x0000_0203
+<a href=#191 id=191 data-nosnippet>191</a>	</span>DOMAIN_GROUP_CONTROLLERS <span class="number">0x0000_0204
+<a href=#192 id=192 data-nosnippet>192</a>	</span>DOMAIN_GROUP_CERT_ADMINS <span class="number">0x0000_0205
+<a href=#193 id=193 data-nosnippet>193</a>	</span>DOMAIN_GROUP_SCHEMA_ADMINS <span class="number">0x0000_0206
+<a href=#194 id=194 data-nosnippet>194</a>	</span>DOMAIN_GROUP_ENTERPRISE_ADMINS <span class="number">0x0000_0207
+<a href=#195 id=195 data-nosnippet>195</a>	</span>DOMAIN_GROUP_POLICY_ADMINS <span class="number">0x0000_0208
+<a href=#196 id=196 data-nosnippet>196</a>	</span>DOMAIN_GROUP_READONLY_CONTROLLERS <span class="number">0x0000_0209
+<a href=#197 id=197 data-nosnippet>197</a>	</span>DOMAIN_GROUP_CLONEABLE_CONTROLLERS <span class="number">0x0000_020a
+<a href=#198 id=198 data-nosnippet>198</a>	</span>DOMAIN_GROUP_CDC_RESERVED <span class="number">0x0000_020c
+<a href=#199 id=199 data-nosnippet>199</a>	</span>DOMAIN_GROUP_PROTECTED_USERS <span class="number">0x0000_020d
+<a href=#200 id=200 data-nosnippet>200</a>	</span>DOMAIN_GROUP_KEY_ADMINS <span class="number">0x0000_020e
+<a href=#201 id=201 data-nosnippet>201</a>	</span>DOMAIN_GROUP_ENTERPRISE_KEY_ADMINS <span class="number">0x0000_020f
+<a href=#202 id=202 data-nosnippet>202</a>	</span>DOMAIN_ALIAS_ADMINS <span class="number">0x0000_0220
+<a href=#203 id=203 data-nosnippet>203</a>	</span>DOMAIN_ALIAS_USERS <span class="number">0x0000_0221
+<a href=#204 id=204 data-nosnippet>204</a>	</span>DOMAIN_ALIAS_GUESTS <span class="number">0x0000_0222
+<a href=#205 id=205 data-nosnippet>205</a>	</span>DOMAIN_ALIAS_POWER_USERS <span class="number">0x0000_0223
+<a href=#206 id=206 data-nosnippet>206</a>	</span>DOMAIN_ALIAS_ACCOUNT_OPS <span class="number">0x0000_0224
+<a href=#207 id=207 data-nosnippet>207</a>	</span>DOMAIN_ALIAS_SYSTEM_OPS <span class="number">0x0000_0225
+<a href=#208 id=208 data-nosnippet>208</a>	</span>DOMAIN_ALIAS_PRINT_OPS <span class="number">0x0000_0226
+<a href=#209 id=209 data-nosnippet>209</a>	</span>DOMAIN_ALIAS_BACKUP_OPS <span class="number">0x0000_0227
+<a href=#210 id=210 data-nosnippet>210</a>	</span>DOMAIN_ALIAS_REPLICATOR <span class="number">0x0000_0228
+<a href=#211 id=211 data-nosnippet>211</a>	</span>DOMAIN_ALIAS_RAS_SERVERS <span class="number">0x0000_0229
+<a href=#212 id=212 data-nosnippet>212</a>	</span>DOMAIN_ALIAS_PREW2KCOMPACCESS <span class="number">0x0000_022a
+<a href=#213 id=213 data-nosnippet>213</a>	</span>DOMAIN_ALIAS_REMOTE_DESKTOP_USERS <span class="number">0x0000_022b
+<a href=#214 id=214 data-nosnippet>214</a>	</span>DOMAIN_ALIAS_NETWORK_CONFIGURATION_OPS <span class="number">0x0000_022c
+<a href=#215 id=215 data-nosnippet>215</a>	</span>DOMAIN_ALIAS_INCOMING_FOREST_TRUST_BUILDERS <span class="number">0x0000_022d
+<a href=#216 id=216 data-nosnippet>216</a>	</span>DOMAIN_ALIAS_MONITORING_USERS <span class="number">0x0000_022e
+<a href=#217 id=217 data-nosnippet>217</a>	</span>DOMAIN_ALIAS_LOGGING_USERS <span class="number">0x0000_022f
+<a href=#218 id=218 data-nosnippet>218</a>	</span>DOMAIN_ALIAS_AUTHORIZATIONACCESS <span class="number">0x0000_0230
+<a href=#219 id=219 data-nosnippet>219</a>	</span>DOMAIN_ALIAS_TS_LICENSE_SERVERS <span class="number">0x0000_0231
+<a href=#220 id=220 data-nosnippet>220</a>	</span>DOMAIN_ALIAS_DCOM_USERS <span class="number">0x0000_0232
+<a href=#221 id=221 data-nosnippet>221</a>	</span>DOMAIN_ALIAS_IUSERS <span class="number">0x0000_0238
+<a href=#222 id=222 data-nosnippet>222</a>	</span>DOMAIN_ALIAS_CRYPTO_OPERATORS <span class="number">0x0000_0239
+<a href=#223 id=223 data-nosnippet>223</a>	</span>DOMAIN_ALIAS_CACHEABLE_PRINCIPALS_GROUP <span class="number">0x0000_023b
+<a href=#224 id=224 data-nosnippet>224</a>	</span>DOMAIN_ALIAS_NON_CACHEABLE_PRINCIPALS_GROUP <span class="number">0x0000_023c
+<a href=#225 id=225 data-nosnippet>225</a>	</span>DOMAIN_ALIAS_EVENT_LOG_READERS_GROUP <span class="number">0x0000_023d
+<a href=#226 id=226 data-nosnippet>226</a>	</span>DOMAIN_ALIAS_CERTSVC_DCOM_ACCESS_GROUP <span class="number">0x0000_023e
+<a href=#227 id=227 data-nosnippet>227</a>	</span>DOMAIN_ALIAS_RDS_REMOTE_ACCESS_SERVERS <span class="number">0x0000_023f
+<a href=#228 id=228 data-nosnippet>228</a>	</span>DOMAIN_ALIAS_RDS_ENDPOINT_SERVERS <span class="number">0x0000_0240
+<a href=#229 id=229 data-nosnippet>229</a>	</span>DOMAIN_ALIAS_RDS_MANAGEMENT_SERVERS <span class="number">0x0000_0241
+<a href=#230 id=230 data-nosnippet>230</a>	</span>DOMAIN_ALIAS_HYPER_V_ADMINS <span class="number">0x0000_0242
+<a href=#231 id=231 data-nosnippet>231</a>	</span>DOMAIN_ALIAS_ACCESS_CONTROL_ASSISTANCE_OPS <span class="number">0x0000_0243
+<a href=#232 id=232 data-nosnippet>232</a>	</span>DOMAIN_ALIAS_REMOTE_MANAGEMENT_USERS <span class="number">0x0000_0244
+<a href=#233 id=233 data-nosnippet>233</a>	</span>DOMAIN_ALIAS_DEFAULT_ACCOUNT <span class="number">0x0000_0245
+<a href=#234 id=234 data-nosnippet>234</a>	</span>DOMAIN_ALIAS_STORAGE_REPLICA_ADMINS <span class="number">0x0000_0246
+<a href=#235 id=235 data-nosnippet>235</a>	</span>DOMAIN_ALIAS_DEVICE_OWNERS <span class="number">0x0000_0247
+<a href=#236 id=236 data-nosnippet>236</a>	</span>SECURITY_APP_PACKAGE_BASE <span class="number">0x0000_0002
+<a href=#237 id=237 data-nosnippet>237</a>	</span>SECURITY_CAPABILITY_BASE <span class="number">0x0000_0003
+<a href=#238 id=238 data-nosnippet>238</a>	</span>SECURITY_CAPABILITY_APP <span class="number">0x00000_0400
+<a href=#239 id=239 data-nosnippet>239</a>	</span>SECURITY_BUILTIN_PACKAGE_ANY_PACKAGE <span class="number">0x0000_0001
+<a href=#240 id=240 data-nosnippet>240</a>	</span>SECURITY_BUILTIN_PACKAGE_ANY_RESTRICTED_PACKAGE <span class="number">0x0000_0002
+<a href=#241 id=241 data-nosnippet>241</a>	</span>SECURITY_CAPABILITY_INTERNET_CLIENT <span class="number">0x0000_0001
+<a href=#242 id=242 data-nosnippet>242</a>	</span>SECURITY_CAPABILITY_INTERNET_CLIENT_SERVER <span class="number">0x0000_0002
+<a href=#243 id=243 data-nosnippet>243</a>	</span>SECURITY_CAPABILITY_PRIVATE_NETWORK_CLIENT_SERVER <span class="number">0x0000_0003
+<a href=#244 id=244 data-nosnippet>244</a>	</span>SECURITY_CAPABILITY_PICTURES_LIBRARY <span class="number">0x0000_0004
+<a href=#245 id=245 data-nosnippet>245</a>	</span>SECURITY_CAPABILITY_VIDEOS_LIBRARY <span class="number">0x0000_0005
+<a href=#246 id=246 data-nosnippet>246</a>	</span>SECURITY_CAPABILITY_MUSIC_LIBRARY <span class="number">0x0000_0006
+<a href=#247 id=247 data-nosnippet>247</a>	</span>SECURITY_CAPABILITY_DOCUMENTS_LIBRARY <span class="number">0x0000_0007
+<a href=#248 id=248 data-nosnippet>248</a>	</span>SECURITY_CAPABILITY_ENTERPRISE_AUTHENTICATION <span class="number">0x0000_0008
+<a href=#249 id=249 data-nosnippet>249</a>	</span>SECURITY_CAPABILITY_SHARED_USER_CERTIFICATES <span class="number">0x0000_0009
+<a href=#250 id=250 data-nosnippet>250</a>	</span>SECURITY_CAPABILITY_REMOVABLE_STORAGE <span class="number">0x0000_000a
+<a href=#251 id=251 data-nosnippet>251</a>	</span>SECURITY_CAPABILITY_APPOINTMENTS <span class="number">0x0000_000b
+<a href=#252 id=252 data-nosnippet>252</a>	</span>SECURITY_CAPABILITY_CONTACTS <span class="number">0x0000_000c
+<a href=#253 id=253 data-nosnippet>253</a>	</span>SECURITY_CAPABILITY_INTERNET_EXPLORER <span class="number">0x0000_1000
+<a href=#254 id=254 data-nosnippet>254</a>	</span>SECURITY_AUTHENTICATION_AUTHORITY_ASSERTED <span class="number">0x0000_0001
+<a href=#255 id=255 data-nosnippet>255</a>	</span>SECURITY_AUTHENTICATION_SERVICE_ASSERTED <span class="number">0x0000_0002
+<a href=#256 id=256 data-nosnippet>256</a>	</span>SECURITY_AUTHENTICATION_FRESH_KEY_AUTH <span class="number">0x0000_0003
+<a href=#257 id=257 data-nosnippet>257</a>	</span>SECURITY_AUTHENTICATION_KEY_TRUST <span class="number">0x0000_0004
+<a href=#258 id=258 data-nosnippet>258</a>	</span>SECURITY_AUTHENTICATION_KEY_PROPERTY_MFA <span class="number">0x0000_0005
+<a href=#259 id=259 data-nosnippet>259</a>	</span>SECURITY_AUTHENTICATION_KEY_PROPERTY_ATTESTATION <span class="number">0x0000_0006
+<a href=#260 id=260 data-nosnippet>260</a>	</span>SECURITY_PROCESS_PROTECTION_TYPE_FULL <span class="number">0x0000_0400
+<a href=#261 id=261 data-nosnippet>261</a>	</span>SECURITY_PROCESS_PROTECTION_TYPE_LITE <span class="number">0x0000_0200
+<a href=#262 id=262 data-nosnippet>262</a>	</span>SECURITY_PROCESS_PROTECTION_TYPE_NONE <span class="number">0x0000_0000
+<a href=#263 id=263 data-nosnippet>263</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_WINTCB <span class="number">0x0000_2000
+<a href=#264 id=264 data-nosnippet>264</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_WINDOWS <span class="number">0x0000_1000
+<a href=#265 id=265 data-nosnippet>265</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_APP <span class="number">0x0000_0800
+<a href=#266 id=266 data-nosnippet>266</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_ANTIMALWARE <span class="number">0x0000_0600
+<a href=#267 id=267 data-nosnippet>267</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_AUTHENTICODE <span class="number">0x0000_0400
+<a href=#268 id=268 data-nosnippet>268</a>	</span>SECURITY_PROCESS_PROTECTION_LEVEL_NONE <span class="number">0x0000_0000
+<a href=#269 id=269 data-nosnippet>269</a>	</span>SECURITY_TRUSTED_INSTALLER_1 <span class="number">9_5600_8885
+<a href=#270 id=270 data-nosnippet>270</a>	</span>SECURITY_TRUSTED_INSTALLER_2 <span class="number">34_1852_2649
+<a href=#271 id=271 data-nosnippet>271</a>	</span>SECURITY_TRUSTED_INSTALLER_3 <span class="number">18_3103_8044
+<a href=#272 id=272 data-nosnippet>272</a>	</span>SECURITY_TRUSTED_INSTALLER_4 <span class="number">18_5329_2631
+<a href=#273 id=273 data-nosnippet>273</a>	</span>SECURITY_TRUSTED_INSTALLER_5 <span class="number">22_7147_8464
+<a href=#274 id=274 data-nosnippet>274</a></span>}
+<a href=#275 id=275 data-nosnippet>275</a>
+<a href=#276 id=276 data-nosnippet>276</a><span class="macro">const_bitflag!</span> { RRF: u32;
+<a href=#277 id=277 data-nosnippet>277</a>	<span class="doccomment">/// [`HKEY::GetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
+<a href=#278 id=278 data-nosnippet>278</a>	</span>=&gt;
+<a href=#279 id=279 data-nosnippet>279</a>	RT_REG_NONE <span class="number">0x0000_0001
+<a href=#280 id=280 data-nosnippet>280</a>	</span>RT_REG_SZ <span class="number">0x0000_0002
+<a href=#281 id=281 data-nosnippet>281</a>	</span>RT_REG_EXPAND_SZ <span class="number">0x0000_0004
+<a href=#282 id=282 data-nosnippet>282</a>	</span>RT_REG_BINARY <span class="number">0x0000_0008
+<a href=#283 id=283 data-nosnippet>283</a>	</span>RT_REG_DWORD <span class="number">0x0000_0010
+<a href=#284 id=284 data-nosnippet>284</a>	</span>RT_REG_MULTI_SZ <span class="number">0x0000_0020
+<a href=#285 id=285 data-nosnippet>285</a>	</span>RT_REG_QWORD <span class="number">0x0000_0040
+<a href=#286 id=286 data-nosnippet>286</a>	</span>RT_DWORD <span class="self">Self</span>::RT_REG_BINARY.<span class="number">0 </span>| <span class="self">Self</span>::RT_REG_DWORD.<span class="number">0
+<a href=#287 id=287 data-nosnippet>287</a>	</span>RT_QWORD <span class="self">Self</span>::RT_REG_BINARY.<span class="number">0 </span>| <span class="self">Self</span>::RT_REG_QWORD.<span class="number">0
+<a href=#288 id=288 data-nosnippet>288</a>	</span>RT_ANY <span class="number">0x0000_ffff
+<a href=#289 id=289 data-nosnippet>289</a>
+<a href=#290 id=290 data-nosnippet>290</a>	</span>SUBKEY_WOW6464KEY <span class="number">0x0001_0000
+<a href=#291 id=291 data-nosnippet>291</a>	</span>SUBKEY_WOW6432KEY <span class="number">0x0002_0000
+<a href=#292 id=292 data-nosnippet>292</a>	</span>WOW64_MASK <span class="number">0x0003_0000
+<a href=#293 id=293 data-nosnippet>293</a>
+<a href=#294 id=294 data-nosnippet>294</a>	</span>NOEXPAND <span class="number">0x1000_0000
+<a href=#295 id=295 data-nosnippet>295</a>	</span>ZEROONFAILURE <span class="number">0x2000_0000
+<a href=#296 id=296 data-nosnippet>296</a></span>}
+<a href=#297 id=297 data-nosnippet>297</a>
+<a href=#298 id=298 data-nosnippet>298</a><span class="macro">const_bitflag!</span> { SC_MANAGER: u32;
+<a href=#299 id=299 data-nosnippet>299</a>	<span class="doccomment">/// Service Control Manager access rights
+<a href=#300 id=300 data-nosnippet>300</a>	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
+<a href=#301 id=301 data-nosnippet>301</a>	/// (`u32`).
+<a href=#302 id=302 data-nosnippet>302</a>	</span>=&gt;
+<a href=#303 id=303 data-nosnippet>303</a>	ALL_ACCESS <span class="number">0xf003f
+<a href=#304 id=304 data-nosnippet>304</a>	</span>CREATE_SERVICE <span class="number">0x0002
+<a href=#305 id=305 data-nosnippet>305</a>	</span>CONNECT <span class="number">0x0001
+<a href=#306 id=306 data-nosnippet>306</a>	</span>ENUMERATE_SERVICE <span class="number">0x0004
+<a href=#307 id=307 data-nosnippet>307</a>	</span>LOCK <span class="number">0x0008
+<a href=#308 id=308 data-nosnippet>308</a>	</span>MODIFY_BOOT_CONFIG <span class="number">0x0020
+<a href=#309 id=309 data-nosnippet>309</a>	</span>QUERY_LOCK_STATUS <span class="number">0x0010
+<a href=#310 id=310 data-nosnippet>310</a>
+<a href=#311 id=311 data-nosnippet>311</a>	</span>GENERIC_READ STANDARD_RIGHTS::READ.raw() | <span class="self">Self</span>::ENUMERATE_SERVICE.<span class="number">0 </span>| <span class="self">Self</span>::QUERY_LOCK_STATUS.<span class="number">0
+<a href=#312 id=312 data-nosnippet>312</a>	</span>GENERIC_WRITE STANDARD_RIGHTS::WRITE.raw() | <span class="self">Self</span>::CREATE_SERVICE.<span class="number">0 </span>| <span class="self">Self</span>::MODIFY_BOOT_CONFIG.<span class="number">0
+<a href=#313 id=313 data-nosnippet>313</a>	</span>GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.raw() | <span class="self">Self</span>::CONNECT.<span class="number">0 </span>| <span class="self">Self</span>::LOCK.<span class="number">0
+<a href=#314 id=314 data-nosnippet>314</a>	</span>GENERIC_ALL <span class="self">Self</span>::ALL_ACCESS.<span class="number">0
+<a href=#315 id=315 data-nosnippet>315</a></span>}
+<a href=#316 id=316 data-nosnippet>316</a>
+<a href=#317 id=317 data-nosnippet>317</a><span class="macro">const_str!</span> { SE_PRIV;
+<a href=#318 id=318 data-nosnippet>318</a>	<span class="doccomment">/// [Privilege constants](https://learn.microsoft.com/en-us/windows/win32/secauthz/privilege-constants)
+<a href=#319 id=319 data-nosnippet>319</a>	/// (`&amp;'static str`).
+<a href=#320 id=320 data-nosnippet>320</a>	///
+<a href=#321 id=321 data-nosnippet>321</a>	/// Originally has `SE` prefix.
+<a href=#322 id=322 data-nosnippet>322</a>	</span>=&gt;
+<a href=#323 id=323 data-nosnippet>323</a>	CREATE_TOKEN_NAME <span class="string">"SeCreateTokenPrivilege"
+<a href=#324 id=324 data-nosnippet>324</a>	</span>ASSIGNPRIMARYTOKEN_NAME <span class="string">"SeAssignPrimaryTokenPrivilege"
+<a href=#325 id=325 data-nosnippet>325</a>	</span>LOCK_MEMORY_NAME <span class="string">"SeLockMemoryPrivilege"
+<a href=#326 id=326 data-nosnippet>326</a>	</span>INCREASE_QUOTA_NAME <span class="string">"SeIncreaseQuotaPrivilege"
+<a href=#327 id=327 data-nosnippet>327</a>	</span>UNSOLICITED_INPUT_NAME <span class="string">"SeUnsolicitedInputPrivilege"
+<a href=#328 id=328 data-nosnippet>328</a>	</span>MACHINE_ACCOUNT_NAME <span class="string">"SeMachineAccountPrivilege"
+<a href=#329 id=329 data-nosnippet>329</a>	</span>TCB_NAME <span class="string">"SeTcbPrivilege"
+<a href=#330 id=330 data-nosnippet>330</a>	</span>SECURITY_NAME <span class="string">"SeSecurityPrivilege"
+<a href=#331 id=331 data-nosnippet>331</a>	</span>TAKE_OWNERSHIP_NAME <span class="string">"SeTakeOwnershipPrivilege"
+<a href=#332 id=332 data-nosnippet>332</a>	</span>LOAD_DRIVER_NAME <span class="string">"SeLoadDriverPrivilege"
+<a href=#333 id=333 data-nosnippet>333</a>	</span>SYSTEM_PROFILE_NAME <span class="string">"SeSystemProfilePrivilege"
+<a href=#334 id=334 data-nosnippet>334</a>	</span>SYSTEMTIME_NAME <span class="string">"SeSystemtimePrivilege"
+<a href=#335 id=335 data-nosnippet>335</a>	</span>PROF_SINGLE_PROCESS_NAME <span class="string">"SeProfileSingleProcessPrivilege"
+<a href=#336 id=336 data-nosnippet>336</a>	</span>INC_BASE_PRIORITY_NAME <span class="string">"SeIncreaseBasePriorityPrivilege"
+<a href=#337 id=337 data-nosnippet>337</a>	</span>CREATE_PAGEFILE_NAME <span class="string">"SeCreatePagefilePrivilege"
+<a href=#338 id=338 data-nosnippet>338</a>	</span>CREATE_PERMANENT_NAME <span class="string">"SeCreatePermanentPrivilege"
+<a href=#339 id=339 data-nosnippet>339</a>	</span>BACKUP_NAME <span class="string">"SeBackupPrivilege"
+<a href=#340 id=340 data-nosnippet>340</a>	</span>RESTORE_NAME <span class="string">"SeRestorePrivilege"
+<a href=#341 id=341 data-nosnippet>341</a>	</span>SHUTDOWN_NAME <span class="string">"SeShutdownPrivilege"
+<a href=#342 id=342 data-nosnippet>342</a>	</span>DEBUG_NAME <span class="string">"SeDebugPrivilege"
+<a href=#343 id=343 data-nosnippet>343</a>	</span>AUDIT_NAME <span class="string">"SeAuditPrivilege"
+<a href=#344 id=344 data-nosnippet>344</a>	</span>SYSTEM_ENVIRONMENT_NAME <span class="string">"SeSystemEnvironmentPrivilege"
+<a href=#345 id=345 data-nosnippet>345</a>	</span>CHANGE_NOTIFY_NAME <span class="string">"SeChangeNotifyPrivilege"
+<a href=#346 id=346 data-nosnippet>346</a>	</span>REMOTE_SHUTDOWN_NAME <span class="string">"SeRemoteShutdownPrivilege"
+<a href=#347 id=347 data-nosnippet>347</a>	</span>UNDOCK_NAME <span class="string">"SeUndockPrivilege"
+<a href=#348 id=348 data-nosnippet>348</a>	</span>SYNC_AGENT_NAME <span class="string">"SeSyncAgentPrivilege"
+<a href=#349 id=349 data-nosnippet>349</a>	</span>ENABLE_DELEGATION_NAME <span class="string">"SeEnableDelegationPrivilege"
+<a href=#350 id=350 data-nosnippet>350</a>	</span>MANAGE_VOLUME_NAME <span class="string">"SeManageVolumePrivilege"
+<a href=#351 id=351 data-nosnippet>351</a>	</span>IMPERSONATE_NAME <span class="string">"SeImpersonatePrivilege"
+<a href=#352 id=352 data-nosnippet>352</a>	</span>CREATE_GLOBAL_NAME <span class="string">"SeCreateGlobalPrivilege"
+<a href=#353 id=353 data-nosnippet>353</a>	</span>TRUSTED_CREDMAN_ACCESS_NAME <span class="string">"SeTrustedCredManAccessPrivilege"
+<a href=#354 id=354 data-nosnippet>354</a>	</span>RELABEL_NAME <span class="string">"SeRelabelPrivilege"
+<a href=#355 id=355 data-nosnippet>355</a>	</span>INC_WORKING_SET_NAME <span class="string">"SeIncreaseWorkingSetPrivilege"
+<a href=#356 id=356 data-nosnippet>356</a>	</span>TIME_ZONE_NAME <span class="string">"SeTimeZonePrivilege"
+<a href=#357 id=357 data-nosnippet>357</a>	</span>CREATE_SYMBOLIC_LINK_NAME <span class="string">"SeCreateSymbolicLinkPrivilege"
+<a href=#358 id=358 data-nosnippet>358</a>	</span>DELEGATE_SESSION_USER_IMPERSONATE_NAME <span class="string">"SeDelegateSessionUserImpersonatePrivilege"
+<a href=#359 id=359 data-nosnippet>359</a></span>}
+<a href=#360 id=360 data-nosnippet>360</a>
+<a href=#361 id=361 data-nosnippet>361</a><span class="macro">const_bitflag!</span> { SE_PRIV_ATTR: u32;
+<a href=#362 id=362 data-nosnippet>362</a>	<span class="doccomment">/// [Privilege attributes](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
+<a href=#363 id=363 data-nosnippet>363</a>	/// (`u32`).
+<a href=#364 id=364 data-nosnippet>364</a>	///
+<a href=#365 id=365 data-nosnippet>365</a>	/// Originally has `SE_PRIVILEGE` prefix.
+<a href=#366 id=366 data-nosnippet>366</a>	</span>=&gt;
+<a href=#367 id=367 data-nosnippet>367</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#368 id=368 data-nosnippet>368</a>	</span>NoValue <span class="number">0
+<a href=#369 id=369 data-nosnippet>369</a>	</span>ENABLED_BY_DEFAULT <span class="number">0x0000_0001
+<a href=#370 id=370 data-nosnippet>370</a>	</span>ENABLED <span class="number">0x0000_0002
+<a href=#371 id=371 data-nosnippet>371</a>	</span>REMOVED <span class="number">0x0000_0004
+<a href=#372 id=372 data-nosnippet>372</a>	</span>USED_FOR_ACCESS <span class="number">0x8000_0000
+<a href=#373 id=373 data-nosnippet>373</a>	</span>VALID_ATTRIBUTES <span class="self">Self</span>::ENABLED_BY_DEFAULT.<span class="number">0 </span>| <span class="self">Self</span>::ENABLED.<span class="number">0 </span>| <span class="self">Self</span>::REMOVED.<span class="number">0 </span>| <span class="self">Self</span>::USED_FOR_ACCESS.<span class="number">0
+<a href=#374 id=374 data-nosnippet>374</a></span>}
+<a href=#375 id=375 data-nosnippet>375</a>
+<a href=#376 id=376 data-nosnippet>376</a><span class="macro">const_bitflag!</span> { SECURITY_IMPERSONATION: u32;
+<a href=#377 id=377 data-nosnippet>377</a>	<span class="doccomment">/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
+<a href=#378 id=378 data-nosnippet>378</a>	/// enumeration (`u32`).
+<a href=#379 id=379 data-nosnippet>379</a>	</span>=&gt;
+<a href=#380 id=380 data-nosnippet>380</a>	Anonymous <span class="number">0
+<a href=#381 id=381 data-nosnippet>381</a>	</span>Identification <span class="number">1
+<a href=#382 id=382 data-nosnippet>382</a>	</span>Impersonation <span class="number">2
+<a href=#383 id=383 data-nosnippet>383</a>	</span>Delegation <span class="number">3
+<a href=#384 id=384 data-nosnippet>384</a></span>}
+<a href=#385 id=385 data-nosnippet>385</a>
+<a href=#386 id=386 data-nosnippet>386</a><span class="macro">const_bitflag!</span> { SERVICE_ACCEPT: u32;
+<a href=#387 id=387 data-nosnippet>387</a>	<span class="doccomment">/// [`SERVICE_STATUS`](crate::SERVICE_STATUS) `dwControlsAccepted` (`u32`).
+<a href=#388 id=388 data-nosnippet>388</a>	</span>=&gt;
+<a href=#389 id=389 data-nosnippet>389</a>	NETBINDCHANGE <span class="number">0x0000_0010
+<a href=#390 id=390 data-nosnippet>390</a>	</span>PARAMCHANGE <span class="number">0x0000_0008
+<a href=#391 id=391 data-nosnippet>391</a>	</span>PAUSE_CONTINUE <span class="number">0x0000_0002
+<a href=#392 id=392 data-nosnippet>392</a>	</span>PRESHUTDOWN <span class="number">0x0000_0100
+<a href=#393 id=393 data-nosnippet>393</a>	</span>SHUTDOWN <span class="number">0x0000_0004
+<a href=#394 id=394 data-nosnippet>394</a>	</span>STOP <span class="number">0x0000_0001
+<a href=#395 id=395 data-nosnippet>395</a>	</span>HARDWAREPROFILECHANGE <span class="number">0x0000_0020
+<a href=#396 id=396 data-nosnippet>396</a>	</span>POWEREVENT <span class="number">0x0000_0040
+<a href=#397 id=397 data-nosnippet>397</a>	</span>SESSIONCHANGE <span class="number">0x0000_0080
+<a href=#398 id=398 data-nosnippet>398</a>	</span>TIMECHANGE <span class="number">0x0000_0200
+<a href=#399 id=399 data-nosnippet>399</a>	</span>TRIGGEREVENT <span class="number">0x0000_0400
+<a href=#400 id=400 data-nosnippet>400</a>	</span>USERMODEREBOOT <span class="number">0x0000_0800
+<a href=#401 id=401 data-nosnippet>401</a></span>}
+<a href=#402 id=402 data-nosnippet>402</a>
+<a href=#403 id=403 data-nosnippet>403</a><span class="macro">const_bitflag!</span> { SERVICE_CONTROL: u32;
+<a href=#404 id=404 data-nosnippet>404</a>	<span class="doccomment">/// [`LPHANDLER_FUNCTION_EX`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lphandler_function_ex)
+<a href=#405 id=405 data-nosnippet>405</a>	/// `dwControl` (`u32`).
+<a href=#406 id=406 data-nosnippet>406</a>	///
+<a href=#407 id=407 data-nosnippet>407</a>	/// Used within [`SvcCtl`](crate::SvcCtl) parsing.
+<a href=#408 id=408 data-nosnippet>408</a>	</span>=&gt;
+<a href=#409 id=409 data-nosnippet>409</a>	CONTINUE <span class="number">0x0000_0003
+<a href=#410 id=410 data-nosnippet>410</a>	</span>INTERROGATE <span class="number">0x0000_0004
+<a href=#411 id=411 data-nosnippet>411</a>	</span>NETBINDADD <span class="number">0x0000_0007
+<a href=#412 id=412 data-nosnippet>412</a>	</span>NETBINDDISABLE <span class="number">0x0000_000a
+<a href=#413 id=413 data-nosnippet>413</a>	</span>NETBINDENABLE <span class="number">0x0000_0009
+<a href=#414 id=414 data-nosnippet>414</a>	</span>NETBINDREMOVE <span class="number">0x0000_0008
+<a href=#415 id=415 data-nosnippet>415</a>	</span>PARAMCHANGE <span class="number">0x0000_0006
+<a href=#416 id=416 data-nosnippet>416</a>	</span>PAUSE <span class="number">0x0000_0002
+<a href=#417 id=417 data-nosnippet>417</a>	</span>PRESHUTDOWN <span class="number">0x0000_000f
+<a href=#418 id=418 data-nosnippet>418</a>	</span>SHUTDOWN <span class="number">0x0000_0005
+<a href=#419 id=419 data-nosnippet>419</a>	</span>STOP <span class="number">0x0000_0001
+<a href=#420 id=420 data-nosnippet>420</a>
+<a href=#421 id=421 data-nosnippet>421</a>	</span>DEVICEEVENT <span class="number">0x0000_000b
+<a href=#422 id=422 data-nosnippet>422</a>	</span>HARDWAREPROFILECHANGE <span class="number">0x0000_000c
+<a href=#423 id=423 data-nosnippet>423</a>	</span>POWEREVENT <span class="number">0x0000_000d
+<a href=#424 id=424 data-nosnippet>424</a>	</span>SESSIONCHANGE <span class="number">0x0000_000e
+<a href=#425 id=425 data-nosnippet>425</a>	</span>TIMECHANGE <span class="number">0x0000_0010
+<a href=#426 id=426 data-nosnippet>426</a>	</span>TRIGGEREVENT <span class="number">0x0000_0020
+<a href=#427 id=427 data-nosnippet>427</a>	</span>USERMODEREBOOT <span class="number">0x0000_0040
+<a href=#428 id=428 data-nosnippet>428</a></span>}
+<a href=#429 id=429 data-nosnippet>429</a>
+<a href=#430 id=430 data-nosnippet>430</a><span class="macro">const_ordinary!</span> { SERVICE_ERROR: u32;
+<a href=#431 id=431 data-nosnippet>431</a>	<span class="doccomment">/// [`HSC::CreateService`](crate::HSC::CreateService) `error_control`
+<a href=#432 id=432 data-nosnippet>432</a>	/// (`u32`).
+<a href=#433 id=433 data-nosnippet>433</a>	</span>=&gt;
+<a href=#434 id=434 data-nosnippet>434</a>	CRITICAL <span class="number">0x0000_0003
+<a href=#435 id=435 data-nosnippet>435</a>	</span>IGNORE <span class="number">0x0000_0000
+<a href=#436 id=436 data-nosnippet>436</a>	</span>NORMAL <span class="number">0x0000_0001
+<a href=#437 id=437 data-nosnippet>437</a>	</span>SEVERE <span class="number">0x0000_0002
+<a href=#438 id=438 data-nosnippet>438</a></span>}
+<a href=#439 id=439 data-nosnippet>439</a>
+<a href=#440 id=440 data-nosnippet>440</a><span class="macro">const_ordinary!</span> { SERVICE_START: u32;
+<a href=#441 id=441 data-nosnippet>441</a>	<span class="doccomment">/// [`HSC::CreateService`](crate::HSC::CreateService) `start_type` (`u32`).
+<a href=#442 id=442 data-nosnippet>442</a>	///
+<a href=#443 id=443 data-nosnippet>443</a>	/// Originally has `SERVICE` prefix.
+<a href=#444 id=444 data-nosnippet>444</a>	</span>=&gt;
+<a href=#445 id=445 data-nosnippet>445</a>	AUTO_START <span class="number">0x0000_0002
+<a href=#446 id=446 data-nosnippet>446</a>	</span>BOOT_START <span class="number">0x0000_0000
+<a href=#447 id=447 data-nosnippet>447</a>	</span>DEMAND_START <span class="number">0x0000_0003
+<a href=#448 id=448 data-nosnippet>448</a>	</span>DISABLED <span class="number">0x0000_0004
+<a href=#449 id=449 data-nosnippet>449</a>	</span>SYSTEM_START <span class="number">0x0000_0001
+<a href=#450 id=450 data-nosnippet>450</a></span>}
+<a href=#451 id=451 data-nosnippet>451</a>
+<a href=#452 id=452 data-nosnippet>452</a><span class="macro">const_ordinary!</span> { SERVICE_STATE: u32;
+<a href=#453 id=453 data-nosnippet>453</a>	<span class="doccomment">/// [`HSERVICESTATUS::SetServiceStatus`](crate::HSERVICESTATUS::SetServiceStatus)
+<a href=#454 id=454 data-nosnippet>454</a>	/// `current_state` (u32)
+<a href=#455 id=455 data-nosnippet>455</a>	</span>=&gt;
+<a href=#456 id=456 data-nosnippet>456</a>	CONTINUE_PENDING <span class="number">0x0000_0005
+<a href=#457 id=457 data-nosnippet>457</a>	</span>PAUSE_PENDING <span class="number">0x0000_0006
+<a href=#458 id=458 data-nosnippet>458</a>	</span>PAUSED <span class="number">0x0000_0007
+<a href=#459 id=459 data-nosnippet>459</a>	</span>RUNNING <span class="number">0x0000_0004
+<a href=#460 id=460 data-nosnippet>460</a>	</span>START_PENDING <span class="number">0x0000_0002
+<a href=#461 id=461 data-nosnippet>461</a>	</span>STOP_PENDING <span class="number">0x0000_0003
+<a href=#462 id=462 data-nosnippet>462</a>	</span>STOPPED <span class="number">0x0000_0001
+<a href=#463 id=463 data-nosnippet>463</a></span>}
+<a href=#464 id=464 data-nosnippet>464</a>
+<a href=#465 id=465 data-nosnippet>465</a><span class="macro">const_ordinary!</span> { SERVICE_TYPE: u32;
+<a href=#466 id=466 data-nosnippet>466</a>	<span class="doccomment">/// [`HSC::CreateService`](crate::HSC::CreateService) `service_type`
+<a href=#467 id=467 data-nosnippet>467</a>	/// (`u32`).
+<a href=#468 id=468 data-nosnippet>468</a>	///
+<a href=#469 id=469 data-nosnippet>469</a>	/// Originally has `SERVICE` prefix.
+<a href=#470 id=470 data-nosnippet>470</a>	</span>=&gt;
+<a href=#471 id=471 data-nosnippet>471</a>	ADAPTER <span class="number">0x0000_0004
+<a href=#472 id=472 data-nosnippet>472</a>	</span>FILE_SYSTEM_DRIVER <span class="number">0x0000_0002
+<a href=#473 id=473 data-nosnippet>473</a>	</span>KERNEL_DRIVER <span class="number">0x0000_0001
+<a href=#474 id=474 data-nosnippet>474</a>	</span>RECOGNIZER_DRIVER <span class="number">0x0000_0008
+<a href=#475 id=475 data-nosnippet>475</a>	</span>WIN32_OWN_PROCESS <span class="number">0x0000_0010
+<a href=#476 id=476 data-nosnippet>476</a>	</span>WIN32_SHARE_PROCESS <span class="number">0x0000_0020
+<a href=#477 id=477 data-nosnippet>477</a>
+<a href=#478 id=478 data-nosnippet>478</a>	</span>WIN32_OWN_PROCESS_INTERACTIVE <span class="self">Self</span>::WIN32_OWN_PROCESS.<span class="number">0 </span>| <span class="number">0x0000_0100
+<a href=#479 id=479 data-nosnippet>479</a>	</span>WIN32_SHARE_PROCESS_INTERACTIVE <span class="self">Self</span>::WIN32_SHARE_PROCESS.<span class="number">0 </span>| <span class="number">0x0000_0100
+<a href=#480 id=480 data-nosnippet>480</a></span>}
+<a href=#481 id=481 data-nosnippet>481</a>
+<a href=#482 id=482 data-nosnippet>482</a><span class="macro">const_ordinary!</span> { SID_NAME_USE: u32;
+<a href=#483 id=483 data-nosnippet>483</a>	<span class="doccomment">/// [`SID_NAME_USE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-sid_name_use)
+<a href=#484 id=484 data-nosnippet>484</a>	/// enumeration (`u32`).
+<a href=#485 id=485 data-nosnippet>485</a>	///
+<a href=#486 id=486 data-nosnippet>486</a>	/// Originally has `Sid` prefix.
+<a href=#487 id=487 data-nosnippet>487</a>	</span>=&gt;
+<a href=#488 id=488 data-nosnippet>488</a>	User <span class="number">1
+<a href=#489 id=489 data-nosnippet>489</a>	</span>Group <span class="number">2
+<a href=#490 id=490 data-nosnippet>490</a>	</span>Domain <span class="number">3
+<a href=#491 id=491 data-nosnippet>491</a>	</span>Alias <span class="number">4
+<a href=#492 id=492 data-nosnippet>492</a>	</span>WellKnownGroup <span class="number">5
+<a href=#493 id=493 data-nosnippet>493</a>	</span>DeletedAccount <span class="number">6
+<a href=#494 id=494 data-nosnippet>494</a>	</span>Invalid <span class="number">7
+<a href=#495 id=495 data-nosnippet>495</a>	</span>Unknown <span class="number">8
+<a href=#496 id=496 data-nosnippet>496</a>	</span>Computer <span class="number">9
+<a href=#497 id=497 data-nosnippet>497</a>	</span>Label <span class="number">10
+<a href=#498 id=498 data-nosnippet>498</a>	</span>LogonSession <span class="number">11
+<a href=#499 id=499 data-nosnippet>499</a></span>}
+<a href=#500 id=500 data-nosnippet>500</a>
+<a href=#501 id=501 data-nosnippet>501</a><span class="macro">const_ordinary!</span> { TOKEN_ELEVATION_TYPE: u32;
+<a href=#502 id=502 data-nosnippet>502</a>	<span class="doccomment">/// [`TOKEN_ELEVATION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_elevation_type)
+<a href=#503 id=503 data-nosnippet>503</a>	/// enumeration (`u32`).
+<a href=#504 id=504 data-nosnippet>504</a>	</span>=&gt;
+<a href=#505 id=505 data-nosnippet>505</a>	Default <span class="number">1
+<a href=#506 id=506 data-nosnippet>506</a>	</span>Full <span class="number">2
+<a href=#507 id=507 data-nosnippet>507</a>	</span>Limited <span class="number">3
+<a href=#508 id=508 data-nosnippet>508</a></span>}
+<a href=#509 id=509 data-nosnippet>509</a>
+<a href=#510 id=510 data-nosnippet>510</a><span class="macro">const_ordinary!</span> { TOKEN_INFORMATION_CLASS: u32;
+<a href=#511 id=511 data-nosnippet>511</a>	<span class="doccomment">/// [`TOKEN_INFORMATION_CLASS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_information_class)
+<a href=#512 id=512 data-nosnippet>512</a>	/// enumeration (`u32`).
+<a href=#513 id=513 data-nosnippet>513</a>	</span>=&gt;
+<a href=#514 id=514 data-nosnippet>514</a>	User <span class="number">1
+<a href=#515 id=515 data-nosnippet>515</a>	</span>Groups <span class="number">2
+<a href=#516 id=516 data-nosnippet>516</a>	</span>Privileges <span class="number">3
+<a href=#517 id=517 data-nosnippet>517</a>	</span>Owner <span class="number">4
+<a href=#518 id=518 data-nosnippet>518</a>	</span>PrimaryGroup <span class="number">5
+<a href=#519 id=519 data-nosnippet>519</a>	</span>DefaultDacl <span class="number">6
+<a href=#520 id=520 data-nosnippet>520</a>	</span>Source <span class="number">7
+<a href=#521 id=521 data-nosnippet>521</a>	</span>Type <span class="number">8
+<a href=#522 id=522 data-nosnippet>522</a>	</span>ImpersonationLevel <span class="number">9
+<a href=#523 id=523 data-nosnippet>523</a>	</span>Statistics <span class="number">10
+<a href=#524 id=524 data-nosnippet>524</a>	</span>RestrictedSids <span class="number">11
+<a href=#525 id=525 data-nosnippet>525</a>	</span>SessionId <span class="number">12
+<a href=#526 id=526 data-nosnippet>526</a>	</span>GroupsAndPrivileges <span class="number">13
+<a href=#527 id=527 data-nosnippet>527</a>	</span>SessionReference <span class="number">14
+<a href=#528 id=528 data-nosnippet>528</a>	</span>SandBoxInert <span class="number">15
+<a href=#529 id=529 data-nosnippet>529</a>	</span>AuditPolicy <span class="number">16
+<a href=#530 id=530 data-nosnippet>530</a>	</span>Origin <span class="number">17
+<a href=#531 id=531 data-nosnippet>531</a>	</span>ElevationType <span class="number">18
+<a href=#532 id=532 data-nosnippet>532</a>	</span>LinkedToken <span class="number">19
+<a href=#533 id=533 data-nosnippet>533</a>	</span>Elevation <span class="number">20
+<a href=#534 id=534 data-nosnippet>534</a>	</span>HasRestrictions <span class="number">21
+<a href=#535 id=535 data-nosnippet>535</a>	</span>AccessInformation <span class="number">22
+<a href=#536 id=536 data-nosnippet>536</a>	</span>VirtualizationAllowed <span class="number">23
+<a href=#537 id=537 data-nosnippet>537</a>	</span>VirtualizationEnabled <span class="number">24
+<a href=#538 id=538 data-nosnippet>538</a>	</span>IntegrityLevel <span class="number">25
+<a href=#539 id=539 data-nosnippet>539</a>	</span>UIAccess <span class="number">26
+<a href=#540 id=540 data-nosnippet>540</a>	</span>MandatoryPolicy <span class="number">27
+<a href=#541 id=541 data-nosnippet>541</a>	</span>LogonSid <span class="number">28
+<a href=#542 id=542 data-nosnippet>542</a>	</span>IsAppContainer <span class="number">29
+<a href=#543 id=543 data-nosnippet>543</a>	</span>Capabilities <span class="number">30
+<a href=#544 id=544 data-nosnippet>544</a>	</span>AppContainerSid <span class="number">31
+<a href=#545 id=545 data-nosnippet>545</a>	</span>AppContainerNumber <span class="number">32
+<a href=#546 id=546 data-nosnippet>546</a>	</span>UserClaimAttributes <span class="number">33
+<a href=#547 id=547 data-nosnippet>547</a>	</span>DeviceClaimAttributes <span class="number">34
+<a href=#548 id=548 data-nosnippet>548</a>	</span>RestrictedUserClaimAttributes <span class="number">35
+<a href=#549 id=549 data-nosnippet>549</a>	</span>RestrictedDeviceClaimAttributes <span class="number">36
+<a href=#550 id=550 data-nosnippet>550</a>	</span>DeviceGroups <span class="number">37
+<a href=#551 id=551 data-nosnippet>551</a>	</span>RestrictedDeviceGroups <span class="number">38
+<a href=#552 id=552 data-nosnippet>552</a>	</span>SecurityAttributes <span class="number">39
+<a href=#553 id=553 data-nosnippet>553</a>	</span>IsRestricted <span class="number">40
+<a href=#554 id=554 data-nosnippet>554</a>	</span>ProcessTrustLevel <span class="number">41
+<a href=#555 id=555 data-nosnippet>555</a>	</span>PrivateNameSpace <span class="number">42
+<a href=#556 id=556 data-nosnippet>556</a>	</span>SingletonAttributes <span class="number">43
+<a href=#557 id=557 data-nosnippet>557</a>	</span>BnoIsolation <span class="number">44
+<a href=#558 id=558 data-nosnippet>558</a>	</span>ChildProcessFlags <span class="number">45
+<a href=#559 id=559 data-nosnippet>559</a>	</span>IsLessPrivilegedAppContainer <span class="number">46
+<a href=#560 id=560 data-nosnippet>560</a>	</span>IsSandboxed <span class="number">47
+<a href=#561 id=561 data-nosnippet>561</a>	</span>OriginatingProcessTrustLevel <span class="number">48
+<a href=#562 id=562 data-nosnippet>562</a></span>}
+<a href=#563 id=563 data-nosnippet>563</a>
+<a href=#564 id=564 data-nosnippet>564</a><span class="macro">const_ordinary!</span> { TOKEN_TYPE: u32;
+<a href=#565 id=565 data-nosnippet>565</a>	<span class="doccomment">/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
+<a href=#566 id=566 data-nosnippet>566</a>	/// enumeration (`u32`).
+<a href=#567 id=567 data-nosnippet>567</a>	</span>=&gt;
+<a href=#568 id=568 data-nosnippet>568</a>	Primary <span class="number">1
+<a href=#569 id=569 data-nosnippet>569</a>	</span>Impersonation <span class="number">2
+<a href=#570 id=570 data-nosnippet>570</a></span>}
+<a href=#571 id=571 data-nosnippet>571</a>
+<a href=#572 id=572 data-nosnippet>572</a><span class="macro">const_bitflag!</span> { TRANSACTION: u32;
+<a href=#573 id=573 data-nosnippet>573</a>	<span class="doccomment">/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
+<a href=#574 id=574 data-nosnippet>574</a>	/// (`u32`).
+<a href=#575 id=575 data-nosnippet>575</a>	</span>=&gt;
+<a href=#576 id=576 data-nosnippet>576</a>	QUERY_INFORMATION <span class="number">0x0001
+<a href=#577 id=577 data-nosnippet>577</a>	</span>SET_INFORMATION <span class="number">0x0002
+<a href=#578 id=578 data-nosnippet>578</a>	</span>ENLIST <span class="number">0x0004
+<a href=#579 id=579 data-nosnippet>579</a>	</span>COMMIT <span class="number">0x0008
+<a href=#580 id=580 data-nosnippet>580</a>	</span>ROLLBACK <span class="number">0x0010
+<a href=#581 id=581 data-nosnippet>581</a>	</span>PROPAGATE <span class="number">0x0020
+<a href=#582 id=582 data-nosnippet>582</a>	</span>RIGHT_RESERVED1 <span class="number">0x0040
+<a href=#583 id=583 data-nosnippet>583</a>	</span>GENERIC_READ STANDARD_RIGHTS::READ.raw() | TRANSACTION::QUERY_INFORMATION.<span class="number">0 </span>| ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#584 id=584 data-nosnippet>584</a>	GENERIC_WRITE STANDARD_RIGHTS::WRITE.raw() | TRANSACTION::SET_INFORMATION.<span class="number">0 </span>| TRANSACTION::COMMIT.<span class="number">0 </span>| TRANSACTION::ENLIST.<span class="number">0 </span>| TRANSACTION::ROLLBACK.<span class="number">0 </span>| TRANSACTION::PROPAGATE.<span class="number">0 </span>| ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#585 id=585 data-nosnippet>585</a>	GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.raw() | TRANSACTION::COMMIT.<span class="number">0 </span>| TRANSACTION::ROLLBACK.<span class="number">0 </span>| ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#586 id=586 data-nosnippet>586</a>	ALL_ACCESS STANDARD_RIGHTS::REQUIRED.raw() | TRANSACTION::GENERIC_READ.<span class="number">0 </span>| TRANSACTION::GENERIC_WRITE.<span class="number">0 </span>| TRANSACTION::GENERIC_EXECUTE.<span class="number">0
+<a href=#587 id=587 data-nosnippet>587</a>	</span>RESOURCE_MANAGER_RIGHTS TRANSACTION::GENERIC_READ.<span class="number">0 </span>| STANDARD_RIGHTS::WRITE.raw() | TRANSACTION::SET_INFORMATION.<span class="number">0 </span>| TRANSACTION::ENLIST.<span class="number">0 </span>| TRANSACTION::ROLLBACK.<span class="number">0 </span>| TRANSACTION::PROPAGATE.<span class="number">0 </span>| ACCESS_RIGHTS::SYNCHRONIZE.raw()
+<a href=#588 id=588 data-nosnippet>588</a>}
+<a href=#589 id=589 data-nosnippet>589</a>
+<a href=#590 id=590 data-nosnippet>590</a><span class="macro">const_bitflag!</span> { TRANSACTION_OPT: u32;
+<a href=#591 id=591 data-nosnippet>591</a>	<span class="doccomment">/// [`CrateTransaction`](crate::HTRANSACTION::CreateTransaction) `options`
+<a href=#592 id=592 data-nosnippet>592</a>	/// (`u32`).
+<a href=#593 id=593 data-nosnippet>593</a>	///
+<a href=#594 id=594 data-nosnippet>594</a>	/// Originally has `TRANSACTION` prefix.
+<a href=#595 id=595 data-nosnippet>595</a>	</span>=&gt;
+<a href=#596 id=596 data-nosnippet>596</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#597 id=597 data-nosnippet>597</a>	</span>NoValue <span class="number">0
+<a href=#598 id=598 data-nosnippet>598</a>	</span>DO_NOT_PROMOTE <span class="number">0x0000_0001
+<a href=#599 id=599 data-nosnippet>599</a></span>}
+<a href=#600 id=600 data-nosnippet>600</a>
+<a href=#601 id=601 data-nosnippet>601</a><span class="macro">const_ordinary!</span> { WELL_KNOWN_SID_TYPE: u32;
+<a href=#602 id=602 data-nosnippet>602</a>	<span class="doccomment">/// [`WELL_KNOWN_SID_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-well_known_sid_type)
+<a href=#603 id=603 data-nosnippet>603</a>	/// enumeration (`u32`).
+<a href=#604 id=604 data-nosnippet>604</a>	</span>=&gt;
+<a href=#605 id=605 data-nosnippet>605</a>	Null <span class="number">0
+<a href=#606 id=606 data-nosnippet>606</a>	</span>World <span class="number">1
+<a href=#607 id=607 data-nosnippet>607</a>	</span>Local <span class="number">2
+<a href=#608 id=608 data-nosnippet>608</a>	</span>CreatorOwner <span class="number">3
+<a href=#609 id=609 data-nosnippet>609</a>	</span>CreatorGroup <span class="number">4
+<a href=#610 id=610 data-nosnippet>610</a>	</span>CreatorOwnerServer <span class="number">5
+<a href=#611 id=611 data-nosnippet>611</a>	</span>CreatorGroupServer <span class="number">6
+<a href=#612 id=612 data-nosnippet>612</a>	</span>NtAuthority <span class="number">7
+<a href=#613 id=613 data-nosnippet>613</a>	</span>Dialup <span class="number">8
+<a href=#614 id=614 data-nosnippet>614</a>	</span>Network <span class="number">9
+<a href=#615 id=615 data-nosnippet>615</a>	</span>Batch <span class="number">10
+<a href=#616 id=616 data-nosnippet>616</a>	</span>Interactive <span class="number">11
+<a href=#617 id=617 data-nosnippet>617</a>	</span>Service <span class="number">12
+<a href=#618 id=618 data-nosnippet>618</a>	</span>Anonymous <span class="number">13
+<a href=#619 id=619 data-nosnippet>619</a>	</span>Proxy <span class="number">14
+<a href=#620 id=620 data-nosnippet>620</a>	</span>EnterpriseControllers <span class="number">15
+<a href=#621 id=621 data-nosnippet>621</a>	</span>SelfSid <span class="number">16
+<a href=#622 id=622 data-nosnippet>622</a>	</span>AuthenticatedUser <span class="number">17
+<a href=#623 id=623 data-nosnippet>623</a>	</span>RestrictedCode <span class="number">18
+<a href=#624 id=624 data-nosnippet>624</a>	</span>TerminalServer <span class="number">19
+<a href=#625 id=625 data-nosnippet>625</a>	</span>RemoteLogonId <span class="number">20
+<a href=#626 id=626 data-nosnippet>626</a>	</span>LogonIds <span class="number">21
+<a href=#627 id=627 data-nosnippet>627</a>	</span>LocalSystem <span class="number">22
+<a href=#628 id=628 data-nosnippet>628</a>	</span>LocalService <span class="number">23
+<a href=#629 id=629 data-nosnippet>629</a>	</span>NetworkService <span class="number">24
+<a href=#630 id=630 data-nosnippet>630</a>	</span>BuiltinDomain <span class="number">25
+<a href=#631 id=631 data-nosnippet>631</a>	</span>BuiltinAdministrators <span class="number">26
+<a href=#632 id=632 data-nosnippet>632</a>	</span>BuiltinUsers <span class="number">27
+<a href=#633 id=633 data-nosnippet>633</a>	</span>BuiltinGuests <span class="number">28
+<a href=#634 id=634 data-nosnippet>634</a>	</span>BuiltinPowerUsers <span class="number">29
+<a href=#635 id=635 data-nosnippet>635</a>	</span>BuiltinAccountOperators <span class="number">30
+<a href=#636 id=636 data-nosnippet>636</a>	</span>BuiltinSystemOperators <span class="number">31
+<a href=#637 id=637 data-nosnippet>637</a>	</span>BuiltinPrintOperators <span class="number">32
+<a href=#638 id=638 data-nosnippet>638</a>	</span>BuiltinBackupOperators <span class="number">33
+<a href=#639 id=639 data-nosnippet>639</a>	</span>BuiltinReplicator <span class="number">34
+<a href=#640 id=640 data-nosnippet>640</a>	</span>BuiltinPreWindows2000CompatibleAccess <span class="number">35
+<a href=#641 id=641 data-nosnippet>641</a>	</span>BuiltinRemoteDesktopUsers <span class="number">36
+<a href=#642 id=642 data-nosnippet>642</a>	</span>BuiltinNetworkConfigurationOperators <span class="number">37
+<a href=#643 id=643 data-nosnippet>643</a>	</span>AccountAdministrator <span class="number">38
+<a href=#644 id=644 data-nosnippet>644</a>	</span>AccountGuest <span class="number">39
+<a href=#645 id=645 data-nosnippet>645</a>	</span>AccountKrbtgt <span class="number">40
+<a href=#646 id=646 data-nosnippet>646</a>	</span>AccountDomainAdmins <span class="number">41
+<a href=#647 id=647 data-nosnippet>647</a>	</span>AccountDomainUsers <span class="number">42
+<a href=#648 id=648 data-nosnippet>648</a>	</span>AccountDomainGuests <span class="number">43
+<a href=#649 id=649 data-nosnippet>649</a>	</span>AccountComputers <span class="number">44
+<a href=#650 id=650 data-nosnippet>650</a>	</span>AccountControllers <span class="number">45
+<a href=#651 id=651 data-nosnippet>651</a>	</span>AccountCertAdmins <span class="number">46
+<a href=#652 id=652 data-nosnippet>652</a>	</span>AccountSchemaAdmins <span class="number">47
+<a href=#653 id=653 data-nosnippet>653</a>	</span>AccountEnterpriseAdmins <span class="number">48
+<a href=#654 id=654 data-nosnippet>654</a>	</span>AccountPolicyAdmins <span class="number">49
+<a href=#655 id=655 data-nosnippet>655</a>	</span>AccountRasAndIasServers <span class="number">50
+<a href=#656 id=656 data-nosnippet>656</a>	</span>NTLMAuthentication <span class="number">51
+<a href=#657 id=657 data-nosnippet>657</a>	</span>DigestAuthentication <span class="number">52
+<a href=#658 id=658 data-nosnippet>658</a>	</span>SChannelAuthentication <span class="number">53
+<a href=#659 id=659 data-nosnippet>659</a>	</span>ThisOrganization <span class="number">54
+<a href=#660 id=660 data-nosnippet>660</a>	</span>OtherOrganization <span class="number">55
+<a href=#661 id=661 data-nosnippet>661</a>	</span>BuiltinIncomingForestTrustBuilders <span class="number">56
+<a href=#662 id=662 data-nosnippet>662</a>	</span>BuiltinPerfMonitoringUsers <span class="number">57
+<a href=#663 id=663 data-nosnippet>663</a>	</span>BuiltinPerfLoggingUsers <span class="number">58
+<a href=#664 id=664 data-nosnippet>664</a>	</span>BuiltinAuthorizationAccess <span class="number">59
+<a href=#665 id=665 data-nosnippet>665</a>	</span>BuiltinTerminalServerLicenseServers <span class="number">60
+<a href=#666 id=666 data-nosnippet>666</a>	</span>BuiltinDCOMUsers <span class="number">61
+<a href=#667 id=667 data-nosnippet>667</a>	</span>BuiltinIUsers <span class="number">62
+<a href=#668 id=668 data-nosnippet>668</a>	</span>IUser <span class="number">63
+<a href=#669 id=669 data-nosnippet>669</a>	</span>BuiltinCryptoOperators <span class="number">64
+<a href=#670 id=670 data-nosnippet>670</a>	</span>UntrustedLabel <span class="number">65
+<a href=#671 id=671 data-nosnippet>671</a>	</span>LowLabel <span class="number">66
+<a href=#672 id=672 data-nosnippet>672</a>	</span>MediumLabel <span class="number">67
+<a href=#673 id=673 data-nosnippet>673</a>	</span>HighLabel <span class="number">68
+<a href=#674 id=674 data-nosnippet>674</a>	</span>SystemLabel <span class="number">69
+<a href=#675 id=675 data-nosnippet>675</a>	</span>WriteRestrictedCode <span class="number">70
+<a href=#676 id=676 data-nosnippet>676</a>	</span>CreatorOwnerRights <span class="number">71
+<a href=#677 id=677 data-nosnippet>677</a>	</span>CacheablePrincipalsGroup <span class="number">72
+<a href=#678 id=678 data-nosnippet>678</a>	</span>NonCacheablePrincipalsGroup <span class="number">73
+<a href=#679 id=679 data-nosnippet>679</a>	</span>EnterpriseReadonlyControllers <span class="number">74
+<a href=#680 id=680 data-nosnippet>680</a>	</span>AccountReadonlyControllers <span class="number">75
+<a href=#681 id=681 data-nosnippet>681</a>	</span>BuiltinEventLogReadersGroup <span class="number">76
+<a href=#682 id=682 data-nosnippet>682</a>	</span>NewEnterpriseReadonlyControllers <span class="number">77
+<a href=#683 id=683 data-nosnippet>683</a>	</span>BuiltinCertSvcDComAccessGroup <span class="number">78
+<a href=#684 id=684 data-nosnippet>684</a>	</span>MediumPlusLabel <span class="number">79
+<a href=#685 id=685 data-nosnippet>685</a>	</span>LocalLogon <span class="number">80
+<a href=#686 id=686 data-nosnippet>686</a>	</span>ConsoleLogon <span class="number">81
+<a href=#687 id=687 data-nosnippet>687</a>	</span>ThisOrganizationCertificate <span class="number">82
+<a href=#688 id=688 data-nosnippet>688</a>	</span>ApplicationPackageAuthority <span class="number">83
+<a href=#689 id=689 data-nosnippet>689</a>	</span>BuiltinAnyPackage <span class="number">84
+<a href=#690 id=690 data-nosnippet>690</a>	</span>CapabilityInternetClient <span class="number">85
+<a href=#691 id=691 data-nosnippet>691</a>	</span>CapabilityInternetClientServer <span class="number">86
+<a href=#692 id=692 data-nosnippet>692</a>	</span>CapabilityPrivateNetworkClientServer <span class="number">87
+<a href=#693 id=693 data-nosnippet>693</a>	</span>CapabilityPicturesLibrary <span class="number">88
+<a href=#694 id=694 data-nosnippet>694</a>	</span>CapabilityVideosLibrary <span class="number">89
+<a href=#695 id=695 data-nosnippet>695</a>	</span>CapabilityMusicLibrary <span class="number">90
+<a href=#696 id=696 data-nosnippet>696</a>	</span>CapabilityDocumentsLibrary <span class="number">91
+<a href=#697 id=697 data-nosnippet>697</a>	</span>CapabilitySharedUserCertificates <span class="number">92
+<a href=#698 id=698 data-nosnippet>698</a>	</span>CapabilityEnterpriseAuthentication <span class="number">93
+<a href=#699 id=699 data-nosnippet>699</a>	</span>CapabilityRemovableStorage <span class="number">94
+<a href=#700 id=700 data-nosnippet>700</a>	</span>BuiltinRDSRemoteAccessServers <span class="number">95
+<a href=#701 id=701 data-nosnippet>701</a>	</span>BuiltinRDSEndpointServers <span class="number">96
+<a href=#702 id=702 data-nosnippet>702</a>	</span>BuiltinRDSManagementServers <span class="number">97
+<a href=#703 id=703 data-nosnippet>703</a>	</span>UserModeDrivers <span class="number">98
+<a href=#704 id=704 data-nosnippet>704</a>	</span>BuiltinHyperVAdmins <span class="number">99
+<a href=#705 id=705 data-nosnippet>705</a>	</span>AccountCloneableControllers <span class="number">100
+<a href=#706 id=706 data-nosnippet>706</a>	</span>BuiltinAccessControlAssistanceOperators <span class="number">101
+<a href=#707 id=707 data-nosnippet>707</a>	</span>BuiltinRemoteManagementUsers <span class="number">102
+<a href=#708 id=708 data-nosnippet>708</a>	</span>AuthenticationAuthorityAsserted <span class="number">103
+<a href=#709 id=709 data-nosnippet>709</a>	</span>AuthenticationServiceAsserted <span class="number">104
+<a href=#710 id=710 data-nosnippet>710</a>	</span>LocalAccount <span class="number">105
+<a href=#711 id=711 data-nosnippet>711</a>	</span>LocalAccountAndAdministrator <span class="number">106
+<a href=#712 id=712 data-nosnippet>712</a>	</span>AccountProtectedUsers <span class="number">107
+<a href=#713 id=713 data-nosnippet>713</a>	</span>CapabilityAppointments <span class="number">108
+<a href=#714 id=714 data-nosnippet>714</a>	</span>CapabilityContacts <span class="number">109
+<a href=#715 id=715 data-nosnippet>715</a>	</span>AccountDefaultSystemManaged <span class="number">110
+<a href=#716 id=716 data-nosnippet>716</a>	</span>BuiltinDefaultSystemManagedGroup <span class="number">111
+<a href=#717 id=717 data-nosnippet>717</a>	</span>BuiltinStorageReplicaAdmins <span class="number">112
+<a href=#718 id=718 data-nosnippet>718</a>	</span>AccountKeyAdmins <span class="number">113
+<a href=#719 id=719 data-nosnippet>719</a>	</span>AccountEnterpriseKeyAdmins <span class="number">114
+<a href=#720 id=720 data-nosnippet>720</a>	</span>AuthenticationKeyTrust <span class="number">115
+<a href=#721 id=721 data-nosnippet>721</a>	</span>AuthenticationKeyPropertyMFA <span class="number">116
+<a href=#722 id=722 data-nosnippet>722</a>	</span>AuthenticationKeyPropertyAttestation <span class="number">117
+<a href=#723 id=723 data-nosnippet>723</a>	</span>AuthenticationFreshKeyAuth <span class="number">118
+<a href=#724 id=724 data-nosnippet>724</a>	</span>BuiltinDeviceOwners <span class="number">119
+<a href=#725 id=725 data-nosnippet>725</a></span>}</code></pre></div></section></main></body></html>

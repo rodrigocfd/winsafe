@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Parameters of window messages."><title>winsafe::msg - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../static.files/storage-e2aeef58.js"></script><script defer src="../sidebar-items.js"></script><script defer src="../../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">Module msg</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../winsafe/index.html">winsafe</a><span class="version">0.0.27</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">Module msg</a></h2><h3><a href="#">Sections</a></h3><ul class="block top-toc"><li><a href="#sending-messages" title="Sending messages">Sending messages</a></li><li><a href="#custom-messages" title="Custom messages">Custom messages</a></li></ul><h3><a href="#modules">Module Items</a></h3><ul class="block"><li><a href="#modules" title="Modules">Modules</a></li><li><a href="#structs" title="Structs">Structs</a></li></ul></section><div id="rustdoc-modnav"><h2 class="in-crate"><a href="../index.html">In crate winsafe</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">winsafe</a></div><h1>Module <span>msg</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/winsafe/lib.rs.html#114">Source</a> </span></div><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>user</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>Parameters of <a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues">window messages</a>.</p>
+<p><a href="struct.WndMsg.html" title="struct winsafe::msg::WndMsg"><code>WndMsg</code></a> is the generic message, with <code>WPARAM</code> and <code>LPARAM</code> fields. Other messages belong to a module according to its prefix, for example, <a href="bm/struct.Click.html" title="struct winsafe::msg::bm::Click"><code>BM_CLICK</code></a> can be found in <a href="bm/index.html" title="mod winsafe::msg::bm"><code>bm</code></a> module.</p>
+<p>All messages can be sent, so they all implement the <a href="../prelude/trait.MsgSend.html" title="trait winsafe::prelude::MsgSend"><code>MsgSend</code></a> trait. Some messages can also be received – that means you can handle them if you’re implementing a custom window from scratch –, and these implement the <a href="../prelude/trait.MsgSendRecv.html" title="trait winsafe::prelude::MsgSendRecv"><code>MsgSendRecv</code></a> trait.</p>
+<h2 id="sending-messages"><a class="doc-anchor" href="#sending-messages">§</a>Sending messages</h2>
+<p>We want to delete the 3rd element of a <a href="../gui/struct.ListView.html" title="struct winsafe::gui::ListView"><code>ListView</code></a> control. This can be done by sending it an <a href="lvm/struct.DeleteItem.html" title="struct winsafe::msg::lvm::DeleteItem"><code>LVM_DELETEITEM</code></a> message via <a href="../struct.HWND.html#method.SendMessage" title="method winsafe::HWND::SendMessage"><code>HWND::SendMessage</code></a>. The message itself is a struct, which is initialized with the specific message parameters.</p>
+<p>The message struct also defines the data type returned by <code>SendMessage</code>. In the example below, <code>LVM_DELETEITEM</code> returns <code>SysResult&lt;()&gt;</code>.</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, msg};
+
+<span class="kw">let </span>hlistview: w::HWND; <span class="comment">// initialized somewhere
+
+</span>hlistview.SendMessage(
+    msg::lvm::DeleteItem {
+        index: <span class="number">2</span>,
+    },
+).expect(<span class="string">"Failed to delete item 2."</span>);</code></pre></div>
+<p>Messages are organized into modules according to their prefixes: <a href="wm/index.html" title="mod winsafe::msg::wm"><code>wm</code></a> (window messages), <a href="lvm/index.html" title="mod winsafe::msg::lvm"><code>lvm</code></a> (list view messages), and so on.</p>
+<h2 id="custom-messages"><a class="doc-anchor" href="#custom-messages">§</a>Custom messages</h2>
+<p>In order to create a custom message, you must create a struct with the data it contains (if any) and implement the <a href="../prelude/trait.MsgSend.html" title="trait winsafe::prelude::MsgSend"><code>MsgSend</code></a> and <a href="../prelude/trait.MsgSendRecv.html" title="trait winsafe::prelude::MsgSendRecv"><code>MsgSendRecv</code></a> traits:</p>
+
+<div class="example-wrap ignore"><a href="#" class="tooltip" title="This example is not tested">ⓘ</a><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co, msg};
+
+<span class="doccomment">/// The integer value of our message ID.
+</span><span class="kw">pub const </span>MAKE_TOAST: co::WM = <span class="kw">unsafe </span>{ co::WM::from_raw(co::WM::USER.raw() + <span class="number">20</span>) };
+
+<span class="doccomment">/// Our message with its parameter.
+</span><span class="kw">struct </span>MakeToast {
+    how_many: u32,
+}
+
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>MakeToast {
+    <span class="kw">type </span>RetType = ();
+
+    <span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+        ()
+    }
+
+    <span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; msg::WndMsg {
+        msg::WndMsg {
+            msg_id: MAKE_TOAST,
+            wparam: <span class="self">self</span>.how_many <span class="kw">as _</span>,
+            lparam: <span class="number">0</span>,
+        }
+    }
+}
+
+<span class="kw">impl </span>MsgSendRecv <span class="kw">for </span>MakeToast {
+    <span class="kw">fn </span>from_generic_wm(p: msg::WndMsg) -&gt; <span class="self">Self </span>{
+        <span class="self">Self </span>{
+            how_many: p.wparam <span class="kw">as _</span>,
+        }
+    }
+}</code></pre></div></div></details><h2 id="modules" class="section-header">Modules<a href="#modules" class="anchor">§</a></h2><dl class="item-table"><dt><a class="mod" href="bm/index.html" title="mod winsafe::msg::bm">bm</a></dt><dd>Button control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.BM.html" title="struct winsafe::co::BM"><code>BM</code></a> and
+<a href="../co/struct.BCM.html" title="struct winsafe::co::BCM"><code>BCM</code></a> prefixes.</dd><dt><a class="mod" href="cb/index.html" title="mod winsafe::msg::cb">cb</a></dt><dd>Combo box control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.CB.html" title="struct winsafe::co::CB"><code>CB</code></a> prefix.</dd><dt><a class="mod" href="dtm/index.html" title="mod winsafe::msg::dtm">dtm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Date and time picker control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.DTM.html" title="struct winsafe::co::DTM"><code>DTM</code></a> prefix.</dd><dt><a class="mod" href="em/index.html" title="mod winsafe::msg::em">em</a></dt><dd>Edit control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.EM.html" title="struct winsafe::co::EM"><code>EM</code></a> prefix.</dd><dt><a class="mod" href="hdm/index.html" title="mod winsafe::msg::hdm">hdm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Header control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.HDM.html" title="struct winsafe::co::HDM"><code>HDM</code></a> prefix.</dd><dt><a class="mod" href="lb/index.html" title="mod winsafe::msg::lb">lb</a></dt><dd>ListBox control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.LB.html" title="struct winsafe::co::LB"><code>LB</code></a> prefix.</dd><dt><a class="mod" href="lvm/index.html" title="mod winsafe::msg::lvm">lvm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>List view control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.LVM.html" title="struct winsafe::co::LVM"><code>LVM</code></a> prefix.</dd><dt><a class="mod" href="mcm/index.html" title="mod winsafe::msg::mcm">mcm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Month calendar control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.MCM.html" title="struct winsafe::co::MCM"><code>MCM</code></a> prefix.</dd><dt><a class="mod" href="pbm/index.html" title="mod winsafe::msg::pbm">pbm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Progress bar control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.PBM.html" title="struct winsafe::co::PBM"><code>PBM</code></a> prefix.</dd><dt><a class="mod" href="psm/index.html" title="mod winsafe::msg::psm">psm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Property sheet
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-property-sheets-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.PSM.html" title="struct winsafe::co::PSM"><code>PSM</code></a> prefix.</dd><dt><a class="mod" href="sb/index.html" title="mod winsafe::msg::sb">sb</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Status bar control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.SB.html" title="struct winsafe::co::SB"><code>SB</code></a> prefix.</dd><dt><a class="mod" href="stm/index.html" title="mod winsafe::msg::stm">stm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Static control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.STM.html" title="struct winsafe::co::STM"><code>STM</code></a> prefix.</dd><dt><a class="mod" href="tbm/index.html" title="mod winsafe::msg::tbm">tbm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Toolbar control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.TBM.html" title="struct winsafe::co::TBM"><code>TBM</code></a> prefix.</dd><dt><a class="mod" href="tcm/index.html" title="mod winsafe::msg::tcm">tcm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Tab control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.TCM.html" title="struct winsafe::co::TCM"><code>TCM</code></a> prefix.</dd><dt><a class="mod" href="trbm/index.html" title="mod winsafe::msg::trbm">trbm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Trackbar control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.TRBM.html" title="struct winsafe::co::TRBM"><code>TRBM</code></a> prefix.</dd><dt><a class="mod" href="tvm/index.html" title="mod winsafe::msg::tvm">tvm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>Tree view control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.TVM.html" title="struct winsafe::co::TVM"><code>TVM</code></a> prefix.</dd><dt><a class="mod" href="udm/index.html" title="mod winsafe::msg::udm">udm</a><wbr><span class="stab portability" title="Available on crate feature `comctl` only"><code>comctl</code></span></dt><dd>UpDown control
+<a href="https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages">messages</a>,
+whose constants have <a href="../co/struct.UDM.html" title="struct winsafe::co::UDM"><code>UDM</code></a> prefix.</dd><dt><a class="mod" href="wm/index.html" title="mod winsafe::msg::wm">wm</a></dt><dd>Generic window
+<a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues">messages</a>,
+whose constants have <a href="../co/struct.WM.html" title="struct winsafe::co::WM"><code>WM</code></a> prefix.</dd></dl><h2 id="structs" class="section-header">Structs<a href="#structs" class="anchor">§</a></h2><dl class="item-table"><dt><a class="struct" href="struct.WndMsg.html" title="struct winsafe::msg::WndMsg">WndMsg</a></dt><dd>Generic
+<a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues">window message</a>
+parameters: <code>WPARAM</code> and <code>LPARAM</code>.</dd></dl></section></div></main></body></html>

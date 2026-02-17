@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["GetAccel","GetBase","GetBuddy","GetPos","GetPos32","GetRange","GetRange32","GetUnicodeFormat","SetAccel","SetBase","SetBuddy","SetPos","SetPos32","SetRange","SetRange32","SetUnicodeFormat"]};

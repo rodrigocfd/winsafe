@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This trait is enabled with the `gui` feature, and provides events for window notifications."><title>GuiEventsParent in winsafe::prelude - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../static.files/storage-e2aeef58.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">GuiEventsParent</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../winsafe/index.html">winsafe</a><span class="version">0.0.27</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">GuiEvents<wbr>Parent</a></h2><h3><a href="#required-methods">Required Methods</a></h3><ul class="block"><li><a href="#tymethod.wm_command" title="wm_command">wm_command</a></li><li><a href="#tymethod.wm_notify" title="wm_notify">wm_notify</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.wm_command_acc_menu" title="wm_command_acc_menu">wm_command_acc_menu</a></li><li><a href="#method.wm_create" title="wm_create">wm_create</a></li><li><a href="#method.wm_init_dialog" title="wm_init_dialog">wm_init_dialog</a></li><li><a href="#method.wm_nc_create" title="wm_nc_create">wm_nc_create</a></li></ul><h3><a href="#dyn-compatibility">Dyn Compatibility</a></h3><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In winsafe::<wbr>prelude</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">winsafe</a>::<wbr><a href="index.html">prelude</a></div><h1>Trait <span class="trait">GuiEvents<wbr>Parent</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#922-1091">Source</a> </span></div><pre class="rust item-decl"><code>pub trait GuiEventsParent: <a class="trait" href="trait.GuiEventsWindow.html" title="trait winsafe::prelude::GuiEventsWindow">GuiEventsWindow</a> {
+    // Required methods
+    fn <a href="#tymethod.wm_command" class="fn">wm_command</a>&lt;F&gt;(
+        &amp;self,
+        ctrl_id: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt;,
+        code: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../co/struct.CMD.html" title="struct winsafe::co::CMD">CMD</a>&gt;,
+        func: F,
+    )
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + 'static</span>;
+<span class="item-spacer"></span>    fn <a href="#tymethod.wm_notify" class="fn">wm_notify</a>&lt;F&gt;(
+        &amp;self,
+        id_from: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt;,
+        code: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../struct.NmhdrCode.html" title="struct winsafe::NmhdrCode">NmhdrCode</a>&gt;,
+        func: F,
+    )
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.Notify.html" title="struct winsafe::msg::wm::Notify">Notify</a>&lt;'_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.isize.html">isize</a>&gt; + 'static</span>;
+
+    // Provided methods
+    fn <a href="#method.wm_command_acc_menu" class="fn">wm_command_acc_menu</a>&lt;F&gt;(&amp;self, ctrl_id: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a>, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + 'static</span> { ... }
+<span class="item-spacer"></span>    fn <a href="#method.wm_create" class="fn">wm_create</a>&lt;F&gt;(&amp;self, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.Create.html" title="struct winsafe::msg::wm::Create">Create</a>&lt;'_, '_, '_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; + 'static</span> { ... }
+<span class="item-spacer"></span>    fn <a href="#method.wm_init_dialog" class="fn">wm_init_dialog</a>&lt;F&gt;(&amp;self, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.InitDialog.html" title="struct winsafe::msg::wm::InitDialog">InitDialog</a>) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; + 'static</span> { ... }
+<span class="item-spacer"></span>    fn <a href="#method.wm_nc_create" class="fn">wm_nc_create</a>&lt;F&gt;(&amp;self, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.NcCreate.html" title="struct winsafe::msg::wm::NcCreate">NcCreate</a>&lt;'_, '_, '_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; + 'static</span> { ... }
+}</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>gui</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This trait is enabled with the <code>gui</code> feature, and provides events for window
+<a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues">notifications</a>.</p>
+<p>Prefer importing this trait through the prelude:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::prelude::<span class="kw-2">*</span>;</code></pre></div></div></details><h2 id="required-methods" class="section-header">Required Methods<a href="#required-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="tymethod.wm_command" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#952-954">Source</a><h4 class="code-header">fn <a href="#tymethod.wm_command" class="fn">wm_command</a>&lt;F&gt;(&amp;self, ctrl_id: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt;, code: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../co/struct.CMD.html" title="struct winsafe::co::CMD">CMD</a>&gt;, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command"><code>WM_COMMAND</code></a>
+message, for specific code and control ID.</p>
+<p>A command notification must be narrowed by the
+<a href="../co/struct.CMD.html" title="struct winsafe::co::CMD">command code</a> and the control ID, so the closure will
+be fired for that specific control at that specific event.</p>
+<p>Instead of using this event, you should always prefer the specific
+command notifications, which will give you the correct message
+parameters. This generic method should be used only when you have a
+custom, non-standard window notification.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co, gui};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+
+</span><span class="kw">const </span>CTRL_ID: u16 = <span class="number">1010</span>;
+
+wnd.on().wm_command(
+    CTRL_ID,
+    co::BN::CLICKED,
+    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+        <span class="macro">println!</span>(<span class="string">"Button clicked!"</span>);
+        <span class="prelude-val">Ok</span>(())
+    },
+);</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="tymethod.wm_notify" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#1029-1031">Source</a><h4 class="code-header">fn <a href="#tymethod.wm_notify" class="fn">wm_notify</a>&lt;F&gt;(
+    &amp;self,
+    id_from: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt;,
+    code: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="struct" href="../struct.NmhdrCode.html" title="struct winsafe::NmhdrCode">NmhdrCode</a>&gt;,
+    func: F,
+)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.Notify.html" title="struct winsafe::msg::wm::Notify">Notify</a>&lt;'_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.isize.html">isize</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="../msg/wm/struct.Notify.html" title="struct winsafe::msg::wm::Notify"><code>WM_NOTIFY</code></a> message, for specific ID and
+notification code.</p>
+<p>Instead of using this event, you should always prefer the specific
+notifications, which will give you the correct notification struct. This
+generic method should be used only when you have a custom, non-standard
+window notification.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co, gui};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+
+</span><span class="kw">const </span>CTRL_ID: u16 = <span class="number">1010</span>;
+
+wnd.on().wm_notify(
+    CTRL_ID,
+    co::NM::DBLCLK,
+    <span class="kw">move </span>|<span class="kw">_</span>| -&gt; w::AnyResult&lt;isize&gt; {
+        <span class="macro">println!</span>(<span class="string">"Status bar double clicked!"</span>);
+        <span class="prelude-val">Ok</span>(<span class="number">0</span>)
+    },
+);</code></pre></div></div></details></div><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.wm_command_acc_menu" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#981-1002">Source</a><h4 class="code-header">fn <a href="#method.wm_command_acc_menu" class="fn">wm_command_acc_menu</a>&lt;F&gt;(&amp;self, ctrl_id: impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u16.html">u16</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a>, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command"><code>WM_COMMAND</code></a>
+message, handling both <code>CMD::Accelerator</code> and <code>CMD::Menu</code>, for a
+specific command ID.</p>
+<p>Ideal to be used with menu commands whose IDs are shared with
+accelerators, like menu items.</p>
+<h5 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co, gui};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+
+</span><span class="kw">const </span>CTRL_ID: u16 = <span class="number">1010</span>;
+
+wnd.on().wm_command_acc_menu(
+    CTRL_ID,
+    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+        <span class="macro">println!</span>(<span class="string">"Hello!"</span>);
+        <span class="prelude-val">Ok</span>(())
+    },
+);</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="method.wm_create" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#1056-1061">Source</a><h4 class="code-header">fn <a href="#method.wm_create" class="fn">wm_create</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.Create.html" title="struct winsafe::msg::wm::Create">Create</a>&lt;'_, '_, '_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.i32.html">i32</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create"><code>WM_CREATE</code></a>
+message, sent only to non-dialog windows. Dialog windows must handle
+<a href="trait.GuiEventsParent.html#method.wm_init_dialog" title="method winsafe::prelude::GuiEventsParent::wm_init_dialog"><code>wm_init_dialog</code></a>
+instead.</p>
+<h5 id="examples-1"><a class="doc-anchor" href="#examples-1">§</a>Examples</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, gui, msg};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+
+</span>wnd.on().wm_create(
+    <span class="kw">move </span>|p: msg::wm::Create| -&gt; w::AnyResult&lt;i32&gt; {
+        <span class="macro">println!</span>(<span class="string">"Client area: {}x{}"</span>,
+            p.createstruct.cx,
+            p.createstruct.cy,
+        );
+        <span class="prelude-val">Ok</span>(<span class="number">0</span>)
+    },
+);</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="method.wm_init_dialog" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#1063-1085">Source</a><h4 class="code-header">fn <a href="#method.wm_init_dialog" class="fn">wm_init_dialog</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.InitDialog.html" title="struct winsafe::msg::wm::InitDialog">InitDialog</a>) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog"><code>WM_INITDIALOG</code></a>
+message, sent only to dialog windows. Non-dialog windows must handle
+<a href="trait.GuiEventsParent.html#method.wm_create" title="method winsafe::prelude::GuiEventsParent::wm_create"><code>wm_create</code></a> instead.</p>
+<p>Return <code>true</code> to set the focus to the first control in the dialog.</p>
+<h5 id="examples-2"><a class="doc-anchor" href="#examples-2">§</a>Examples</h5>
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, gui, msg};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+
+</span>wnd.on().wm_init_dialog(
+    <span class="kw">move </span>|p: msg::wm::InitDialog| -&gt; w::AnyResult&lt;bool&gt; {
+        <span class="macro">println!</span>(<span class="string">"Focused HWND: {}"</span>, p.hwnd_focus);
+        <span class="prelude-val">Ok</span>(<span class="bool-val">true</span>)
+    },
+);</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="method.wm_nc_create" class="method"><a class="src rightside" href="../../src/winsafe/gui\events/base_wnd_events.rs.html#1087-1090">Source</a><h4 class="code-header">fn <a href="#method.wm_nc_create" class="fn">wm_nc_create</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.Fn.html" title="trait core::ops::function::Fn">Fn</a>(<a class="struct" href="../msg/wm/struct.NcCreate.html" title="struct winsafe::msg::wm::NcCreate">NcCreate</a>&lt;'_, '_, '_&gt;) -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt; + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate"><code>WM_NCCREATE</code></a>
+message.</p>
+</div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/nightly/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety", so this trait is not object safe.</i></p></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"></div><script src="../../trait.impl/winsafe/gui/events/base_wnd_events/trait.GuiEventsParent.js" async></script></section></div></main></body></html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\wininet\co\consts.rs`."><title>consts.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\wininet\co/</div>consts.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href=#2 id=2 data-nosnippet>2</a>
+<a href=#3 id=3 data-nosnippet>3</a></span><span class="macro">const_bitflag!</span> { HTTP_ADDREQ: u32;
+<a href=#4 id=4 data-nosnippet>4</a>	<span class="doccomment">/// [`HINTERNETREQUEST::HttpAddRequestHeaders`](crate::HINTERNETREQUEST::HttpAddRequestHeaders)
+<a href=#5 id=5 data-nosnippet>5</a>	/// `modifiers` (`u32`).
+<a href=#6 id=6 data-nosnippet>6</a>	///
+<a href=#7 id=7 data-nosnippet>7</a>	/// Originally has `HTTP_ADDREQ_FLAG` prefix.
+<a href=#8 id=8 data-nosnippet>8</a>	</span>=&gt;
+<a href=#9 id=9 data-nosnippet>9</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#10 id=10 data-nosnippet>10</a>	</span>NoValue <span class="number">0
+<a href=#11 id=11 data-nosnippet>11</a>	</span>ADD_IF_NEW <span class="number">0x1000_0000
+<a href=#12 id=12 data-nosnippet>12</a>	</span>ADD <span class="number">0x2000_0000
+<a href=#13 id=13 data-nosnippet>13</a>	</span>COALESCE_WITH_COMMA <span class="number">0x4000_0000
+<a href=#14 id=14 data-nosnippet>14</a>	</span>COALESCE_WITH_SEMICOLON <span class="number">0x0100_0000
+<a href=#15 id=15 data-nosnippet>15</a>	</span>COALESCE <span class="self">Self</span>::COALESCE_WITH_COMMA.<span class="number">0
+<a href=#16 id=16 data-nosnippet>16</a>	</span>REPLACE <span class="number">0x8000_0000
+<a href=#17 id=17 data-nosnippet>17</a></span>}
+<a href=#18 id=18 data-nosnippet>18</a>
+<a href=#19 id=19 data-nosnippet>19</a><span class="macro">const_ordinary!</span> { HTTP_QUERY: u32;
+<a href=#20 id=20 data-nosnippet>20</a>	<span class="doccomment">/// [`HINTERNETREQUEST::HttpQueryInfo`](crate::HINTERNETREQUEST::HttpQueryInfo)
+<a href=#21 id=21 data-nosnippet>21</a>	/// `info` (`u32`).
+<a href=#22 id=22 data-nosnippet>22</a>	</span>=&gt;
+<a href=#23 id=23 data-nosnippet>23</a>	MIME_VERSION <span class="number">0
+<a href=#24 id=24 data-nosnippet>24</a>	</span>CONTENT_TYPE <span class="number">1
+<a href=#25 id=25 data-nosnippet>25</a>	</span>CONTENT_TRANSFER_ENCODING <span class="number">2
+<a href=#26 id=26 data-nosnippet>26</a>	</span>CONTENT_ID <span class="number">3
+<a href=#27 id=27 data-nosnippet>27</a>	</span>CONTENT_DESCRIPTION <span class="number">4
+<a href=#28 id=28 data-nosnippet>28</a>	</span>CONTENT_LENGTH <span class="number">5
+<a href=#29 id=29 data-nosnippet>29</a>	</span>CONTENT_LANGUAGE <span class="number">6
+<a href=#30 id=30 data-nosnippet>30</a>	</span>ALLOW <span class="number">7
+<a href=#31 id=31 data-nosnippet>31</a>	</span>PUBLIC <span class="number">8
+<a href=#32 id=32 data-nosnippet>32</a>	</span>DATE <span class="number">9
+<a href=#33 id=33 data-nosnippet>33</a>	</span>EXPIRES <span class="number">10
+<a href=#34 id=34 data-nosnippet>34</a>	</span>LAST_MODIFIED <span class="number">11
+<a href=#35 id=35 data-nosnippet>35</a>	</span>MESSAGE_ID <span class="number">12
+<a href=#36 id=36 data-nosnippet>36</a>	</span>URI <span class="number">13
+<a href=#37 id=37 data-nosnippet>37</a>	</span>DERIVED_FROM <span class="number">14
+<a href=#38 id=38 data-nosnippet>38</a>	</span>COST <span class="number">15
+<a href=#39 id=39 data-nosnippet>39</a>	</span>LINK <span class="number">16
+<a href=#40 id=40 data-nosnippet>40</a>	</span>PRAGMA <span class="number">17
+<a href=#41 id=41 data-nosnippet>41</a>	</span>VERSION <span class="number">18
+<a href=#42 id=42 data-nosnippet>42</a>	</span>STATUS_CODE <span class="number">19
+<a href=#43 id=43 data-nosnippet>43</a>	</span>STATUS_TEXT <span class="number">20
+<a href=#44 id=44 data-nosnippet>44</a>	</span>RAW_HEADERS <span class="number">21
+<a href=#45 id=45 data-nosnippet>45</a>	</span>RAW_HEADERS_CRLF <span class="number">22
+<a href=#46 id=46 data-nosnippet>46</a>	</span>CONNECTION <span class="number">23
+<a href=#47 id=47 data-nosnippet>47</a>	</span>ACCEPT <span class="number">24
+<a href=#48 id=48 data-nosnippet>48</a>	</span>ACCEPT_CHARSET <span class="number">25
+<a href=#49 id=49 data-nosnippet>49</a>	</span>ACCEPT_ENCODING <span class="number">26
+<a href=#50 id=50 data-nosnippet>50</a>	</span>ACCEPT_LANGUAGE <span class="number">27
+<a href=#51 id=51 data-nosnippet>51</a>	</span>AUTHORIZATION <span class="number">28
+<a href=#52 id=52 data-nosnippet>52</a>	</span>CONTENT_ENCODING <span class="number">29
+<a href=#53 id=53 data-nosnippet>53</a>	</span>FORWARDED <span class="number">30
+<a href=#54 id=54 data-nosnippet>54</a>	</span>FROM <span class="number">31
+<a href=#55 id=55 data-nosnippet>55</a>	</span>IF_MODIFIED_SINCE <span class="number">32
+<a href=#56 id=56 data-nosnippet>56</a>	</span>LOCATION <span class="number">33
+<a href=#57 id=57 data-nosnippet>57</a>	</span>ORIG_URI <span class="number">34
+<a href=#58 id=58 data-nosnippet>58</a>	</span>REFERER <span class="number">35
+<a href=#59 id=59 data-nosnippet>59</a>	</span>RETRY_AFTER <span class="number">36
+<a href=#60 id=60 data-nosnippet>60</a>	</span>SERVER <span class="number">37
+<a href=#61 id=61 data-nosnippet>61</a>	</span>TITLE <span class="number">38
+<a href=#62 id=62 data-nosnippet>62</a>	</span>USER_AGENT <span class="number">39
+<a href=#63 id=63 data-nosnippet>63</a>	</span>WWW_AUTHENTICATE <span class="number">40
+<a href=#64 id=64 data-nosnippet>64</a>	</span>PROXY_AUTHENTICATE <span class="number">41
+<a href=#65 id=65 data-nosnippet>65</a>	</span>ACCEPT_RANGES <span class="number">42
+<a href=#66 id=66 data-nosnippet>66</a>	</span>SET_COOKIE <span class="number">43
+<a href=#67 id=67 data-nosnippet>67</a>	</span>COOKIE <span class="number">44
+<a href=#68 id=68 data-nosnippet>68</a>	</span>REQUEST_METHOD <span class="number">45
+<a href=#69 id=69 data-nosnippet>69</a>	</span>REFRESH <span class="number">46
+<a href=#70 id=70 data-nosnippet>70</a>	</span>CONTENT_DISPOSITION <span class="number">47
+<a href=#71 id=71 data-nosnippet>71</a>
+<a href=#72 id=72 data-nosnippet>72</a>	</span>AGE <span class="number">48
+<a href=#73 id=73 data-nosnippet>73</a>	</span>CACHE_CONTROL <span class="number">49
+<a href=#74 id=74 data-nosnippet>74</a>	</span>CONTENT_BASE <span class="number">50
+<a href=#75 id=75 data-nosnippet>75</a>	</span>CONTENT_LOCATION <span class="number">51
+<a href=#76 id=76 data-nosnippet>76</a>	</span>CONTENT_MD5 <span class="number">52
+<a href=#77 id=77 data-nosnippet>77</a>	</span>CONTENT_RANGE <span class="number">53
+<a href=#78 id=78 data-nosnippet>78</a>	</span>ETAG <span class="number">54
+<a href=#79 id=79 data-nosnippet>79</a>	</span>HOST <span class="number">55
+<a href=#80 id=80 data-nosnippet>80</a>	</span>IF_MATCH <span class="number">56
+<a href=#81 id=81 data-nosnippet>81</a>	</span>IF_NONE_MATCH <span class="number">57
+<a href=#82 id=82 data-nosnippet>82</a>	</span>IF_RANGE <span class="number">58
+<a href=#83 id=83 data-nosnippet>83</a>	</span>IF_UNMODIFIED_SINCE <span class="number">59
+<a href=#84 id=84 data-nosnippet>84</a>	</span>MAX_FORWARDS <span class="number">60
+<a href=#85 id=85 data-nosnippet>85</a>	</span>PROXY_AUTHORIZATION <span class="number">61
+<a href=#86 id=86 data-nosnippet>86</a>	</span>RANGE <span class="number">62
+<a href=#87 id=87 data-nosnippet>87</a>	</span>TRANSFER_ENCODING <span class="number">63
+<a href=#88 id=88 data-nosnippet>88</a>	</span>UPGRADE <span class="number">64
+<a href=#89 id=89 data-nosnippet>89</a>	</span>VARY <span class="number">65
+<a href=#90 id=90 data-nosnippet>90</a>	</span>VIA <span class="number">66
+<a href=#91 id=91 data-nosnippet>91</a>	</span>WARNING <span class="number">67
+<a href=#92 id=92 data-nosnippet>92</a>	</span>EXPECT <span class="number">68
+<a href=#93 id=93 data-nosnippet>93</a>	</span>PROXY_CONNECTION <span class="number">69
+<a href=#94 id=94 data-nosnippet>94</a>	</span>UNLESS_MODIFIED_SINCE <span class="number">70
+<a href=#95 id=95 data-nosnippet>95</a>
+<a href=#96 id=96 data-nosnippet>96</a>	</span>ECHO_REQUEST <span class="number">71
+<a href=#97 id=97 data-nosnippet>97</a>	</span>ECHO_REPLY <span class="number">72
+<a href=#98 id=98 data-nosnippet>98</a>
+<a href=#99 id=99 data-nosnippet>99</a>	</span>ECHO_HEADERS <span class="number">73
+<a href=#100 id=100 data-nosnippet>100</a>	</span>ECHO_HEADERS_CRLF <span class="number">74
+<a href=#101 id=101 data-nosnippet>101</a>
+<a href=#102 id=102 data-nosnippet>102</a>	</span>PROXY_SUPPORT <span class="number">75
+<a href=#103 id=103 data-nosnippet>103</a>	</span>AUTHENTICATION_INFO <span class="number">76
+<a href=#104 id=104 data-nosnippet>104</a>	</span>PASSPORT_URLS <span class="number">77
+<a href=#105 id=105 data-nosnippet>105</a>	</span>PASSPORT_CONFIG <span class="number">78
+<a href=#106 id=106 data-nosnippet>106</a>
+<a href=#107 id=107 data-nosnippet>107</a>	</span>X_CONTENT_TYPE_OPTIONS <span class="number">79
+<a href=#108 id=108 data-nosnippet>108</a>	</span>P3P <span class="number">80
+<a href=#109 id=109 data-nosnippet>109</a>	</span>X_P2P_PEERDIST <span class="number">81
+<a href=#110 id=110 data-nosnippet>110</a>	</span>TRANSLATE <span class="number">82
+<a href=#111 id=111 data-nosnippet>111</a>	</span>X_UA_COMPATIBLE <span class="number">83
+<a href=#112 id=112 data-nosnippet>112</a>	</span>DEFAULT_STYLE <span class="number">84
+<a href=#113 id=113 data-nosnippet>113</a>	</span>X_FRAME_OPTIONS <span class="number">85
+<a href=#114 id=114 data-nosnippet>114</a>	</span>X_XSS_PROTECTION <span class="number">86
+<a href=#115 id=115 data-nosnippet>115</a>
+<a href=#116 id=116 data-nosnippet>116</a>	</span>SET_COOKIE2 <span class="number">87
+<a href=#117 id=117 data-nosnippet>117</a>
+<a href=#118 id=118 data-nosnippet>118</a>	</span>DO_NOT_TRACK <span class="number">88
+<a href=#119 id=119 data-nosnippet>119</a>
+<a href=#120 id=120 data-nosnippet>120</a>	</span>KEEP_ALIVE <span class="number">89
+<a href=#121 id=121 data-nosnippet>121</a>
+<a href=#122 id=122 data-nosnippet>122</a>	</span>HTTP2_SETTINGS <span class="number">90
+<a href=#123 id=123 data-nosnippet>123</a>
+<a href=#124 id=124 data-nosnippet>124</a>	</span>STRICT_TRANSPORT_SECURITY <span class="number">91
+<a href=#125 id=125 data-nosnippet>125</a>
+<a href=#126 id=126 data-nosnippet>126</a>	</span>TOKEN_BINDING <span class="number">92
+<a href=#127 id=127 data-nosnippet>127</a>
+<a href=#128 id=128 data-nosnippet>128</a>	</span>INCLUDE_REFERRED_TOKEN_BINDING_ID <span class="number">93
+<a href=#129 id=129 data-nosnippet>129</a>	</span>INCLUDE_REFERER_TOKEN_BINDING_ID <span class="self">Self</span>::INCLUDE_REFERRED_TOKEN_BINDING_ID.<span class="number">0
+<a href=#130 id=130 data-nosnippet>130</a>
+<a href=#131 id=131 data-nosnippet>131</a>	</span>PUBLIC_KEY_PINS <span class="number">94
+<a href=#132 id=132 data-nosnippet>132</a>	</span>PUBLIC_KEY_PINS_REPORT_ONLY <span class="number">95
+<a href=#133 id=133 data-nosnippet>133</a></span>}
+<a href=#134 id=134 data-nosnippet>134</a>
+<a href=#135 id=135 data-nosnippet>135</a><span class="macro">const_ordinary!</span> { HTTP_QUERY_FLAG: u32;
+<a href=#136 id=136 data-nosnippet>136</a>	<span class="doccomment">/// [`HINTERNETREQUEST::HttpQueryInfo`](crate::HINTERNETREQUEST::HttpQueryInfo)
+<a href=#137 id=137 data-nosnippet>137</a>	/// `flags` (`u32`).
+<a href=#138 id=138 data-nosnippet>138</a>	</span>=&gt;
+<a href=#139 id=139 data-nosnippet>139</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#140 id=140 data-nosnippet>140</a>	</span>NoValue <span class="number">0
+<a href=#141 id=141 data-nosnippet>141</a>	</span>COALESCE <span class="number">0x1000_0000
+<a href=#142 id=142 data-nosnippet>142</a>	</span>COALESCE_WITH_COMMA <span class="number">0x0400_0000
+<a href=#143 id=143 data-nosnippet>143</a>	</span>NUMBER <span class="number">0x2000_0000
+<a href=#144 id=144 data-nosnippet>144</a>	</span>NUMBER64 <span class="number">0x0800_0000
+<a href=#145 id=145 data-nosnippet>145</a>	</span>REQUEST_HEADERS <span class="number">0x8000_0000
+<a href=#146 id=146 data-nosnippet>146</a>	</span>SYSTEMTIME <span class="number">0x4000_0000
+<a href=#147 id=147 data-nosnippet>147</a></span>}
+<a href=#148 id=148 data-nosnippet>148</a>
+<a href=#149 id=149 data-nosnippet>149</a><span class="macro">const_bitflag!</span> { ICU: u32;
+<a href=#150 id=150 data-nosnippet>150</a>	<span class="doccomment">/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl),
+<a href=#151 id=151 data-nosnippet>151</a>	/// [`InternetCombineUrl`](crate::InternetCombineUrl) and
+<a href=#152 id=152 data-nosnippet>152</a>	/// [`InternetCrackUrl`](crate::InternetCrackUrl) `flags` (`u32`).
+<a href=#153 id=153 data-nosnippet>153</a>	</span>=&gt;
+<a href=#154 id=154 data-nosnippet>154</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#155 id=155 data-nosnippet>155</a>	</span>NoValue <span class="number">0
+<a href=#156 id=156 data-nosnippet>156</a>	</span><span class="doccomment">/// (Un)escape URL characters.
+<a href=#157 id=157 data-nosnippet>157</a>	</span>ESCAPE <span class="number">0x8000_0000
+<a href=#158 id=158 data-nosnippet>158</a>	</span><span class="doccomment">/// Use internal username &amp; password.
+<a href=#159 id=159 data-nosnippet>159</a>	</span>USERNAME <span class="number">0x4000_0000
+<a href=#160 id=160 data-nosnippet>160</a>
+<a href=#161 id=161 data-nosnippet>161</a>	</span><span class="doccomment">/// Don't convert unsafe characters to escape sequence.
+<a href=#162 id=162 data-nosnippet>162</a>	</span>NO_ENCODE <span class="number">0x2000_0000
+<a href=#163 id=163 data-nosnippet>163</a>	</span><span class="doccomment">/// Convert %XX escape sequences to characters.
+<a href=#164 id=164 data-nosnippet>164</a>	</span>DECODE <span class="number">0x1000_0000
+<a href=#165 id=165 data-nosnippet>165</a>	</span><span class="doccomment">/// Don't convert .. etc. meta path sequences.
+<a href=#166 id=166 data-nosnippet>166</a>	</span>NO_META <span class="number">0x0800_0000
+<a href=#167 id=167 data-nosnippet>167</a>	</span><span class="doccomment">/// Encode spaces only.
+<a href=#168 id=168 data-nosnippet>168</a>	</span>ENCODE_SPACES_ONLY <span class="number">0x0400_0000
+<a href=#169 id=169 data-nosnippet>169</a>	</span><span class="doccomment">/// Special encode/decode rules for browser.
+<a href=#170 id=170 data-nosnippet>170</a>	</span>BROWSER_MODE <span class="number">0x0200_0000
+<a href=#171 id=171 data-nosnippet>171</a>	</span><span class="doccomment">/// Encode any percent (ASCII25).
+<a href=#172 id=172 data-nosnippet>172</a>	</span>ENCODE_PERCENT <span class="number">0x0000_1000
+<a href=#173 id=173 data-nosnippet>173</a></span>}
+<a href=#174 id=174 data-nosnippet>174</a>
+<a href=#175 id=175 data-nosnippet>175</a><span class="macro">const_ordinary!</span> { INTERNET_DEFAULT_PORT: u16;
+<a href=#176 id=176 data-nosnippet>176</a>	<span class="doccomment">/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `port`
+<a href=#177 id=177 data-nosnippet>177</a>	/// (`u16`).
+<a href=#178 id=178 data-nosnippet>178</a>	///
+<a href=#179 id=179 data-nosnippet>179</a>	/// Originally has `INTERNET_DEFAULT` prefix and `PORT` suffix.
+<a href=#180 id=180 data-nosnippet>180</a>	</span>=&gt;
+<a href=#181 id=181 data-nosnippet>181</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#182 id=182 data-nosnippet>182</a>	</span>NoValue <span class="number">0
+<a href=#183 id=183 data-nosnippet>183</a>
+<a href=#184 id=184 data-nosnippet>184</a>	</span><span class="doccomment">/// Uses the default port for the service specified by `service``.
+<a href=#185 id=185 data-nosnippet>185</a>	</span>INVALID <span class="number">0
+<a href=#186 id=186 data-nosnippet>186</a>	</span><span class="doccomment">/// Uses the default port for FTP servers (port 21).
+<a href=#187 id=187 data-nosnippet>187</a>	</span>FTP <span class="number">21
+<a href=#188 id=188 data-nosnippet>188</a>	</span><span class="doccomment">/// Uses the default port for Gopher servers (port 70).
+<a href=#189 id=189 data-nosnippet>189</a>	</span>GOPHER <span class="number">70
+<a href=#190 id=190 data-nosnippet>190</a>	</span><span class="doccomment">/// Uses the default port for HTTP servers (port 80).
+<a href=#191 id=191 data-nosnippet>191</a>	</span>HTTP <span class="number">80
+<a href=#192 id=192 data-nosnippet>192</a>	</span><span class="doccomment">/// Uses the default port for Secure Hypertext Transfer Protocol (HTTPS)
+<a href=#193 id=193 data-nosnippet>193</a>	/// servers (port 443).
+<a href=#194 id=194 data-nosnippet>194</a>	</span>HTTPS <span class="number">443
+<a href=#195 id=195 data-nosnippet>195</a>	</span><span class="doccomment">/// Uses the default port for SOCKS firewall servers (port 1080).
+<a href=#196 id=196 data-nosnippet>196</a>	</span>SOCKS <span class="number">1080
+<a href=#197 id=197 data-nosnippet>197</a></span>}
+<a href=#198 id=198 data-nosnippet>198</a>
+<a href=#199 id=199 data-nosnippet>199</a><span class="macro">const_bitflag!</span> { INTERNET_FLAG: u32;
+<a href=#200 id=200 data-nosnippet>200</a>	<span class="doccomment">/// Internet API
+<a href=#201 id=201 data-nosnippet>201</a>	/// [flags](https://learn.microsoft.com/en-us/windows/win32/wininet/api-flags)
+<a href=#202 id=202 data-nosnippet>202</a>	/// (`u32`).
+<a href=#203 id=203 data-nosnippet>203</a>	</span>=&gt;
+<a href=#204 id=204 data-nosnippet>204</a>	<span class="doccomment">/// None of the actual values (zero).
+<a href=#205 id=205 data-nosnippet>205</a>	</span>NoValue <span class="number">0
+<a href=#206 id=206 data-nosnippet>206</a>
+<a href=#207 id=207 data-nosnippet>207</a>	</span><span class="doccomment">/// IDN enabled for direct connections.
+<a href=#208 id=208 data-nosnippet>208</a>	</span>IDN_DIRECT <span class="number">0x0000_0001
+<a href=#209 id=209 data-nosnippet>209</a>	</span><span class="doccomment">/// IDN enabled for proxy.
+<a href=#210 id=210 data-nosnippet>210</a>	</span>IDN_PROXY <span class="number">0x0000_0002
+<a href=#211 id=211 data-nosnippet>211</a>
+<a href=#212 id=212 data-nosnippet>212</a>	</span><span class="doccomment">/// Retrieve the original item.
+<a href=#213 id=213 data-nosnippet>213</a>	</span>RELOAD <span class="number">0x8000_0000
+<a href=#214 id=214 data-nosnippet>214</a>
+<a href=#215 id=215 data-nosnippet>215</a>	</span><span class="doccomment">/// FTP/gopher find: receive the item as raw (structured) data.
+<a href=#216 id=216 data-nosnippet>216</a>	</span>RAW_DATA <span class="number">0x4000_0000
+<a href=#217 id=217 data-nosnippet>217</a>	</span><span class="doccomment">/// FTP: use existing InternetConnect handle for server if possible.
+<a href=#218 id=218 data-nosnippet>218</a>	</span>EXISTING_CONNECT <span class="number">0x2000_0000
+<a href=#219 id=219 data-nosnippet>219</a>
+<a href=#220 id=220 data-nosnippet>220</a>	</span><span class="doccomment">/// This request is asynchronous (where supported).
+<a href=#221 id=221 data-nosnippet>221</a>	</span>ASYNC <span class="number">0x1000_0000
+<a href=#222 id=222 data-nosnippet>222</a>
+<a href=#223 id=223 data-nosnippet>223</a>	</span><span class="doccomment">/// Used for FTP connections.
+<a href=#224 id=224 data-nosnippet>224</a>	</span>PASSIVE <span class="number">0x0800_0000
+<a href=#225 id=225 data-nosnippet>225</a>
+<a href=#226 id=226 data-nosnippet>226</a>	</span><span class="doccomment">/// Don't write this item to the cache (same as `DONT_CACHE`).
+<a href=#227 id=227 data-nosnippet>227</a>	</span>NO_CACHE_WRITE <span class="number">0x0400_0000
+<a href=#228 id=228 data-nosnippet>228</a>	</span><span class="doccomment">/// Don't write this item to the cache (same as `NO_CACHE_WRITE`).
+<a href=#229 id=229 data-nosnippet>229</a>	</span>DONT_CACHE <span class="self">Self</span>::NO_CACHE_WRITE.<span class="number">0
+<a href=#230 id=230 data-nosnippet>230</a>	</span><span class="doccomment">/// Make this item persistent in cache.
+<a href=#231 id=231 data-nosnippet>231</a>	</span>MAKE_PERSISTENT <span class="number">0x0200_0000
+<a href=#232 id=232 data-nosnippet>232</a>	</span><span class="doccomment">/// Use offline semantics (same as `OFFLINE`).
+<a href=#233 id=233 data-nosnippet>233</a>	</span>FROM_CACHE <span class="number">0x0100_0000
+<a href=#234 id=234 data-nosnippet>234</a>	</span><span class="doccomment">/// Use offline semantics (same as `FROM_CACHE`).
+<a href=#235 id=235 data-nosnippet>235</a>	</span>OFFLINE <span class="self">Self</span>::FROM_CACHE.<span class="number">0
+<a href=#236 id=236 data-nosnippet>236</a>
+<a href=#237 id=237 data-nosnippet>237</a>	</span><span class="doccomment">/// Use PCT/SSL if applicable (HTTP).
+<a href=#238 id=238 data-nosnippet>238</a>	</span>SECURE <span class="number">0x0080_0000
+<a href=#239 id=239 data-nosnippet>239</a>	</span><span class="doccomment">/// Use keep-alive semantics.
+<a href=#240 id=240 data-nosnippet>240</a>	</span>KEEP_CONNECTION <span class="number">0x0040_0000
+<a href=#241 id=241 data-nosnippet>241</a>	</span><span class="doccomment">/// Don't handle redirections automatically.
+<a href=#242 id=242 data-nosnippet>242</a>	</span>NO_AUTO_REDIRECT <span class="number">0x0020_0000
+<a href=#243 id=243 data-nosnippet>243</a>	</span><span class="doccomment">/// Do background read prefetch.
+<a href=#244 id=244 data-nosnippet>244</a>	</span>READ_PREFETCH <span class="number">0x0010_0000
+<a href=#245 id=245 data-nosnippet>245</a>	</span><span class="doccomment">/// No automatic cookie handling.
+<a href=#246 id=246 data-nosnippet>246</a>	</span>NO_COOKIES <span class="number">0x0008_0000
+<a href=#247 id=247 data-nosnippet>247</a>	</span><span class="doccomment">/// No automatic authentication handling.
+<a href=#248 id=248 data-nosnippet>248</a>	</span>NO_AUTH <span class="number">0x0004_0000
+<a href=#249 id=249 data-nosnippet>249</a>	</span><span class="doccomment">/// Apply restricted zone policies for cookies, auth.
+<a href=#250 id=250 data-nosnippet>250</a>	</span>RESTRICTED_ZONE <span class="number">0x0002_0000
+<a href=#251 id=251 data-nosnippet>251</a>	</span><span class="doccomment">/// Return cache file if net request fails.
+<a href=#252 id=252 data-nosnippet>252</a>	</span>CACHE_IF_NET_FAIL <span class="number">0x0001_0000
+<a href=#253 id=253 data-nosnippet>253</a>
+<a href=#254 id=254 data-nosnippet>254</a>	</span><span class="doccomment">/// Ex: `https://` to `http://`.
+<a href=#255 id=255 data-nosnippet>255</a>	</span>IGNORE_REDIRECT_TO_HTTP <span class="number">0x0000_8000
+<a href=#256 id=256 data-nosnippet>256</a>	</span><span class="doccomment">/// Ex: `http://` to `https://`.
+<a href=#257 id=257 data-nosnippet>257</a>	</span>IGNORE_REDIRECT_TO_HTTPS <span class="number">0x0000_4000
+<a href=#258 id=258 data-nosnippet>258</a>	</span><span class="doccomment">/// Expired X509 Cert.
+<a href=#259 id=259 data-nosnippet>259</a>	</span>IGNORE_CERT_DATE_INVALID <span class="number">0x0000_2000
+<a href=#260 id=260 data-nosnippet>260</a>	</span><span class="doccomment">/// Bad common name in X509 Cert.
+<a href=#261 id=261 data-nosnippet>261</a>	</span>IGNORE_CERT_CN_INVALID <span class="number">0x0000_1000
+<a href=#262 id=262 data-nosnippet>262</a>
+<a href=#263 id=263 data-nosnippet>263</a>	</span><span class="doccomment">/// Asking wininet to update an item if it is newer.
+<a href=#264 id=264 data-nosnippet>264</a>	</span>RESYNCHRONIZE <span class="number">0x0000_0800
+<a href=#265 id=265 data-nosnippet>265</a>	</span><span class="doccomment">/// Asking wininet to do hyperlinking semantic which works right for
+<a href=#266 id=266 data-nosnippet>266</a>	/// scripts.
+<a href=#267 id=267 data-nosnippet>267</a>	</span>HYPERLINK <span class="number">0x0000_0400
+<a href=#268 id=268 data-nosnippet>268</a>	</span><span class="doccomment">/// No cookie popup.
+<a href=#269 id=269 data-nosnippet>269</a>	</span>NO_UI <span class="number">0x0000_0200
+<a href=#270 id=270 data-nosnippet>270</a>	</span><span class="doccomment">/// Asking wininet to add "pragma: no-cache".
+<a href=#271 id=271 data-nosnippet>271</a>	</span>PRAGMA_NOCACHE <span class="number">0x0000_0100
+<a href=#272 id=272 data-nosnippet>272</a>	</span><span class="doccomment">/// Ok to perform lazy cache-write.
+<a href=#273 id=273 data-nosnippet>273</a>	</span>CACHE_ASYNC <span class="number">0x0000_0080
+<a href=#274 id=274 data-nosnippet>274</a>	</span><span class="doccomment">/// This is a forms submit.
+<a href=#275 id=275 data-nosnippet>275</a>	</span>FORMS_SUBMIT <span class="number">0x0000_0040
+<a href=#276 id=276 data-nosnippet>276</a>	</span><span class="doccomment">/// Fwd-back button op.
+<a href=#277 id=277 data-nosnippet>277</a>	</span>FWD_BACK <span class="number">0x0000_0020
+<a href=#278 id=278 data-nosnippet>278</a>	</span><span class="doccomment">/// Need a file for this request (same as `MUST_CACHE_REQUEST`).
+<a href=#279 id=279 data-nosnippet>279</a>	</span>NEED_FILE <span class="number">0x0000_0010
+<a href=#280 id=280 data-nosnippet>280</a>	</span><span class="doccomment">/// Need a file for this request (same as `NEED_FILE`).
+<a href=#281 id=281 data-nosnippet>281</a>	</span>MUST_CACHE_REQUEST <span class="self">Self</span>::NEED_FILE.<span class="number">0
+<a href=#282 id=282 data-nosnippet>282</a>
+<a href=#283 id=283 data-nosnippet>283</a>	</span>TRANSFER_ASCII <span class="number">0x0000_0001 </span><span class="comment">// FTP_TRANSFER_TYPE_ASCII
+<a href=#284 id=284 data-nosnippet>284</a>	</span>TRANSFER_BINARY <span class="number">0x0000_0002 </span><span class="comment">// FTP_TRANSFER_TYPE_BINARY
+<a href=#285 id=285 data-nosnippet>285</a></span>}
+<a href=#286 id=286 data-nosnippet>286</a>
+<a href=#287 id=287 data-nosnippet>287</a><span class="macro">const_ordinary!</span> { INTERNET_OPEN_TYPE: u32;
+<a href=#288 id=288 data-nosnippet>288</a>	<span class="doccomment">/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen)
+<a href=#289 id=289 data-nosnippet>289</a>	/// `access_type` (`u32`).
+<a href=#290 id=290 data-nosnippet>290</a>	</span>=&gt;
+<a href=#291 id=291 data-nosnippet>291</a>	<span class="doccomment">/// Retrieves the proxy or direct configuration from the registry.
+<a href=#292 id=292 data-nosnippet>292</a>	</span>PRECONFIG <span class="number">0
+<a href=#293 id=293 data-nosnippet>293</a>	</span><span class="doccomment">/// Resolves all host names locally.
+<a href=#294 id=294 data-nosnippet>294</a>	</span>DIRECT <span class="number">1
+<a href=#295 id=295 data-nosnippet>295</a>	</span><span class="doccomment">/// Passes requests to the proxy unless a proxy bypass list is supplied and
+<a href=#296 id=296 data-nosnippet>296</a>	/// the name to be resolved bypasses the proxy. In this case, the function
+<a href=#297 id=297 data-nosnippet>297</a>	/// uses `DIRECT`.
+<a href=#298 id=298 data-nosnippet>298</a>	</span>PROXY <span class="number">3
+<a href=#299 id=299 data-nosnippet>299</a>	</span><span class="doccomment">/// Retrieves the proxy or direct configuration from the registry and
+<a href=#300 id=300 data-nosnippet>300</a>	/// prevents the use of a startup Microsoft JScript or Internet Setup (INS)
+<a href=#301 id=301 data-nosnippet>301</a>	/// file.
+<a href=#302 id=302 data-nosnippet>302</a>	</span>PRECONFIG_WITH_NO_AUTOPROXY <span class="number">4
+<a href=#303 id=303 data-nosnippet>303</a></span>}
+<a href=#304 id=304 data-nosnippet>304</a>
+<a href=#305 id=305 data-nosnippet>305</a><span class="macro">const_ordinary!</span> { INTERNET_SCHEME: i32;
+<a href=#306 id=306 data-nosnippet>306</a>	<span class="doccomment">/// [`INTERNET_SCHEME`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/ne-wininet-internet_scheme)
+<a href=#307 id=307 data-nosnippet>307</a>	/// enumeration (`i32`).
+<a href=#308 id=308 data-nosnippet>308</a>	</span>=&gt;
+<a href=#309 id=309 data-nosnippet>309</a>	PARTIAL -<span class="number">2
+<a href=#310 id=310 data-nosnippet>310</a>	</span>UNKNOWN -<span class="number">1
+<a href=#311 id=311 data-nosnippet>311</a>	</span>DEFAULT <span class="number">0
+<a href=#312 id=312 data-nosnippet>312</a>	</span>FTP <span class="number">1
+<a href=#313 id=313 data-nosnippet>313</a>	</span>GOPHER <span class="number">2
+<a href=#314 id=314 data-nosnippet>314</a>	</span>HTTP <span class="number">3
+<a href=#315 id=315 data-nosnippet>315</a>	</span>HTTPS <span class="number">4
+<a href=#316 id=316 data-nosnippet>316</a>	</span>FILE <span class="number">5
+<a href=#317 id=317 data-nosnippet>317</a>	</span>NEWS <span class="number">6
+<a href=#318 id=318 data-nosnippet>318</a>	</span>MAILTO <span class="number">7
+<a href=#319 id=319 data-nosnippet>319</a>	</span>SOCKS <span class="number">8
+<a href=#320 id=320 data-nosnippet>320</a>	</span>JAVASCRIPT <span class="number">9
+<a href=#321 id=321 data-nosnippet>321</a>	</span>VBSCRIPT <span class="number">10
+<a href=#322 id=322 data-nosnippet>322</a>	</span>RES <span class="number">11
+<a href=#323 id=323 data-nosnippet>323</a></span>}
+<a href=#324 id=324 data-nosnippet>324</a>
+<a href=#325 id=325 data-nosnippet>325</a><span class="macro">const_ordinary!</span> { INTERNET_SERVICE: u32;
+<a href=#326 id=326 data-nosnippet>326</a>	<span class="doccomment">/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `service`
+<a href=#327 id=327 data-nosnippet>327</a>	/// (`u32`).
+<a href=#328 id=328 data-nosnippet>328</a>	</span>=&gt;
+<a href=#329 id=329 data-nosnippet>329</a>	FTP <span class="number">1
+<a href=#330 id=330 data-nosnippet>330</a>	</span>GOPHER <span class="number">2
+<a href=#331 id=331 data-nosnippet>331</a>	</span>HTTP <span class="number">3
+<a href=#332 id=332 data-nosnippet>332</a></span>}</code></pre></div></section></main></body></html>

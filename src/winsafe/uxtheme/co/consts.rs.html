@@ -1,0 +1,291 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\uxtheme\co\consts.rs`."><title>consts.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../..\../static.files/storage-e2aeef58.js"></script><script defer src="../../..\../static.files/src-script-813739b1.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\uxtheme\co/</div>consts.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="macro">const_ordinary!</span> { PROPERTYORIGIN: u32;
+<a href=#2 id=2 data-nosnippet>2</a>	<span class="doccomment">/// [`PROPERTYORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/ne-uxtheme-propertyorigin)
+<a href=#3 id=3 data-nosnippet>3</a>	/// enumeration (`u32`).
+<a href=#4 id=4 data-nosnippet>4</a>	</span>=&gt;
+<a href=#5 id=5 data-nosnippet>5</a>	STATE <span class="number">0
+<a href=#6 id=6 data-nosnippet>6</a>	</span>PART <span class="number">1
+<a href=#7 id=7 data-nosnippet>7</a>	</span>CLASS <span class="number">2
+<a href=#8 id=8 data-nosnippet>8</a>	</span>GLOBAL <span class="number">3
+<a href=#9 id=9 data-nosnippet>9</a>	</span>NOTFOUND <span class="number">4
+<a href=#10 id=10 data-nosnippet>10</a></span>}
+<a href=#11 id=11 data-nosnippet>11</a>
+<a href=#12 id=12 data-nosnippet>12</a><span class="macro">const_ordinary!</span> { STAP: u32;
+<a href=#13 id=13 data-nosnippet>13</a>	<span class="doccomment">/// [`HTHEME::GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties)
+<a href=#14 id=14 data-nosnippet>14</a>	/// return value (`u32`).
+<a href=#15 id=15 data-nosnippet>15</a>	</span>=&gt;
+<a href=#16 id=16 data-nosnippet>16</a>	ALLOW_NONCLIENT <span class="number">1 </span>&lt;&lt; <span class="number">0
+<a href=#17 id=17 data-nosnippet>17</a>	</span>ALLOW_CONTROLS <span class="number">1 </span>&lt;&lt; <span class="number">1
+<a href=#18 id=18 data-nosnippet>18</a>	</span>ALLOW_WEBCONTENT <span class="number">1 </span>&lt;&lt; <span class="number">2
+<a href=#19 id=19 data-nosnippet>19</a>	</span>VALIDBITS <span class="self">Self</span>::ALLOW_NONCLIENT.<span class="number">0 </span>| <span class="self">Self</span>::ALLOW_CONTROLS.<span class="number">0 </span>| <span class="self">Self</span>::ALLOW_WEBCONTENT.<span class="number">0
+<a href=#20 id=20 data-nosnippet>20</a></span>}
+<a href=#21 id=21 data-nosnippet>21</a>
+<a href=#22 id=22 data-nosnippet>22</a><span class="macro">const_ordinary!</span> { THEMESIZE: u32;
+<a href=#23 id=23 data-nosnippet>23</a>	<span class="doccomment">/// [`THEMESIZE`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/ne-uxtheme-themesize)
+<a href=#24 id=24 data-nosnippet>24</a>	/// enumeration (`u32`).
+<a href=#25 id=25 data-nosnippet>25</a>	</span>=&gt;
+<a href=#26 id=26 data-nosnippet>26</a>	MIN <span class="number">0
+<a href=#27 id=27 data-nosnippet>27</a>	</span>TRUE <span class="number">1
+<a href=#28 id=28 data-nosnippet>28</a>	</span>DRAW <span class="number">2
+<a href=#29 id=29 data-nosnippet>29</a></span>}
+<a href=#30 id=30 data-nosnippet>30</a>
+<a href=#31 id=31 data-nosnippet>31</a><span class="macro">const_ordinary!</span> { TMT: i32;
+<a href=#32 id=32 data-nosnippet>32</a>	<span class="doccomment">/// Theme property
+<a href=#33 id=33 data-nosnippet>33</a>	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/controls/property-typedefs)
+<a href=#34 id=34 data-nosnippet>34</a>	/// (`i32`).
+<a href=#35 id=35 data-nosnippet>35</a>	</span>=&gt;
+<a href=#36 id=36 data-nosnippet>36</a>	DIBDATA <span class="number">2
+<a href=#37 id=37 data-nosnippet>37</a>	</span>GLYPHDIBDATA <span class="number">8
+<a href=#38 id=38 data-nosnippet>38</a>	</span>ENUM <span class="number">200
+<a href=#39 id=39 data-nosnippet>39</a>	</span>STRING <span class="number">201
+<a href=#40 id=40 data-nosnippet>40</a>	</span>INT <span class="number">202
+<a href=#41 id=41 data-nosnippet>41</a>	</span>BOOL <span class="number">203
+<a href=#42 id=42 data-nosnippet>42</a>	</span>COLOR <span class="number">204
+<a href=#43 id=43 data-nosnippet>43</a>	</span>MARGINS <span class="number">205
+<a href=#44 id=44 data-nosnippet>44</a>	</span>FILENAME <span class="number">206
+<a href=#45 id=45 data-nosnippet>45</a>	</span>SIZE <span class="number">207
+<a href=#46 id=46 data-nosnippet>46</a>	</span>POSITION <span class="number">208
+<a href=#47 id=47 data-nosnippet>47</a>	</span>RECT <span class="number">209
+<a href=#48 id=48 data-nosnippet>48</a>	</span>FONT <span class="number">210
+<a href=#49 id=49 data-nosnippet>49</a>	</span>INTLIST <span class="number">211
+<a href=#50 id=50 data-nosnippet>50</a>	</span>HBITMAP <span class="number">212
+<a href=#51 id=51 data-nosnippet>51</a>	</span>DISKSTREAM <span class="number">213
+<a href=#52 id=52 data-nosnippet>52</a>	</span>STREAM <span class="number">214
+<a href=#53 id=53 data-nosnippet>53</a>	</span>BITMAPREF <span class="number">215
+<a href=#54 id=54 data-nosnippet>54</a>	</span>FLOAT <span class="number">216
+<a href=#55 id=55 data-nosnippet>55</a>	</span>FLOATLIST <span class="number">217
+<a href=#56 id=56 data-nosnippet>56</a>	</span>COLORSCHEMES <span class="number">401
+<a href=#57 id=57 data-nosnippet>57</a>	</span>SIZES <span class="number">402
+<a href=#58 id=58 data-nosnippet>58</a>	</span>CHARSET <span class="number">403
+<a href=#59 id=59 data-nosnippet>59</a>	</span>NAME <span class="number">600
+<a href=#60 id=60 data-nosnippet>60</a>	</span>DISPLAYNAME <span class="number">601
+<a href=#61 id=61 data-nosnippet>61</a>	</span>TOOLTIP <span class="number">602
+<a href=#62 id=62 data-nosnippet>62</a>	</span>COMPANY <span class="number">603
+<a href=#63 id=63 data-nosnippet>63</a>	</span>AUTHOR <span class="number">604
+<a href=#64 id=64 data-nosnippet>64</a>	</span>COPYRIGHT <span class="number">605
+<a href=#65 id=65 data-nosnippet>65</a>	</span>URL <span class="number">606
+<a href=#66 id=66 data-nosnippet>66</a>	</span>VERSION <span class="number">607
+<a href=#67 id=67 data-nosnippet>67</a>	</span>DESCRIPTION <span class="number">608
+<a href=#68 id=68 data-nosnippet>68</a>	</span>FIRST_RCSTRING_NAME <span class="self">Self</span>::DISPLAYNAME.<span class="number">0
+<a href=#69 id=69 data-nosnippet>69</a>	</span>LAST_RCSTRING_NAME <span class="self">Self</span>::DESCRIPTION.<span class="number">0
+<a href=#70 id=70 data-nosnippet>70</a>	</span>CAPTIONFONT <span class="number">801
+<a href=#71 id=71 data-nosnippet>71</a>	</span>SMALLCAPTIONFONT <span class="number">802
+<a href=#72 id=72 data-nosnippet>72</a>	</span>MENUFONT <span class="number">803
+<a href=#73 id=73 data-nosnippet>73</a>	</span>STATUSFONT <span class="number">804
+<a href=#74 id=74 data-nosnippet>74</a>	</span>MSGBOXFONT <span class="number">805
+<a href=#75 id=75 data-nosnippet>75</a>	</span>ICONTITLEFONT <span class="number">806
+<a href=#76 id=76 data-nosnippet>76</a>	</span>HEADING1FONT <span class="number">807
+<a href=#77 id=77 data-nosnippet>77</a>	</span>HEADING2FONT <span class="number">808
+<a href=#78 id=78 data-nosnippet>78</a>	</span>BODYFONT <span class="number">809
+<a href=#79 id=79 data-nosnippet>79</a>	</span>FIRSTFONT <span class="self">Self</span>::CAPTIONFONT.<span class="number">0
+<a href=#80 id=80 data-nosnippet>80</a>	</span>LASTFONT <span class="self">Self</span>::BODYFONT.<span class="number">0
+<a href=#81 id=81 data-nosnippet>81</a>	</span>FLATMENUS <span class="number">1001
+<a href=#82 id=82 data-nosnippet>82</a>	</span>FIRSTBOOL <span class="self">Self</span>::FLATMENUS.<span class="number">0
+<a href=#83 id=83 data-nosnippet>83</a>	</span>LASTBOOL <span class="self">Self</span>::FLATMENUS.<span class="number">0
+<a href=#84 id=84 data-nosnippet>84</a>	</span>SIZINGBORDERWIDTH <span class="number">1201
+<a href=#85 id=85 data-nosnippet>85</a>	</span>SCROLLBARWIDTH <span class="number">1202
+<a href=#86 id=86 data-nosnippet>86</a>	</span>SCROLLBARHEIGHT <span class="number">1203
+<a href=#87 id=87 data-nosnippet>87</a>	</span>CAPTIONBARWIDTH <span class="number">1204
+<a href=#88 id=88 data-nosnippet>88</a>	</span>CAPTIONBARHEIGHT <span class="number">1205
+<a href=#89 id=89 data-nosnippet>89</a>	</span>SMCAPTIONBARWIDTH <span class="number">1206
+<a href=#90 id=90 data-nosnippet>90</a>	</span>SMCAPTIONBARHEIGHT <span class="number">1207
+<a href=#91 id=91 data-nosnippet>91</a>	</span>MENUBARWIDTH <span class="number">1208
+<a href=#92 id=92 data-nosnippet>92</a>	</span>MENUBARHEIGHT <span class="number">1209
+<a href=#93 id=93 data-nosnippet>93</a>	</span>PADDEDBORDERWIDTH <span class="number">1210
+<a href=#94 id=94 data-nosnippet>94</a>	</span>FIRSTSIZE <span class="self">Self</span>::SIZINGBORDERWIDTH.<span class="number">0
+<a href=#95 id=95 data-nosnippet>95</a>	</span>LASTSIZE <span class="self">Self</span>::PADDEDBORDERWIDTH.<span class="number">0
+<a href=#96 id=96 data-nosnippet>96</a>	</span>MINCOLORDEPTH <span class="number">1301
+<a href=#97 id=97 data-nosnippet>97</a>	</span>FIRSTINT <span class="self">Self</span>::MINCOLORDEPTH.<span class="number">0
+<a href=#98 id=98 data-nosnippet>98</a>	</span>LASTINT <span class="self">Self</span>::MINCOLORDEPTH.<span class="number">0
+<a href=#99 id=99 data-nosnippet>99</a>	</span>CSSNAME <span class="number">1401
+<a href=#100 id=100 data-nosnippet>100</a>	</span>XMLNAME <span class="number">1402
+<a href=#101 id=101 data-nosnippet>101</a>	</span>LASTUPDATED <span class="number">1403
+<a href=#102 id=102 data-nosnippet>102</a>	</span>ALIAS <span class="number">1404
+<a href=#103 id=103 data-nosnippet>103</a>	</span>FIRSTSTRING <span class="self">Self</span>::CSSNAME.<span class="number">0
+<a href=#104 id=104 data-nosnippet>104</a>	</span>LASTSTRING <span class="self">Self</span>::ALIAS.<span class="number">0
+<a href=#105 id=105 data-nosnippet>105</a>	</span>SCROLLBAR <span class="number">1601
+<a href=#106 id=106 data-nosnippet>106</a>	</span>BACKGROUND <span class="number">1602
+<a href=#107 id=107 data-nosnippet>107</a>	</span>ACTIVECAPTION <span class="number">1603
+<a href=#108 id=108 data-nosnippet>108</a>	</span>INACTIVECAPTION <span class="number">1604
+<a href=#109 id=109 data-nosnippet>109</a>	</span>MENU <span class="number">1605
+<a href=#110 id=110 data-nosnippet>110</a>	</span>WINDOW <span class="number">1606
+<a href=#111 id=111 data-nosnippet>111</a>	</span>WINDOWFRAME <span class="number">1607
+<a href=#112 id=112 data-nosnippet>112</a>	</span>MENUTEXT <span class="number">1608
+<a href=#113 id=113 data-nosnippet>113</a>	</span>WINDOWTEXT <span class="number">1609
+<a href=#114 id=114 data-nosnippet>114</a>	</span>CAPTIONTEXT <span class="number">1610
+<a href=#115 id=115 data-nosnippet>115</a>	</span>ACTIVEBORDER <span class="number">1611
+<a href=#116 id=116 data-nosnippet>116</a>	</span>INACTIVEBORDER <span class="number">1612
+<a href=#117 id=117 data-nosnippet>117</a>	</span>APPWORKSPACE <span class="number">1613
+<a href=#118 id=118 data-nosnippet>118</a>	</span>HIGHLIGHT <span class="number">1614
+<a href=#119 id=119 data-nosnippet>119</a>	</span>HIGHLIGHTTEXT <span class="number">1615
+<a href=#120 id=120 data-nosnippet>120</a>	</span>BTNFACE <span class="number">1616
+<a href=#121 id=121 data-nosnippet>121</a>	</span>BTNSHADOW <span class="number">1617
+<a href=#122 id=122 data-nosnippet>122</a>	</span>GRAYTEXT <span class="number">1618
+<a href=#123 id=123 data-nosnippet>123</a>	</span>BTNTEXT <span class="number">1619
+<a href=#124 id=124 data-nosnippet>124</a>	</span>INACTIVECAPTIONTEXT <span class="number">1620
+<a href=#125 id=125 data-nosnippet>125</a>	</span>BTNHIGHLIGHT <span class="number">1621
+<a href=#126 id=126 data-nosnippet>126</a>	</span>DKSHADOW3D <span class="number">1622
+<a href=#127 id=127 data-nosnippet>127</a>	</span>LIGHT3D <span class="number">1623
+<a href=#128 id=128 data-nosnippet>128</a>	</span>INFOTEXT <span class="number">1624
+<a href=#129 id=129 data-nosnippet>129</a>	</span>INFOBK <span class="number">1625
+<a href=#130 id=130 data-nosnippet>130</a>	</span>BUTTONALTERNATEFACE <span class="number">1626
+<a href=#131 id=131 data-nosnippet>131</a>	</span>HOTTRACKING <span class="number">1627
+<a href=#132 id=132 data-nosnippet>132</a>	</span>GRADIENTACTIVECAPTION <span class="number">1628
+<a href=#133 id=133 data-nosnippet>133</a>	</span>GRADIENTINACTIVECAPTION <span class="number">1629
+<a href=#134 id=134 data-nosnippet>134</a>	</span>MENUHILIGHT <span class="number">1630
+<a href=#135 id=135 data-nosnippet>135</a>	</span>MENUBAR <span class="number">1631
+<a href=#136 id=136 data-nosnippet>136</a>	</span>FIRSTCOLOR <span class="self">Self</span>::SCROLLBAR.<span class="number">0
+<a href=#137 id=137 data-nosnippet>137</a>	</span>LASTCOLOR <span class="self">Self</span>::MENUBAR.<span class="number">0
+<a href=#138 id=138 data-nosnippet>138</a>	</span>FROMHUE1 <span class="number">1801
+<a href=#139 id=139 data-nosnippet>139</a>	</span>FROMHUE2 <span class="number">1802
+<a href=#140 id=140 data-nosnippet>140</a>	</span>FROMHUE3 <span class="number">1803
+<a href=#141 id=141 data-nosnippet>141</a>	</span>FROMHUE4 <span class="number">1804
+<a href=#142 id=142 data-nosnippet>142</a>	</span>FROMHUE5 <span class="number">1805
+<a href=#143 id=143 data-nosnippet>143</a>	</span>TOHUE1 <span class="number">1806
+<a href=#144 id=144 data-nosnippet>144</a>	</span>TOHUE2 <span class="number">1807
+<a href=#145 id=145 data-nosnippet>145</a>	</span>TOHUE3 <span class="number">1808
+<a href=#146 id=146 data-nosnippet>146</a>	</span>TOHUE4 <span class="number">1809
+<a href=#147 id=147 data-nosnippet>147</a>	</span>TOHUE5 <span class="number">1810
+<a href=#148 id=148 data-nosnippet>148</a>	</span>FROMCOLOR1 <span class="number">2001
+<a href=#149 id=149 data-nosnippet>149</a>	</span>FROMCOLOR2 <span class="number">2002
+<a href=#150 id=150 data-nosnippet>150</a>	</span>FROMCOLOR3 <span class="number">2003
+<a href=#151 id=151 data-nosnippet>151</a>	</span>FROMCOLOR4 <span class="number">2004
+<a href=#152 id=152 data-nosnippet>152</a>	</span>FROMCOLOR5 <span class="number">2005
+<a href=#153 id=153 data-nosnippet>153</a>	</span>TOCOLOR1 <span class="number">2006
+<a href=#154 id=154 data-nosnippet>154</a>	</span>TOCOLOR2 <span class="number">2007
+<a href=#155 id=155 data-nosnippet>155</a>	</span>TOCOLOR3 <span class="number">2008
+<a href=#156 id=156 data-nosnippet>156</a>	</span>TOCOLOR4 <span class="number">2009
+<a href=#157 id=157 data-nosnippet>157</a>	</span>TOCOLOR5 <span class="number">2010
+<a href=#158 id=158 data-nosnippet>158</a>	</span>TRANSPARENT <span class="number">2201
+<a href=#159 id=159 data-nosnippet>159</a>	</span>AUTOSIZE <span class="number">2202
+<a href=#160 id=160 data-nosnippet>160</a>	</span>BORDERONLY <span class="number">2203
+<a href=#161 id=161 data-nosnippet>161</a>	</span>COMPOSITED <span class="number">2204
+<a href=#162 id=162 data-nosnippet>162</a>	</span>BGFILL <span class="number">2205
+<a href=#163 id=163 data-nosnippet>163</a>	</span>GLYPHTRANSPARENT <span class="number">2206
+<a href=#164 id=164 data-nosnippet>164</a>	</span>GLYPHONLY <span class="number">2207
+<a href=#165 id=165 data-nosnippet>165</a>	</span>ALWAYSSHOWSIZINGBAR <span class="number">2208
+<a href=#166 id=166 data-nosnippet>166</a>	</span>MIRRORIMAGE <span class="number">2209
+<a href=#167 id=167 data-nosnippet>167</a>	</span>UNIFORMSIZING <span class="number">2210
+<a href=#168 id=168 data-nosnippet>168</a>	</span>INTEGRALSIZING <span class="number">2211
+<a href=#169 id=169 data-nosnippet>169</a>	</span>SOURCEGROW <span class="number">2212
+<a href=#170 id=170 data-nosnippet>170</a>	</span>SOURCESHRINK <span class="number">2213
+<a href=#171 id=171 data-nosnippet>171</a>	</span>DRAWBORDERS <span class="number">2214
+<a href=#172 id=172 data-nosnippet>172</a>	</span>NOETCHEDEFFECT <span class="number">2215
+<a href=#173 id=173 data-nosnippet>173</a>	</span>TEXTAPPLYOVERLAY <span class="number">2216
+<a href=#174 id=174 data-nosnippet>174</a>	</span>TEXTGLOW <span class="number">2217
+<a href=#175 id=175 data-nosnippet>175</a>	</span>TEXTITALIC <span class="number">2218
+<a href=#176 id=176 data-nosnippet>176</a>	</span>COMPOSITEDOPAQUE <span class="number">2219
+<a href=#177 id=177 data-nosnippet>177</a>	</span>LOCALIZEDMIRRORIMAGE <span class="number">2220
+<a href=#178 id=178 data-nosnippet>178</a>	</span>IMAGECOUNT <span class="number">2401
+<a href=#179 id=179 data-nosnippet>179</a>	</span>ALPHALEVEL <span class="number">2402
+<a href=#180 id=180 data-nosnippet>180</a>	</span>BORDERSIZE <span class="number">2403
+<a href=#181 id=181 data-nosnippet>181</a>	</span>ROUNDCORNERWIDTH <span class="number">2404
+<a href=#182 id=182 data-nosnippet>182</a>	</span>ROUNDCORNERHEIGHT <span class="number">2405
+<a href=#183 id=183 data-nosnippet>183</a>	</span>GRADIENTRATIO1 <span class="number">2406
+<a href=#184 id=184 data-nosnippet>184</a>	</span>GRADIENTRATIO2 <span class="number">2407
+<a href=#185 id=185 data-nosnippet>185</a>	</span>GRADIENTRATIO3 <span class="number">2408
+<a href=#186 id=186 data-nosnippet>186</a>	</span>GRADIENTRATIO4 <span class="number">2409
+<a href=#187 id=187 data-nosnippet>187</a>	</span>GRADIENTRATIO5 <span class="number">2410
+<a href=#188 id=188 data-nosnippet>188</a>	</span>PROGRESSCHUNKSIZE <span class="number">2411
+<a href=#189 id=189 data-nosnippet>189</a>	</span>PROGRESSSPACESIZE <span class="number">2412
+<a href=#190 id=190 data-nosnippet>190</a>	</span>SATURATION <span class="number">2413
+<a href=#191 id=191 data-nosnippet>191</a>	</span>TEXTBORDERSIZE <span class="number">2414
+<a href=#192 id=192 data-nosnippet>192</a>	</span>ALPHATHRESHOLD <span class="number">2415
+<a href=#193 id=193 data-nosnippet>193</a>	</span>WIDTH <span class="number">2416
+<a href=#194 id=194 data-nosnippet>194</a>	</span>HEIGHT <span class="number">2417
+<a href=#195 id=195 data-nosnippet>195</a>	</span>GLYPHINDEX <span class="number">2418
+<a href=#196 id=196 data-nosnippet>196</a>	</span>TRUESIZESTRETCHMARK <span class="number">2419
+<a href=#197 id=197 data-nosnippet>197</a>	</span>MINDPI1 <span class="number">2420
+<a href=#198 id=198 data-nosnippet>198</a>	</span>MINDPI2 <span class="number">2421
+<a href=#199 id=199 data-nosnippet>199</a>	</span>MINDPI3 <span class="number">2422
+<a href=#200 id=200 data-nosnippet>200</a>	</span>MINDPI4 <span class="number">2423
+<a href=#201 id=201 data-nosnippet>201</a>	</span>MINDPI5 <span class="number">2424
+<a href=#202 id=202 data-nosnippet>202</a>	</span>TEXTGLOWSIZE <span class="number">2425
+<a href=#203 id=203 data-nosnippet>203</a>	</span>FRAMESPERSECOND <span class="number">2426
+<a href=#204 id=204 data-nosnippet>204</a>	</span>PIXELSPERFRAME <span class="number">2427
+<a href=#205 id=205 data-nosnippet>205</a>	</span>ANIMATIONDELAY <span class="number">2428
+<a href=#206 id=206 data-nosnippet>206</a>	</span>GLOWINTENSITY <span class="number">2429
+<a href=#207 id=207 data-nosnippet>207</a>	</span>OPACITY <span class="number">2430
+<a href=#208 id=208 data-nosnippet>208</a>	</span>COLORIZATIONCOLOR <span class="number">2431
+<a href=#209 id=209 data-nosnippet>209</a>	</span>COLORIZATIONOPACITY <span class="number">2432
+<a href=#210 id=210 data-nosnippet>210</a>	</span>MINDPI6 <span class="number">2433
+<a href=#211 id=211 data-nosnippet>211</a>	</span>MINDPI7 <span class="number">2434
+<a href=#212 id=212 data-nosnippet>212</a>	</span>GLYPHFONT <span class="number">2601
+<a href=#213 id=213 data-nosnippet>213</a>	</span>IMAGEFILE <span class="number">3001
+<a href=#214 id=214 data-nosnippet>214</a>	</span>IMAGEFILE1 <span class="number">3002
+<a href=#215 id=215 data-nosnippet>215</a>	</span>IMAGEFILE2 <span class="number">3003
+<a href=#216 id=216 data-nosnippet>216</a>	</span>IMAGEFILE3 <span class="number">3004
+<a href=#217 id=217 data-nosnippet>217</a>	</span>IMAGEFILE4 <span class="number">3005
+<a href=#218 id=218 data-nosnippet>218</a>	</span>IMAGEFILE5 <span class="number">3006
+<a href=#219 id=219 data-nosnippet>219</a>	</span>GLYPHIMAGEFILE <span class="number">3008
+<a href=#220 id=220 data-nosnippet>220</a>	</span>IMAGEFILE6 <span class="number">3009
+<a href=#221 id=221 data-nosnippet>221</a>	</span>IMAGEFILE7 <span class="number">3010
+<a href=#222 id=222 data-nosnippet>222</a>	</span>TEXT <span class="number">3201
+<a href=#223 id=223 data-nosnippet>223</a>	</span>CLASSICVALUE <span class="number">3202
+<a href=#224 id=224 data-nosnippet>224</a>	</span>OFFSET <span class="number">3401
+<a href=#225 id=225 data-nosnippet>225</a>	</span>TEXTSHADOWOFFSET <span class="number">3402
+<a href=#226 id=226 data-nosnippet>226</a>	</span>MINSIZE <span class="number">3403
+<a href=#227 id=227 data-nosnippet>227</a>	</span>MINSIZE1 <span class="number">3404
+<a href=#228 id=228 data-nosnippet>228</a>	</span>MINSIZE2 <span class="number">3405
+<a href=#229 id=229 data-nosnippet>229</a>	</span>MINSIZE3 <span class="number">3406
+<a href=#230 id=230 data-nosnippet>230</a>	</span>MINSIZE4 <span class="number">3407
+<a href=#231 id=231 data-nosnippet>231</a>	</span>MINSIZE5 <span class="number">3408
+<a href=#232 id=232 data-nosnippet>232</a>	</span>NORMALSIZE <span class="number">3409
+<a href=#233 id=233 data-nosnippet>233</a>	</span>MINSIZE6 <span class="number">3410
+<a href=#234 id=234 data-nosnippet>234</a>	</span>MINSIZE7 <span class="number">3411
+<a href=#235 id=235 data-nosnippet>235</a>	</span>SIZINGMARGINS <span class="number">3601
+<a href=#236 id=236 data-nosnippet>236</a>	</span>CONTENTMARGINS <span class="number">3602
+<a href=#237 id=237 data-nosnippet>237</a>	</span>CAPTIONMARGINS <span class="number">3603
+<a href=#238 id=238 data-nosnippet>238</a>	</span>BORDERCOLOR <span class="number">3801
+<a href=#239 id=239 data-nosnippet>239</a>	</span>FILLCOLOR <span class="number">3802
+<a href=#240 id=240 data-nosnippet>240</a>	</span>TEXTCOLOR <span class="number">3803
+<a href=#241 id=241 data-nosnippet>241</a>	</span>EDGELIGHTCOLOR <span class="number">3804
+<a href=#242 id=242 data-nosnippet>242</a>	</span>EDGEHIGHLIGHTCOLOR <span class="number">3805
+<a href=#243 id=243 data-nosnippet>243</a>	</span>EDGESHADOWCOLOR <span class="number">3806
+<a href=#244 id=244 data-nosnippet>244</a>	</span>EDGEDKSHADOWCOLOR <span class="number">3807
+<a href=#245 id=245 data-nosnippet>245</a>	</span>EDGEFILLCOLOR <span class="number">3808
+<a href=#246 id=246 data-nosnippet>246</a>	</span>TRANSPARENTCOLOR <span class="number">3809
+<a href=#247 id=247 data-nosnippet>247</a>	</span>GRADIENTCOLOR1 <span class="number">3810
+<a href=#248 id=248 data-nosnippet>248</a>	</span>GRADIENTCOLOR2 <span class="number">3811
+<a href=#249 id=249 data-nosnippet>249</a>	</span>GRADIENTCOLOR3 <span class="number">3812
+<a href=#250 id=250 data-nosnippet>250</a>	</span>GRADIENTCOLOR4 <span class="number">3813
+<a href=#251 id=251 data-nosnippet>251</a>	</span>GRADIENTCOLOR5 <span class="number">3814
+<a href=#252 id=252 data-nosnippet>252</a>	</span>SHADOWCOLOR <span class="number">3815
+<a href=#253 id=253 data-nosnippet>253</a>	</span>GLOWCOLOR <span class="number">3816
+<a href=#254 id=254 data-nosnippet>254</a>	</span>TEXTBORDERCOLOR <span class="number">3817
+<a href=#255 id=255 data-nosnippet>255</a>	</span>TEXTSHADOWCOLOR <span class="number">3818
+<a href=#256 id=256 data-nosnippet>256</a>	</span>GLYPHTEXTCOLOR <span class="number">3819
+<a href=#257 id=257 data-nosnippet>257</a>	</span>GLYPHTRANSPARENTCOLOR <span class="number">3820
+<a href=#258 id=258 data-nosnippet>258</a>	</span>FILLCOLORHINT <span class="number">3821
+<a href=#259 id=259 data-nosnippet>259</a>	</span>BORDERCOLORHINT <span class="number">3822
+<a href=#260 id=260 data-nosnippet>260</a>	</span>ACCENTCOLORHINT <span class="number">3823
+<a href=#261 id=261 data-nosnippet>261</a>	</span>TEXTCOLORHINT <span class="number">3824
+<a href=#262 id=262 data-nosnippet>262</a>	</span>HEADING1TEXTCOLOR <span class="number">3825
+<a href=#263 id=263 data-nosnippet>263</a>	</span>HEADING2TEXTCOLOR <span class="number">3826
+<a href=#264 id=264 data-nosnippet>264</a>	</span>BODYTEXTCOLOR <span class="number">3827
+<a href=#265 id=265 data-nosnippet>265</a>	</span>BGTYPE <span class="number">4001
+<a href=#266 id=266 data-nosnippet>266</a>	</span>BORDERTYPE <span class="number">4002
+<a href=#267 id=267 data-nosnippet>267</a>	</span>FILLTYPE <span class="number">4003
+<a href=#268 id=268 data-nosnippet>268</a>	</span>SIZINGTYPE <span class="number">4004
+<a href=#269 id=269 data-nosnippet>269</a>	</span>HALIGN <span class="number">4005
+<a href=#270 id=270 data-nosnippet>270</a>	</span>CONTENTALIGNMENT <span class="number">4006
+<a href=#271 id=271 data-nosnippet>271</a>	</span>VALIGN <span class="number">4007
+<a href=#272 id=272 data-nosnippet>272</a>	</span>OFFSETTYPE <span class="number">4008
+<a href=#273 id=273 data-nosnippet>273</a>	</span>ICONEFFECT <span class="number">4009
+<a href=#274 id=274 data-nosnippet>274</a>	</span>TEXTSHADOWTYPE <span class="number">4010
+<a href=#275 id=275 data-nosnippet>275</a>	</span>IMAGELAYOUT <span class="number">4011
+<a href=#276 id=276 data-nosnippet>276</a>	</span>GLYPHTYPE <span class="number">4012
+<a href=#277 id=277 data-nosnippet>277</a>	</span>IMAGESELECTTYPE <span class="number">4013
+<a href=#278 id=278 data-nosnippet>278</a>	</span>GLYPHFONTSIZINGTYPE <span class="number">4014
+<a href=#279 id=279 data-nosnippet>279</a>	</span>TRUESIZESCALINGTYPE <span class="number">4015
+<a href=#280 id=280 data-nosnippet>280</a>	</span>USERPICTURE <span class="number">5001
+<a href=#281 id=281 data-nosnippet>281</a>	</span>DEFAULTPANESIZE <span class="number">5002
+<a href=#282 id=282 data-nosnippet>282</a>	</span>BLENDCOLOR <span class="number">5003
+<a href=#283 id=283 data-nosnippet>283</a>	</span>CUSTOMSPLITRECT <span class="number">5004
+<a href=#284 id=284 data-nosnippet>284</a>	</span>ANIMATIONBUTTONRECT <span class="number">5005
+<a href=#285 id=285 data-nosnippet>285</a>	</span>ANIMATIONDURATION <span class="number">5006
+<a href=#286 id=286 data-nosnippet>286</a>	</span>TRANSITIONDURATIONS <span class="number">6000
+<a href=#287 id=287 data-nosnippet>287</a>	</span>SCALEDBACKGROUND <span class="number">7001
+<a href=#288 id=288 data-nosnippet>288</a>	</span>ATLASIMAGE <span class="number">8000
+<a href=#289 id=289 data-nosnippet>289</a>	</span>ATLASINPUTIMAGE <span class="number">8001
+<a href=#290 id=290 data-nosnippet>290</a>	</span>ATLASRECT <span class="number">8002
+<a href=#291 id=291 data-nosnippet>291</a></span>}</code></pre></div></section></main></body></html>

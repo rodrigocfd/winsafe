@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This trait is enabled with the `gui` feature, and is implemented by all windows which can host child controls."><title>GuiParent in winsafe::prelude - Rust</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2"href="../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../static.files/rustdoc-e56847b5.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.92.0-nightly (54a8a1db6 2025-09-26)" data-channel="nightly" data-search-js="search-e256b49e.js" data-stringdex-js="stringdex-061df703.js" data-settings-js="settings-c38705f0.js" ><script src="../../static.files/storage-e2aeef58.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-ce535bd0.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-263c88ec.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-eab170b8.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-044be391.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><rustdoc-topbar><h2><a href="#">GuiParent</a></h2></rustdoc-topbar><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../winsafe/index.html">winsafe</a><span class="version">0.0.27</span></h2></div><div class="sidebar-elems"><section id="rustdoc-toc"><h2 class="location"><a href="#">GuiParent</a></h2><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.run_ui_thread" title="run_ui_thread">run_ui_thread</a></li><li><a href="#method.spawn_thread" title="spawn_thread">spawn_thread</a></li></ul><h3><a href="#dyn-compatibility">Dyn Compatibility</a></h3><h3><a href="#implementors">Implementors</a></h3></section><div id="rustdoc-modnav"><h2><a href="index.html">In winsafe::<wbr>prelude</a></h2></div></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><div class="width-limiter"><section id="main-content" class="content"><div class="main-heading"><div class="rustdoc-breadcrumbs"><a href="../index.html">winsafe</a>::<wbr><a href="index.html">prelude</a></div><h1>Trait <span class="trait">GuiParent</span>&nbsp;<button id="copy-path" title="Copy item path to clipboard">Copy item path</button></h1><rustdoc-toolbar></rustdoc-toolbar><span class="sub-heading"><a class="src" href="../../src/winsafe/gui/traits_gui.rs.html#64-197">Source</a> </span></div><pre class="rust item-decl"><code>pub trait GuiParent:
+    <a class="trait" href="trait.GuiWindow.html" title="trait winsafe::prelude::GuiWindow">GuiWindow</a>
+    + <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a>
+    + <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;BaseWnd&gt; {
+    // Provided methods
+    fn <a href="#method.spawn_thread" class="fn">spawn_thread</a>&lt;F&gt;(&amp;self, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static</span> { ... }
+<span class="item-spacer"></span>    fn <a href="#method.run_ui_thread" class="fn">run_ui_thread</a>&lt;F&gt;(&amp;self, func: F)
+       <span class="where">where F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static</span> { ... }
+}</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate feature <code>gui</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This trait is enabled with the <code>gui</code> feature, and is implemented by all
+windows which can host child controls.</p>
+<p>Prefer importing this trait through the prelude:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::prelude::<span class="kw-2">*</span>;</code></pre></div></div></details><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.spawn_thread" class="method"><a class="src rightside" href="../../src/winsafe/gui/traits_gui.rs.html#108-113">Source</a><h4 class="code-header">fn <a href="#method.spawn_thread" class="fn">spawn_thread</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,</div></h4></section></summary><div class="docblock"><p>This method calls <a href="https://doc.rust-lang.org/nightly/std/thread/fn.spawn.html" title="fn std::thread::spawn"><code>std::thread::spawn</code></a>, but it allows the returning of
+an error value. This error value will be forwarded to the original UI
+thread, allowing it to be caught at
+<a href="../gui/struct.WindowMain.html#method.run_main" title="method winsafe::gui::WindowMain::run_main"><code>WindowMain::run_main</code></a>.</p>
+<p>It’s a way to ensure that, upon an unexpected error, you application
+will be terminated gracefully.</p>
+<h5 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h5>
+<p>The example below shows the event of a
+<a href="trait.GuiEventsButton.html#method.bn_clicked" title="method winsafe::prelude::GuiEventsButton::bn_clicked">button click</a> which spawns
+a new thread.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, gui};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+</span><span class="kw">let </span>btn: gui::Button;
+
+btn.on().bn_clicked({
+    <span class="kw">let </span>wnd = wnd.clone();
+    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+        <span class="macro">println!</span>(<span class="string">"Click event at {:#x}"</span>, w::GetCurrentThreadId());
+
+        wnd.spawn_thread({
+            <span class="kw">let </span>wnd = wnd.clone();
+            <span class="kw">move </span>|| {
+                <span class="macro">println!</span>(<span class="string">"This is another thread: {:#x}"</span>, w::GetCurrentThreadId());
+                <span class="kw">if </span><span class="number">1 </span>!= <span class="number">2 </span>{
+                    <span class="prelude-val">Err</span>(<span class="string">"Unexpected condition, goodbye."</span>.into())
+                } <span class="kw">else </span>{
+                    <span class="prelude-val">Ok</span>(())
+                }
+            }
+        });
+
+        <span class="prelude-val">Ok</span>(())
+    }
+});</code></pre></div></div></details><details class="toggle method-toggle" open><summary><section id="method.run_ui_thread" class="method"><a class="src rightside" href="../../src/winsafe/gui/traits_gui.rs.html#191-196">Source</a><h4 class="code-header">fn <a href="#method.run_ui_thread" class="fn">run_ui_thread</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
+    F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnOnce.html" title="trait core::ops::function::FnOnce">FnOnce</a>() -&gt; <a class="type" href="../type.AnyResult.html" title="type winsafe::AnyResult">AnyResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + 'static,</div></h4></section></summary><div class="docblock"><p>Runs a closure synchronously in the window’s original UI thread,
+allowing UI updates without the risk of a deadlock.</p>
+<h5 id="rationale"><a class="doc-anchor" href="#rationale">§</a>Rationale</h5>
+<p>If you perform a very long task in the UI thread, the UI freezes until
+the task is complete – this may cause the impression that your
+application crashed. That’s why long tasks should be performed in
+parallel threads. However, at some point you’ll want to update the UI to
+reflect the task progress, but if you update the UI from another thread
+(different from the original UI thread), the UI may deadlock, and you
+application crashes.</p>
+<p>This is what this <code>run_ui_thread</code> does, step-by-step:</p>
+<ol>
+<li>blocks current thread;</li>
+<li>switches to the window’s original UI thread;</li>
+<li>runs the given <code>FnOnce</code>;</li>
+<li>switches back to the first thread, which is then unblocked.</li>
+</ol>
+<p>When working in a parallel thread, you <strong>must</strong> call <code>run_ui_thread</code> to
+update the UI.</p>
+<h5 id="examples-1"><a class="doc-anchor" href="#examples-1">§</a>Examples</h5>
+<p>The example below shows the event of a
+<a href="trait.GuiEventsButton.html#method.bn_clicked" title="method winsafe::prelude::GuiEventsButton::bn_clicked">button click</a> which starts
+a long task in a parallel thread. As it progresses, the status is
+printed at the windows’s titlebar.</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, gui};
+
+<span class="kw">let </span>wnd: gui::WindowMain; <span class="comment">// initialized somewhere
+</span><span class="kw">let </span>btn: gui::Button;
+
+btn.on().bn_clicked({
+    <span class="kw">let </span>wnd = wnd.clone();
+    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+        <span class="macro">println!</span>(<span class="string">"Click event at {:#x}"</span>, w::GetCurrentThreadId());
+
+        std::thread::spawn({
+            <span class="kw">let </span>wnd = wnd.clone();
+            <span class="kw">move </span>|| {
+                <span class="macro">println!</span>(<span class="string">"Parallel task starts at {:#x}"</span>, w::GetCurrentThreadId());
+                w::Sleep(<span class="number">2000</span>);
+
+                wnd.run_ui_thread({
+                    <span class="kw">let </span>wnd = wnd.clone();
+                    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+                        <span class="macro">println!</span>(<span class="string">"Updating UI at {:#x}"</span>, w::GetCurrentThreadId());
+                        wnd.hwnd().SetWindowText(<span class="string">"Status... 50%"</span>)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(())
+                    }
+                });
+
+                <span class="macro">println!</span>(<span class="string">"Parallel task keeps going at {:#x}"</span>, w::GetCurrentThreadId());
+                w::Sleep(<span class="number">2000</span>);
+
+                wnd.run_ui_thread({
+                    <span class="kw">let </span>wnd = wnd.clone();
+                    <span class="kw">move </span>|| -&gt; w::AnyResult&lt;()&gt; {
+                        <span class="macro">println!</span>(<span class="string">"Updating UI at {:#x}"</span>, w::GetCurrentThreadId());
+                        wnd.hwnd().SetWindowText(<span class="string">"Status... 100%"</span>)<span class="question-mark">?</span>;
+                        <span class="prelude-val">Ok</span>(())
+                    }
+                });
+            }
+        });
+
+        <span class="prelude-val">Ok</span>(())
+    }
+});</code></pre></div></div></details></div><h2 id="dyn-compatibility" class="section-header">Dyn Compatibility<a href="#dyn-compatibility" class="anchor">§</a></h2><div class="dyn-compatibility-info"><p>This trait is <b>not</b> <a href="https://doc.rust-lang.org/nightly/reference/items/traits.html#dyn-compatibility">dyn compatible</a>.</p><p><i>In older versions of Rust, dyn compatibility was called "object safety", so this trait is not object safe.</i></p></div><h2 id="implementors" class="section-header">Implementors<a href="#implementors" class="anchor">§</a></h2><div id="implementors-list"><section id="impl-GuiParent-for-PropSheetPage" class="impl"><a class="src rightside" href="../../src/winsafe/gui\native_controls/prop_sheet_page.rs.html#41">Source</a><a href="#impl-GuiParent-for-PropSheetPage" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.PropSheetPage.html" title="struct winsafe::gui::PropSheetPage">PropSheetPage</a></h3></section><section id="impl-GuiParent-for-TabPage" class="impl"><a class="src rightside" href="../../src/winsafe/gui\native_controls/tab_page.rs.html#35">Source</a><a href="#impl-GuiParent-for-TabPage" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.TabPage.html" title="struct winsafe::gui::TabPage">TabPage</a></h3></section><section id="impl-GuiParent-for-WindowControl" class="impl"><a class="src rightside" href="../../src/winsafe/gui\windows/window_control.rs.html#42">Source</a><a href="#impl-GuiParent-for-WindowControl" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.WindowControl.html" title="struct winsafe::gui::WindowControl">WindowControl</a></h3></section><section id="impl-GuiParent-for-WindowMain" class="impl"><a class="src rightside" href="../../src/winsafe/gui\windows/window_main.rs.html#89">Source</a><a href="#impl-GuiParent-for-WindowMain" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.WindowMain.html" title="struct winsafe::gui::WindowMain">WindowMain</a></h3></section><section id="impl-GuiParent-for-WindowMessageOnly" class="impl"><a class="src rightside" href="../../src/winsafe/gui\windows/window_message_only.rs.html#35">Source</a><a href="#impl-GuiParent-for-WindowMessageOnly" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.WindowMessageOnly.html" title="struct winsafe::gui::WindowMessageOnly">WindowMessageOnly</a></h3></section><section id="impl-GuiParent-for-WindowModal" class="impl"><a class="src rightside" href="../../src/winsafe/gui\windows/window_modal.rs.html#43">Source</a><a href="#impl-GuiParent-for-WindowModal" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.WindowModal.html" title="struct winsafe::gui::WindowModal">WindowModal</a></h3></section><section id="impl-GuiParent-for-WindowModeless" class="impl"><a class="src rightside" href="../../src/winsafe/gui\windows/window_modeless.rs.html#43">Source</a><a href="#impl-GuiParent-for-WindowModeless" class="anchor">§</a><h3 class="code-header">impl <a class="trait" href="trait.GuiParent.html" title="trait winsafe::prelude::GuiParent">GuiParent</a> for <a class="struct" href="../gui/struct.WindowModeless.html" title="struct winsafe::gui::WindowModeless">WindowModeless</a></h3></section></div><script src="../../trait.impl/winsafe/gui/traits_gui/trait.GuiParent.js" async></script></section></div></main></body></html>
