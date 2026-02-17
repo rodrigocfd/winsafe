@@ -406,7 +406,7 @@ impl Variant {
 	///
 	/// # Panics
 	///
-	/// Panics if the value is not `IDispatch`.
+	/// Panics if the value is not [`IDispatch`](crate::IDispatch).
 	///
 	/// # Examples
 	///

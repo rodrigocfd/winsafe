@@ -42,12 +42,9 @@ sed -b -i '3i#![cfg_attr(docsrs, feature(doc_auto_cfg))]' src/lib.rs # insert li
 RUSTDOCFLAGS="--cfg docsrs" cargo +nightly-2025-09-27 doc --all-features
 sed -b -i '3d' src/lib.rs # remove line, 1-based
 
-# Check the existence of -r flag, if not passed, we stop here.
-R_FLAG=false
-for arg in "$@"; do
-	[[ "$arg" == "-r" ]] && R_FLAG=true
-done
-if ! $R_FLAG; then
+# Check the existence of -r flag, if absent, we stop here.
+if [[ ! " $@ " =~ " -r " ]]; then
+	echo -e "${BLUE}To push the docs to gh-pages, pass -r flag.${NC}"
 	TF=$((($(date +%s%N) - $T0)/1000000)) # end time
 	print_duration $TF
 	exit 0

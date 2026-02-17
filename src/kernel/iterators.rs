@@ -21,7 +21,6 @@ impl Iterator for DirListFlatIter {
 		let found = match &self.hfind {
 			None => {
 				// First pass, HFIND starts as None.
-
 				let dir_search = format!("{}\\*", path::rtrim_backslash(&self.dir_path));
 				let found = match HFINDFILE::FindFirstFile(&dir_search, &mut self.wfd) {
 					Err(e) => {
@@ -51,17 +50,15 @@ impl Iterator for DirListFlatIter {
 		};
 
 		if found {
-			// A file was found.
+			// A file was found in this iteration.
 			let file_name = self.wfd.cFileName();
 			if file_name == "." || file_name == ".." {
-				// Skip the dot ones.
-				self.next()
+				self.next() // skip the dot ones
 			} else {
-				// Assembly the full path and return it.
-				Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
+				Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName()))) // assembly the full path and return it
 			}
 		} else {
-			None // no file found, halt
+			None // no file found in this iteration, halt
 		}
 	}
 }
@@ -94,9 +91,10 @@ impl Iterator for DirListRecursiveIter {
 
 		match &mut self.recursive_runner {
 			None => {
+				// We're not running a recursive search, we're in the original folder.
 				match self.flat_runner.next() {
 					Some(cur_file) => {
-						// A file was found.
+						// A file or error was found in this iteration.
 						match cur_file {
 							Err(e) => {
 								// An actual error happened.
@@ -113,7 +111,7 @@ impl Iterator for DirListRecursiveIter {
 							},
 						}
 					},
-					None => None, // no file found, halt
+					None => None, // no file found in this iteration, halt
 				}
 			},
 			Some(recursive_runner) => {
@@ -124,7 +122,7 @@ impl Iterator for DirListRecursiveIter {
 						self.recursive_runner = None;
 						self.next()
 					},
-					Some(inner_file) => Some(inner_file), // file or error
+					Some(inner_file) => Some(inner_file), // file or error found in this iteration
 				}
 			},
 		}
