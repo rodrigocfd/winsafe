@@ -472,7 +472,7 @@ pub fn GetLastError() -> co::ERROR {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{self as w};
+/// use winsafe::{self as w, prelude::*};
 ///
 /// let st = w::GetLocalTime();
 /// println!("{:04}-{:02}-{:02}",
@@ -788,7 +788,7 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{self as w};
+/// use winsafe::{self as w, prelude::*};
 ///
 /// let st_utc = w::GetSystemTime();
 /// println!("{:04}-{:02}-{:02}",
@@ -992,7 +992,7 @@ pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{self as w};
+/// use winsafe::{self as w, prelude::*};
 ///
 /// let msx = w::GlobalMemoryStatusEx()?;
 /// println!("Total mem: {} bytes", msx.ullTotalPhys);

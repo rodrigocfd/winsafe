@@ -8,31 +8,26 @@ use crate::decl::*;
 use crate::kernel::iterators::*;
 use crate::prelude::*;
 
-/// Returns an iterator over the files and folders within a directory.
-/// Optionally, a wildcard can be specified to filter files by name.
+/// Returns an iterator over the files and folders within a directory. Does not
+/// search recursively.
 ///
 /// This is a high-level abstraction over [`HFINDFILE`](crate::HFINDFILE)
 /// iteration functions.
 ///
 /// # Examples
 ///
-/// Listing all text files in a directory:
-///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// for file_path in w::path::dir_list("C:\\temp", Some("*.txt")) {
+/// for file_path in w::path::dir_list_flat("C:\\Temp") {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
 /// # w::SysResult::Ok(())
 /// ```
 #[must_use]
-pub fn dir_list<'a>(
-	dir_path: &'a str,
-	filter: Option<&'a str>,
-) -> impl Iterator<Item = SysResult<String>> + 'a {
-	DirListIter::new(dir_path.to_owned(), filter)
+pub fn dir_list_flat<'a>(dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a {
+	DirListFlatIter::new(dir_path.to_owned())
 }
 
 /// Returns an interator over the files within a directory, and all its
@@ -47,13 +42,13 @@ pub fn dir_list<'a>(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// // Ordinary for loop
-/// for file_path in w::path::dir_walk("C:\\Temp") {
+/// for file_path in w::path::dir_list_recursive("C:\\Temp") {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
 ///
 /// // Closure with try_for_each
-/// w::path::dir_walk("C:\\Temp")
+/// w::path::dir_list_recursive("C:\\Temp")
 ///     .try_for_each(|file_path| {
 ///         let file_path = file_path?;
 ///         println!("{}", file_path);
@@ -61,11 +56,11 @@ pub fn dir_list<'a>(
 ///     })?;
 ///
 /// // Collecting into a Vec
-/// let all = w::path::dir_walk("C:\\Temp")
+/// let all = w::path::dir_list_recursive("C:\\Temp")
 ///     .collect::<w::SysResult<Vec<_>>>()?;
 ///
 /// // Transforming and collecting into a Vec
-/// let all = w::path::dir_walk("C:\\Temp")
+/// let all = w::path::dir_list_recursive("C:\\Temp")
 ///     .map(|file_path| {
 ///         let file_path = file_path?;
 ///         Ok(format!("PATH: {}", file_path))
@@ -74,8 +69,8 @@ pub fn dir_list<'a>(
 /// # w::SysResult::Ok(())
 /// ```
 #[must_use]
-pub fn dir_walk<'a>(dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a {
-	DirWalkIter::new(dir_path.to_owned())
+pub fn dir_list_recursive<'a>(dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a {
+	DirListRecursiveIter::new(dir_path.to_owned())
 }
 
 /// Returns a new string with the path of the current EXE file, without the EXE

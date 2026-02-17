@@ -63,7 +63,6 @@ mod decl {
 }
 pub use decl::*;
 
-#[cfg(feature = "kernel")]
 pub mod co {
 	//! Native constants.
 	//!
@@ -90,7 +89,6 @@ pub mod co {
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
 
-#[cfg(feature = "kernel")]
 pub mod guard {
 	//! RAII implementation for various resources, which automatically perform
 	//! cleanup routines when the object goes out of scope.
@@ -291,7 +289,6 @@ pub mod msg {
 	}
 }
 
-#[cfg(feature = "kernel")]
 pub mod prelude {
 	//! The WinSafe prelude.
 	//!

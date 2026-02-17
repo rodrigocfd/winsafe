@@ -3,15 +3,14 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 
-pub(in crate::kernel) struct DirListIter<'a> {
+pub(in crate::kernel) struct DirListFlatIter {
 	dir_path: String,
-	filter: Option<&'a str>,
 	hfind: Option<FindCloseGuard>,
 	wfd: WIN32_FIND_DATA,
 	no_more: bool,
 }
 
-impl<'a> Iterator for DirListIter<'a> {
+impl Iterator for DirListFlatIter {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -21,13 +20,10 @@ impl<'a> Iterator for DirListIter<'a> {
 
 		let found = match &self.hfind {
 			None => {
-				// first pass
-				let dir_final = match self.filter {
-					None => format!("{}\\*", self.dir_path),
-					Some(filter) => format!("{}\\{}", self.dir_path, filter),
-				};
+				// First pass, HFIND starts as None.
 
-				let found = match HFINDFILE::FindFirstFile(&dir_final, &mut self.wfd) {
+				let dir_search = format!("{}\\*", path::rtrim_backslash(&self.dir_path));
+				let found = match HFINDFILE::FindFirstFile(&dir_search, &mut self.wfd) {
 					Err(e) => {
 						// An actual error happened.
 						self.no_more = true; // prevent further iterations
@@ -42,7 +38,7 @@ impl<'a> Iterator for DirListIter<'a> {
 				found
 			},
 			Some(hfind) => {
-				// subsequent passes
+				// Subsequent passes.
 				match hfind.FindNextFile(&mut self.wfd) {
 					Err(e) => {
 						// An actual error happened.
@@ -70,12 +66,11 @@ impl<'a> Iterator for DirListIter<'a> {
 	}
 }
 
-impl<'a> DirListIter<'a> {
+impl DirListFlatIter {
 	#[must_use]
-	pub(in crate::kernel) fn new(dir_path: String, filter: Option<&'a str>) -> Self {
+	pub(in crate::kernel) fn new(dir_path: String) -> Self {
 		Self {
 			dir_path: path::rtrim_backslash(&dir_path).to_owned(),
-			filter,
 			hfind: None,
 			wfd: WIN32_FIND_DATA::default(),
 			no_more: false,
@@ -83,13 +78,13 @@ impl<'a> DirListIter<'a> {
 	}
 }
 
-pub(in crate::kernel) struct DirWalkIter<'a> {
-	runner: DirListIter<'a>,
-	subdir_runner: Option<Box<DirWalkIter<'a>>>,
+pub(in crate::kernel) struct DirListRecursiveIter {
+	flat_runner: DirListFlatIter,
+	recursive_runner: Option<Box<DirListRecursiveIter>>,
 	no_more: bool,
 }
 
-impl<'a> Iterator for DirWalkIter<'a> {
+impl Iterator for DirListRecursiveIter {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -97,21 +92,20 @@ impl<'a> Iterator for DirWalkIter<'a> {
 			return None;
 		}
 
-		match &mut self.subdir_runner {
+		match &mut self.recursive_runner {
 			None => {
-				let cur_file = self.runner.next();
-				match cur_file {
+				match self.flat_runner.next() {
 					Some(cur_file) => {
 						// A file was found.
 						match cur_file {
 							Err(e) => {
-								// Actually an error.
+								// An actual error happened.
 								self.no_more = true; // prevent further iterations
 								Some(Err(e)) // return the error
 							},
 							Ok(cur_file) => {
 								if path::is_directory(&cur_file) {
-									self.subdir_runner = Some(Box::new(Self::new(cur_file))); // recursively
+									self.recursive_runner = Some(Box::new(Self::new(cur_file))); // fire recursive
 									self.next()
 								} else {
 									Some(Ok(cur_file))
@@ -122,27 +116,27 @@ impl<'a> Iterator for DirWalkIter<'a> {
 					None => None, // no file found, halt
 				}
 			},
-			Some(subdir_runner) => {
-				let inner_file = subdir_runner.next();
-				match inner_file {
+			Some(recursive_runner) => {
+				// We're running a recursive search, consume it.
+				match recursive_runner.next() {
 					None => {
-						// Subdir_runner finished his work.
-						self.subdir_runner = None;
+						// Recursive finished.
+						self.recursive_runner = None;
 						self.next()
 					},
-					Some(inner_file) => Some(inner_file),
+					Some(inner_file) => Some(inner_file), // file or error
 				}
 			},
 		}
 	}
 }
 
-impl<'a> DirWalkIter<'a> {
+impl DirListRecursiveIter {
 	#[must_use]
 	pub(in crate::kernel) fn new(dir_path: String) -> Self {
 		Self {
-			runner: DirListIter::new(dir_path, None),
-			subdir_runner: None,
+			flat_runner: DirListFlatIter::new(dir_path),
+			recursive_runner: None,
 			no_more: false,
 		}
 	}
