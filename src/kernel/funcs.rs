@@ -167,10 +167,24 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 /// must also pass the returned `SYSTEMTIME` to
 /// [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime).
 ///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let expanded = w::ExpandEnvironmentStrings(
+///     "Os %OS%, home %HOMEPATH% and temp %TEMP%",
+/// )?;
+///
+/// println!("{}", expanded);
+/// # w::SysResult::Ok(())
+/// ```
+///
 /// # Related functions
 ///
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`GetSystemTimeAsFileTime`](crate::GetSystemTimeAsFileTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 #[must_use]
@@ -483,6 +497,7 @@ pub fn GetLastError() -> co::ERROR {
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`GetSystemTimeAsFileTime`](crate::GetSystemTimeAsFileTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 #[must_use]
@@ -799,6 +814,7 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`GetSystemTimeAsFileTime`](crate::GetSystemTimeAsFileTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 #[must_use]
@@ -812,6 +828,14 @@ pub fn GetSystemTime() -> SYSTEMTIME {
 
 /// [`GetSystemTimeAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
+///
+/// # Related functions
+///
+/// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
+/// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+/// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 #[must_use]
 pub fn GetSystemTimeAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
@@ -1517,6 +1541,7 @@ pub fn SwitchToThread() -> SysResult<()> {
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`GetSystemTimeAsFileTime`](crate::GetSystemTimeAsFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 #[must_use]
 pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
@@ -1534,6 +1559,7 @@ pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`GetSystemTimeAsFileTime`](crate::GetSystemTimeAsFileTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 #[must_use]
 pub fn SystemTimeToTzSpecificLocalTime(
