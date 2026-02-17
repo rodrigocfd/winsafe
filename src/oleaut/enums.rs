@@ -407,6 +407,24 @@ impl Variant {
 	/// # Panics
 	///
 	/// Panics if the value is not `IDispatch`.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let _com_guard = w::CoInitializeEx(
+	///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+	///
+	/// let excel = w::CoCreateInstance::<w::IDispatch>(
+	///     &w::CLSIDFromProgID("Excel.Application")?,
+	///     None::<&w::IUnknown>,
+	///     co::CLSCTX::LOCAL_SERVER,
+	/// )?;
+	///
+	/// let books = excel.invoke_get("Workbooks", &[])?.unwrap_dispatch();
+	/// # w::AnyResult::Ok(())
+	/// ```
 	#[must_use]
 	pub fn unwrap_dispatch(&self) -> IDispatch {
 		match self {
