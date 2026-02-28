@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types)]
 
 use crate::co::*;
+use crate::macros::*;
 
 const_bitflag! { FORM: u32;
 	/// [`FORM_INFO_1`](crate::FORM_INFO_1) and

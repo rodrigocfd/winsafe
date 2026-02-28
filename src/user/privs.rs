@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 
 const_values_num_privs! {
 	ASFW_ANY u32 = -1i32 as _

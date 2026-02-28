@@ -21,6 +21,7 @@ macro_rules! impl_default {
 		}
 	};
 }
+pub(crate) use impl_default;
 
 /// Declares a newtype with an underlying numeric type.
 macro_rules! newtype_num {
@@ -88,6 +89,7 @@ macro_rules! newtype_num {
 		}
 	};
 }
+pub(crate) use newtype_num;
 
 /// Implements getter and setter methods for the given `BOOL` field.
 macro_rules! pub_fn_bool_get_set {
@@ -104,6 +106,7 @@ macro_rules! pub_fn_bool_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_bool_get_set;
 
 /// Implements getter and setter methods for the given resource ID field, stored
 /// as `*mut u16`.
@@ -121,6 +124,7 @@ macro_rules! pub_fn_resource_id_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_resource_id_get_set;
 
 /// Implements getter and setter methods for the given `*mut u16` field.
 macro_rules! pub_fn_string_ptr_get_set {
@@ -142,6 +146,7 @@ macro_rules! pub_fn_string_ptr_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_string_ptr_get_set;
 
 /// Implements getter and setter methods for the given `*mut u16` and `u32`
 /// fields, setting pointer and its actual chars length without terminating
@@ -166,6 +171,7 @@ macro_rules! pub_fn_string_ptrlen_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_string_ptrlen_get_set;
 
 /// Implements getter and setter methods for the given `[u16; N]` field.
 macro_rules! pub_fn_string_arr_get_set {
@@ -182,6 +188,7 @@ macro_rules! pub_fn_string_arr_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_string_arr_get_set;
 
 /// Implements getter and setter methods for the given `*mut u16` and `i32`
 /// fields, setting buffer and its size.
@@ -217,6 +224,7 @@ macro_rules! pub_fn_string_buf_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_string_buf_get_set;
 
 /// Implements getter method for the given `BSTR` field.
 macro_rules! pub_fn_bstr_get {
@@ -234,6 +242,7 @@ macro_rules! pub_fn_bstr_get {
 		}
 	};
 }
+pub(crate) use pub_fn_bstr_get;
 
 /// Implements getter and setter methods for the given pointer field.
 macro_rules! pub_fn_ptr_get_set {
@@ -250,6 +259,7 @@ macro_rules! pub_fn_ptr_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_ptr_get_set;
 
 /// Implements getter and setter methods for the given array + size fields,
 /// setting buffer and its size.
@@ -280,6 +290,7 @@ macro_rules! pub_fn_array_buf_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_array_buf_get_set;
 
 /// Implements getter and setter methods for the given `COMPTR` field.
 macro_rules! pub_fn_comptr_get_set {
@@ -318,6 +329,7 @@ macro_rules! pub_fn_comptr_get_set {
 		}
 	};
 }
+pub(crate) use pub_fn_comptr_get_set;
 
 /// Implements `Drop` for a struct with one `COMPTR` field.
 macro_rules! impl_drop_comptr {
@@ -334,6 +346,7 @@ macro_rules! impl_drop_comptr {
 		}
 	};
 }
+pub(crate) use impl_drop_comptr;
 
 /// Implements accessor methods over `pmem` and `sz` fields of an allocated
 /// memory block.
@@ -398,3 +411,4 @@ macro_rules! pub_fn_mem_block {
 		}
 	};
 }
+pub(crate) use pub_fn_mem_block;

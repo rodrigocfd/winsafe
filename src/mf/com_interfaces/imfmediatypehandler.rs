@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -31,7 +32,8 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 		let mut mt = GUID::default();
 		HrRet(unsafe {
 			(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(self.ptr(), pvoid(&mut mt))
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| mt)
 	}
 
@@ -42,7 +44,8 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 		let mut count = 0u32;
 		HrRet(unsafe {
 			(vt::<IMFMediaTypeHandlerVT>(self).GetMediaTypeCount)(self.ptr(), &mut count)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| count)
 	}
 }

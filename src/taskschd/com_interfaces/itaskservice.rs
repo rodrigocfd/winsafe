@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::taskschd::vts::*;

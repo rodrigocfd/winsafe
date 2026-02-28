@@ -1,3 +1,5 @@
+use crate::macros::*;
+
 const_guid! { CLSID;
 	/// A COM class ID, from which the interfaces are created (`GUID`).
 	=>

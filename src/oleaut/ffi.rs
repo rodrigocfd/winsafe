@@ -1,4 +1,5 @@
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 // This block should be in the "ole" feature, but there is a circular dependency
 // in the Windows headers.

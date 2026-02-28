@@ -1,5 +1,6 @@
 use crate::co;
 use crate::gui::privs::*;
+use crate::macros::*;
 
 /// This trait is enabled with the `gui` feature, and exposes label control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications).

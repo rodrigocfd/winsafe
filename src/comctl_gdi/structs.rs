@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 
 /// [`IMAGELISTDRAWPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.

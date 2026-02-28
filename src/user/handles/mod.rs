@@ -24,6 +24,7 @@ pub mod decl {
 	pub use super::hmenu::HMENU;
 	pub use super::hmonitor::HMONITOR;
 	pub use super::hwnd::HWND;
+	use crate::macros::*;
 
 	handle! { HBITMAP;
 		/// Handle to a

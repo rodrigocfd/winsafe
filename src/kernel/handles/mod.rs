@@ -32,6 +32,7 @@ pub mod decl {
 	pub use super::hstd::HSTD;
 	pub use super::hthread::HTHREAD;
 	pub use super::hupdatesrc::HUPDATERSRC;
+	use crate::macros::*;
 
 	handle! { HRSRC;
 		/// Handle to a

@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{callbacks, ffi, privs::*};
+use crate::macros::*;
 
 handle! { HINSTANCE;
 	/// Handle to an

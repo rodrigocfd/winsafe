@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_ordinary! { TASK_ACTION_TYPE: u32;
 	/// [`TASK_ACTION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_action_type)
 	/// enumeration (`u32`);

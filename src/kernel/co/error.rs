@@ -1,5 +1,6 @@
 #![allow(non_snake_case, non_upper_case_globals)]
 
+use crate::macros::*;
 use crate::prelude::SystemError;
 
 const_basic_decl! { ERROR: u32;

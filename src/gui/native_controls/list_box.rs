@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::gui::{collections::*, privs::*, *};
+use crate::macros::*;
 use crate::msg::*;
 use crate::prelude::*;
 

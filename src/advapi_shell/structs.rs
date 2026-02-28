@@ -4,6 +4,7 @@ use crate::advapi_shell::privs::*;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 /// [`SHELLEXECUTEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow)

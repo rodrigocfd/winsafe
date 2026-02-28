@@ -1,3 +1,5 @@
+use crate::macros::*;
+
 const_ordinary! { DISPATCH: u16;
 	/// [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke) `flags`
 	/// (`u16`).

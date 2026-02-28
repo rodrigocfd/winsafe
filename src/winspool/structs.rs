@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 
 /// [`ADDJOB_INFO_1 `](https://learn.microsoft.com/en-us/windows/win32/printdocs/addjob-info-1)
 /// struct.

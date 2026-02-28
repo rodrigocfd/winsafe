@@ -1,6 +1,7 @@
 #![allow(unused)]
 
 use crate::co::*;
+use crate::macros::*;
 
 const_values_num_privs! {
 	CLR_DEFAULT u32 = 0xff00_0000

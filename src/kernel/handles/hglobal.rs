@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
+use crate::macros::*;
 
 handle! { HGLOBAL;
 	/// Handle to a

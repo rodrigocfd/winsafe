@@ -1,4 +1,5 @@
 use crate::decl::*;
+use crate::macros::*;
 use crate::prelude::*;
 use crate::winspool::ffi;
 

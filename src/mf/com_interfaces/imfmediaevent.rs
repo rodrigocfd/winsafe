@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -35,7 +36,8 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 		let mut ex_ty = GUID::default();
 		HrRet(unsafe {
 			(vt::<IMFMediaEventVT>(self).GetExtendedType)(self.ptr(), pvoid(&mut ex_ty))
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| ex_ty)
 	}
 
@@ -44,10 +46,9 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetStatus(&self) -> HrResult<co::HRESULT> {
 		let mut status = co::HRESULT::default();
-		HrRet(unsafe {
-			(vt::<IMFMediaEventVT>(self).GetStatus)(self.ptr(), status.as_mut())
-		}).to_hrresult()
-		.map(|_| status)
+		HrRet(unsafe { (vt::<IMFMediaEventVT>(self).GetStatus)(self.ptr(), status.as_mut()) })
+			.to_hrresult()
+			.map(|_| status)
 	}
 
 	/// [`IMFMediaEvent::GetType`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaevent-gettype)
@@ -56,7 +57,7 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	fn GetType(&self) -> HrResult<co::ME> {
 		let mut met = co::ME::default();
 		HrRet(unsafe { (vt::<IMFMediaEventVT>(self).GetType)(self.ptr(), met.as_mut()) })
-		.to_hrresult()
+			.to_hrresult()
 			.map(|_| met)
 	}
 
@@ -65,9 +66,8 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	#[must_use]
 	fn GetValue(&self) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
-		HrRet(unsafe {
-			(vt::<IMFMediaEventVT>(self).GetValue)(self.ptr(), pvoid(&mut value))
-		}).to_hrresult()?;
+		HrRet(unsafe { (vt::<IMFMediaEventVT>(self).GetValue)(self.ptr(), pvoid(&mut value)) })
+			.to_hrresult()?;
 		PropVariant::from_raw(&value)
 	}
 }

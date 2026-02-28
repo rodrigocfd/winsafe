@@ -6,6 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::{collections::*, privs::*, *};
+use crate::macros::*;
 use crate::prelude::*;
 
 struct ComboBoxObj {

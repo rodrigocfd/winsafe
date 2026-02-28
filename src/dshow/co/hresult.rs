@@ -1,4 +1,5 @@
 use crate::co::*;
+use crate::macros::*;
 
 const_values_pub! { HRESULT;
 	VFW_E_INVALIDMEDIATYPE 0x8004_0200

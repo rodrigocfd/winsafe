@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -40,7 +41,8 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	/// [`IMFMediaEventGenerator::EndGetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-endgetevent)
@@ -54,7 +56,8 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 				result.ptr(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -69,7 +72,8 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 				flags.unwrap_or_default().raw(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -93,6 +97,7 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 					Some(v) => pcvoid(&v.to_raw()?),
 				},
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 }

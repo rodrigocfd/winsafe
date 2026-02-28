@@ -1,4 +1,5 @@
 use crate::co::*;
+use crate::macros::*;
 
 const_values_pub! { HRESULT;
 	DXGI_STATUS_OCCLUDED 0x087a_0001

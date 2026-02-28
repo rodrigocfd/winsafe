@@ -5,6 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 /// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)

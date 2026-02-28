@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
+use crate::macros::*;
 
 /// This trait is enabled with the `gui` feature, and exposes tab control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications).

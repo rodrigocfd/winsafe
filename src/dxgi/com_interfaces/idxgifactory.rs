@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::dxgi::{iterators::*, vts::*};
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -51,7 +52,8 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 				hmodule.ptr(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -71,7 +73,8 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 				pcvoid(desc),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -111,7 +114,8 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 		let mut hwnd = HWND::NULL;
 		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).GetWindowAssociation)(self.ptr(), hwnd.as_mut())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| hwnd)
 	}
 
@@ -120,6 +124,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	fn MakeWindowAssociation(&self, hwnd: &HWND, flags: co::DXGI_MWA) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(self.ptr(), hwnd.ptr(), flags.raw())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 }

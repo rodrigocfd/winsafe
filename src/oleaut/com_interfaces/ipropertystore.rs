@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::oleaut::{iterators::*, vts::*};
 use crate::prelude::*;

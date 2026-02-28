@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 

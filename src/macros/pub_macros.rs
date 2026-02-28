@@ -1,3 +1,5 @@
+#![allow(unused_macros)]
+
 /// Generates sequential `u16` constants starting from the given value.
 ///
 /// This macro is useful to generate constants for loaded resources, like menus
@@ -28,8 +30,7 @@
 /// /// This menu closes the application.
 /// pub const MNU_FILE_CLOSE: u16 = 3003;
 /// ```
-#[cfg(feature = "user")]
-#[macro_export]
+#[macro_export] // https://internals.rust-lang.org/t/pub-on-macro-rules/19358
 macro_rules! seq_ids {
 	() => {};
 

@@ -5,6 +5,7 @@ mod hwnd;
 pub mod decl {
 	pub use super::himagelist::HIMAGELIST;
 	pub use super::hpropsheetpage::HPROPSHEETPAGE;
+	use crate::macros::*;
 
 	handle! { HTREEITEM;
 		/// Handle to a

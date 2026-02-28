@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -38,7 +39,8 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 				self.ptr(),
 				eviction_priority.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| eviction_priority)
 	}
 
@@ -47,10 +49,9 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetSharedHandle(&self) -> HrResult<*mut std::ffi::c_void> {
 		let mut handle: *mut std::ffi::c_void = std::ptr::null_mut();
-		HrRet(unsafe {
-			(vt::<IDXGIResourceVT>(self).GetSharedHandle)(self.ptr(), &mut handle)
-		}).to_hrresult()
-		.map(|_| handle)
+		HrRet(unsafe { (vt::<IDXGIResourceVT>(self).GetSharedHandle)(self.ptr(), &mut handle) })
+			.to_hrresult()
+			.map(|_| handle)
 	}
 
 	/// [`IDXGIResource::GetUsage`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiresource-getusage)
@@ -58,10 +59,9 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetUsage(&self) -> HrResult<co::DXGI_USAGE> {
 		let mut usage = co::DXGI_USAGE::default();
-		HrRet(unsafe {
-			(vt::<IDXGIResourceVT>(self).GetUsage)(self.ptr(), usage.as_mut())
-		}).to_hrresult()
-		.map(|_| usage)
+		HrRet(unsafe { (vt::<IDXGIResourceVT>(self).GetUsage)(self.ptr(), usage.as_mut()) })
+			.to_hrresult()
+			.map(|_| usage)
 	}
 
 	/// [`IDXGIResource::SetEvictionPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiresource-setevictionpriority)
@@ -69,6 +69,7 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	fn SetEvictionPriority(&self, eviction_priority: co::DXGI_RESOURCE_PRIORITY) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IDXGIResourceVT>(self).SetEvictionPriority)(self.ptr(), eviction_priority.raw())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 }

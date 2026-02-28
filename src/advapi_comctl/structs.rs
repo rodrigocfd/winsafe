@@ -3,6 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::decl::*;
+use crate::macros::*;
 
 /// [`TBSAVEPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbsaveparamsw)
 /// struct.

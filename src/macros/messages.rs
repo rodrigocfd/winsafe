@@ -1,4 +1,4 @@
-#![allow(unused_macros)]
+#![allow(unused_imports, unused_macros)]
 
 /// Struct for a message that has no parameters and no meaningful return value.
 macro_rules! pub_struct_msg_empty {
@@ -30,6 +30,7 @@ macro_rules! pub_struct_msg_empty {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_empty;
 
 /// Struct for a handleable message that has no parameters and no meaningful
 /// return value.
@@ -50,6 +51,7 @@ macro_rules! pub_struct_msg_empty_handleable {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_empty_handleable;
 
 /// Struct for WM_CHAR-based handleable messages.
 macro_rules! pub_struct_msg_char_code {
@@ -112,6 +114,7 @@ macro_rules! pub_struct_msg_char_code {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_char_code;
 
 /// Struct for WM_KEY-based handleable messages.
 macro_rules! pub_struct_msg_char_key {
@@ -174,6 +177,7 @@ macro_rules! pub_struct_msg_char_key {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_char_key;
 
 /// Struct for WM_CTLCOLOR* handleable messages.
 macro_rules! pub_struct_msg_ctlcolor {
@@ -220,6 +224,7 @@ macro_rules! pub_struct_msg_ctlcolor {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_ctlcolor;
 
 /// Struct for WM_*BUTTON* handleable messages and others.
 macro_rules! pub_struct_msg_button {
@@ -265,3 +270,4 @@ macro_rules! pub_struct_msg_button {
 		}
 	};
 }
+pub(crate) use pub_struct_msg_button;

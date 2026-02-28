@@ -1,4 +1,4 @@
-#![allow(unused_macros)]
+#![allow(unused_imports, unused_macros)]
 
 /// Ordinary window message, no parameters, no meaningful return.
 macro_rules! fn_wm_noparm_noret {
@@ -18,6 +18,7 @@ macro_rules! fn_wm_noparm_noret {
 		}
 	};
 }
+pub(crate) use fn_wm_noparm_noret;
 
 /// Ordinary window message, no parameters, returns bool.
 macro_rules! fn_wm_noparm_boolret {
@@ -35,6 +36,7 @@ macro_rules! fn_wm_noparm_boolret {
 		}
 	};
 }
+pub(crate) use fn_wm_noparm_boolret;
 
 /// Ordinary window message, with parameters, no meaningful return.
 macro_rules! fn_wm_withparm_noret {
@@ -54,6 +56,7 @@ macro_rules! fn_wm_withparm_noret {
 		}
 	};
 }
+pub(crate) use fn_wm_withparm_noret;
 
 /// Ordinary window message, with parameters, returns bool.
 macro_rules! fn_wm_withparm_boolret {
@@ -71,6 +74,7 @@ macro_rules! fn_wm_withparm_boolret {
 		}
 	};
 }
+pub(crate) use fn_wm_withparm_boolret;
 
 /// Ordinary window message, with parameters, returns constant.
 macro_rules! fn_wm_withparm_coret {
@@ -88,6 +92,7 @@ macro_rules! fn_wm_withparm_coret {
 		}
 	};
 }
+pub(crate) use fn_wm_withparm_coret;
 
 /// WM_CTLCOLOR* message.
 macro_rules! fn_wm_ctlcolor {
@@ -105,6 +110,7 @@ macro_rules! fn_wm_ctlcolor {
 		}
 	};
 }
+pub(crate) use fn_wm_ctlcolor;
 
 /// WM_COMMAND message, no parameters, no meaningful return.
 macro_rules! fn_cmd_noparm_noret {
@@ -122,6 +128,7 @@ macro_rules! fn_cmd_noparm_noret {
 		}
 	};
 }
+pub(crate) use fn_cmd_noparm_noret;
 
 /// WM_NOTIFY message, no parameters, no meaningful return.
 macro_rules! fn_nfy_noparm_noret {
@@ -141,6 +148,7 @@ macro_rules! fn_nfy_noparm_noret {
 		}
 	};
 }
+pub(crate) use fn_nfy_noparm_noret;
 
 /// WM_NOTIFY message, with parameters, no meaningful return.
 macro_rules! fn_nfy_withparm_noret {
@@ -160,6 +168,7 @@ macro_rules! fn_nfy_withparm_noret {
 		}
 	};
 }
+pub(crate) use fn_nfy_withparm_noret;
 
 /// WM_NOTIFY message, with mutable parameters, no meaningful return.
 macro_rules! fn_nfy_withmutparm_noret {
@@ -179,6 +188,7 @@ macro_rules! fn_nfy_withmutparm_noret {
 		}
 	};
 }
+pub(crate) use fn_nfy_withmutparm_noret;
 
 /// WM_NOTIFY message, no parameters, returns bool.
 macro_rules! fn_nfy_noparm_boolret {
@@ -196,6 +206,7 @@ macro_rules! fn_nfy_noparm_boolret {
 		}
 	};
 }
+pub(crate) use fn_nfy_noparm_boolret;
 
 /// WM_NOTIFY message, with parameters, returns bool.
 macro_rules! fn_nfy_withparm_boolret {
@@ -213,6 +224,7 @@ macro_rules! fn_nfy_withparm_boolret {
 		}
 	};
 }
+pub(crate) use fn_nfy_withparm_boolret;
 
 /// WM_NOTIFY message, no parameters, returns i32.
 macro_rules! fn_nfy_noparm_i32ret {
@@ -230,6 +242,7 @@ macro_rules! fn_nfy_noparm_i32ret {
 		}
 	};
 }
+pub(crate) use fn_nfy_noparm_i32ret;
 
 /// WM_NOTIFY message, with parameters, returns i32.
 macro_rules! fn_nfy_withparm_i32ret {
@@ -247,3 +260,4 @@ macro_rules! fn_nfy_withparm_i32ret {
 		}
 	};
 }
+pub(crate) use fn_nfy_withparm_i32ret;

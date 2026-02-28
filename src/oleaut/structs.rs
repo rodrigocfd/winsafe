@@ -6,6 +6,7 @@ use std::mem::ManuallyDrop;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::{ffi_types::*, privs::*};
+use crate::macros::*;
 use crate::oleaut::ffi;
 
 /// A

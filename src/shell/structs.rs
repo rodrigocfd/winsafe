@@ -5,6 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::{ffi_types::*, privs::*};
+use crate::macros::*;
 
 /// [`COMDLG_FILTERSPEC`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.

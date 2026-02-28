@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::dxgi::vts::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -41,7 +42,8 @@ pub trait dxgi_IDXGIDeviceSubObject: dxgi_IDXGIObject {
 				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 }

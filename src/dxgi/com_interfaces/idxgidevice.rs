@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -65,7 +66,8 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		let mut priority = 0i32;
 		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).GetGPUThreadPriority)(self.ptr(), &mut priority)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| priority as _)
 	}
 
@@ -84,7 +86,8 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 				status.as_mut_ptr() as _,
 				resources.len() as _,
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| status)
 	}
 
@@ -93,6 +96,7 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 	fn SetGPUThreadPriority(&self, priority: i8) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IDXGIDeviceVT>(self).SetGPUThreadPriority)(self.ptr(), priority as _)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 }

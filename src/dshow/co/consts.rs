@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+use crate::macros::*;
+
 const_ordinary! { FILTER_STATE: u32;
 	/// [`FILTER_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-filter_state)
 	/// enumeration (`u32`).

@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -63,7 +64,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -90,7 +92,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -99,7 +102,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 	fn CancelObjectCreation(&self, cookie: &impl ole_IUnknown) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IMFSourceResolverVT>(self).CancelObjectCreation)(self.ptr(), cookie.ptr())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	/// [`IMFSourceResolver::CreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfrombytestream)
@@ -124,7 +128,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -148,7 +153,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -168,7 +174,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 
@@ -188,7 +195,8 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				obj_type.as_mut(),
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| (obj_type, queried))
 	}
 }

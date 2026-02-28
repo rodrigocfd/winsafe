@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::dxgi::vts::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -33,10 +34,8 @@ pub trait dxgi_IDXGIAdapter1: dxgi_IDXGIAdapter {
 	#[must_use]
 	fn GetDesc1(&self) -> HrResult<DXGI_ADAPTER_DESC1> {
 		let mut desc = DXGI_ADAPTER_DESC1::default();
-		HrRet(unsafe {
-			(vt::<IDXGIAdapter1VT>(self).GetDesc1)(self.ptr(), pvoid(&mut desc))
-		})
-		.to_hrresult()
-		.map(|_| desc)
+		HrRet(unsafe { (vt::<IDXGIAdapter1VT>(self).GetDesc1)(self.ptr(), pvoid(&mut desc)) })
+			.to_hrresult()
+			.map(|_| desc)
 	}
 }

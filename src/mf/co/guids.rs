@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_guid! { MF_SERVICE;
 	/// [`IMFGetService::GetService`](`crate::prelude::mf_IMFGetService::GetService`)
 	/// `service_guid` (`GUID`).

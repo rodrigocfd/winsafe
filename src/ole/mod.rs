@@ -19,6 +19,7 @@ pub mod decl {
 	pub use super::com_interfaces::decl::*;
 	pub use super::funcs::*;
 	pub use super::structs::*;
+	use crate::macros::*;
 
 	handle! { HMETAFILEPICT;
 		/// Handle to a

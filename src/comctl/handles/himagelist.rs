@@ -5,6 +5,7 @@ use crate::comctl::{ffi, iterators::*, privs::*};
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 handle! { HIMAGELIST;

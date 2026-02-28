@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::macros::*;
 use crate::prelude::*;
 
 com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";

@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_ordinary! { VFT: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileType` (`u32`).
 	=>

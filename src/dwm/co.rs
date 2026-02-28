@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_bitflag! { DWM_CLOAKED: u32;
 	/// [`DWMWA`](crate::co::DWMWA) cloaked flags (`u32`).
 	=>

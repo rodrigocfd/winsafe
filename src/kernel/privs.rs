@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 const_values_num_privs! {

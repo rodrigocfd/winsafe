@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
 use crate::co::*;
+use crate::macros::*;
 
 const_ordinary! { ME: u32;
 	/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)

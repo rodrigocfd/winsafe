@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::dxgi::vts::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -37,7 +38,8 @@ pub trait dxgi_IDXGIKeyedMutex: dxgi_IDXGIDeviceSubObject {
 				key,
 				dw_milliseconds.unwrap_or(INFINITE),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	/// [`IDXGIKeyedMutex::ReleaseSync`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgikeyedmutex-releasesync)

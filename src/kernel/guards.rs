@@ -2,6 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use crate::decl::*;
 use crate::kernel::ffi;
+use crate::macros::*;
 use crate::prelude::*;
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which

@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 /// [`DXGI_ADAPTER_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc)
 /// struct.

@@ -2,29 +2,24 @@
 //! declared before everything in lib.rs. This is necessary because macros must
 //! exist before a module declaration to be used inside of the module.
 
-#[macro_use]
+#![allow(unused_imports)]
+
 mod com;
-
-#[macro_use]
 mod consts;
-
-#[macro_use]
 mod ffis;
-
-#[macro_use]
 mod gui_events;
-
-#[macro_use]
 mod gui_objs;
-
-#[macro_use]
 mod handles;
-
-#[macro_use]
 mod messages;
-
-#[macro_use]
 mod pub_macros;
-
-#[macro_use]
 mod structs;
+
+pub(crate) use com::*;
+pub(crate) use consts::*;
+pub(crate) use ffis::*;
+pub(crate) use gui_events::*;
+pub(crate) use gui_objs::*;
+pub(crate) use handles::*;
+pub(crate) use messages::*;
+pub use pub_macros::*;
+pub(crate) use structs::*;

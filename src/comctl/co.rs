@@ -2,6 +2,7 @@
 
 use crate::co::*;
 use crate::comctl::privs::*;
+use crate::macros::*;
 
 const_ordinary! { ADRF: u32;
 	/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`).

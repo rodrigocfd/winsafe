@@ -1,4 +1,4 @@
-#![allow(unused_macros)]
+#![allow(unused_imports, unused_macros)]
 
 /// Declares an ordinary COM interface, and implements ole_IUnknown trait.
 macro_rules! com_interface {
@@ -48,6 +48,7 @@ macro_rules! com_interface {
 		}
 	};
 }
+pub(crate) use com_interface;
 
 /// Implements a trait function with no parameters, returning ordinary HRESULT.
 macro_rules! fn_com_noparm {
@@ -65,6 +66,7 @@ macro_rules! fn_com_noparm {
 		}
 	};
 }
+pub(crate) use fn_com_noparm;
 
 /// Implements a trait function with no parameters and no return.
 macro_rules! fn_com_noparm_noret {
@@ -78,6 +80,7 @@ macro_rules! fn_com_noparm_noret {
 		}
 	};
 }
+pub(crate) use fn_com_noparm_noret;
 
 /// Implements a trait function for a COM interface getter, no parameters.
 macro_rules! fn_com_interface_get {
@@ -98,6 +101,7 @@ macro_rules! fn_com_interface_get {
 		}
 	};
 }
+pub(crate) use fn_com_interface_get;
 
 /// Implements a trait function for a BSTR getter, no parameters.
 macro_rules! fn_com_bstr_get {
@@ -120,6 +124,7 @@ macro_rules! fn_com_bstr_get {
 		}
 	};
 }
+pub(crate) use fn_com_bstr_get;
 
 /// Implements a trait function for a BSTR setter, single parameter.
 macro_rules! fn_com_bstr_set {
@@ -140,6 +145,7 @@ macro_rules! fn_com_bstr_set {
 		}
 	};
 }
+pub(crate) use fn_com_bstr_set;
 
 /// Declares an user-defined COM interface implementation, and implements
 /// ole_IUnknown trait.
@@ -199,6 +205,7 @@ macro_rules! com_interface_userdef {
 		}
 	};
 }
+pub(crate) use com_interface_userdef;
 
 /// Implements a function which stores a callback to an user-defined COM
 /// implementation.
@@ -217,6 +224,7 @@ macro_rules! fn_com_userdef_event {
 		}
 	};
 }
+pub(crate) use fn_com_userdef_event;
 
 /// Declares the static `QueryInterface`, `AddRef` and `Release` methods for an
 /// user-defined COM interface implementation.
@@ -257,6 +265,7 @@ macro_rules! fn_com_userdef_iunknown_impls {
 		}
 	};
 }
+pub(crate) use fn_com_userdef_iunknown_impls;
 
 /// Declares a zero-parameter static method for an user-defined COM interface
 /// implementation.
@@ -271,6 +280,7 @@ macro_rules! fn_com_userdef_impl_noparm {
 		}
 	};
 }
+pub(crate) use fn_com_userdef_impl_noparm;
 
 /// Declares the type of a `GUID`-derived constant, along with public values.
 macro_rules! const_guid {
@@ -327,6 +337,7 @@ macro_rules! const_guid {
 		}
 	};
 }
+pub(crate) use const_guid;
 
 /// Creates multiple `GUID`-derived pub const values.
 macro_rules! const_guid_values {
@@ -341,3 +352,4 @@ macro_rules! const_guid_values {
 		}
 	};
 }
+pub(crate) use const_guid_values;

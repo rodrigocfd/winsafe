@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -36,7 +37,8 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	fn DeselectStream(&self, descriptor_index: u32) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IMFPresentationDescriptorVT>(self).DeselectStream)(self.ptr(), descriptor_index)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	/// [`IMFPresentationDescriptor::GetStreamDescriptorByIndex`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-getstreamdescriptorbyindex)
@@ -53,7 +55,8 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 				&mut selected,
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| (selected != 0, queried))
 	}
 
@@ -67,7 +70,8 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 				self.ptr(),
 				&mut descriptor_count,
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| descriptor_count)
 	}
 
@@ -76,6 +80,7 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	fn SelectStream(&self, descriptor_index: u32) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IMFPresentationDescriptorVT>(self).SelectStream)(self.ptr(), descriptor_index)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 }

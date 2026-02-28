@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::shell::{ffi, iterators::*};
 
 handle! { HDROP;

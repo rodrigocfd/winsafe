@@ -1,4 +1,5 @@
 use crate::co::*;
+use crate::macros::*;
 
 const_values_pub! { HRESULT;
 	MF_E_PLATFORM_NOT_INITIALIZED 0xc00d_36b0

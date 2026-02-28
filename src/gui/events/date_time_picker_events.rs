@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
+use crate::macros::*;
 
 /// This trait is enabled with the `gui` feature, and exposes date and time
 /// picker control

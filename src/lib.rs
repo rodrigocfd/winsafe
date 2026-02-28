@@ -1,10 +1,9 @@
 #![doc = include_str!("lib.md")]
 #![cfg_attr(any(), rustfmt::skip)]
 
-// Declarations of macros used throughout the library.
-// No macros are public, except those in pub_macros.
+// Declaration of macros.
 
-#[macro_use] mod macros;
+mod macros;
 
 // Declarations of modules themselves.
 

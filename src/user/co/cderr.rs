@@ -1,5 +1,7 @@
 #![allow(non_upper_case_globals)]
 
+use crate::macros::*;
+
 const_basic_decl! { CDERR: u32;
 	/// Common dialog box
 	/// [error codes](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).

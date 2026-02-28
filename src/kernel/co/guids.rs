@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_guid! { POWER_SAVINGS;
 	/// Power scheme
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/power/power-setting-guids)

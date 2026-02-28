@@ -2,6 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::prelude::*;
 use crate::user::ffi;
 

@@ -3,6 +3,7 @@
 use crate::advapi::{callbacks, ffi};
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 
 handle! { HSERVICESTATUS;
 	/// Handle to a

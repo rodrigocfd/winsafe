@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -68,7 +69,8 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 				topo_id,
 				queried.as_mut(),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| queried)
 	}
 
@@ -79,7 +81,8 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		let mut caps = co::MFSESSIONCAP::default();
 		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).GetSessionCapabilities)(self.ptr(), caps.as_mut())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| caps)
 	}
 
@@ -97,7 +100,8 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	) -> HrResult<()> {
 		HrRet(unsafe {
 			(vt::<IMFMediaSessionVT>(self).SetTopology)(self.ptr(), flags.raw(), topology.ptr())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	fn_com_noparm! { Shutdown: IMFMediaSessionVT;
@@ -129,7 +133,8 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 				pcvoid(&time_format),
 				pcvoid(&start_position.to_raw()?),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSessionVT;

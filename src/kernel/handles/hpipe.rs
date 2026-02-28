@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
+use crate::macros::*;
 use crate::prelude::*;
 
 handle! { HPIPE;

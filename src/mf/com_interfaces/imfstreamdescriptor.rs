@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -38,7 +39,8 @@ pub trait mf_IMFStreamDescriptor: mf_IMFAttributes {
 		let mut id = 0u32;
 		HrRet(unsafe {
 			(vt::<IMFStreamDescriptorVT>(self).GetStreamIdentifier)(self.ptr(), &mut id)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| id)
 	}
 }

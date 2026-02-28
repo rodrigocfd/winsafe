@@ -1,4 +1,5 @@
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 #[cfg(target_pointer_width = "64")]
 extern_sys! { "uxtheme";

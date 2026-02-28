@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+use crate::macros::*;
+
 const_bitflag! { ACCESS_RIGHTS: u32;
 	/// Standard access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)

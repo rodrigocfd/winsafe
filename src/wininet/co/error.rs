@@ -1,4 +1,5 @@
 use crate::co::*;
+use crate::macros::*;
 use crate::wininet::privs::*;
 
 const_values_pub! { ERROR; // this error range is hardcoded in SystemError trait, keep them in sync

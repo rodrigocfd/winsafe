@@ -10,6 +10,7 @@ macro_rules! one_func {
 		pub(crate) fn $func( $( _: $parm, )* );
 	};
 }
+pub(crate) use one_func;
 
 /// Builds a block of FFI bindings.
 macro_rules! extern_sys {
@@ -28,3 +29,4 @@ macro_rules! extern_sys {
 		}
 	};
 }
+pub(crate) use extern_sys;

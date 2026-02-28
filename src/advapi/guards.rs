@@ -5,6 +5,7 @@ use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 handle_guard! { CloseServiceHandleGuard: HSC;

@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
 use crate::co::*;
+use crate::macros::*;
 
 const_ordinary! { FDEOR: u32;
 	/// [`FDE_OVERWRITE_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_overwrite_response)

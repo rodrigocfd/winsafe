@@ -120,6 +120,7 @@ macro_rules! handle {
 		}
 	};
 }
+pub(crate) use handle;
 
 /// Declares a handle guard which has a simple cleaner function.
 macro_rules! handle_guard {
@@ -183,3 +184,4 @@ macro_rules! handle_guard {
 		}
 	};
 }
+pub(crate) use handle_guard;

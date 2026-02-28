@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::co;
+use crate::macros::*;
 use crate::prelude::*;
 
 const_basic_decl! { HRESULT: u32;

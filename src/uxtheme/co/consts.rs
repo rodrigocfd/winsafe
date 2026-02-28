@@ -1,3 +1,5 @@
+use crate::macros::*;
+
 const_ordinary! { PROPERTYORIGIN: u32;
 	/// [`PROPERTYORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/ne-uxtheme-propertyorigin)
 	/// enumeration (`u32`).

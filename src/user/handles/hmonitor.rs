@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::user::ffi;
 
 handle! { HMONITOR;

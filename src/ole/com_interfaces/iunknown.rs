@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::ole::{privs::*, vts::*};
 
 com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";

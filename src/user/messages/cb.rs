@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;

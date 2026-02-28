@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 
 use crate::comctl::ffi;
 use crate::decl::*;
+use crate::macros::*;
 use crate::prelude::*;
 
 handle_guard! { DestroyPropertySheetPageGuard: HPROPSHEETPAGE;

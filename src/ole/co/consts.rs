@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types)]
 
+use crate::macros::*;
+
 const_bitflag! { ADVF: u32;
 	/// [`ADVF`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-advf)
 	/// enumeration (`u32`).

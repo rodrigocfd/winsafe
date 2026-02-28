@@ -1,4 +1,5 @@
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 extern_sys! { "comdlg32";
 	ChooseColorW(PVOID) -> BOOL

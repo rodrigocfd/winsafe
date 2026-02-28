@@ -1,4 +1,5 @@
 use crate::co::*;
+use crate::macros::*;
 
 const_values_num_privs! {
 	//SEE_MASK_FLAG_HINST_IS_SITE: SEE_MASK = 0x0800_0000

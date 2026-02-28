@@ -6,6 +6,7 @@ use std::sync::atomic::AtomicU32;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 

@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::macros::*;
+
 /// [`MODULEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/ns-psapi-moduleinfo)
 /// struct.
 #[repr(C)]

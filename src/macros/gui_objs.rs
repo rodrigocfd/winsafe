@@ -1,4 +1,4 @@
-#![allow(unused_macros)]
+#![allow(unused_imports, unused_macros)]
 
 /// Declares a native control, optionally with a single generic parameter.
 macro_rules! native_ctrl {
@@ -70,3 +70,4 @@ macro_rules! native_ctrl {
 		}
 	};
 }
+pub(crate) use native_ctrl;

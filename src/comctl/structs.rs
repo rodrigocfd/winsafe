@@ -6,6 +6,7 @@ use crate::co;
 use crate::comctl::{callbacks, privs::*};
 use crate::decl::*;
 use crate::kernel::{ffi_types::*, privs::*};
+use crate::macros::*;
 use crate::prelude::*;
 
 /// [`BUTTON_IMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)

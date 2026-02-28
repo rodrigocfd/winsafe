@@ -6,6 +6,7 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 /// [`BIND_OPTS3`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-bind_opts3-r1)
 /// struct.

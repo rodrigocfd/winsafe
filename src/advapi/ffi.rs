@@ -1,4 +1,5 @@
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 
 extern_sys! { "advapi32";
 	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL

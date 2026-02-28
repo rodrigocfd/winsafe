@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::macros::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -35,7 +36,8 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 		let mut characteristics = co::MFMEDIASOURCE::default();
 		HrRet(unsafe {
 			(vt::<IMFMediaSourceVT>(self).GetCharacteristics)(self.ptr(), characteristics.as_mut())
-		}).to_hrresult()
+		})
+		.to_hrresult()
 		.map(|_| characteristics)
 	}
 
@@ -69,7 +71,8 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 				pcvoid(time_format.unwrap_or(&GUID::default())),
 				pcvoid(&start_position.to_raw()?),
 			)
-		}).to_hrresult()
+		})
+		.to_hrresult()
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSourceVT;

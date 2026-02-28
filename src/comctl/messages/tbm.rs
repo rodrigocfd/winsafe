@@ -1,6 +1,7 @@
 use crate::co;
 use crate::comctl::privs::*;
 use crate::decl::*;
+use crate::macros::*;
 use crate::msg::*;
 use crate::ole::privs::*;
 use crate::prelude::*;

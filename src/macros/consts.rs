@@ -1,4 +1,4 @@
-#![allow(unused_macros)]
+#![allow(unused_imports, unused_macros)]
 
 /// Basic declaration of a numeric newtype constant.
 macro_rules! const_basic_decl {
@@ -33,6 +33,7 @@ macro_rules! const_basic_decl {
 		}
 	};
 }
+pub(crate) use const_basic_decl;
 
 /// Implements bitflag operations for numeric newtype constants.
 macro_rules! const_impl_bitflag {
@@ -87,6 +88,7 @@ macro_rules! const_impl_bitflag {
 		}
 	};
 }
+pub(crate) use const_impl_bitflag;
 
 /// Implements Debug and Display for numeric newtype constants.
 macro_rules! const_impl_debug_display {
@@ -111,6 +113,7 @@ macro_rules! const_impl_debug_display {
 		}
 	};
 }
+pub(crate) use const_impl_debug_display;
 
 /// Writes multiple pub values of a numeric newtype constant.
 macro_rules! const_values_pub {
@@ -129,6 +132,7 @@ macro_rules! const_values_pub {
 		}
 	};
 }
+pub(crate) use const_values_pub;
 
 /// Writes multiple pub(crate) values of an arbitrary numeric type; used in
 /// internal privs.rs files.
@@ -145,6 +149,7 @@ macro_rules! const_values_num_privs {
 		$( pub(crate) const $name: $ty = unsafe { <$ty>::from_raw($val) }; )*
 	};
 }
+pub(crate) use const_values_num_privs;
 
 /// Complete declaration of ordinary, non-bitflag numeric newtype constants.
 macro_rules! const_ordinary {
@@ -171,6 +176,7 @@ macro_rules! const_ordinary {
 		}
 	};
 }
+pub(crate) use const_ordinary;
 
 /// Complete declaration of bitflag numeric newtype constants.
 macro_rules! const_bitflag {
@@ -200,6 +206,7 @@ macro_rules! const_bitflag {
 		}
 	};
 }
+pub(crate) use const_bitflag;
 
 /// Complete declaration of a constant for a window message, convertible to the
 /// co::WM.
@@ -235,6 +242,7 @@ macro_rules! const_wm {
 		}
 	};
 }
+pub(crate) use const_wm;
 
 /// Complete declaration of a constant for a WM_COMMAND notification code,
 /// convertible to co::CMD.
@@ -271,6 +279,7 @@ macro_rules! const_cmd {
 		}
 	};
 }
+pub(crate) use const_cmd;
 
 /// Complete declaration of a constant for a WM_NOTIFY notification code,
 /// convertible to NmhdrCode.
@@ -319,6 +328,7 @@ macro_rules! const_nm {
 		}
 	};
 }
+pub(crate) use const_nm;
 
 /// Complete declaration of a constant for a window style, convertible to
 /// co::WS.
@@ -359,6 +369,7 @@ macro_rules! const_ws {
 		}
 	};
 }
+pub(crate) use const_ws;
 
 /// Complete declaration of a constant for an extended window style, convertible
 /// to WS_EX.
@@ -400,6 +411,7 @@ macro_rules! const_wsex {
 		}
 	};
 }
+pub(crate) use const_wsex;
 
 /// Complete declaration of a constant with a literal string as its underlying
 /// type. Pretty rare.
@@ -453,3 +465,4 @@ macro_rules! const_str {
 		}
 	};
 }
+pub(crate) use const_str;

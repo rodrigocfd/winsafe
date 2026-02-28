@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::macros::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
