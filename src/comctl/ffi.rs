@@ -1,6 +1,11 @@
 use crate::kernel::ffi_types::*;
 use crate::macros::*;
 
+#[cfg(target_pointer_width = "64")]
+extern_sys! { "comctl32";
+	ImageList_DragMove(HANDLE, i32, i32) -> BOOL
+}
+
 extern_sys! { "comctl32";
 	CreatePropertySheetPageW(PCVOID) -> HANDLE
 	DefSubclassProc(HANDLE, u32, usize, isize) -> isize
@@ -10,7 +15,6 @@ extern_sys! { "comctl32";
 	ImageList_BeginDrag(HANDLE, i32, i32, i32) -> BOOL
 	ImageList_Create(i32, i32, u32, i32, i32) -> HANDLE
 	ImageList_Destroy(HANDLE) -> BOOL
-	ImageList_DragMove(HANDLE, i32, i32) -> BOOL
 	ImageList_DragShowNolock(BOOL) -> BOOL
 	ImageList_Draw(HANDLE, i32, HANDLE, i32, i32, u32) -> BOOL
 	ImageList_DrawEx(HANDLE, i32, HANDLE, i32, i32, i32, i32, u32, u32, u32) -> BOOL

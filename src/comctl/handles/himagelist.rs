@@ -156,6 +156,9 @@ impl HIMAGELIST {
 
 	/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// function.
+	///
+	/// **Note:** This function doesn't exist in x32.
+	#[cfg(target_pointer_width = "64")]
 	pub fn DragMove(&self, x: i32, y: i32) -> HrResult<()> {
 		match unsafe { ffi::ImageList_DragMove(self.ptr(), x, y) } {
 			0 => Err(co::HRESULT::E_FAIL),

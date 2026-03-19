@@ -437,14 +437,24 @@ impl HWND {
 		PtrRet(unsafe { ffi::GetCapture() }).to_opt_handle()
 	}
 
+	/// [`GetClassLong`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongw)
+	/// function (x32) or
 	/// [`GetClassLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
-	/// function.
+	/// function (x64).
 	///
 	/// If you just want to check whether the window is a dialog, prefer using
 	/// [`HWND::is_dialog`](crate::HWND::is_dialog) method.
 	#[must_use]
 	pub fn GetClassLongPtr(&self, index: co::GCLP) -> usize {
-		unsafe { ffi::GetClassLongPtrW(self.ptr(), index.raw()) }
+		#[cfg(target_pointer_width = "32")]
+		unsafe {
+			ffi::GetClassLongW(self.ptr(), index.raw())
+		}
+
+		#[cfg(target_pointer_width = "64")]
+		unsafe {
+			ffi::GetClassLongPtrW(self.ptr(), index.raw())
+		}
 	}
 
 	/// [`GetClassName`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassnamew)
