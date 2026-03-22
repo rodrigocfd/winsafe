@@ -895,21 +895,27 @@ pub fn GetSystemTimes() -> SysResult<(FILETIME, FILETIME, FILETIME)> {
 
 /// [`GetSystemWow64Directory`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-getsystemwow64directoryw)
 /// function.
+#[must_use]
 pub fn GetSystemWow64Directory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	let nchars = match unsafe { ffi::GetSystemWow64DirectoryW(buf.as_mut_ptr(), buf.buf_len() as _) } {
+	let mut buf_sz = match unsafe { ffi::GetSystemWow64DirectoryW(std::ptr::null_mut(), 0) } {
 		0 => return Err(GetLastError()),
 		n => n,
-	} as usize;
+	}; // includes terminating null count
 
-	if nchars > buf.buf_len() {
-		buf = WString::new_alloc_buf(nchars);
-		if unsafe { ffi::GetSystemWow64DirectoryW(buf.as_mut_ptr(), buf.buf_len() as _) } == 0 {
-			return Err(GetLastError());
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz as _);
+		let returned_chars =
+			match unsafe { ffi::GetSystemWow64DirectoryW(buf.as_mut_ptr(), buf_sz) } {
+				0 => return Err(GetLastError()),
+				n => n,
+			};
+
+		if returned_chars < buf_sz {
+			return Ok(buf.to_string());
 		}
-	}
 
-	Ok(buf.to_string())
+		buf_sz = returned_chars; // includes terminating null count; set the new buffer size to try again
+	}
 }
 
 /// [`GetTempFileName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettempfilenamew)
