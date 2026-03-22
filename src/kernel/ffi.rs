@@ -95,6 +95,7 @@ extern_sys! { "kernel32";
 	GetSystemTimeAsFileTime(PVOID)
 	GetSystemTimePreciseAsFileTime(PVOID)
 	GetSystemTimes(PVOID, PVOID, PVOID) -> BOOL
+	GetSystemWow64DirectoryW(PSTR, u32) -> u32
 	GetTempFileNameW(PCSTR, PCSTR, u32, PSTR) -> u32
 	GetTempPathW(u32, PSTR) -> u32
 	GetThreadId(HANDLE) -> u32
