@@ -1529,6 +1529,13 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 		.to_sysresult()
 }
 
+/// [`SetDllDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setdlldirectoryw)
+/// function.
+pub fn SetDllDirectory(path_name: &str) -> SysResult<()> {
+	BoolRet(unsafe { ffi::SetDllDirectoryW(WString::from_str(path_name).as_ptr()) })
+		.to_sysresult()
+}
+
 /// [`SetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileattributesw)
 /// function.
 pub fn SetFileAttributes(file_name: &str, attributes: co::FILE_ATTRIBUTE) -> SysResult<()> {
