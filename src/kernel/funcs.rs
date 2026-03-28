@@ -1531,9 +1531,23 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 
 /// [`SetDllDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setdlldirectoryw)
 /// function.
-pub fn SetDllDirectory(path_name: &str) -> SysResult<()> {
-	BoolRet(unsafe { ffi::SetDllDirectoryW(WString::from_str(path_name).as_ptr()) })
-		.to_sysresult()
+pub fn SetDllDirectory(path_name: Option<&str>) -> SysResult<()> {
+	let empty_str_buf = [0u16];
+	let str_buf: WString;
+
+	let pwstr = match path_name {
+		None => std::ptr::null(), // null restores default order
+		Some(path_name) => {
+			if path_name.is_empty() {
+				empty_str_buf.as_ptr() // empty string removes current dir
+			} else {
+				str_buf = WString::from_str(path_name);
+				str_buf.as_ptr() // set new dir
+			}
+		},
+	};
+
+	BoolRet(unsafe { ffi::SetDllDirectoryW(pwstr) }).to_sysresult()
 }
 
 /// [`SetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileattributesw)
