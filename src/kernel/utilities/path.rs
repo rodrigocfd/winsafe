@@ -172,7 +172,7 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 /// use winsafe::{self as w, prelude::*};
 ///
 /// println!("{}",
-///     w::path::has_extension("file.txt", &[".txt", ".bat"]));
+///     w::path::has_extension("file.txt", &["txt", "bat"]));
 /// ```
 #[must_use]
 pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
@@ -180,8 +180,11 @@ pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 	extensions
 		.iter()
 		.find(|ext| {
-			let ext_u = ext.as_ref().to_uppercase();
-			full_path_u.ends_with(&ext_u)
+			let mut ext_upper = ext.as_ref().to_uppercase();
+			if !ext_upper.starts_with('.') {
+				ext_upper.insert(0, '.'); // prepend dot
+			}
+			full_path_u.ends_with(&ext_upper)
 		})
 		.is_some()
 }
