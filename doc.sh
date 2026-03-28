@@ -64,7 +64,7 @@ git add .
 
 echo -e "${BLUE}Committing changes...${NC}"
 DEPLOY_TIME=$(date '+%Y-%m-%d %H:%M:%S')
-DEPLOY_MSG="Cargo doc auto deployment $DEPLOY_TIME."
+DEPLOY_MSG="Cargo doc auto deployment $DEPLOY_TIME." # this will be the gh-pages commit message
 git commit -m "$DEPLOY_MSG" || {
 	echo -e "${GREN}No changes since last publish.${NC}"
 	TF=$((($(date +%s%N) - $T0)/1000000)) # end time
