@@ -79,7 +79,7 @@ impl DlgMain {
 		self.btn_run.hwnd().EnableWindow(false);
 		self.txt_out.set_text("")?;
 
-		let target_dir = self.txt_path.text()?;
+		let target_dir = w::path::rtrim_backslash(&self.txt_path.text()?).to_owned();
 		if !w::path::exists(&target_dir) {
 			w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
 				hwnd_parent: Some(self.wnd.hwnd()),
@@ -91,14 +91,17 @@ impl DlgMain {
 				flags: co::TDF::ALLOW_DIALOG_CANCELLATION | co::TDF::POSITION_RELATIVE_TO_WINDOW,
 				..Default::default()
 			})?;
+			self.txt_path.hwnd().EnableWindow(true);
+			self.btn_run.hwnd().EnableWindow(true);
+			self.txt_path.focus()?;
 			return Ok(()); // halt processing
 		}
 
 		self.pro_load.set_marquee(true);
-		let total_files_count = w::path::dir_walk(&target_dir).count(); // how many files to process?
+		let rs_files_list = stats::rs_files_list(&target_dir)?; // all files to be scanned
 		self.pro_load.set_marquee(false);
 
-		self.pro_load.set_range(0, total_files_count as _); // setup progress bar
+		self.pro_load.set_range(0, rs_files_list.len() as _); // setup progress bar
 		self.pro_load.set_position(0);
 
 		let titlebar_text = self.wnd.hwnd().GetWindowText()?;
@@ -108,7 +111,7 @@ impl DlgMain {
 			self.pro_load.range().1,
 		))?;
 
-		let stats = stats::gather(&target_dir, |pass_idx| {
+		let stats = stats::gather(&rs_files_list, |pass_idx| {
 			self.pro_load.set_position(pass_idx as _); // process the files
 		})?;
 
@@ -117,7 +120,7 @@ impl DlgMain {
 
 		file_repl::ask_update_stats(
 			self.wnd.hwnd(),
-			&format!("{}\\README.md", ids::ROOT_DIR),
+			&format!("{}\\..\\README.md", target_dir),
 			&stats,
 		)?;
 

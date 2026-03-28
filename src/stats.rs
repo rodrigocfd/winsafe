@@ -32,36 +32,46 @@ impl std::fmt::Display for Stats {
 	}
 }
 
+/// Returns a list of the .rs paths to be scanned.
+#[must_use]
+pub fn rs_files_list(target: &str) -> w::SysResult<Vec<String>> {
+	w::path::dir_list_recursive(target)
+		.filter(|file_path| match file_path {
+			Err(_) => true,
+			Ok(file_path) => {
+				w::path::has_extension(file_path, &["rs"]) && !file_path.ends_with("lib.rs")
+			},
+		})
+		.collect::<w::SysResult<Vec<_>>>()
+}
+
 /// Reads all files in the target directory and processes all the stats.
 ///
 /// The callback is called after processing each file, to give a progressive
 /// feedback of the whole operation.
-pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Stats>
+#[must_use]
+pub fn gather<F>(files: &[impl AsRef<str>], callback: F) -> w::SysResult<Stats>
 where
 	F: Fn(usize),
 {
 	let mut stats = Stats::default();
 
-	w::path::dir_walk(target)
-		.enumerate()
-		.try_for_each(|(idx, path)| {
-			let path = path?;
-			if w::path::has_extension(&path, &[".rs"]) && !path.ends_with("lib.rs") {
-				let contents = {
-					let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
-					w::WString::parse(f.as_slice())?.to_string()
-				};
-				stats.count_ffis(&contents, &path);
-				stats.count_structs(&contents);
-				stats.count_consts(&contents);
-				stats.count_wmsgs(&contents);
-				stats.count_handles(&contents);
-				stats.count_com(&contents, &path);
-				stats.count_com_impl(&contents, &path);
-				callback(idx); // pass the zero-based index of the file that has been processed
-			}
-			Ok(())
-		})?;
+	files.iter().enumerate().try_for_each(|(idx, rs_file)| {
+		let contents = {
+			let f = w::FileMapped::open(rs_file.as_ref(), w::FileAccess::ExistingReadOnly)?;
+			w::WString::parse(f.as_slice())?.to_string()
+		};
+		stats.count_ffis(&contents, rs_file.as_ref());
+		stats.count_structs(&contents);
+		stats.count_consts(&contents);
+		stats.count_wmsgs(&contents);
+		stats.count_handles(&contents);
+		stats.count_com(&contents, rs_file.as_ref());
+		stats.count_com_impl(&contents, rs_file.as_ref());
+		callback(idx); // pass the zero-based index of the file that has been processed
+
+		Ok(())
+	})?;
 
 	Ok(stats)
 }

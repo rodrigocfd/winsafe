@@ -5,10 +5,6 @@ mod file_repl;
 mod ids;
 mod stats;
 
-use dlg_main::DlgMain;
-
 fn main() {
-	if let Err(e) = DlgMain::create_and_run() {
-		eprintln!("{}", e);
-	}
+	dlg_main::DlgMain::create_and_run().unwrap();
 }
