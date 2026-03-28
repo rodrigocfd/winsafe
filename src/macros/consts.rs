@@ -334,7 +334,7 @@ pub(crate) use const_nm;
 /// co::WS.
 macro_rules! const_ws {
 	(
-		$name:ident : $ntype:ty;
+		$name:ident;
 		$( #[$doc:meta] )*
 		=>
 		$(
@@ -343,7 +343,7 @@ macro_rules! const_ws {
 		)*
 	) => {
 		const_basic_decl! {
-			$name: $ntype;
+			$name: u32;
 			$( #[$doc] )*
 			///
 			/// This is a window style, convertible to [`WS`](crate::co::WS).

@@ -73,7 +73,7 @@ const_ordinary! { BIA: u32;
 	CENTER 4
 }
 
-const_ws! { BTNS: u8;
+const_ws! { BTNS;
 	/// Toolbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
 	/// (`u8`).
@@ -270,7 +270,7 @@ const_nm! { DTN;
 	WMKEYDOWN DTN_FIRST - 4
 }
 
-const_ws! { DTS: u32;
+const_ws! { DTS;
 	/// Date and time picker control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`).
@@ -475,7 +475,7 @@ const_nm! { HDN;
 	BEGINDRAG HDN_FIRST - 10
 }
 
-const_ws! { HDS: u32;
+const_ws! { HDS;
 	/// Header control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`).
@@ -1184,7 +1184,7 @@ const_bitflag! { LVNI: u32;
 	DIRECTIONMASK Self::ABOVE.0 | Self::BELOW.0 | Self::TOLEFT.0 | Self::TORIGHT.0
 }
 
-const_ws! { LVS: u32;
+const_ws! { LVS;
 	/// List view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`).
@@ -1279,7 +1279,7 @@ const_bitflag! { LVTVIM: u32;
 	LABELMARGIN 0x0000_0004
 }
 
-const_ws! { LWS: u32;
+const_ws! { LWS;
 	/// SysLink control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`).
@@ -1409,7 +1409,7 @@ const_nm! { MCN;
 	VIEWCHANGE MCN_FIRST - 4
 }
 
-const_ws! { MCS: u32;
+const_ws! { MCS;
 	/// Month calendar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`).
@@ -1462,7 +1462,7 @@ const_nm! { NM;
 	THEMECHANGED NM_FIRST - 22
 }
 
-const_ws! { PBS: u32;
+const_ws! { PBS;
 	/// Progress bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`).
@@ -1750,7 +1750,7 @@ const_nm! { RBN;
 	AUTOBREAK RBN_FIRST - 22
 }
 
-const_ws! { RBS: u32;
+const_ws! { RBS;
 	/// Rebar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`).
@@ -1791,7 +1791,7 @@ const_wm! { SB;
 	SETBKCOLOR CCM::SETBKCOLOR.0
 }
 
-const_ws! { SBARS: u32;
+const_ws! { SBARS;
 	/// Status bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`).
@@ -2021,7 +2021,7 @@ const_nm! { TBN;
 	WRAPHOTITEM TBN_FIRST - 24
 }
 
-const_ws! { TBS: u32;
+const_ws! { TBS;
 	/// Trackbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`).
@@ -2166,7 +2166,7 @@ const_nm! { TCN;
 	SELCHANGING TCN_FIRST - 2
 }
 
-const_ws! { TCS: u32;
+const_ws! { TCS;
 	/// Tab control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`).
@@ -2538,7 +2538,7 @@ const_nm! { TVN;
 	ASYNCDRAW TVN_FIRST - 20
 }
 
-const_ws! { TVS: u32;
+const_ws! { TVS;
 	/// Tree view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`).
@@ -2622,7 +2622,7 @@ const_nm! { UDN;
 	DELTAPOS UDN_FIRST - 1
 }
 
-const_ws! { UDS: u32;
+const_ws! { UDS;
 	/// Up-down control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`).

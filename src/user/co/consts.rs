@@ -120,7 +120,7 @@ const_cmd! { BN;
 	KILLFOCUS 7
 }
 
-const_ws! { BS: u32;
+const_ws! { BS;
 	/// Button control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`).
@@ -256,7 +256,7 @@ const_cmd! { CBN;
 	SELENDCANCEL 10
 }
 
-const_ws! { CBS: u32;
+const_ws! { CBS;
 	/// Combo box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`).
@@ -1234,7 +1234,7 @@ const_ordinary! { ENUM_SETTINGS: u32;
 	REGISTRY -2i32 as u32
 }
 
-const_ws! { ES: u32;
+const_ws! { ES;
 	/// Edit control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`).
@@ -1693,7 +1693,7 @@ const_cmd! { LBN;
 	KILLFOCUS 5
 }
 
-const_ws! { LBS: u32;
+const_ws! { LBS;
 	/// List box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`).
@@ -2684,7 +2684,7 @@ const_bitflag! { SPIF: u32;
 	SENDCHANGE Self::SENDWININICHANGE.0
 }
 
-const_ws! { SS: u32;
+const_ws! { SS;
 	/// Label control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`).
