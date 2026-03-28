@@ -1,6 +1,6 @@
-use winsafe::{self as w, co};
+use winsafe::{self as w};
 
-use crate::stats;
+use crate::{stats, sysdlg};
 
 /// Replaces the stats lines directly in the README.md file.
 pub fn ask_update_stats(
@@ -8,17 +8,12 @@ pub fn ask_update_stats(
 	readme_md: &str,
 	stats: &stats::Stats,
 ) -> w::AnyResult<()> {
-	let (ret, _, _) = w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
-		hwnd_parent: Some(hparent),
-		common_buttons: co::TDCBF::CANCEL,
-		main_icon: w::IconIdTd::Td(co::TD_ICON::WARNING),
-		flags: co::TDF::ALLOW_DIALOG_CANCELLATION,
-		window_title: Some("Update README.md"),
-		content: Some("Do you want to update the README.md file?"),
-		buttons: &[(co::DLGID::OK.into(), "&Update")],
-		..Default::default()
-	})?;
-	if ret == co::DLGID::OK {
+	if sysdlg::ok_cancel(
+		hparent,
+		"Update README.md",
+		"Do you want to update the README.md file?",
+		"&Update",
+	) {
 		write_readme(readme_md, stats)?;
 	}
 	Ok(())

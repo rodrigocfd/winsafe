@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use winsafe::{self as w, co, gui, msg, prelude::*};
 
-use crate::{file_repl, ids, stats};
+use crate::{file_repl, ids, stats, sysdlg};
 
 #[derive(Clone)]
 pub struct DlgMain {
@@ -81,16 +81,11 @@ impl DlgMain {
 
 		let target_dir = w::path::rtrim_backslash(&self.txt_path.text()?).to_owned();
 		if !w::path::exists(&target_dir) {
-			w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
-				hwnd_parent: Some(self.wnd.hwnd()),
-				window_title: Some("Bad path"),
-				main_instruction: Some("Process cannot be done"),
-				content: Some(&format!("Path does not exist:\n{}", target_dir)),
-				main_icon: w::IconIdTd::Td(co::TD_ICON::ERROR),
-				common_buttons: co::TDCBF::OK,
-				flags: co::TDF::ALLOW_DIALOG_CANCELLATION | co::TDF::POSITION_RELATIVE_TO_WINDOW,
-				..Default::default()
-			})?;
+			sysdlg::err(
+				self.wnd.hwnd(),
+				"Bad path",
+				&format!("Process cannot be done.\nPath does not exist:\n{}", target_dir),
+			);
 			self.txt_path.hwnd().EnableWindow(true);
 			self.btn_run.hwnd().EnableWindow(true);
 			self.txt_path.focus()?;
@@ -98,7 +93,17 @@ impl DlgMain {
 		}
 
 		self.pro_load.set_marquee(true);
-		let rs_files_list = stats::rs_files_list(&target_dir)?; // all files to be scanned
+		let rs_files_list = match stats::rs_files_list(&target_dir) {
+			Err(err) => {
+				sysdlg::err(
+					self.wnd.hwnd(),
+					"File listing",
+					&format!("Failed to list .rs files:\n{}", err.to_string()),
+				);
+				return Ok(()); // halt processing
+			},
+			Ok(f) => f,
+		};
 		self.pro_load.set_marquee(false);
 
 		self.pro_load.set_range(0, rs_files_list.len() as _); // setup progress bar
