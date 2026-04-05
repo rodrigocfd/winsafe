@@ -160,7 +160,8 @@ impl HACCESSTOKEN {
 		.to_sysresult()
 		{
 			Err(err) => match err {
-				co::ERROR::INSUFFICIENT_BUFFER => {}, // all good
+				// NOTE: Some TOKEN_INFORMATION_CLASS (e.g. Elevation) return BAD_LENGTH
+				co::ERROR::INSUFFICIENT_BUFFER | co::ERROR::BAD_LENGTH => {}, // all good
 				err => return Err(err),
 			},
 			Ok(_) => return Err(co::ERROR::INVALID_PARAMETER), // should never happen
