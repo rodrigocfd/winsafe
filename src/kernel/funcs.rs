@@ -48,6 +48,32 @@ pub fn CreateDirectory(
 
 /// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 /// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let mut si = w::STARTUPINFO::default();
+/// si.dwFlags = co::STARTF::USESHOWWINDOW;
+/// si.set_wShowWindow(co::SW::SHOW);
+///
+/// let pi = w::CreateProcess(
+///     None,
+///     Some("C:\\Temp\\foo.exe"),
+///     None,
+///     None,
+///     false,
+///     co::CREATE::NoValue,
+///     &[],
+///     None,
+///     &mut si,
+/// )?;
+///
+/// pi.hProcess.WaitForSingleObject(None)?;
+/// let exit_code = pi.hProcess.GetExitCodeProcess()?;
+/// # w::SysResult::Ok(())
+/// ```
 #[must_use]
 pub fn CreateProcess(
 	application_name: Option<&str>,
