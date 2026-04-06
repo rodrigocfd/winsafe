@@ -1,4 +1,7 @@
+set -e
+
 EXE=stats-winsafe.exe
+TARGET_DIR=/d/Stuff/Core/rs/_target
 
 T0=$(date +%s%N)
 
@@ -6,11 +9,11 @@ echo "Compiling $EXE..."
 RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target x86_64-pc-windows-msvc
 
 echo "Replacing old $EXE..."
-mv -f /d/Stuff/Core/rs/_target/x86_64-pc-windows-msvc/release/$EXE /d/Stuff/apps/_audio\ tools/.
+mv -f "$TARGET_DIR/x86_64-pc-windows-msvc/release/$EXE" "/d/Stuff/apps/_audio tools/."
 
 echo "Cleaning up..."
-rm -rf /d/Stuff/Core/rs/_target/release
-rm -rf /d/Stuff/Core/rs/_target/x86_64-pc-windows-msvc
+rm -rf "$TARGET_DIR/release"
+rm -rf "$TARGET_DIR/x86_64-pc-windows-msvc"
 
 print_elapsed () {
 	MIN=$(( ($1 - ($1 % (60 * 1000))) / (1000 * 60) ))
