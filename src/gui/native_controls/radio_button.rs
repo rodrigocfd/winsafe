@@ -56,14 +56,13 @@ impl RadioButton {
 						opts.window_style & !(co::WS::GROUP | co::WS::TABSTOP)
 					} | opts.control_style.into(),
 					opts.position.into(),
-					if opts.size == (0, 0) {
-						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(&text2))
-					} else {
-						opts.size.into()
-					},
+					opts.size.into(),
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
+				if opts.size == (0, 0) {
+					self2.set_text_and_resize(&text2).expect(DONTFAIL);
+				}
 				if opts.selected {
 					self2.select(true);
 				}
@@ -141,14 +140,14 @@ impl RadioButton {
 	/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 	/// text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
-		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text));
+		self.hwnd().SetWindowText(text)?;
+		let bound_box = text_calc::bound_box_bcm(self.hwnd());
 		self.hwnd().SetWindowPos(
 			HwndPlace::None,
 			POINT::default(),
 			bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE,
 		)?;
-		self.hwnd().SetWindowText(text)?;
 		Ok(())
 	}
 
@@ -184,7 +183,7 @@ pub struct RadioButtonOpts<'a> {
 	/// Radio button styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `BS::AUTORADIOBUTTON`.
+	/// Defaults to `BS::AUTORADIOBUTTON | co::BS::MULTILINE`.
 	pub control_style: co::BS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -223,7 +222,7 @@ impl<'a> Default for RadioButtonOpts<'a> {
 			text: "",
 			position: (0, 0),
 			size: (0, 0), // will resize to fit the text
-			control_style: co::BS::AUTORADIOBUTTON,
+			control_style: co::BS::AUTORADIOBUTTON | co::BS::MULTILINE,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

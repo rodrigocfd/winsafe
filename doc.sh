@@ -78,7 +78,7 @@ git reset $(git commit-tree "HEAD^{tree}" -m "$DEPLOY_MSG") # squash into 1 comm
 echo -e "${BLUE}Cleaning up...${NC}"
 git fetch origin --prune
 git -c gc.reflogExpire=0 -c gc.reflogExpireUnreachable=0 -c gc.rerereresolved=0 \
-	-c gc.rerereunresolved=0 -c gc.pruneExpire=now gc # https://stackoverflow.com/a/14729486/6923555
+	-c gc.rerereunresolved=0 -c gc.pruneExpire=now gc # https://stackoverflow.com/a/14729486
 
 echo -e "${BLUE}Pushing changes to remote...${NC}"
 git push origin +gh-pages

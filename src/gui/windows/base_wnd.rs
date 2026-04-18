@@ -215,7 +215,7 @@ impl BaseWnd {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
-				// https://stackoverflow.com/a/29359913/6923555
+				// https://stackoverflow.com/a/29359913
 				PostQuitMessage(msg.wParam as _);
 				return Ok(0); // raw modals will always return 0
 			}

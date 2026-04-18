@@ -53,14 +53,13 @@ impl CheckBox {
 					Some(&text2),
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					if opts.size == (0, 0) {
-						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(&text2))
-					} else {
-						opts.size.into()
-					},
+					opts.size.into(),
 					&parent2,
 				);
 				ui_font::set(self2.hwnd());
+				if opts.size == (0, 0) {
+					self2.set_text_and_resize(&text2).expect(DONTFAIL);
+				}
 				self2.set_state(opts.check_state);
 				parent2
 					.as_ref()
@@ -149,14 +148,15 @@ impl CheckBox {
 	/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 	/// text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
-		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text));
+		self.hwnd().SetWindowText(text)?;
+		let bound_box = text_calc::bound_box_bcm(self.hwnd());
 		self.hwnd().SetWindowPos(
 			HwndPlace::None,
 			POINT::default(),
 			bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE,
 		)?;
-		self.hwnd().SetWindowText(text)?;
+
 		Ok(())
 	}
 
@@ -198,7 +198,7 @@ pub struct CheckBoxOpts<'a> {
 	/// Check box styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `BS::AUTOCHECKBOX`.
+	/// Defaults to `BS::AUTOCHECKBOX | co::BS::MULTILINE`.
 	///
 	/// Suggestions:
 	/// * replace with `BS::AUTO3STATE` for a 3-state check box.
@@ -236,7 +236,7 @@ impl<'a> Default for CheckBoxOpts<'a> {
 			text: "",
 			position: dpi(0, 0),
 			size: (0, 0), // will resize to fit the text
-			control_style: co::BS::AUTOCHECKBOX,
+			control_style: co::BS::AUTOCHECKBOX | co::BS::MULTILINE,
 			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

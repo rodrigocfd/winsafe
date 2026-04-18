@@ -33,7 +33,7 @@ impl HWND {
 
 	/// Calls
 	/// [`HWND::GetClassLongPtr`](crate::HWND::GetClassLongPtr) to retrieve the
-	/// [class atom](https://stackoverflow.com/a/64437627/6923555) and check
+	/// [class atom](https://stackoverflow.com/a/64437627) and check
 	/// whether the window was created from a dialog resource.
 	#[must_use]
 	pub fn is_dialog(&self) -> bool {
@@ -195,7 +195,7 @@ impl HWND {
 	/// provide its own window procedure.
 	///
 	/// The usable ID range for child controls is
-	/// [8 to 57,343](https://stackoverflow.com/a/18192766/6923555).
+	/// [8 to 57,343](https://stackoverflow.com/a/18192766).
 	pub unsafe fn CreateWindowEx(
 		ex_style: co::WS_EX,
 		class_name: AtomStr,

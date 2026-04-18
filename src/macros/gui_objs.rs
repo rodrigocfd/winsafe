@@ -13,7 +13,7 @@ macro_rules! native_ctrl {
 
 		// A simple #[derive(Clone)] works for non-generic controls, but for
 		// generic ones, we need manual implementation.
-		// https://stackoverflow.com/q/39415052/6923555
+		// https://stackoverflow.com/q/39415052
 		impl<$( $genp )?> Clone for $name<$( $genp )?> {
 			fn clone(&self) -> Self {
 				Self(self.0.clone())

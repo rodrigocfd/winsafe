@@ -125,7 +125,7 @@ impl RawBase {
 	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {
 		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
 			if *self.base.hwnd() == hwnd_cur_focus {
-				// https://stackoverflow.com/a/2835220/6923555
+				// https://stackoverflow.com/a/2835220
 				if let Ok(hchild_first) = self.base.hwnd().GetWindow(co::GW::CHILD) {
 					hchild_first.SetFocus(); // if window receives focus, delegate to first child
 				}

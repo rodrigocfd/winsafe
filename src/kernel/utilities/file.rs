@@ -126,7 +126,7 @@ impl File {
 	#[must_use]
 	pub fn pointer_offset(&self) -> SysResult<u64> {
 		self.hfile
-			.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
+			.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021
 			.map(|off| off as _)
 	}
 

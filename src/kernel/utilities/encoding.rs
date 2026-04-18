@@ -113,7 +113,7 @@ impl Encoding {
 
 	#[must_use]
 	fn guess_utf8(data: &[u8]) -> bool {
-		let mut i = 0; // https://stackoverflow.com/a/1031773/6923555
+		let mut i = 0; // https://stackoverflow.com/a/1031773
 		while i < data.len() {
 			let ch0 = unsafe { *data.get_unchecked(i) };
 

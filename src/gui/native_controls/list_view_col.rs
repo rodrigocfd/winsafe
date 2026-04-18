@@ -18,7 +18,7 @@ pub struct ListViewCol<'a, T: 'static = ()> {
 }
 
 impl<'a, T> Clone for ListViewCol<'a, T> {
-	// https://stackoverflow.com/q/39415052/6923555
+	// https://stackoverflow.com/q/39415052
 	fn clone(&self) -> Self {
 		Self { owner: self.owner, index: self.index }
 	}
