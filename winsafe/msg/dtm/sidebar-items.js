@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["CloseMonthCal","GetDateTimePickerInfo","GetIdealSize","GetMcColor","GetMcFont","GetMcStyle","GetMonthCal","GetRange","GetSystemTime","SetFormat","SetMcColor","SetMcFont","SetMcStyle","SetRange","SetSystemTime"]};

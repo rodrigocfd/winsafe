@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["GetBorders","GetIcon","GetParts","GetRect","GetText","GetTextLength","GetTipText","GetUnicodeFormat","IsSimple","SetBkColor","SetIcon","SetMinHeight","SetParts","SetText","SetTipText","SetUnicodeFormat","Simple"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["DeltaPos","GetBarColor","GetBkColor","GetPos","GetRange","GetState","GetStep","SetBarColor","SetBkColor","SetMarquee","SetPos","SetRange","SetRange32","SetState","SetStep","StepIt"]};

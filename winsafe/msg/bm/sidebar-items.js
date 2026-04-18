@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["Click","GetCheck","GetIdealSize","GetImage","GetImageList","GetNote","GetNoteLength","GetSplitInfo","GetState","GetTextMargin","SetCheck","SetDontClick","SetDropDownState","SetImage","SetImageList","SetNote","SetShield","SetSplitInfo","SetState","SetStyle","SetTextMargin"]};
