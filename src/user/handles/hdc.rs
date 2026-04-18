@@ -20,16 +20,14 @@ impl HDC {
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// function.
-	pub fn DrawText(&self, text: &str, bounds: RECT, format: co::DT) -> SysResult<i32> {
-		let mut bounds = bounds;
+	pub fn DrawText(&self, text: &str, bounds: &mut RECT, format: co::DT) -> SysResult<i32> {
 		let wtext = WString::from_str(text);
-
 		match unsafe {
 			ffi::DrawTextW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				pvoid(&mut bounds),
+				pvoid(bounds),
 				format.raw(),
 			)
 		} {
@@ -43,19 +41,17 @@ impl HDC {
 	pub fn DrawTextEx(
 		&self,
 		text: &str,
-		bounds: RECT,
+		bounds: &mut RECT,
 		format: co::DT,
 		dtp: Option<&DRAWTEXTPARAMS>,
 	) -> SysResult<i32> {
-		let mut bounds = bounds;
 		let wtext = WString::from_str(text);
-
 		match unsafe {
 			ffi::DrawTextExW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				pvoid(&mut bounds),
+				pvoid(bounds),
 				format.raw(),
 				pcvoid_or_null(dtp),
 			)
