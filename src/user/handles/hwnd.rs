@@ -1442,7 +1442,7 @@ impl HWND {
 
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// function.
-	pub fn SetCapture(&self) -> ReleaseCaptureGuard<'_> {
+	pub fn SetCapture(&self) -> ReleaseCaptureGuard {
 		unsafe {
 			ReleaseCaptureGuard::new(
 				self,

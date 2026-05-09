@@ -155,12 +155,12 @@ impl<'a> EndPaintGuard<'a> {
 /// RAII implementation for [`HWND`](crate::HWND) which automatically calls
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// when the object goes out of scope.
-pub struct ReleaseCaptureGuard<'a> {
-	_hwnd: &'a HWND,
+pub struct ReleaseCaptureGuard {
+	hwnd: HWND,
 	hwnd_prev: Option<HWND>,
 }
 
-impl<'a> Drop for ReleaseCaptureGuard<'a> {
+impl Drop for ReleaseCaptureGuard {
 	fn drop(&mut self) {
 		unsafe {
 			ffi::ReleaseCapture(); // ignore errors
@@ -168,7 +168,7 @@ impl<'a> Drop for ReleaseCaptureGuard<'a> {
 	}
 }
 
-impl<'a> ReleaseCaptureGuard<'a> {
+impl ReleaseCaptureGuard {
 	/// Constructs the guard by taking ownership of the handles.
 	///
 	/// # Safety
@@ -177,8 +177,17 @@ impl<'a> ReleaseCaptureGuard<'a> {
 	/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a HWND, hwnd_prev: Option<HWND>) -> Self {
-		Self { _hwnd: hwnd, hwnd_prev }
+	pub unsafe fn new(hwnd: &HWND, hwnd_prev: Option<HWND>) -> Self {
+		Self {
+			hwnd: unsafe { hwnd.raw_copy() },
+			hwnd_prev,
+		}
+	}
+
+	/// Returns a handle to the window which is currently capturing the mouse.
+	#[must_use]
+	pub const fn hwnd(&self) -> &HWND {
+		return &self.hwnd;
 	}
 
 	/// Returns a handle to the window that had previously captured the mouse,
