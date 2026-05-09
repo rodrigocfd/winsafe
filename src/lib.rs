@@ -1,5 +1,6 @@
 #![doc = include_str!("lib.md")]
 #![cfg_attr(any(), rustfmt::skip)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 // Declaration of macros.
 

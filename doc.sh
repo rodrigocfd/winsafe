@@ -34,13 +34,8 @@ if [ -d $LOCAL_DOC ]; then
 	cd -
 fi
 
-# Since doc_cfg is broken, we're using nightly-2025-09-27 because it's the last one supporting doc_auto_cfg.
-# In lib.rs we'll insert doc_auto_cfg line, run rust doc, then remove the line.
-# https://users.rust-lang.org/t/doc-auto-cfg-is-gone-what-am-i-supposed-to-do/135070
 echo -e "${BLUE}Generating docs locally...${NC}"
-sed -b -i '3i#![cfg_attr(docsrs, feature(doc_auto_cfg))]' src/lib.rs # insert line as 3rd
-RUSTDOCFLAGS="--cfg docsrs" cargo +nightly-2025-09-27 doc --all-features
-sed -b -i '3d' src/lib.rs # remove 3rd line
+RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
 
 # Check the existence of -r flag, if absent, we stop here.
 if [[ ! " $@ " =~ " -r " ]]; then
