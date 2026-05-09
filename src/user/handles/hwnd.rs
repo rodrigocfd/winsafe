@@ -130,7 +130,7 @@ impl HWND {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn BeginPaint(&self) -> SysResult<EndPaintGuard<'_>> {
+	pub fn BeginPaint(&self) -> SysResult<EndPaintGuard> {
 		let mut ps = PAINTSTRUCT::default();
 		unsafe {
 			PtrRet(ffi::BeginPaint(self.ptr(), pvoid(&mut ps)))
@@ -491,7 +491,7 @@ impl HWND {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_>> {
+	pub fn GetDC(&self) -> SysResult<ReleaseDCGuard> {
 		unsafe {
 			PtrRet(ffi::GetDC(self.ptr()))
 				.to_sysresult_handle()
@@ -502,7 +502,7 @@ impl HWND {
 	/// [`GetDCEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdcex)
 	/// function.
 	#[must_use]
-	pub fn GetDCEx(&self, hrgn_clip: &HRGN, flags: co::DCX) -> SysResult<ReleaseDCGuard<'_>> {
+	pub fn GetDCEx(&self, hrgn_clip: &HRGN, flags: co::DCX) -> SysResult<ReleaseDCGuard> {
 		unsafe {
 			PtrRet(ffi::GetDCEx(self.ptr(), hrgn_clip.ptr(), flags.raw()))
 				.to_sysresult_handle()
@@ -708,7 +708,7 @@ impl HWND {
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// function.
 	#[must_use]
-	pub fn GetWindowDC(&self) -> SysResult<ReleaseDCGuard<'_>> {
+	pub fn GetWindowDC(&self) -> SysResult<ReleaseDCGuard> {
 		unsafe {
 			PtrRet(ffi::GetWindowDC(self.ptr()))
 				.to_sysresult_handle()

@@ -16,9 +16,7 @@ pub struct CloseClipboardGuard {
 
 impl Drop for CloseClipboardGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::CloseClipboard(); // ignore errors
-		}
+		unsafe { ffi::CloseClipboard() }; // ignore errors
 	}
 }
 
@@ -57,87 +55,85 @@ impl CloseClipboardGuard {
 
 handle_guard! { CloseDesktopGuard: HDESK;
 	ffi::CloseDesktop;
-	/// RAII implementation for [`HDESK`](crate::HDESK) which automatically
-	/// calls
+	/// RAII implementation for [`HDESK`](crate::decl::HDESK) which
+	/// automatically calls
 	/// [`CloseDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closedesktop)
 	/// when the object goes out of scope.
 }
 
 handle_guard! { DestroyAcceleratorTableGuard: HACCEL;
 	ffi::DestroyAcceleratorTable;
-	/// RAII implementation for [`HACCEL`](crate::HACCEL) which automatically
-	/// calls
+	/// RAII implementation for [`HACCEL`](crate::decl::HACCEL) which
+	/// automatically calls
 	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
 	/// when the object goes out of scope.
 }
 
 handle_guard! { DestroyCursorGuard: HCURSOR;
 	ffi::DestroyCursor;
-	/// RAII implementation for [`HCURSOR`](crate::HCURSOR) which automatically
-	/// calls
+	/// RAII implementation for [`HCURSOR`](crate::decl::HCURSOR) which
+	/// automatically calls
 	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
 	/// when the object goes out of scope.
 }
 
 handle_guard! { DestroyIconGuard: HICON;
 	ffi::DestroyIcon;
-	/// RAII implementation for [`HICON`](crate::HICON) which automatically
-	/// calls
+	/// RAII implementation for [`HICON`](crate::decl::HICON) which
+	/// automatically calls
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// when the object goes out of scope.
 }
 
 handle_guard! { DestroyMenuGuard: HMENU;
 	ffi::DestroyMenu;
-	/// RAII implementation for [`HMENU`](crate::HMENU) which automatically
-	/// calls
+	/// RAII implementation for [`HMENU`](crate::decl::HMENU) which
+	/// automatically calls
 	/// [`DestroyMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
 	/// when the object goes out of scope.
 }
 
 handle_guard! { EndDeferWindowPosGuard: HDWP;
 	ffi::EndDeferWindowPos;
-	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
+	/// RAII implementation for [`HDWP`](crate::decl::HDWP) which automatically
+	/// calls
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// when the object goes out of scope.
 }
 
-/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+/// RAII implementation for [`HDC`] which automatically calls
 /// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 /// when the object goes out of scope.
 ///
-/// The [`PAINTSTRUCT`](crate::PAINTSTRUCT) object is stored internally, and can
-/// be accessed through the
-/// [`paintstruct`](crate::guard::EndPaintGuard::paintstruct) method.
-pub struct EndPaintGuard<'a> {
-	hwnd: &'a HWND,
+/// The [`PAINTSTRUCT`] object is stored internally, and can be accessed
+/// through the [`paintstruct`](crate::guard::EndPaintGuard::paintstruct)
+/// method.
+pub struct EndPaintGuard {
+	hwnd: HWND,
 	hdc: HDC,
 	ps: PAINTSTRUCT,
 }
 
-impl<'a> Drop for EndPaintGuard<'a> {
+impl Drop for EndPaintGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::EndPaint(self.hwnd.ptr(), pcvoid(&self.ps));
-		}
+		unsafe { ffi::EndPaint(self.hwnd.ptr(), pcvoid(&self.ps)) };
 	}
 }
 
-impl<'a> Deref for EndPaintGuard<'a> {
+impl Deref for EndPaintGuard {
 	type Target = HDC;
 
 	fn deref(&self) -> &Self::Target {
 		&self.hdc
 	}
 }
-
-impl<'a> DerefMut for EndPaintGuard<'a> {
+impl DerefMut for EndPaintGuard {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
 	}
 }
 
-impl<'a> EndPaintGuard<'a> {
+impl EndPaintGuard {
 	/// Constructs the guard by taking ownership of the objects.
 	///
 	/// # Safety
@@ -146,19 +142,28 @@ impl<'a> EndPaintGuard<'a> {
 	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a HWND, hdc: HDC, ps: PAINTSTRUCT) -> Self {
-		Self { hwnd, hdc, ps }
+	pub unsafe fn new(hwnd: &HWND, hdc: HDC, ps: PAINTSTRUCT) -> Self {
+		Self {
+			hwnd: unsafe { hwnd.raw_copy() },
+			hdc,
+			ps,
+		}
 	}
 
-	/// Returns a reference to the internal [`PAINTSTRUCT`](crate::PAINTSTRUCT)
-	/// object.
+	/// Returns a reference to the internal [`PAINTSTRUCT`] object.
 	#[must_use]
 	pub const fn paintstruct(&self) -> &PAINTSTRUCT {
 		&self.ps
 	}
+
+	/// Returns a handle to the window being painted.
+	#[must_use]
+	pub const fn hwnd(&self) -> &HWND {
+		&self.hwnd
+	}
 }
 
-/// RAII implementation for [`HWND`](crate::HWND) which automatically calls
+/// RAII implementation for [`HWND`] which automatically calls
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// when the object goes out of scope.
 pub struct ReleaseCaptureGuard {
@@ -168,9 +173,7 @@ pub struct ReleaseCaptureGuard {
 
 impl Drop for ReleaseCaptureGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::ReleaseCapture(); // ignore errors
-		}
+		unsafe { ffi::ReleaseCapture() }; // ignore errors
 	}
 }
 
@@ -204,41 +207,38 @@ impl ReleaseCaptureGuard {
 	}
 }
 
-/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+/// RAII implementation for [`HDC`] which automatically calls
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 /// when the object goes out of scope.
-pub struct ReleaseDCGuard<'a> {
-	hwnd: &'a HWND,
+pub struct ReleaseDCGuard {
+	hwnd: HWND,
 	hdc: HDC,
 }
 
-impl<'a> Drop for ReleaseDCGuard<'a> {
+impl Drop for ReleaseDCGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hwnd.as_opt() {
 			if let Some(dc) = self.hdc.as_opt() {
-				unsafe {
-					ffi::ReleaseDC(h.ptr(), dc.ptr()); // ignore errors
-				}
+				unsafe { ffi::ReleaseDC(h.ptr(), dc.ptr()) }; // ignore errors
 			}
 		}
 	}
 }
 
-impl<'a> Deref for ReleaseDCGuard<'a> {
+impl Deref for ReleaseDCGuard {
 	type Target = HDC;
 
 	fn deref(&self) -> &Self::Target {
 		&self.hdc
 	}
 }
-
-impl<'a> DerefMut for ReleaseDCGuard<'a> {
+impl DerefMut for ReleaseDCGuard {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
 	}
 }
 
-impl<'a> ReleaseDCGuard<'a> {
+impl ReleaseDCGuard {
 	/// Constructs the guard by taking ownership of the handles.
 	///
 	/// # Safety
@@ -247,12 +247,12 @@ impl<'a> ReleaseDCGuard<'a> {
 	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a HWND, hdc: HDC) -> Self {
-		Self { hwnd, hdc }
+	pub unsafe fn new(hwnd: &HWND, hdc: HDC) -> Self {
+		Self { hwnd: unsafe { hwnd.raw_copy() }, hdc }
 	}
 
-	/// Ejects the underlying handle, leaving a
-	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	/// Ejects the underlying handle, leaving a [`Handle::INVALID`] in its
+	/// place.
 	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
@@ -260,5 +260,11 @@ impl<'a> ReleaseDCGuard<'a> {
 	#[must_use]
 	pub fn leak(&mut self) -> HDC {
 		std::mem::replace(&mut self.hdc, HDC::INVALID)
+	}
+
+	/// Returns a handle to the window which got the DC.
+	#[must_use]
+	pub const fn hwnd(&self) -> &HWND {
+		&self.hwnd
 	}
 }
