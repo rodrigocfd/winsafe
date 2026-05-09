@@ -1185,7 +1185,7 @@ impl HWND {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_>> {
+	pub fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard> {
 		unsafe {
 			BoolRet(ffi::OpenClipboard(self.ptr()))
 				.to_sysresult()

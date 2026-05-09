@@ -9,12 +9,12 @@ use crate::user::ffi;
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// when the object goes out of scope.
-pub struct CloseClipboardGuard<'a> {
-	_hwnd: &'a HWND,
+pub struct CloseClipboardGuard {
+	hwnd: HWND,
 	hclip: HCLIPBOARD,
 }
 
-impl<'a> Drop for CloseClipboardGuard<'a> {
+impl Drop for CloseClipboardGuard {
 	fn drop(&mut self) {
 		unsafe {
 			ffi::CloseClipboard(); // ignore errors
@@ -22,20 +22,20 @@ impl<'a> Drop for CloseClipboardGuard<'a> {
 	}
 }
 
-impl<'a> Deref for CloseClipboardGuard<'a> {
+impl Deref for CloseClipboardGuard {
 	type Target = HCLIPBOARD;
 
 	fn deref(&self) -> &Self::Target {
 		&self.hclip
 	}
 }
-impl<'a> DerefMut for CloseClipboardGuard<'a> {
+impl DerefMut for CloseClipboardGuard {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hclip
 	}
 }
 
-impl<'a> CloseClipboardGuard<'a> {
+impl CloseClipboardGuard {
 	/// Constructs the guard by taking ownership of the handle.
 	///
 	/// # Safety
@@ -44,8 +44,14 @@ impl<'a> CloseClipboardGuard<'a> {
 	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a HWND, hclip: HCLIPBOARD) -> Self {
-		Self { _hwnd: hwnd, hclip }
+	pub unsafe fn new(hwnd: &HWND, hclip: HCLIPBOARD) -> Self {
+		Self { hwnd: unsafe { hwnd.raw_copy() }, hclip }
+	}
+
+	/// Returns a handle to the window associated with the open clipboard.
+	#[must_use]
+	pub const fn hwnd(&self) -> &HWND {
+		&self.hwnd
 	}
 }
 
