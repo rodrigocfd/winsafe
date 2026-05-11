@@ -156,7 +156,6 @@ impl CheckBox {
 			bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE,
 		)?;
-
 		Ok(())
 	}
 

@@ -429,6 +429,8 @@ const_bitflag! { CS: u32;
 	/// [`styles`](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	VREDRAW 0x0001
 	HREDRAW 0x0002
 	DBLCLKS 0x0008
