@@ -67,7 +67,7 @@ native_ctrl! { Button: ButtonObj => GuiEventsButton;
 	///
 	///     fn events(&self) {
 	///         let self2 = self.clone();
-	///             self.btn.on().bn_clicked(move || {
+	///         self.btn.on().bn_clicked(move || {
 	///             self2.wnd.hwnd().SetWindowText("Button clicked")?;
 	///             Ok(())
 	///         });

@@ -61,6 +61,8 @@ mod decl {
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::decl::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
 }
+
+#[allow(unused)]
 pub use decl::*;
 
 pub mod co {
