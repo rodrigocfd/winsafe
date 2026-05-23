@@ -461,6 +461,16 @@ impl HDC {
 		if ret == 0 { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(ret) }
 	}
 
+	/// [`GetLayout`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getlayout)
+	/// function.
+	#[must_use]
+	pub fn GetLayout(&self) -> SysResult<co::LAYOUT> {
+		match unsafe { ffi::GetLayout(self.ptr()) } {
+			GDI_ERROR => Err(co::ERROR::INVALID_PARAMETER),
+			num => Ok(unsafe { co::LAYOUT::from_raw(num) }),
+		}
+	}
+
 	/// [`GetPixelFormat`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getpixelformat)
 	/// function.
 	#[must_use]
@@ -1016,6 +1026,15 @@ impl HDC {
 		match unsafe { ffi::SetGraphicsMode(self.ptr(), mode.raw()) } {
 			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::GM::from_raw(v) }),
+		}
+	}
+
+	/// [`SetLayout`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setlayout)
+	/// function.
+	pub fn SetLayout(&self, l: co::LAYOUT) -> SysResult<co::LAYOUT> {
+		match unsafe { ffi::SetLayout(self.ptr(), l.raw()) } {
+			GDI_ERROR => Err(co::ERROR::INVALID_PARAMETER),
+			num => Ok(unsafe { co::LAYOUT::from_raw(num) }),
 		}
 	}
 

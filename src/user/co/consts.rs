@@ -1624,14 +1624,22 @@ const_bitflag! { KEYEVENTF: u32;
 }
 
 const_ordinary! { LAYOUT: u32;
-	/// [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout) and
-	/// [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout) value
-	/// (`u32`).
+	/// [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout),
+	/// [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout),
+	/// [`HDC::GetLayout`](crate::HDC::GetLayout) and
+	/// [`HDC::SetLayout`](crate::HDC::SetLayout) value (`u32`).
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
-	/// Default horizontal layout is right to left.
+	/// Left to right.
+	LTR 0x0000_0000
+	/// Right to left.
 	RTL 0x0000_0001
+	/// Bottom to top.
+	BTT 0x0000_0002
+	/// Vertical before horizontal.
+	VBH 0x0000_0004
+	/// Disables any reflection during [`BitBlt`](crate::HDC::BitBlt) and
+	/// [`StretchBlt`](crate::HDC::StretchBlt) operations.
+	BITMAPORIENTATIONPRESERVED 0x0000_0008
 }
 
 const_wm! { LB;

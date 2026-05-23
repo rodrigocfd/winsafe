@@ -53,6 +53,7 @@ extern_sys! { "gdi32";
 	GetDCPenColor(HANDLE) -> u32
 	GetDeviceCaps(HANDLE, i32) -> i32
 	GetDIBits(HANDLE, HANDLE, u32, u32, PVOID, PVOID, u32) -> i32
+	GetLayout(HANDLE) -> u32
 	GetObjectW(HANDLE, i32, PVOID) -> i32
 	GetPixelFormat(HANDLE) -> i32
 	GetStockObject(i32) -> HANDLE
@@ -105,6 +106,7 @@ extern_sys! { "gdi32";
 	SetDCPenColor(HANDLE, u32) -> u32
 	SetDIBits(HANDLE, HANDLE, u32, u32, PCVOID, PCVOID, u32) -> i32
 	SetGraphicsMode(HANDLE, i32) -> i32
+	SetLayout(HANDLE, u32) -> u32
 	SetStretchBltMode(HANDLE, i32) -> i32
 	SetTextAlign(HANDLE, u32) -> u32
 	SetTextColor(HANDLE, u32) -> u32
