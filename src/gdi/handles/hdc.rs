@@ -466,7 +466,7 @@ impl HDC {
 	#[must_use]
 	pub fn GetLayout(&self) -> SysResult<co::LAYOUT> {
 		match unsafe { ffi::GetLayout(self.ptr()) } {
-			GDI_ERROR => Err(co::ERROR::INVALID_PARAMETER),
+			GDI_ERROR => Err(GetLastError()),
 			num => Ok(unsafe { co::LAYOUT::from_raw(num) }),
 		}
 	}
