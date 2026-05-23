@@ -2,12 +2,8 @@
 
 /// Builds one single FFI binding function.
 macro_rules! one_func {
-	($func:ident( $( $parm:ty ),* ) -> $ret:ty) => {
-		pub(crate) fn $func( $( _: $parm, )* ) -> $ret;
-	};
-
-	($func:ident( $( $parm:ty ),* )) => {
-		pub(crate) fn $func( $( _: $parm, )* );
+	( $func:ident( $( $parm:ty ),* ) $( -> $ret:ty )? ) => {
+		pub(crate) fn $func( $( _x: $parm, )* ) $( -> $ret )?;
 	};
 }
 pub(crate) use one_func;
