@@ -562,6 +562,28 @@ pub fn GetKeyNameText(scan_code: u8, is_extended_key: bool, dont_care: bool) -> 
 	}
 }
 
+/// [`GetKeyState`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate)
+/// function.
+///
+/// Returns two `bool` values:
+/// 1) key is pressed;
+/// 2) key is toggled (usually caps lock).
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let (is_down, _) = w::GetKeyState(co::VK::CONTROL);
+/// ```
+#[must_use]
+pub fn GetKeyState(virt_key: co::VK) -> (bool, bool) {
+	let short = unsafe { ffi::GetKeyState(virt_key.raw() as _) } as u16;
+	let is_down = (short & 0x8000) != 0;
+	let is_toggled = (short & 0x0001) != 0;
+	(is_down, is_toggled)
+}
+
 /// [`GetLastInputInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastinputinfo)
 /// function.
 #[must_use]

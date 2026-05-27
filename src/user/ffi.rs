@@ -122,6 +122,7 @@ extern_sys! { "user32";
 	GetIconInfo(HANDLE, PVOID) -> BOOL
 	GetIconInfoExW(HANDLE, PVOID) -> BOOL
 	GetKeyNameTextW(i32, PSTR, i32) -> i32
+	GetKeyState(i32) -> i16
 	GetLastActivePopup(HANDLE) -> HANDLE
 	GetLastInputInfo(PVOID) -> BOOL
 	GetMenu(HANDLE) -> HANDLE
