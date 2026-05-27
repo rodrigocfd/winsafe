@@ -105,7 +105,7 @@ pub(in crate::gui) mod ui_font {
 	/// Global UI font object, cached.
 	static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
 
-	// Returns the global UI font, creating it of not yet.
+	/// Returns the global UI font, creating it of not yet.
 	pub(in crate::gui) fn get() -> HFONT {
 		unsafe {
 			match &*&raw const UI_HFONT {

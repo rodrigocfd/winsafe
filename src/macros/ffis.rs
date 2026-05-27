@@ -1,13 +1,5 @@
 #![allow(unused_macros)]
 
-/// Builds one single FFI binding function.
-macro_rules! one_func {
-	( $func:ident( $( $parm:ty ),* ) $( -> $ret:ty )? ) => {
-		pub(crate) fn $func( $( _x: $parm, )* ) $( -> $ret )?;
-	};
-}
-pub(crate) use one_func;
-
 /// Builds a block of FFI bindings.
 macro_rules! extern_sys {
 	(
@@ -20,7 +12,7 @@ macro_rules! extern_sys {
 		#[cfg_attr(feature = "raw-dylib", link(name = $dll, kind = "raw-dylib"))]
 		unsafe extern "system" {
 			$(
-				one_func!( $func( $( $parm ),* ) $(-> $ret)? );
+				pub(crate) fn $func( $( _x: $parm, )* ) $( -> $ret )?;
 			)*
 		}
 	};
