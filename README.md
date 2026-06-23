@@ -66,6 +66,7 @@ The following Cargo features are available so far:
 | `dxgi` | [DirectX Graphics Infrastructure](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dx-graphics-dxgi) |
 | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI abstractions** |
+| `htmlhelp` | [HTML Help](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/htmlhelp/microsoft-html-help-1-4-sdk) |
 | `kernel` | Kernel32.dll, basic kernel functions |
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
 | `ole` | Basic OLE/COM support |

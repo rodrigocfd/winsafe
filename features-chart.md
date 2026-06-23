@@ -12,6 +12,7 @@ flowchart RL
     gdi --> user
     gui --> comctl
     gui --> uxtheme
+    htmlhelp --> user
     mf --> oleaut
     ole --> user
     oleaut --> ole

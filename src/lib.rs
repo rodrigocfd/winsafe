@@ -14,6 +14,7 @@ mod macros;
 #[cfg(feature = "dwm")] mod dwm;
 #[cfg(feature = "dxgi")] mod dxgi;
 #[cfg(feature = "gdi")] mod gdi;
+#[cfg(feature = "htmlhelp")] mod htmlhelp;
 #[cfg(feature = "kernel")] mod kernel;
 #[cfg(feature = "mf")] mod mf;
 #[cfg(feature = "ole")] mod ole;
@@ -45,6 +46,7 @@ mod decl {
 	#[cfg(feature = "dwm")] pub use super::dwm::decl::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::decl::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::decl::*;
+	#[cfg(feature = "htmlhelp")] pub use super::htmlhelp::decl::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::decl::*;
 	#[cfg(feature = "mf")] pub use super::mf::decl::*;
 	#[cfg(feature = "ole")] pub use super::ole::decl::*;
@@ -77,6 +79,7 @@ pub mod co {
 	#[cfg(feature = "dwm")] pub use super::dwm::co::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
+	#[cfg(feature = "htmlhelp")] pub use super::htmlhelp::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
 	#[cfg(feature = "mf")] pub use super::mf::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;

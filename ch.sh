@@ -16,6 +16,7 @@ FEATS=(
 	'gdi mf'
 	gui
 	'gui shell'
+	htmlhelp
 	kernel
 	mf
 	ole
