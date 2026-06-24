@@ -3,7 +3,7 @@ use crate::decl::*;
 
 /// Variable parameter for:
 ///
-/// * [`HWND::HtmlHelp`](crate::exports::htmlhelp_Hwnd::HtmlHelp)
+/// * [`HWND::HtmlHelp`](crate::HWND::HtmlHelp)
 pub enum HhCmd<'a> {
 	/// [`HH_CLOSE_ALL`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/htmlhelp/hh-close-all-command)
 	/// command.
@@ -33,7 +33,9 @@ pub enum HhCmd<'a> {
 }
 
 impl<'a> HhCmd<'a> {
-	/// Returns the [`co::HH`](crate::co::HH) constant and serialized data.
+	/// Returns the [`co::HH`](crate::co::HH) constant and serialized data. So
+	/// far, only a limited subset has been implemented. The ones involving
+	/// pointers are still up to debate.
 	#[must_use]
 	pub(in crate::htmlhelp) fn as_data(&self) -> (co::HH, HhCmdData) {
 		use HhCmd::*;
@@ -63,7 +65,7 @@ impl<'a> HhCmd<'a> {
 	}
 }
 
-// Serialized data of [`HhCmd`].
+/// Serialized data of [`HhCmd`].
 pub(in crate::htmlhelp) enum HhCmdData {
 	None,
 	Str(WString),
