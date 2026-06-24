@@ -93,7 +93,8 @@ impl Stats {
 					self.ffis += 1; // each line inside FFI block is counted
 				}
 			} else {
-				if line.starts_with("extern_sys!") {
+				if line.starts_with("extern_sys!") || line.starts_with("unsafe extern \"system\" {")
+				{
 					inside_block = true;
 				}
 			}
