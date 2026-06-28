@@ -60,7 +60,7 @@ impl DlgMain {
 		self.txt_path.set_text(&format!("{}\\src", ids::ROOT_DIR))?;
 
 		unsafe {
-			self.txt_out.hwnd().SendMessage(msg::wm::SetFont {
+			self.txt_out.hwnd().SendMessage(msg::WmSetFont {
 				hfont: self.mono_font.raw_copy(), // fixed-width font for output
 				redraw: true,
 			});
