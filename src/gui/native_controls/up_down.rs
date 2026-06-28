@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct UpDownObj {
@@ -142,40 +142,40 @@ impl UpDown {
 	}
 
 	/// Retrieves the current position by sending an
-	/// [`udm::GetPos32`](crate::msg::udm::GetPos32) message.
+	/// [`UdmGetPos32`](crate::msg::UdmGetPos32) message.
 	#[must_use]
 	pub fn pos(&self) -> i32 {
 		unsafe {
 			self.hwnd()
-				.SendMessage(udm::GetPos32 { success_flag: None })
+				.SendMessage(msg::UdmGetPos32 { success_flag: None })
 		}
 	}
 
 	/// Retrieves the minimum and maximum position values by sending an
-	/// [`udm::GetRange32`](crate::msg::udm::GetRange32) message.
+	/// [`UdmGetRange32`](crate::msg::UdmGetRange32) message.
 	#[must_use]
 	pub fn range(&self) -> (i32, i32) {
 		let (mut min, mut max) = (0i32, 0i32);
 		unsafe {
 			self.hwnd()
-				.SendMessage(udm::GetRange32 { min: &mut min, max: &mut max });
+				.SendMessage(msg::UdmGetRange32 { min: &mut min, max: &mut max });
 		}
 		(min, max)
 	}
 
 	/// Sets the current position by sending an
-	/// [`udm::SetPos32`](crate::msg::udm::SetPos32) message.
+	/// [`UdmSetPos32`](crate::msg::UdmSetPos32) message.
 	pub fn set_pos(&self, pos: i32) {
 		unsafe {
-			self.hwnd().SendMessage(udm::SetPos32 { pos });
+			self.hwnd().SendMessage(msg::UdmSetPos32 { pos });
 		}
 	}
 
 	/// Set the control range by sending an
-	/// [`udm::SetRange32`](crate::msg::udm::SetRange32) message.
+	/// [`UdmSetRange32`](crate::msg::UdmSetRange32) message.
 	pub fn set_range(&self, min: i32, max: i32) {
 		unsafe {
-			self.hwnd().SendMessage(udm::SetRange32 { min, max });
+			self.hwnd().SendMessage(msg::UdmSetRange32 { min, max });
 		}
 	}
 }

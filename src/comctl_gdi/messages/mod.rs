@@ -1,1 +1,3 @@
-pub mod dtm;
+mod dtm;
+
+pub use dtm::*;

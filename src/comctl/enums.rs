@@ -6,8 +6,8 @@ use crate::prelude::*;
 
 /// Variant parameter for:
 ///
-/// * [`stm::GetImage`](crate::msg::stm::GetImage)
-/// * [`stm::SetImage`](crate::msg::stm::SetImage)
+/// * [`StmGetImage`](crate::msg::StmGetImage)
+/// * [`StmSetImage`](crate::msg::StmSetImage)
 pub enum BmpIconCurMeta {
 	/// Bitmap.
 	Bmp(HBITMAP),
@@ -159,7 +159,7 @@ impl<'a> IconRes<'a> {
 
 /// Variant type for:
 ///
-/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap)
+/// * [`TbChangeBitmap`](crate::msg::TbChangeBitmap)
 #[derive(Clone, Copy)]
 pub enum IdxCbNone {
 	/// Index of an image in the toolbar's image list.
@@ -194,7 +194,7 @@ pub enum IdxStr {
 
 /// Variant parameter for:
 ///
-/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider)
+/// * [`HdmSetHotDivider`](crate::msg::HdmSetHotDivider)
 pub enum PtIdx {
 	/// X and Y coordinates of the pointer
 	Pt(POINT),
@@ -204,7 +204,7 @@ pub enum PtIdx {
 
 /// Variant parameter for:
 ///
-/// * [`tbm::AddString`](crate::msg::tbm::AddString).
+/// * [`TbAddString`](crate::msg::TbAddString).
 pub enum ResStrs {
 	/// A resource string resource.
 	Res(IdStr, HINSTANCE),

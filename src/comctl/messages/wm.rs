@@ -7,19 +7,19 @@ use crate::prelude::*;
 /// message parameters.
 ///
 /// Return type: `isize`.
-pub struct Notify<'a> {
+pub struct WmNotify<'a> {
 	pub nmhdr: &'a mut NMHDR,
 }
 
-impl<'a> MsgSend for Notify<'a> {
+impl<'a> MsgSend for WmNotify<'a> {
 	type RetType = isize;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr() as _,
 			lparam: self.nmhdr as *mut _ as _,
@@ -27,13 +27,13 @@ impl<'a> MsgSend for Notify<'a> {
 	}
 }
 
-impl<'a> MsgSendRecv for Notify<'a> {
-	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for WmNotify<'a> {
+	unsafe fn from_generic_wm(p: Wm) -> Self {
 		unsafe { Self { nmhdr: &mut *(p.lparam as *mut _) } }
 	}
 }
 
-impl<'a> Notify<'a> {
+impl<'a> WmNotify<'a> {
 	/// Casts the `NMHDR` reference into a derived struct.
 	///
 	/// # Safety

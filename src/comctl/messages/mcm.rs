@@ -9,17 +9,17 @@ use crate::user::privs::*;
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetCalendarBorder {}
+pub struct McmGetCalendarBorder {}
 
-impl MsgSend for GetCalendarBorder {
+impl MsgSend for McmGetCalendarBorder {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCALENDARBORDER.into(),
 			wparam: 0,
 			lparam: 0,
@@ -31,17 +31,17 @@ impl MsgSend for GetCalendarBorder {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetCalendarCount {}
+pub struct McmGetCalendarCount {}
 
-impl MsgSend for GetCalendarCount {
+impl MsgSend for McmGetCalendarCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCALENDARCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -53,19 +53,19 @@ impl MsgSend for GetCalendarCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetCalendarGridInfo<'a, 'b> {
+pub struct McmGetCalendarGridInfo<'a, 'b> {
 	pub info: &'b mut MCGRIDINFO<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for McmGetCalendarGridInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCALENDARGRIDINFO.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -77,17 +77,17 @@ impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::CAL`.
-pub struct GetCalId {}
+pub struct McmGetCalId {}
 
-impl MsgSend for GetCalId {
+impl MsgSend for McmGetCalId {
 	type RetType = co::CAL;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::CAL::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCALID.into(),
 			wparam: 0,
 			lparam: 0,
@@ -99,19 +99,19 @@ impl MsgSend for GetCalId {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-pub struct GetColor {
+pub struct McmGetColor {
 	pub which: co::MCSC,
 }
 
-impl MsgSend for GetColor {
+impl MsgSend for McmGetColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCOLOR.into(),
 			wparam: self.which.raw() as _,
 			lparam: 0,
@@ -123,17 +123,17 @@ impl MsgSend for GetColor {
 /// message, which has no parameters.
 ///
 /// Return type: `co::MCMV`.
-pub struct GetCurrentView {}
+pub struct McmGetCurrentView {}
 
-impl MsgSend for GetCurrentView {
+impl MsgSend for McmGetCurrentView {
 	type RetType = co::MCMV;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::MCMV::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCURRENTVIEW.into(),
 			wparam: 0,
 			lparam: 0,
@@ -145,19 +145,19 @@ impl MsgSend for GetCurrentView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetCurSel<'a> {
+pub struct McmGetCurSel<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
-impl<'a> MsgSend for GetCurSel<'a> {
+impl<'a> MsgSend for McmGetCurSel<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETCURSEL.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -169,17 +169,17 @@ impl<'a> MsgSend for GetCurSel<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `(bool, u16)`.
-pub struct GetFirstDayOfWeek {}
+pub struct McmGetFirstDayOfWeek {}
 
-impl MsgSend for GetFirstDayOfWeek {
+impl MsgSend for McmGetFirstDayOfWeek {
 	type RetType = (bool, u16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(HIWORD(v as _) != 0, LOWORD(v as _))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETFIRSTDAYOFWEEK.into(),
 			wparam: 0,
 			lparam: 0,
@@ -191,17 +191,17 @@ impl MsgSend for GetFirstDayOfWeek {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetMaxSelCount {}
+pub struct McmGetMaxSelCount {}
 
-impl MsgSend for GetMaxSelCount {
+impl MsgSend for McmGetMaxSelCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETMAXSELCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -213,17 +213,17 @@ impl MsgSend for GetMaxSelCount {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetMaxTodayWidth {}
+pub struct McmGetMaxTodayWidth {}
 
-impl MsgSend for GetMaxTodayWidth {
+impl MsgSend for McmGetMaxTodayWidth {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETMAXTODAYWIDTH.into(),
 			wparam: 0,
 			lparam: 0,
@@ -235,19 +235,19 @@ impl MsgSend for GetMaxTodayWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetMinReqRect<'a> {
+pub struct McmGetMinReqRect<'a> {
 	pub bounds_rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetMinReqRect<'a> {
+impl<'a> MsgSend for McmGetMinReqRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETMINREQRECT.into(),
 			wparam: 0,
 			lparam: self.bounds_rect as *mut _ as _,
@@ -259,17 +259,17 @@ impl<'a> MsgSend for GetMinReqRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetMonthDelta {}
+pub struct McmGetMonthDelta {}
 
-impl MsgSend for GetMonthDelta {
+impl MsgSend for McmGetMonthDelta {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETMONTHDELTA.into(),
 			wparam: 0,
 			lparam: 0,
@@ -281,20 +281,20 @@ impl MsgSend for GetMonthDelta {
 /// message parameters.
 ///
 /// Return value: `u32`.
-pub struct GetMonthRange<'a> {
+pub struct McmGetMonthRange<'a> {
 	pub scope: co::GMR,
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for GetMonthRange<'a> {
+impl<'a> MsgSend for McmGetMonthRange<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETMONTHRANGE.into(),
 			wparam: self.scope.raw() as _,
 			lparam: self.limits.as_mut_ptr() as _,
@@ -306,19 +306,19 @@ impl<'a> MsgSend for GetMonthRange<'a> {
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
-pub struct GetRange<'a> {
+pub struct McmGetRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for McmGetRange<'a> {
 	type RetType = co::GDTR;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETRANGE.into(),
 			wparam: 0,
 			lparam: self.limits.as_mut_ptr() as _,
@@ -330,19 +330,19 @@ impl<'a> MsgSend for GetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetSelRange<'a> {
+pub struct McmGetSelRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for GetSelRange<'a> {
+impl<'a> MsgSend for McmGetSelRange<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETSELRANGE.into(),
 			wparam: 0,
 			lparam: self.limits.as_mut_ptr() as _,
@@ -354,19 +354,19 @@ impl<'a> MsgSend for GetSelRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetToday<'a> {
+pub struct McmGetToday<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
-impl<'a> MsgSend for GetToday<'a> {
+impl<'a> MsgSend for McmGetToday<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETTODAY.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -378,17 +378,17 @@ impl<'a> MsgSend for GetToday<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct McmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for McmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -400,19 +400,19 @@ impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct HitTest<'a> {
+pub struct McmHitTest<'a> {
 	pub test_info: &'a mut MCHITTESTINFO,
 }
 
-impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for McmHitTest<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::HITTEST.into(),
 			wparam: 0,
 			lparam: self.test_info as *mut _ as _,
@@ -424,20 +424,20 @@ impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetCalendarBorder {
+pub struct McmSetCalendarBorder {
 	pub border: bool,
 	pub pixels: u32,
 }
 
-impl MsgSend for SetCalendarBorder {
+impl MsgSend for McmSetCalendarBorder {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETCALENDARBORDER.into(),
 			wparam: self.border as _,
 			lparam: self.pixels as _,
@@ -449,19 +449,19 @@ impl MsgSend for SetCalendarBorder {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetCalId {
+pub struct McmSetCalId {
 	pub id: co::CAL,
 }
 
-impl MsgSend for SetCalId {
+impl MsgSend for McmSetCalId {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETCALID.into(),
 			wparam: self.id.raw() as _,
 			lparam: 0,
@@ -473,20 +473,20 @@ impl MsgSend for SetCalId {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetColor {
+pub struct McmSetColor {
 	pub which: co::MCSC,
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetColor {
+impl MsgSend for McmSetColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETCOLOR.into(),
 			wparam: self.which.raw() as _,
 			lparam: u32::from(self.color) as _,
@@ -498,19 +498,19 @@ impl MsgSend for SetColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCurrentView {
+pub struct McmSetCurrentView {
 	pub view: co::MCMV,
 }
 
-impl MsgSend for SetCurrentView {
+impl MsgSend for McmSetCurrentView {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETCURRENTVIEW.into(),
 			wparam: 0,
 			lparam: self.view.raw() as _,
@@ -522,19 +522,19 @@ impl MsgSend for SetCurrentView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCurSel<'a> {
+pub struct McmSetCurSel<'a> {
 	pub info: &'a SYSTEMTIME,
 }
 
-impl<'a> MsgSend for SetCurSel<'a> {
+impl<'a> MsgSend for McmSetCurSel<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETCURSEL.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -546,19 +546,19 @@ impl<'a> MsgSend for SetCurSel<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetDayState<'a> {
+pub struct McmSetDayState<'a> {
 	pub months: &'a [MONTHDAYSTATE],
 }
 
-impl<'a> MsgSend for SetDayState<'a> {
+impl<'a> MsgSend for McmSetDayState<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETDAYSTATE.into(),
 			wparam: self.months.len(),
 			lparam: vec_ptr(self.months) as _,
@@ -570,19 +570,19 @@ impl<'a> MsgSend for SetDayState<'a> {
 /// message parameters.
 ///
 /// Return type: `(bool, u16)`.
-pub struct SetFirstDayOfWeek {
+pub struct McmSetFirstDayOfWeek {
 	pub first_day: u8,
 }
 
-impl MsgSend for SetFirstDayOfWeek {
+impl MsgSend for McmSetFirstDayOfWeek {
 	type RetType = (bool, u16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(HIWORD(v as _) != 0, LOWORD(v as _))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETFIRSTDAYOFWEEK.into(),
 			wparam: 0,
 			lparam: self.first_day as _,
@@ -594,19 +594,19 @@ impl MsgSend for SetFirstDayOfWeek {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetMaxSelCount {
+pub struct McmSetMaxSelCount {
 	pub max_days: u8,
 }
 
-impl MsgSend for SetMaxSelCount {
+impl MsgSend for McmSetMaxSelCount {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETMAXSELCOUNT.into(),
 			wparam: self.max_days as _,
 			lparam: 0,
@@ -618,19 +618,19 @@ impl MsgSend for SetMaxSelCount {
 /// message parameters.
 ///
 /// Return type: `u8`.
-pub struct SetMonthDelta {
+pub struct McmSetMonthDelta {
 	pub num_months: u8,
 }
 
-impl MsgSend for SetMonthDelta {
+impl MsgSend for McmSetMonthDelta {
 	type RetType = u8;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETMONTHDELTA.into(),
 			wparam: self.num_months as _,
 			lparam: 0,
@@ -642,20 +642,20 @@ impl MsgSend for SetMonthDelta {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetRange<'a> {
+pub struct McmSetRange<'a> {
 	pub which: co::GDTR,
 	pub limits: &'a [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for SetRange<'a> {
+impl<'a> MsgSend for McmSetRange<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETRANGE.into(),
 			wparam: self.which.raw() as _,
 			lparam: vec_ptr(self.limits) as _,
@@ -667,19 +667,19 @@ impl<'a> MsgSend for SetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetSelRange<'a> {
+pub struct McmSetSelRange<'a> {
 	pub limits: &'a [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for SetSelRange<'a> {
+impl<'a> MsgSend for McmSetSelRange<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETSELRANGE.into(),
 			wparam: 0,
 			lparam: vec_ptr(self.limits) as _,
@@ -691,19 +691,19 @@ impl<'a> MsgSend for SetSelRange<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetToday<'a> {
+pub struct McmSetToday<'a> {
 	pub today: Option<&'a SYSTEMTIME>,
 }
 
-impl<'a> MsgSend for SetToday<'a> {
+impl<'a> MsgSend for McmSetToday<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETTODAY.into(),
 			wparam: 0,
 			lparam: self.today.map_or(0, |today| today as *const _ as _),
@@ -715,19 +715,19 @@ impl<'a> MsgSend for SetToday<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct McmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for McmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,
@@ -739,19 +739,19 @@ impl MsgSend for SetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SizeRectToMin<'a> {
+pub struct McmSizeRectToMin<'a> {
 	pub region: &'a mut RECT,
 }
 
-impl<'a> MsgSend for SizeRectToMin<'a> {
+impl<'a> MsgSend for McmSizeRectToMin<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::MCM::SIZERECTTOMIN.into(),
 			wparam: 0,
 			lparam: self.region as *mut _ as _,

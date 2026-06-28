@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Possible states of the arrow in a [`HeaderItem`](crate::gui::HeaderItem).
@@ -67,30 +67,30 @@ impl<'a> HeaderItem<'a> {
 	}
 
 	/// Deletes the item by sending a
-	/// [`hdm::DeleteItem`](crate::msg::hdm::DeleteItem) message.
+	/// [`HdmDeleteItem`](crate::msg::HdmDeleteItem) message.
 	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::DeleteItem { index: self.index })
+				.SendMessage(msg::HdmDeleteItem { index: self.index })
 		}
 	}
 
 	/// Sets the item as the focused one sending an
-	/// [`hdm:SetFocusedItem`](crate::msg::hdm::SetFocusedItem) message.
+	/// [`HdmSetFocusedItem`](crate::msg::HdmSetFocusedItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn focus(&self) -> SysResult<Self> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetFocusedItem { index: self.index })?;
+				.SendMessage(msg::HdmSetFocusedItem { index: self.index })?;
 		}
 		Ok(*self)
 	}
 
 	/// Return the format flags of the item by sending a
-	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
+	/// [`HdmGetItem`](crate::msg::HdmGetItem) message.
 	#[must_use]
 	pub fn format(&self) -> co::HDF {
 		let mut hdi = HDITEM::default();
@@ -99,7 +99,7 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmGetItem { index: self.index, hditem: &mut hdi });
 		}
 		hdi.fmt
 	}
@@ -111,7 +111,7 @@ impl<'a> HeaderItem<'a> {
 	}
 
 	/// Retrieves the user-defined value by sending a
-	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
+	/// [`HdmGetItem`](crate::msg::HdmGetItem) message.
 	#[must_use]
 	pub fn lparam(&self) -> isize {
 		let mut hdi = HDITEM::default();
@@ -120,13 +120,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmGetItem { index: self.index, hditem: &mut hdi });
 		}
 		hdi.lParam
 	}
 
 	/// Retrieves the order of the item by sending a
-	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
+	/// [`HdmGetItem`](crate::msg::HdmGetItem) message.
 	#[must_use]
 	pub fn order(&self) -> u32 {
 		let mut hdi = HDITEM::default();
@@ -135,13 +135,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmGetItem { index: self.index, hditem: &mut hdi });
 		}
 		hdi.iOrder as _
 	}
 
 	/// Sets the arrow state of the item by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_arrow(&self, arrow_state: HeaderArrow) -> Self {
@@ -155,13 +155,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &mut hdi });
 		}
 		*self
 	}
 
 	/// Sets the text justification of the column by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_justify(&self, text_justification: HeaderJustify) -> Self {
@@ -175,13 +175,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &mut hdi });
 		}
 		*self
 	}
 
 	/// Sets the user-defined value of the item by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_lparam(&self, lparam: isize) -> Self {
@@ -192,13 +192,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &hdi });
 		}
 		*self
 	}
 
 	/// Sets the order of the item by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_order(&self, order: u32) -> Self {
@@ -209,13 +209,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &hdi });
 		}
 		*self
 	}
 
 	/// Sets the text of the item by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_text(&self, text: &str) -> Self {
@@ -228,13 +228,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &hdi });
 		}
 		*self
 	}
 
 	/// Sets the width of the item by sending a
-	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	/// [`HdmSetItem`](crate::msg::HdmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_width(&self, width: i32) -> Self {
@@ -245,13 +245,13 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
+				.SendMessage(msg::HdmSetItem { index: self.index, hditem: &hdi });
 		}
 		*self
 	}
 
 	/// Retrieves the text of the item by sending a
-	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
+	/// [`HdmGetItem`](crate::msg::HdmGetItem) message.
 	#[must_use]
 	pub fn text(&self) -> String {
 		let mut hdi = HDITEM::default();
@@ -263,7 +263,7 @@ impl<'a> HeaderItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
+				.SendMessage(msg::HdmGetItem { index: self.index, hditem: &mut hdi });
 		}
 		buf.to_string()
 	}

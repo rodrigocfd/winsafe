@@ -5,31 +5,31 @@ use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
 
-pub_struct_msg_ctlcolor! { CtlColorBtn: co::WM::CTLCOLORBTN;
+pub_struct_msg_ctlcolor! { WmCtlColorBtn: co::WM::CTLCOLORBTN;
 	/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorDlg: co::WM::CTLCOLORDLG;
+pub_struct_msg_ctlcolor! { WmCtlColorDlg: co::WM::CTLCOLORDLG;
 	/// [`WM_CTLCOLORDLG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorEdit: co::WM::CTLCOLOREDIT;
+pub_struct_msg_ctlcolor! { WmCtlColorEdit: co::WM::CTLCOLOREDIT;
 	/// [`WM_CTLCOLOREDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorListBox: co::WM::CTLCOLORLISTBOX;
+pub_struct_msg_ctlcolor! { WmCtlColorListBox: co::WM::CTLCOLORLISTBOX;
 	/// [`WM_CTLCOLORLISTBOX`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorScrollBar: co::WM::CTLCOLORSCROLLBAR;
+pub_struct_msg_ctlcolor! { WmCtlColorScrollBar: co::WM::CTLCOLORSCROLLBAR;
 	/// [`WM_CTLCOLORSCROLLBAR`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 }
 
-pub_struct_msg_ctlcolor! { CtlColorStatic: co::WM::CTLCOLORSTATIC;
+pub_struct_msg_ctlcolor! { WmCtlColorStatic: co::WM::CTLCOLORSTATIC;
 	/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 }
 
-pub_struct_msg_char_code! { DeadChar: co::WM::DEADCHAR;
+pub_struct_msg_char_code! { WmDeadChar: co::WM::DEADCHAR;
 	/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 }
 
@@ -37,21 +37,21 @@ pub_struct_msg_char_code! { DeadChar: co::WM::DEADCHAR;
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct DisplayChange {
+pub struct WmDisplayChange {
 	pub depth_bpp: u32,
 	pub horz_res: u16,
 	pub vert_res: u16,
 }
 
-impl MsgSend for DisplayChange {
+impl MsgSend for WmDisplayChange {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::DISPLAYCHANGE,
 			wparam: self.depth_bpp as _,
 			lparam: MAKEDWORD(self.horz_res, self.vert_res) as _,
@@ -59,8 +59,8 @@ impl MsgSend for DisplayChange {
 	}
 }
 
-impl MsgSendRecv for DisplayChange {
-	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for WmDisplayChange {
+	unsafe fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			depth_bpp: p.wparam as _,
 			horz_res: LOWORD(p.lparam as _),
@@ -73,17 +73,17 @@ impl MsgSendRecv for DisplayChange {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HFONT>`.
-pub struct GetFont {}
+pub struct WmGetFont {}
 
-impl MsgSend for GetFont {
+impl MsgSend for WmGetFont {
 	type RetType = Option<HFONT>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::GETFONT,
 			wparam: 0,
 			lparam: 0,
@@ -91,8 +91,8 @@ impl MsgSend for GetFont {
 	}
 }
 
-impl MsgSendRecv for GetFont {
-	unsafe fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for WmGetFont {
+	unsafe fn from_generic_wm(_: Wm) -> Self {
 		Self {}
 	}
 }
@@ -101,19 +101,19 @@ impl MsgSendRecv for GetFont {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct NcPaint {
+pub struct WmNcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-impl MsgSend for NcPaint {
+impl MsgSend for WmNcPaint {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::NCPAINT,
 			wparam: self.updated_hrgn.ptr() as _,
 			lparam: 0,
@@ -121,15 +121,15 @@ impl MsgSend for NcPaint {
 	}
 }
 
-impl MsgSendRecv for NcPaint {
-	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for WmNcPaint {
+	unsafe fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as _) },
 		}
 	}
 }
 
-pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT;
+pub_struct_msg_empty_handleable! { WmPaint: co::WM::PAINT;
 	/// [`WM_PAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 }
 
@@ -137,20 +137,20 @@ pub_struct_msg_empty_handleable! { Paint: co::WM::PAINT;
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetFont {
+pub struct WmSetFont {
 	pub hfont: HFONT,
 	pub redraw: bool,
 }
 
-impl MsgSend for SetFont {
+impl MsgSend for WmSetFont {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::SETFONT,
 			wparam: self.hfont.ptr() as _,
 			lparam: MAKEDWORD(self.redraw as _, 0) as _,
@@ -158,8 +158,8 @@ impl MsgSend for SetFont {
 	}
 }
 
-impl MsgSendRecv for SetFont {
-	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for WmSetFont {
+	unsafe fn from_generic_wm(p: Wm) -> Self {
 		Self {
 			hfont: unsafe { HFONT::from_ptr(p.wparam as _) },
 			redraw: LOWORD(p.lparam as _) != 0,
@@ -171,19 +171,19 @@ impl MsgSendRecv for SetFont {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRedraw {
+pub struct WmSetRedraw {
 	pub can_redraw: bool,
 }
 
-impl MsgSend for SetRedraw {
+impl MsgSend for WmSetRedraw {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::WM::SETREDRAW,
 			wparam: self.can_redraw as _,
 			lparam: 0,
@@ -191,12 +191,12 @@ impl MsgSend for SetRedraw {
 	}
 }
 
-impl MsgSendRecv for SetRedraw {
-	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for WmSetRedraw {
+	unsafe fn from_generic_wm(p: Wm) -> Self {
 		Self { can_redraw: p.wparam != 0 }
 	}
 }
 
-pub_struct_msg_empty_handleable! { SyncPaint: co::WM::SYNCPAINT;
+pub_struct_msg_empty_handleable! { WmSyncPaint: co::WM::SYNCPAINT;
 	/// [`WM_SYNCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
 }

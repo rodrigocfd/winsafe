@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// A single column of a [`ListView`](crate::gui::ListView) control.
@@ -38,7 +38,7 @@ impl<'a, T> ListViewCol<'a, T> {
 	}
 
 	/// Sets the title of the column by sending an
-	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
+	/// [`LvmSetColumn`](crate::msg::LvmSetColumn) message.
 	///
 	/// Returns the same column, so further operations can be chained.
 	pub fn set_title(&self, text: &str) -> SysResult<Self> {
@@ -52,27 +52,27 @@ impl<'a, T> ListViewCol<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetColumn { index: self.index, lvcolumn: &mut lvc })?;
+				.SendMessage(msg::LvmSetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
 		Ok(*self)
 	}
 
 	/// Sets the width of the column by sending an
-	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message.
+	/// [`LvmSetColumnWidth`](crate::msg::LvmSetColumnWidth) message.
 	///
 	/// Returns the same column, so further operations can be chained.
 	pub fn set_width(&self, width: i32) -> SysResult<Self> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetColumnWidth { index: self.index, width: width as _ })?;
+				.SendMessage(msg::LvmSetColumnWidth { index: self.index, width: width as _ })?;
 		}
 		Ok(*self)
 	}
 
 	/// Sets the width of the column by sending an
-	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message. The
-	/// width will be calculated to fill the remaining space.
+	/// [`LvmSetColumnWidth`](crate::msg::LvmSetColumnWidth) message. The width
+	/// will be calculated to fill the remaining space.
 	///
 	/// Returns the same column, so further operations can be chained.
 	pub fn set_width_to_fill(&self) -> SysResult<Self> {
@@ -89,7 +89,7 @@ impl<'a, T> ListViewCol<'a, T> {
 			let rc = self.owner.hwnd().GetClientRect()?; // list view client area
 
 			unsafe {
-				self.owner.hwnd().SendMessage(lvm::SetColumnWidth {
+				self.owner.hwnd().SendMessage(msg::LvmSetColumnWidth {
 					index: self.index,
 					width: std::cmp::max(0, rc.right - cx_used as i32) as _, // avoid negative values
 				})?;
@@ -99,7 +99,7 @@ impl<'a, T> ListViewCol<'a, T> {
 	}
 
 	/// Retrieves the title of the column by sending an
-	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
+	/// [`LvmGetColumn`](crate::msg::LvmGetColumn) message.
 	#[must_use]
 	pub fn title(&self) -> SysResult<String> {
 		let mut lvc = LVCOLUMN::default();
@@ -112,19 +112,19 @@ impl<'a, T> ListViewCol<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::GetColumn { index: self.index, lvcolumn: &mut lvc })?;
+				.SendMessage(msg::LvmGetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
 		Ok(buf.to_string())
 	}
 
 	/// Retrieves the width of the column by sending an
-	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
+	/// [`LvmGetColumnWidth`](crate::msg::LvmGetColumnWidth) message.
 	#[must_use]
 	pub fn width(&self) -> SysResult<u32> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::GetColumnWidth { index: self.index })
+				.SendMessage(msg::LvmGetColumnWidth { index: self.index })
 		}
 	}
 }

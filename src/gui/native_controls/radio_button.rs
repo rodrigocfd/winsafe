@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct RadioButtonObj {
@@ -107,26 +107,26 @@ impl RadioButton {
 	}
 
 	/// Tells if this radio button is the currently selected one by sending a
-	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	/// [`BmGetCheck`](crate::msg::BmGetCheck) message.
 	#[must_use]
 	pub fn is_selected(&self) -> bool {
-		unsafe { self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED }
+		unsafe { self.hwnd().SendMessage(msg::BmGetCheck {}) == co::BST::CHECKED }
 	}
 
 	/// Sets the this radio button as the currently selected one by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message.
 	pub fn select(&self, selected: bool) {
 		unsafe {
-			self.hwnd().SendMessage(bm::SetCheck {
+			self.hwnd().SendMessage(msg::BmSetCheck {
 				state: if selected { co::BST::CHECKED } else { co::BST::UNCHECKED },
 			});
 		}
 	}
 
 	/// Sets the this radio button as the currently selected one by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
-	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
-	/// can handle the event.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message, then sends a
+	/// [`WmCommand`](crate::msg::WmCommand) message to the parent, so it can
+	/// handle the event.
 	pub fn select_and_trigger(&self, selected: bool) -> SysResult<()> {
 		self.select(selected);
 		self.hwnd().GetParent()?.SendCommand(AccelMenuCtrl::Ctrl {
@@ -152,11 +152,9 @@ impl RadioButton {
 	}
 
 	/// Fires the click event for the button by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
+	/// [`BmClick`](crate::msg::BmClick) message.
 	pub fn trigger_click(&self) {
-		unsafe {
-			self.hwnd().SendMessage(bm::Click {});
-		}
+		unsafe { self.hwnd().SendMessage(msg::BmClick {}) };
 	}
 }
 

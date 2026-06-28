@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Base to all dialog windows.
@@ -70,14 +70,14 @@ impl DlgBase {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		unsafe {
-			self.base.hwnd().SendMessage(wm::SetIcon {
+			self.base.hwnd().SendMessage(msg::WmSetIcon {
 				hicon: hinst
 					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::with(16, 16), co::LR::DEFAULTCOLOR)?
 					.leak(),
 				size: co::ICON_SZ::SMALL,
 			});
 
-			self.base.hwnd().SendMessage(wm::SetIcon {
+			self.base.hwnd().SendMessage(msg::WmSetIcon {
 				hicon: hinst
 					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::with(32, 32), co::LR::DEFAULTCOLOR)?
 					.leak(),
@@ -88,18 +88,18 @@ impl DlgBase {
 	}
 
 	extern "system" fn dlg_proc(hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize {
-		let wm_any = WndMsg::new(msg, wparam, lparam);
+		let wm_any = msg::Wm::new(msg, wparam, lparam);
 		Self::dlg_proc_proc(hwnd, wm_any).unwrap_or_else(|err| {
 			quit_error::post_quit_error(wm_any, err);
 			true as _
 		})
 	}
 
-	fn dlg_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
+	fn dlg_proc_proc(hwnd: HWND, p: msg::Wm) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
 			co::WM::INITDIALOG => {
 				// First message being handled.
-				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
+				let msg = unsafe { msg::WmInitDialog::from_generic_wm(p) };
 				let ptr_self = msg.additional_data as *const Self;
 				unsafe {
 					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
@@ -126,7 +126,7 @@ impl DlgBase {
 	pub(in crate::gui) fn dlg_proc_proc2(
 		base: &BaseWnd,
 		hwnd: HWND,
-		p: WndMsg,
+		p: msg::Wm,
 	) -> AnyResult<isize> {
 		// Execute before-user closures, keep track if at least one was executed.
 		// Execute user closure, if any.

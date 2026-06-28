@@ -9,19 +9,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct ClearFilter {
+pub struct HdmClearFilter {
 	pub filter: Option<u32>,
 }
 
-impl MsgSend for ClearFilter {
+impl MsgSend for HdmClearFilter {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::CLEARFILTER.into(),
 			wparam: self.filter.map_or(-1, |f| f as i32) as _,
 			lparam: 0,
@@ -33,19 +33,19 @@ impl MsgSend for ClearFilter {
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
-pub struct CreateDragImage {
+pub struct HdmCreateDragImage {
 	pub index: u32,
 }
 
-impl MsgSend for CreateDragImage {
+impl MsgSend for HdmCreateDragImage {
 	type RetType = SysResult<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::CREATEDRAGIMAGE.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -57,19 +57,19 @@ impl MsgSend for CreateDragImage {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteItem {
+pub struct HdmDeleteItem {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteItem {
+impl MsgSend for HdmDeleteItem {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::DELETEITEM.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -81,20 +81,20 @@ impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct EditFilter {
+pub struct HdmEditFilter {
 	pub index: u32,
 	pub discard_changes: bool,
 }
 
-impl MsgSend for EditFilter {
+impl MsgSend for HdmEditFilter {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::EDITFILTER.into(),
 			wparam: self.index as _,
 			lparam: self.discard_changes as _,
@@ -106,17 +106,17 @@ impl MsgSend for EditFilter {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetBitmapMargin {}
+pub struct HdmGetBitmapMargin {}
 
-impl MsgSend for GetBitmapMargin {
+impl MsgSend for HdmGetBitmapMargin {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETBITMAPMARGIN.into(),
 			wparam: 0,
 			lparam: 0,
@@ -128,17 +128,17 @@ impl MsgSend for GetBitmapMargin {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetFocusedItem {}
+pub struct HdmGetFocusedItem {}
 
-impl MsgSend for GetFocusedItem {
+impl MsgSend for HdmGetFocusedItem {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETFOCUSEDITEM.into(),
 			wparam: 0,
 			lparam: 0,
@@ -150,19 +150,19 @@ impl MsgSend for GetFocusedItem {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct GetImageList {
+pub struct HdmGetImageList {
 	pub kind: co::HDSIL,
 }
 
-impl MsgSend for GetImageList {
+impl MsgSend for HdmGetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: 0,
@@ -174,20 +174,20 @@ impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetItem<'a, 'b> {
+pub struct HdmGetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b mut HDITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for HdmGetItem<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		() // docs are wrong: always returns zero
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETITEM.into(),
 			wparam: self.index as _,
 			lparam: self.hditem as *mut _ as _,
@@ -199,17 +199,17 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct GetItemCount {}
+pub struct HdmGetItemCount {}
 
-impl MsgSend for GetItemCount {
+impl MsgSend for HdmGetItemCount {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -221,20 +221,20 @@ impl MsgSend for GetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemDropDownRect<'a> {
+pub struct HdmGetItemDropDownRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemDropDownRect<'a> {
+impl<'a> MsgSend for HdmGetItemDropDownRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETITEMDROPDOWNRECT.into(),
 			wparam: self.index as _,
 			lparam: self.rect as *mut _ as _,
@@ -246,20 +246,20 @@ impl<'a> MsgSend for GetItemDropDownRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemRect<'a> {
+pub struct HdmGetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for HdmGetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETITEMRECT.into(),
 			wparam: self.index as _,
 			lparam: self.rect as *mut _ as _,
@@ -271,19 +271,19 @@ impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type `SysResult<()>`.
-pub struct GetOrderArray<'a> {
+pub struct HdmGetOrderArray<'a> {
 	pub buffer: &'a mut [u32],
 }
 
-impl<'a> MsgSend for GetOrderArray<'a> {
+impl<'a> MsgSend for HdmGetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETORDERARRAY.into(),
 			wparam: self.buffer.len(),
 			lparam: self.buffer.as_mut_ptr() as _,
@@ -295,19 +295,19 @@ impl<'a> MsgSend for GetOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetOverflowRect<'a> {
+pub struct HdmGetOverflowRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetOverflowRect<'a> {
+impl<'a> MsgSend for HdmGetOverflowRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETOVERFLOWRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *mut _ as _,
@@ -319,17 +319,17 @@ impl<'a> MsgSend for GetOverflowRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct HdmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for HdmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -341,19 +341,19 @@ impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct HitTest<'a> {
+pub struct HdmHitTest<'a> {
 	pub test_info: &'a mut HDHITTESTINFO,
 }
 
-impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for HdmHitTest<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::HITTEST.into(),
 			wparam: 0,
 			lparam: self.test_info as *mut _ as _,
@@ -365,20 +365,20 @@ impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct InsertItem<'a, 'b> {
+pub struct HdmInsertItem<'a, 'b> {
 	pub index_after: u32,
 	pub item: &'b HDITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+impl<'a, 'b> MsgSend for HdmInsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::INSERTITEM.into(),
 			wparam: self.index_after as _,
 			lparam: self.item as *const _ as _,
@@ -390,19 +390,19 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Layout<'a, 'b, 'c> {
+pub struct HdmLayout<'a, 'b, 'c> {
 	pub hdlayout: &'c mut HDLAYOUT<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for HdmLayout<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::LAYOUT.into(),
 			wparam: 0,
 			lparam: self.hdlayout as *mut _ as _,
@@ -414,19 +414,19 @@ impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct OrderToIndex {
+pub struct HdmOrderToIndex {
 	pub order: u32,
 }
 
-impl MsgSend for OrderToIndex {
+impl MsgSend for HdmOrderToIndex {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::ORDERTOINDEX.into(),
 			wparam: self.order as _,
 			lparam: 0,
@@ -438,19 +438,19 @@ impl MsgSend for OrderToIndex {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetBitmapMargin {
+pub struct HdmSetBitmapMargin {
 	pub width: u32,
 }
 
-impl MsgSend for SetBitmapMargin {
+impl MsgSend for HdmSetBitmapMargin {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETBITMAPMARGIN.into(),
 			wparam: self.width as _,
 			lparam: 0,
@@ -462,19 +462,19 @@ impl MsgSend for SetBitmapMargin {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetFilterChangeTimeout {
+pub struct HdmSetFilterChangeTimeout {
 	pub timeout_ms: u32,
 }
 
-impl MsgSend for SetFilterChangeTimeout {
+impl MsgSend for HdmSetFilterChangeTimeout {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETFILTERCHANGETIMEOUT.into(),
 			wparam: self.timeout_ms as _,
 			lparam: 0,
@@ -486,19 +486,19 @@ impl MsgSend for SetFilterChangeTimeout {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetFocusedItem {
+pub struct HdmSetFocusedItem {
 	pub index: u32,
 }
 
-impl MsgSend for SetFocusedItem {
+impl MsgSend for HdmSetFocusedItem {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETFILTERCHANGETIMEOUT.into(),
 			wparam: 0,
 			lparam: self.index as _,
@@ -510,19 +510,19 @@ impl MsgSend for SetFocusedItem {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetHotDivider {
+pub struct HdmSetHotDivider {
 	pub value: PtIdx,
 }
 
-impl MsgSend for SetHotDivider {
+impl MsgSend for HdmSetHotDivider {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETHOTDIVIDER.into(),
 			wparam: match self.value {
 				PtIdx::Pt(_) => true,
@@ -540,20 +540,20 @@ impl MsgSend for SetHotDivider {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList {
+pub struct HdmSetImageList {
 	pub kind: co::HDSIL,
 	pub himagelist: Option<HIMAGELIST>,
 }
 
-impl MsgSend for SetImageList {
+impl MsgSend for HdmSetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
@@ -565,20 +565,20 @@ impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetItem<'a, 'b> {
+pub struct HdmSetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b HDITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for HdmSetItem<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		() // docs are wrong: always returns zero
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETITEM.into(),
 			wparam: self.index as _,
 			lparam: self.hditem as *const _ as _,
@@ -590,19 +590,19 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetOrderArray<'a> {
+pub struct HdmSetOrderArray<'a> {
 	pub buffer: &'a [u32],
 }
 
-impl<'a> MsgSend for SetOrderArray<'a> {
+impl<'a> MsgSend for HdmSetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETORDERARRAY.into(),
 			wparam: self.buffer.len(),
 			lparam: vec_ptr(self.buffer) as _,
@@ -614,19 +614,19 @@ impl<'a> MsgSend for SetOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct HdmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for HdmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::HDM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,

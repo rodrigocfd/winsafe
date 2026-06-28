@@ -2,7 +2,7 @@ use std::any::Any;
 
 use crate::decl::*;
 use crate::gui::privs::*;
-use crate::msg::*;
+use crate::msg;
 
 /// This trait is enabled with the `gui` feature, and is implemented by all
 /// windows. Exposes the underlying window handle.
@@ -214,15 +214,15 @@ pub trait GuiControl: GuiWindow {
 	/// If the control belongs to an ordinary window, simply calls
 	/// [`HWND:SetFocus`](crate::HWND::SetFocus).
 	///
-	/// If the control belongs to a dialog window, sends a
-	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`
-	/// because it takes care of border highlighting, like the native
+	/// If the control belongs to a dialog window, sends a [`msg::WmNextDlgCtl`]
+	/// message. This is preferable to the `HWND::SetFocus` because it takes
+	/// care of border highlighting, like the native
 	/// [`Button`](crate::gui::Button) control needs.
 	fn focus(&self) -> SysResult<()> {
 		let hparent = self.hwnd().GetParent()?;
 		if hparent.is_dialog() {
 			unsafe {
-				hparent.SendMessage(wm::NextDlgCtl {
+				hparent.SendMessage(msg::WmNextDlgCtl {
 					hwnd_focus: HwndFocus::Hwnd(self.hwnd().raw_copy()),
 				});
 			}

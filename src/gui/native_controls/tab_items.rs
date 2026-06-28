@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes the methods of a [`Tab`](crate::gui::Tab) control.
@@ -20,8 +20,8 @@ impl<'a> TabItems<'a> {
 	}
 
 	/// Manually appends a new tab by sending a
-	/// [`tcm::InsertItem`](crate::msg::tcm::InsertItem) message, and returns
-	/// the newly added item.
+	/// [`TcmInsertItem`](crate::msg::TcmInsertItem) message, and returns the
+	/// newly added item.
 	///
 	/// # Safety
 	///
@@ -36,7 +36,7 @@ impl<'a> TabItems<'a> {
 		tci.set_pszText(Some(&mut wtitle));
 
 		let idx = unsafe {
-			self.owner.hwnd().SendMessage(tcm::InsertItem {
+			self.owner.hwnd().SendMessage(msg::TcmInsertItem {
 				index: 0x0fff_ffff, // insert as the last item
 				item: &tci,
 			})
@@ -46,21 +46,21 @@ impl<'a> TabItems<'a> {
 	}
 
 	/// Retrieves the total number of items by sending an
-	/// [`tcm::GetItemCount`](crate::msg::tcm::GetItemCount) message.
+	/// [`TcmGetItemCount`](crate::msg::TcmGetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
-		unsafe { self.owner.hwnd().SendMessage(tcm::GetItemCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::TcmGetItemCount {}) }
 	}
 
 	/// Deletes all items by sending a
-	/// [`tcm::DeleteAllItems`](crate::msg::tcm::DeleteAllItems) message.
+	/// [`TcmDeleteAllItems`](crate::msg::TcmDeleteAllItems) message.
 	///
 	/// # Safety
 	///
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
 	pub unsafe fn delete_all(&self) -> SysResult<()> {
-		unsafe { self.owner.hwnd().SendMessage(tcm::DeleteAllItems {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::TcmDeleteAllItems {}) }
 	}
 
 	/// Retrieves the item at the given zero-based position.
@@ -80,17 +80,17 @@ impl<'a> TabItems<'a> {
 	}
 
 	/// Returns the focused item by sending a
-	/// [`tcm::GetCurFocus`](crate::msg::tcm::GetCurFocus) message.
+	/// [`TcmGetCurFocus`](crate::msg::TcmGetCurFocus) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<TabItem<'a>> {
-		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurFocus {}) }.map(|i| self.get(i))
+		unsafe { self.owner.hwnd().SendMessage(msg::TcmGetCurFocus {}) }.map(|i| self.get(i))
 	}
 
 	/// Returns the selected item by sending a
-	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
+	/// [`TcmGetCurSel`](crate::msg::TcmGetCurSel) message.
 	#[must_use]
 	pub fn selected(&self) -> Option<TabItem<'a>> {
-		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurSel {}) }.map(|i| self.get(i))
+		unsafe { self.owner.hwnd().SendMessage(msg::TcmGetCurSel {}) }.map(|i| self.get(i))
 	}
 }
 

@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct ProgressBarObj {
@@ -101,32 +101,32 @@ impl ProgressBar {
 	}
 
 	/// Retrieves the current position by sending a
-	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.
+	/// [`PbmGetPos`](crate::msg::PbmGetPos) message.
 	#[must_use]
 	pub fn position(&self) -> u32 {
-		unsafe { self.hwnd().SendMessage(pbm::GetPos {}) }
+		unsafe { self.hwnd().SendMessage(msg::PbmGetPos {}) }
 	}
 
 	/// Retrieves the current minimum and maximum values by sending a
-	/// [`pbm::GetRange`](crate::msg::pbm::GetRange) message. Default values are
-	/// 0 and 100.
+	/// [`PbmGetRange`](crate::msg::PbmGetRange) message. Default values are 0
+	/// and 100.
 	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
-		// For some reason, pbm::GetRange is returning all zeros when passing a
+		// For some reason, PbmGetRange is returning all zeros when passing a
 		// PBRANGE pointer.
 		unsafe {
 			let low = self
 				.hwnd()
-				.SendMessage(pbm::GetRange { return_low: true, ranges: None });
+				.SendMessage(msg::PbmGetRange { return_low: true, ranges: None });
 			let high = self
 				.hwnd()
-				.SendMessage(pbm::GetRange { return_low: false, ranges: None });
+				.SendMessage(msg::PbmGetRange { return_low: false, ranges: None });
 			(low as _, high as _)
 		}
 	}
 
 	/// Sets or unsets the marquee mode by sending a
-	/// [`pbm::SetMarquee`](crate::msg::pbm::SetMarquee) message combined with a
+	/// [`PbmSetMarquee`](crate::msg::PbmSetMarquee) message combined with a
 	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) call for a style
 	/// change.
 	pub fn set_marquee(&self, marquee: bool) {
@@ -139,7 +139,7 @@ impl ProgressBar {
 
 		unsafe {
 			self.hwnd()
-				.SendMessage(pbm::SetMarquee { turn_on: marquee, time_ms: None });
+				.SendMessage(msg::PbmSetMarquee { turn_on: marquee, time_ms: None });
 		}
 
 		if !marquee {
@@ -149,7 +149,7 @@ impl ProgressBar {
 	}
 
 	/// Sets the current position by sending a
-	/// [`pbm::SetPos`](crate::msg::pbm::SetPos) message, returning the previous
+	/// [`PbmSetPos`](crate::msg::PbmSetPos) message, returning the previous
 	/// position.
 	pub fn set_position(&self, position: u32) -> u32 {
 		let cur_style: co::PBS = self.hwnd().style().into();
@@ -157,28 +157,28 @@ impl ProgressBar {
 			self.set_marquee(false); // avoid crash
 		}
 
-		unsafe { self.hwnd().SendMessage(pbm::SetPos { position }) }
+		unsafe { self.hwnd().SendMessage(msg::PbmSetPos { position }) }
 	}
 
 	/// Sets the minimum and maximum values by sending a
-	/// [`pbm::SetRange32`](crate::msg::pbm::SetRange32) message. Default values
-	/// are 0 and 100.
+	/// [`PbmSetRange32`](crate::msg::PbmSetRange32) message. Default values are
+	/// 0 and 100.
 	pub fn set_range(&self, min: u32, max: u32) {
-		unsafe { self.hwnd().SendMessage(pbm::SetRange32 { min, max }) }
+		unsafe { self.hwnd().SendMessage(msg::PbmSetRange32 { min, max }) }
 	}
 
 	/// Sets the current state by sending a
-	/// [`pbm::SetState`](crate::msg::pbm::SetState) message, retuning the
-	/// previous state.
+	/// [`PbmSetState`](crate::msg::PbmSetState) message, retuning the previous
+	/// state.
 	pub fn set_state(&self, state: co::PBST) -> co::PBST {
-		unsafe { self.hwnd().SendMessage(pbm::SetState { state }) }
+		unsafe { self.hwnd().SendMessage(msg::PbmSetState { state }) }
 	}
 
 	/// Retrieves the current state by sending a
-	/// [`pbm::GetState`](crate::msg::pbm::GetState) message.
+	/// [`PbmGetState`](crate::msg::PbmGetState) message.
 	#[must_use]
 	pub fn state(&self) -> co::PBST {
-		unsafe { self.hwnd().SendMessage(pbm::GetState {}) }
+		unsafe { self.hwnd().SendMessage(msg::PbmGetState {}) }
 	}
 }
 

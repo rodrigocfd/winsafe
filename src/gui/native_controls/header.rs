@@ -8,7 +8,7 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::gui::{collections::*, privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct HeaderObj {
@@ -120,7 +120,7 @@ impl Header {
 	/// For the nested Header inside ListView.
 	#[must_use]
 	pub(in crate::gui) fn init_nested(&self, hlist: &HWND) -> bool {
-		if let Ok(hheader) = unsafe { hlist.SendMessage(lvm::GetHeader {}) } {
+		if let Ok(hheader) = unsafe { hlist.SendMessage(msg::LvmGetHeader {}) } {
 			unsafe {
 				hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header an ID; initially zero
 			}
@@ -139,11 +139,11 @@ impl Header {
 				.for_each(|kind| unsafe {
 					self2
 						.hwnd()
-						.SendMessage(hdm::GetImageList { kind })
+						.SendMessage(msg::HdmGetImageList { kind })
 						.map(|h| {
 							self2
 								.hwnd()
-								.SendMessage(hdm::SetImageList { himagelist: None, kind }); // remove from control
+								.SendMessage(msg::HdmSetImageList { himagelist: None, kind }); // remove from control
 							let _ = ImageListDestroyGuard::new(h); // destroy
 						});
 				});
@@ -152,23 +152,23 @@ impl Header {
 	}
 
 	/// Retrieves one of the associated image lists by sending an
-	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) message.
+	/// [`HdmGetImageList`](crate::msg::HdmGetImageList) message.
 	///
 	/// Image lists are lazy-initialized: the first time you call this method
 	/// for a given image list, it will be created and assigned with
-	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList).
+	/// [`HdmSetImageList`](crate::msg::HdmSetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self, kind: co::HDSIL) -> HrResult<HIMAGELIST> {
-		match unsafe { self.hwnd().SendMessage(hdm::GetImageList { kind }) } {
+		match unsafe { self.hwnd().SendMessage(msg::HdmGetImageList { kind }) } {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
 				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
-						.SendMessage(hdm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+						.SendMessage(msg::HdmSetImageList { himagelist: Some(h.raw_copy()), kind });
 				}
 				Ok(h)
 			},

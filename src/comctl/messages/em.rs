@@ -8,11 +8,11 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetCueBanner<'a> {
+pub struct EmGetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetCueBanner<'a> {
+impl<'a> MsgSend for EmGetCueBanner<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -22,8 +22,8 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETCUEBANNER.into(),
 			wparam: unsafe { self.buffer.as_mut_ptr() } as _,
 			lparam: self.buffer.buf_len() as _,
@@ -35,17 +35,17 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct HideBalloonTip {}
+pub struct EmHideBalloonTip {}
 
-impl MsgSend for HideBalloonTip {
+impl MsgSend for EmHideBalloonTip {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::HIDEBALLOONTIP.into(),
 			wparam: 0,
 			lparam: 0,
@@ -57,20 +57,20 @@ impl MsgSend for HideBalloonTip {
 /// message parameters..
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCueBanner {
+pub struct EmSetCueBanner {
 	pub show_even_with_focus: bool,
 	pub text: WString,
 }
 
-impl MsgSend for SetCueBanner {
+impl MsgSend for EmSetCueBanner {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETCUEBANNER.into(),
 			wparam: self.show_even_with_focus as _,
 			lparam: self.text.as_ptr() as _,
@@ -82,19 +82,19 @@ impl MsgSend for SetCueBanner {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct ShowBalloonTip<'a, 'b, 'c> {
+pub struct EmShowBalloonTip<'a, 'b, 'c> {
 	pub info: &'c EDITBALLOONTIP<'a, 'b>,
 }
 
-impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for EmShowBalloonTip<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SHOWBALLOONTIP.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,

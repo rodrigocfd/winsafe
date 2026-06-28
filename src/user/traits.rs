@@ -4,11 +4,10 @@ use crate::msg::*;
 /// parameters of messages which can be sent. Implemented by
 /// [all defined messages](crate::msg).
 ///
-/// Allows the conversion to the generic [`WndMsg`](crate::msg::WndMsg)
-/// parameters, and also defines the return type of the message.
+/// Allows the conversion to the generic [`Wm`](crate::msg::Wm) parameters, and
+/// also defines the return type of the message.
 ///
-/// Used in functions like
-/// [`SendMessage`](crate::HWND::SendMessage) and
+/// Used in functions like [`SendMessage`](crate::HWND::SendMessage) and
 /// [`DefWindowProc`](crate::HWND::DefWindowProc).
 ///
 /// Prefer importing this trait through the prelude:
@@ -31,17 +30,15 @@ pub trait MsgSend {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType;
 
 	/// Marshaling method which converts the specific message parameters struct
-	/// into the generic [`WndMsg`](crate::msg::WndMsg) message struct.
+	/// into the generic [`Wm`](crate::msg::Wm) message struct.
 	#[must_use]
-	fn as_generic_wm(&mut self) -> WndMsg;
+	fn as_generic_wm(&mut self) -> Wm;
 }
 
 /// This trait is enabled with the `gui` feature, and is implemented by the
-/// parameters of messages which can be sent and handled (received). Implemented
-/// by [`WndMsg`](crate::msg::WndMsg) and all [msg::wm](`crate::msg::wm`)
-/// messages.
+/// parameters of messages which can be sent and handled (received).
 ///
-/// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
+/// Allows the conversion from and to the generic [`Wm`](crate::msg::Wm)
 /// parameters, and also defines the return type of the message.
 ///
 /// Prefer importing this trait through the prelude:
@@ -50,14 +47,13 @@ pub trait MsgSend {
 /// use winsafe::prelude::*;
 /// ```
 pub trait MsgSendRecv: MsgSend {
-	/// Unmarshaling method which converts the generic
-	/// [`WndMsg`](crate::msg::WndMsg) parameters struct into the specific
-	/// message struct.
+	/// Unmarshaling method which converts the generic [`Wm`](crate::msg::Wm)
+	/// parameters struct into the specific message struct.
 	///
 	/// # Safety
 	///
 	/// Message parameters often involve pointers and require casts, make sure
 	/// the conversions are correct.
 	#[must_use]
-	unsafe fn from_generic_wm(parm: WndMsg) -> Self;
+	unsafe fn from_generic_wm(parm: Wm) -> Self;
 }

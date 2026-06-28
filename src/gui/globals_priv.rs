@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Message to be used on `expect()` of internal calls, which are not supposed
@@ -86,7 +86,7 @@ pub(in crate::gui) mod quit_error {
 	pub(in crate::gui) static QUIT_ERROR: Mutex<Option<MsgError>> = Mutex::new(None);
 
 	/// Calls `PostQuitMessage` to terminate the program with the given error.
-	pub(in crate::gui) fn post_quit_error(src_msg: WndMsg, err: Box<dyn Error + Send + Sync>) {
+	pub(in crate::gui) fn post_quit_error(src_msg: Wm, err: Box<dyn Error + Send + Sync>) {
 		{
 			let mut msg_error = QUIT_ERROR.lock().unwrap();
 			*msg_error = Some(MsgError::new(src_msg, err)); // store the error, so the main window loop can grab it
@@ -100,7 +100,7 @@ pub(in crate::gui) mod ui_font {
 	use crate::decl::*;
 	use crate::guard::*;
 	use crate::gui::privs::*;
-	use crate::msg::*;
+	use crate::msg;
 
 	/// Global UI font object, cached.
 	static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
@@ -131,9 +131,7 @@ pub(in crate::gui) mod ui_font {
 
 	/// Sets the global UI font on the given window.
 	pub(in crate::gui) fn set(hwnd: &HWND) {
-		unsafe {
-			hwnd.SendMessage(wm::SetFont { hfont: get(), redraw: true });
-		}
+		unsafe { hwnd.SendMessage(msg::WmSetFont { hfont: get(), redraw: true }) };
 	}
 
 	/// Frees the global UI font object.
@@ -169,7 +167,7 @@ pub(in crate::gui) mod text_calc {
 	use crate::co;
 	use crate::decl::*;
 	use crate::gui::{privs::*, *};
-	use crate::msg::*;
+	use crate::msg;
 
 	/// Calculates the bound rectangle to fit the text with current system font.
 	#[must_use]
@@ -207,7 +205,7 @@ pub(in crate::gui) mod text_calc {
 	#[must_use]
 	pub(in crate::gui) fn bound_box_bcm(hctrl: &HWND) -> SIZE {
 		let mut bounds = SIZE::new();
-		if unsafe { hctrl.SendMessage(bm::GetIdealSize { size: &mut bounds }) }.is_ok() {
+		if unsafe { hctrl.SendMessage(msg::BcmGetIdealSize { size: &mut bounds }) }.is_ok() {
 			return bounds;
 		}
 
@@ -249,7 +247,7 @@ pub(in crate::gui) mod text_calc {
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
+pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: msg::WmNcPaint) {
 	unsafe {
 		hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 	}

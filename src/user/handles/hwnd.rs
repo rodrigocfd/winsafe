@@ -5,7 +5,7 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 use crate::user::{callbacks, ffi, privs::*};
 
@@ -259,8 +259,7 @@ impl HWND {
 	///
 	/// Usually you don't need to call this method directly, since it's
 	/// automatically called inside the internal message loop. The ordinary way
-	/// to close a window is sending a [`wm::Close`](crate::msg::wm::Close)
-	/// message.
+	/// to close a window is sending a [`WmClose`](crate::msg::WmClose) message.
 	pub fn DestroyWindow(&self) -> SysResult<()> {
 		BoolRet(unsafe { ffi::DestroyWindow(self.ptr()) }).to_sysresult()
 	}
@@ -1311,7 +1310,7 @@ impl HWND {
 	}
 
 	/// [`SendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
-	/// function, specialized to send a [`wm::Command`](crate::msg::wm::Command)
+	/// function, specialized to send a [`WmCommand`](crate::msg::WmCommand)
 	/// message.
 	///
 	/// Unlike the general [`SendMessage`](crate::HWND::SendMessage), sending a
@@ -1333,7 +1332,7 @@ impl HWND {
 	/// ```
 	pub fn SendCommand(&self, cmd: AccelMenuCtrl) {
 		unsafe {
-			self.SendMessage(wm::Command { event: cmd });
+			self.SendMessage(msg::WmCommand { event: cmd });
 		}
 	}
 
@@ -1351,9 +1350,9 @@ impl HWND {
 	///
 	/// # Examples
 	///
-	/// Sending a [`bm::GetImage`](crate::msg::bm::GetImage) button message,
-	/// which demands an image type parameter. Note that this specific message
-	/// can also return an error, which is handled with
+	/// Sending a [`BmGetImage`](crate::msg::BmGetImage) button message, which
+	/// demands an image type parameter. Note that this specific message can
+	/// also return an error, which is handled with
 	/// [`?`](https://doc.rust-lang.org/std/result/index.html#the-question-mark-operator-):
 	///
 	/// ```no_run
@@ -1364,7 +1363,7 @@ impl HWND {
 	///
 	/// let bmp = unsafe {
 	///     hwnd.SendMessage(
-	///         msg::bm::GetImage {
+	///         msg::BmGetImage {
 	///             img_type: co::IMAGE_TYPE::BITMAP,
 	///         },
 	///     )
@@ -1372,7 +1371,7 @@ impl HWND {
 	/// # w::SysResult::Ok(())
 	/// ```
 	///
-	/// Sending an [`em::CharFromPos`](crate::msg::em::CharFromPos) edit message,
+	/// Sending an [`EmCharFromPos`](crate::msg::EmCharFromPos) edit message,
 	/// which receives point coordinates and returns two values:
 	///
 	/// ```no_run
@@ -1383,7 +1382,7 @@ impl HWND {
 	///
 	/// let (char_pos, line_pos) = unsafe {
 	///     hwnd.SendMessage(
-	///         msg::em::CharFromPos {
+	///         msg::EmCharFromPos {
 	///             coords: w::POINT::with(12, 20),
 	///         },
 	///     )

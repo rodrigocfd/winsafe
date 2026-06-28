@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes the item methods of a [`Header`](crate::gui::Header) control.
@@ -20,8 +20,8 @@ impl<'a> HeaderItems<'a> {
 	}
 
 	/// Adds a new item by sending an
-	/// [`hdm::InsertItem`](crate::msg::hdm::InsertItem) message, returning the
-	/// new item.
+	/// [`HdmInsertItem`](crate::msg::HdmInsertItem) message, returning the new
+	/// item.
 	pub fn add(&self, text: &str, width: i32) -> SysResult<HeaderItem<'a>> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::TEXT | co::HDI::WIDTH;
@@ -33,16 +33,16 @@ impl<'a> HeaderItems<'a> {
 		let idx = unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(hdm::InsertItem { index_after: 0xffff, item: &hdi })?
+				.SendMessage(msg::HdmInsertItem { index_after: 0xffff, item: &hdi })?
 		};
 		Ok(self.get(idx))
 	}
 
 	/// Retrieves the total number of items by sending a
-	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message.
+	/// [`HdmGetItemCount`](crate::msg::HdmGetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
-		unsafe { self.owner.hwnd().SendMessage(hdm::GetItemCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::HdmGetItemCount {}) }
 	}
 
 	/// Retrieves the item at the given zero-based position.

@@ -8,7 +8,7 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::gui::{collections::*, privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct TabObj {
@@ -218,10 +218,10 @@ impl Tab {
 		let self2 = self.clone();
 		parent.as_ref().after_on().wm_destroy(move || {
 			unsafe {
-				self2.hwnd().SendMessage(tcm::GetImageList {}).map(|h| {
+				self2.hwnd().SendMessage(msg::TcmGetImageList {}).map(|h| {
 					self2
 						.hwnd()
-						.SendMessage(tcm::SetImageList { himagelist: None }); // remove from control
+						.SendMessage(msg::TcmSetImageList { himagelist: None }); // remove from control
 					let _ = ImageListDestroyGuard::new(h); // destroy
 				});
 			}
@@ -248,7 +248,7 @@ impl Tab {
 				.expect(DONTFAIL);
 
 			unsafe {
-				self.hwnd().SendMessage(tcm::AdjustRect {
+				self.hwnd().SendMessage(msg::TcmAdjustRect {
 					display_rect: false,
 					rect: &mut rc, // ideal size of the child
 				});
@@ -266,23 +266,23 @@ impl Tab {
 	}
 
 	/// Retrieves one of the associated image lists by sending a
-	/// [`tcm::GetImageList`](crate::msg::tcm::GetImageList) message.
+	/// [`TcmGetImageList`](crate::msg::TcmGetImageList) message.
 	///
 	/// Image lists are lazy-initialized: the first time you call this method
 	/// for a given image list, it will be created and assigned with
-	/// [`tcm::SetImageList`](crate::msg::tcm::SetImageList).
+	/// [`TcmSetImageList`](crate::msg::TcmSetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self) -> HrResult<HIMAGELIST> {
-		match unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) } {
+		match unsafe { self.hwnd().SendMessage(msg::TcmGetImageList {}) } {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
 				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
-						.SendMessage(tcm::SetImageList { himagelist: Some(h.raw_copy()) });
+						.SendMessage(msg::TcmSetImageList { himagelist: Some(h.raw_copy()) });
 				}
 				Ok(h)
 			},
@@ -296,10 +296,10 @@ impl Tab {
 	}
 
 	/// Sets or unsets the given extended list view styles by sending a
-	/// [`tcm::SetExtendedStyle`](crate::msg::tcm::SetExtendedStyle) message.
+	/// [`TcmSetExtendedStyle`](crate::msg::TcmSetExtendedStyle) message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::TCS_EX) {
 		unsafe {
-			self.hwnd().SendMessage(tcm::SetExtendedStyle {
+			self.hwnd().SendMessage(msg::TcmSetExtendedStyle {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TCS_EX::NoValue },
 			});

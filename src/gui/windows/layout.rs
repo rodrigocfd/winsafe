@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Specifies the horizontal behavior of the control when the parent window is
@@ -103,7 +103,7 @@ impl Layout {
 
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
-	pub(in crate::gui) fn rearrange(&self, p: wm::Size) {
+	pub(in crate::gui) fn rearrange(&self, p: msg::WmSize) {
 		let ctrls = unsafe { &mut *self.0.ctrls.get() };
 		if ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED

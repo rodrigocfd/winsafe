@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct EditObj {
@@ -140,25 +140,23 @@ impl Edit {
 	}
 
 	/// Hides any balloon tip by sending an
-	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
+	/// [`EmHideBalloonTip`](crate::msg::EmHideBalloonTip) message.
 	pub fn hide_balloon_tip(&self) -> SysResult<()> {
-		unsafe { self.hwnd().SendMessage(em::HideBalloonTip {}) }
+		unsafe { self.hwnd().SendMessage(msg::EmHideBalloonTip {}) }
 	}
 
 	/// Limits the number of characters that can be type by sending an
-	/// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
+	/// [`EmSetLimitText`](crate::msg::EmSetLimitText) message.
 	pub fn limit_text(&self, max_chars: Option<u32>) {
-		unsafe {
-			self.hwnd().SendMessage(em::SetLimitText { max_chars });
-		}
+		unsafe { self.hwnd().SendMessage(msg::EmSetLimitText { max_chars }) }
 	}
 
 	/// Replaces the currently selected text by sending an
-	/// [`em::ReplaceSel`](crate::msg::em::ReplaceSel) message.
+	/// [`EmReplaceSel`](crate::msg::EmReplaceSel) message.
 	pub fn replace_selection(&self, text: &str) {
 		let text16 = WString::from_str(text);
 		unsafe {
-			self.hwnd().SendMessage(em::ReplaceSel {
+			self.hwnd().SendMessage(msg::EmReplaceSel {
 				can_be_undone: true,
 				replacement_text: text16,
 			})
@@ -166,7 +164,7 @@ impl Edit {
 	}
 
 	/// Sets the selection range of the text by sending an
-	/// [`em::SetSel`](crate::msg::em::SetSel) message.
+	/// [`EmSetSel`](crate::msg::EmSetSel) message.
 	///
 	/// # Examples
 	///
@@ -194,9 +192,7 @@ impl Edit {
 	/// my_edit.set_selection(-1, -1);
 	/// ```
 	pub fn set_selection(&self, start: i32, end: i32) {
-		unsafe {
-			self.hwnd().SendMessage(em::SetSel { start, end });
-		}
+		unsafe { self.hwnd().SendMessage(msg::EmSetSel { start, end }) };
 	}
 
 	/// Sets the text by calling
@@ -207,7 +203,7 @@ impl Edit {
 	}
 
 	/// Displays a balloon tip by sending an
-	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
+	/// [`EmShowBalloonTip`](crate::msg::EmShowBalloonTip) message.
 	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) -> SysResult<()> {
 		let mut title16 = WString::from_str(title);
 		let mut text16 = WString::from_str(text);
@@ -217,7 +213,10 @@ impl Edit {
 		info.set_pszText(Some(&mut text16));
 		info.ttiIcon = icon;
 
-		unsafe { self.hwnd().SendMessage(em::ShowBalloonTip { info: &info }) }
+		unsafe {
+			self.hwnd()
+				.SendMessage(msg::EmShowBalloonTip { info: &info })
+		}
 	}
 
 	/// Retrieves the text by calling

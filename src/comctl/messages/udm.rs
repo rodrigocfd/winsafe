@@ -9,19 +9,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct GetAccel<'a> {
+pub struct UdmGetAccel<'a> {
 	pub info: &'a mut [UDACCEL],
 }
 
-impl<'a> MsgSend for GetAccel<'a> {
+impl<'a> MsgSend for UdmGetAccel<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETACCEL.into(),
 			wparam: self.info.len(),
 			lparam: self.info.as_mut_ptr() as _,
@@ -33,17 +33,17 @@ impl<'a> MsgSend for GetAccel<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u8`.
-pub struct GetBase {}
+pub struct UdmGetBase {}
 
-impl MsgSend for GetBase {
+impl MsgSend for UdmGetBase {
 	type RetType = u8;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETBASE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -55,17 +55,17 @@ impl MsgSend for GetBase {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct GetBuddy {}
+pub struct UdmGetBuddy {}
 
-impl MsgSend for GetBuddy {
+impl MsgSend for UdmGetBuddy {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETBUDDY.into(),
 			wparam: 0,
 			lparam: 0,
@@ -77,9 +77,9 @@ impl MsgSend for GetBuddy {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<i16>`.
-pub struct GetPos {}
+pub struct UdmGetPos {}
 
-impl MsgSend for GetPos {
+impl MsgSend for UdmGetPos {
 	type RetType = SysResult<i16>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -89,8 +89,8 @@ impl MsgSend for GetPos {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETPOS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -102,19 +102,19 @@ impl MsgSend for GetPos {
 /// message parameters.
 ///
 /// Return type: `i32`.
-pub struct GetPos32<'a> {
+pub struct UdmGetPos32<'a> {
 	pub success_flag: Option<&'a mut i32>,
 }
 
-impl<'a> MsgSend for GetPos32<'a> {
+impl<'a> MsgSend for UdmGetPos32<'a> {
 	type RetType = i32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETPOS32.into(),
 			wparam: 0,
 			lparam: self.success_flag.as_mut().map_or(0, |f| f as *mut _ as _),
@@ -126,17 +126,17 @@ impl<'a> MsgSend for GetPos32<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `(i16, i16)`.
-pub struct GetRange {}
+pub struct UdmGetRange {}
 
-impl MsgSend for GetRange {
+impl MsgSend for UdmGetRange {
 	type RetType = (i16, i16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETRANGE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -148,20 +148,20 @@ impl MsgSend for GetRange {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetRange32<'a, 'b> {
+pub struct UdmGetRange32<'a, 'b> {
 	pub min: &'a mut i32,
 	pub max: &'b mut i32,
 }
 
-impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
+impl<'a, 'b> MsgSend for UdmGetRange32<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETRANGE32.into(),
 			wparam: self.min as *mut _ as _,
 			lparam: self.max as *mut _ as _,
@@ -173,17 +173,17 @@ impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct UdmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for UdmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -195,19 +195,19 @@ impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetAccel<'a> {
+pub struct UdmSetAccel<'a> {
 	pub info: &'a [UDACCEL],
 }
 
-impl<'a> MsgSend for SetAccel<'a> {
+impl<'a> MsgSend for UdmSetAccel<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETACCEL.into(),
 			wparam: self.info.len(),
 			lparam: vec_ptr(self.info) as _,
@@ -219,19 +219,19 @@ impl<'a> MsgSend for SetAccel<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u8>`.
-pub struct SetBase {
+pub struct UdmSetBase {
 	pub base: u8,
 }
 
-impl MsgSend for SetBase {
+impl MsgSend for UdmSetBase {
 	type RetType = SysResult<u8>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETBASE.into(),
 			wparam: self.base as _,
 			lparam: 0,
@@ -243,19 +243,19 @@ impl MsgSend for SetBase {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct SetBuddy<'a> {
+pub struct UdmSetBuddy<'a> {
 	pub hbuddy: &'a HWND,
 }
 
-impl<'a> MsgSend for SetBuddy<'a> {
+impl<'a> MsgSend for UdmSetBuddy<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETBUDDY.into(),
 			wparam: self.hbuddy.ptr() as _,
 			lparam: 0,
@@ -267,19 +267,19 @@ impl<'a> MsgSend for SetBuddy<'a> {
 /// message parameters.
 ///
 /// Return type: `i16`.
-pub struct SetPos {
+pub struct UdmSetPos {
 	pub pos: i16,
 }
 
-impl MsgSend for SetPos {
+impl MsgSend for UdmSetPos {
 	type RetType = i16;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETPOS.into(),
 			wparam: 0,
 			lparam: self.pos as _,
@@ -291,19 +291,19 @@ impl MsgSend for SetPos {
 /// message parameters.
 ///
 /// Return type: `i32`.
-pub struct SetPos32 {
+pub struct UdmSetPos32 {
 	pub pos: i32,
 }
 
-impl MsgSend for SetPos32 {
+impl MsgSend for UdmSetPos32 {
 	type RetType = i32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETPOS32.into(),
 			wparam: 0,
 			lparam: self.pos as _,
@@ -315,20 +315,20 @@ impl MsgSend for SetPos32 {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRange {
+pub struct UdmSetRange {
 	pub min: i16,
 	pub max: i16,
 }
 
-impl MsgSend for SetRange {
+impl MsgSend for UdmSetRange {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETRANGE.into(),
 			wparam: 0,
 			lparam: MAKEDWORD(self.max as _, self.min as _) as _,
@@ -340,20 +340,20 @@ impl MsgSend for SetRange {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRange32 {
+pub struct UdmSetRange32 {
 	pub min: i32,
 	pub max: i32,
 }
 
-impl MsgSend for SetRange32 {
+impl MsgSend for UdmSetRange32 {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETRANGE32.into(),
 			wparam: self.min as _,
 			lparam: self.max as _,
@@ -365,19 +365,19 @@ impl MsgSend for SetRange32 {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct UdmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for UdmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::UDM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,

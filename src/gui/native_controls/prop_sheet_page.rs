@@ -6,7 +6,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct PropSheetPageObj {
@@ -76,18 +76,18 @@ impl PropSheetPage {
 	}
 
 	extern "system" fn dlg_proc(hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize {
-		let wm_any = WndMsg::new(msg, wparam, lparam);
+		let wm_any = msg::Wm::new(msg, wparam, lparam);
 		Self::dlg_proc_proc(hwnd, wm_any).unwrap_or_else(|err| {
 			quit_error::post_quit_error(wm_any, err);
 			true as _
 		})
 	}
 
-	fn dlg_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
+	fn dlg_proc_proc(hwnd: HWND, p: msg::Wm) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
 			co::WM::INITDIALOG => {
 				// First message being handled.
-				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
+				let msg = unsafe { msg::WmInitDialog::from_generic_wm(p) };
 
 				// For property sheet page dialogs, LPARAM contains PROPSHEETPAGE.
 				let ptr_psp = msg.additional_data as *const PROPSHEETPAGE;

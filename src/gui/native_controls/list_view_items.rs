@@ -6,7 +6,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
@@ -24,7 +24,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Appends a new item by sending an
-	/// [`lvm::InsertItem`](crate::msg::lvm::InsertItem) message, returning it.
+	/// [`LvmInsertItem`](crate::msg::LvmInsertItem) message, returning it.
 	///
 	/// The texts are relative to each column.
 	///
@@ -89,7 +89,7 @@ impl<'a, T> ListViewItems<'a, T> {
 		let new_idx = unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::InsertItem { item: &lvi })
+				.SendMessage(msg::LvmInsertItem { item: &lvi })
 		}?;
 		let new_item = self.get(new_idx);
 
@@ -106,24 +106,24 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Retrieves the total number of items by sending an
-	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
+	/// [`LvmGetItemCount`](crate::msg::LvmGetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		unsafe { self.owner.hwnd().SendMessage(lvm::GetItemCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::LvmGetItemCount {}) }
 	}
 
 	/// Deletes all items by sending an
-	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
+	/// [`LvmDeleteAllItems`](crate::msg::LvmDeleteAllItems) message.
 	pub fn delete_all(&self) -> SysResult<()> {
-		unsafe { self.owner.hwnd().SendMessage(lvm::DeleteAllItems {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::LvmDeleteAllItems {}) }
 	}
 
 	/// Deletes all selected items by sending
-	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) messages.
+	/// [`LvmDeleteItem`](crate::msg::LvmDeleteItem) messages.
 	pub fn delete_selected(&self) -> SysResult<()> {
 		loop {
 			let next_idx = unsafe {
-				self.owner.hwnd().SendMessage(lvm::GetNextItem {
+				self.owner.hwnd().SendMessage(msg::LvmGetNextItem {
 					initial_index: None,
 					relationship: co::LVNI::SELECTED,
 				})
@@ -137,7 +137,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Searches for an item with the given text, case-insensitive, by sending
-	/// an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
+	/// an [`LvmFindItem`](crate::msg::LvmFindItem) message.
 	#[must_use]
 	pub fn find(&self, text: &str) -> Option<ListViewItem<'a, T>> {
 		let mut buf = WString::from_str(text);
@@ -149,17 +149,17 @@ impl<'a, T> ListViewItems<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::FindItem { start_index: None, lvfindinfo: &mut lvfi })
+				.SendMessage(msg::LvmFindItem { start_index: None, lvfindinfo: &mut lvfi })
 		}
 		.map(|idx| self.get(idx))
 	}
 
 	/// Retrieves the focused item by sending an
-	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
+	/// [`LvmGetNextItem`](crate::msg::LvmGetNextItem) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<ListViewItem<'a, T>> {
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::GetNextItem {
+			self.owner.hwnd().SendMessage(msg::LvmGetNextItem {
 				initial_index: None,
 				relationship: co::LVNI::FOCUSED,
 			})
@@ -178,7 +178,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Retrieves the item at the specified position by sending an
-	/// [`lvm::HitTest`](crate::msg::lvm::HitTest) message.
+	/// [`LvmHitTest`](crate::msg::LvmHitTest) message.
 	///
 	/// `coords` must be relative to the list view.
 	#[must_use]
@@ -189,7 +189,7 @@ impl<'a, T> ListViewItems<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::HitTest { info: &mut lvhti })
+				.SendMessage(msg::LvmHitTest { info: &mut lvhti })
 		}
 		.map(|index| self.get(index))
 	}
@@ -245,14 +245,18 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Retrieves the item of the unique ID by sending an
-	/// [`lvm::MapIdToIndex`](crate::msg::lvm::MapIdToIndex) message.
+	/// [`LvmMapIdToIndex`](crate::msg::LvmMapIdToIndex) message.
 	///
 	/// If the item of the given unique ID doesn't exist anymore, returns
 	/// `None`.
 	#[must_use]
 	pub fn get_by_uid(&self, uid: u32) -> Option<ListViewItem<'a, T>> {
-		unsafe { self.owner.hwnd().SendMessage(lvm::MapIdToIndex { id: uid }) }
-			.map(|idx| self.get(idx))
+		unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(msg::LvmMapIdToIndex { id: uid })
+		}
+		.map(|idx| self.get(idx))
 	}
 
 	/// Returns the last item, if any.
@@ -268,7 +272,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Sets or remove the selection for all items by sending an
-	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
+	/// [`LvmSetItemState`](crate::msg::LvmSetItemState) message.
 	pub fn select_all(&self, set: bool) -> SysResult<()> {
 		let styles: co::LVS = self.owner.hwnd().style().into();
 		if styles.has(co::LVS::SINGLESEL) {
@@ -284,30 +288,30 @@ impl<'a, T> ListViewItems<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItemState { index: None, lvitem: &lvi })
+				.SendMessage(msg::LvmSetItemState { index: None, lvitem: &lvi })
 		}
 	}
 
 	/// Retrieves the number of selected items by sending an
-	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
+	/// [`LvmGetSelectedCount`](crate::msg::LvmGetSelectedCount) message.
 	#[must_use]
 	pub fn selected_count(&self) -> u32 {
-		unsafe { self.owner.hwnd().SendMessage(lvm::GetSelectedCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::LvmGetSelectedCount {}) }
 	}
 
 	/// Sets the number of items in a virtual list view – that is, a list view
 	/// created with [`LVS::OWNERDATA`](crate::co::LVS::OWNERDATA) style – by
-	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
+	/// sending an [`LvmSetItemCount`](crate::msg::LvmSetItemCount) message.
 	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) -> SysResult<()> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItemCount { count, behavior })
+				.SendMessage(msg::LvmSetItemCount { count, behavior })
 		}
 	}
 
 	/// Sorts the items according to a callback by sending an
-	/// [`lvm::SortItemsEx`](crate::msg::lvm::SortItemsEx) message.
+	/// [`LvmSortItemsEx`](crate::msg::LvmSortItemsEx) message.
 	///
 	/// The callback receives the two items to be compared.
 	///
@@ -334,7 +338,7 @@ impl<'a, T> ListViewItems<'a, T> {
 		let data = (self.owner, &mut func);
 
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::SortItemsEx {
+			self.owner.hwnd().SendMessage(msg::LvmSortItemsEx {
 				param: &data as *const _ as _,
 				callback: Self::list_view_item_sort::<F>,
 			})

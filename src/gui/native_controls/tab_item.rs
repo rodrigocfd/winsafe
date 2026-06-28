@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// A single item of a [`Tab`](crate::gui::Tab) control.
@@ -31,7 +31,7 @@ impl<'a> TabItem<'a> {
 	}
 
 	/// Deletes the item by sending a
-	/// [`tcm::DeleteItem`](crate::msg::tcm::DeleteItem) message.
+	/// [`TcmDeleteItem`](crate::msg::TcmDeleteItem) message.
 	///
 	/// # Safety
 	///
@@ -41,13 +41,13 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::DeleteItem { index: self.index })
+				.SendMessage(msg::TcmDeleteItem { index: self.index })
 		}
 		.unwrap();
 	}
 
 	/// Retrieves the user-defined value by sending an
-	/// [`tcm::GetItem`](crate::msg::tcm::GetItem) message.
+	/// [`TcmGetItem`](crate::msg::TcmGetItem) message.
 	#[must_use]
 	pub fn lparam(&self) -> SysResult<isize> {
 		let mut tci = TCITEM::default();
@@ -56,14 +56,14 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::GetItem { index: self.index, item: &mut tci })?;
+				.SendMessage(msg::TcmGetItem { index: self.index, item: &mut tci })?;
 		}
 
 		Ok(tci.lParam)
 	}
 
 	/// Sets the user-defined value by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	/// [`TcmSetItem`](crate::msg::TcmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_lparam(&self, lparam: isize) -> SysResult<Self> {
@@ -74,13 +74,13 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })?;
+				.SendMessage(msg::TcmSetItem { index: self.index, item: &mut tci })?;
 		}
 		Ok(*self)
 	}
 
-	/// Sets the text by sending a
-	/// [`tcm:SetItem`](crate::msg::tcm::SetItem) message.
+	/// Sets the text by sending a [`TcmSetItem`](crate::msg::TcmSetItem)
+	/// message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_text(&self, text: &str) -> SysResult<Self> {
@@ -92,13 +92,13 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })?;
+				.SendMessage(msg::TcmSetItem { index: self.index, item: &mut tci })?;
 		}
 		Ok(*self)
 	}
 
-	/// Retrieves the text by sending a
-	/// [`tcm:GetItem`](crate::msg::tcm::GetItem) message.
+	/// Retrieves the text by sending a [`TcmGetItem`](crate::msg::TcmGetItem)
+	/// message.
 	#[must_use]
 	pub fn text(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(64); // arbitrary
@@ -109,7 +109,7 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::GetItem { index: self.index, item: &mut tci })?;
+				.SendMessage(msg::TcmGetItem { index: self.index, item: &mut tci })?;
 		}
 		Ok(buf.to_string())
 	}

@@ -11,21 +11,21 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-pub struct ApproximateViewRect {
+pub struct LvmApproximateViewRect {
 	pub num_items: Option<u32>,
 	pub proposed_x: Option<u16>,
 	pub proposed_y: Option<u16>,
 }
 
-impl MsgSend for ApproximateViewRect {
+impl MsgSend for LvmApproximateViewRect {
 	type RetType = SIZE;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		SIZE::from(v as u32)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::APPROXIMATEVIEWRECT.into(),
 			wparam: self.num_items.map_or(-1, |n| n as i32) as _,
 			lparam: MAKEDWORD(
@@ -40,19 +40,19 @@ impl MsgSend for ApproximateViewRect {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Arrange {
+pub struct LvmArrange {
 	pub arrangement: co::LVA,
 }
 
-impl MsgSend for Arrange {
+impl MsgSend for LvmArrange {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::ARRANGE.into(),
 			wparam: self.arrangement.raw() as _,
 			lparam: 0,
@@ -60,7 +60,7 @@ impl MsgSend for Arrange {
 	}
 }
 
-pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into();
+pub_struct_msg_empty! { LvmCancelEditLabel: co::LVM::CANCELEDITLABEL.into();
 	/// [`LVM_CANCELEDITLABEL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-canceleditlabel)
 }
 
@@ -68,20 +68,20 @@ pub_struct_msg_empty! { CancelEditLabel: co::LVM::CANCELEDITLABEL.into();
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
-pub struct CreateDragImage<'a> {
+pub struct LvmCreateDragImage<'a> {
 	pub index: u32,
 	pub img_location: &'a mut RECT,
 }
 
-impl<'a> MsgSend for CreateDragImage<'a> {
+impl<'a> MsgSend for LvmCreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::CREATEDRAGIMAGE.into(),
 			wparam: self.index as _,
 			lparam: self.img_location as *mut _ as _,
@@ -93,17 +93,17 @@ impl<'a> MsgSend for CreateDragImage<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteAllItems {}
+pub struct LvmDeleteAllItems {}
 
-impl MsgSend for DeleteAllItems {
+impl MsgSend for LvmDeleteAllItems {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::DELETEALLITEMS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -115,19 +115,19 @@ impl MsgSend for DeleteAllItems {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteColumn {
+pub struct LvmDeleteColumn {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteColumn {
+impl MsgSend for LvmDeleteColumn {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::DELETECOLUMN.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -139,19 +139,19 @@ impl MsgSend for DeleteColumn {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteItem {
+pub struct LvmDeleteItem {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteItem {
+impl MsgSend for LvmDeleteItem {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::DELETEITEM.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -163,19 +163,19 @@ impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct EditLabel {
+pub struct LvmEditLabel {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for EditLabel {
+impl MsgSend for LvmEditLabel {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::EDITLABEL.into(),
 			wparam: self.index.map_or(-1, |i| i as i32) as _,
 			lparam: 0,
@@ -187,19 +187,19 @@ impl MsgSend for EditLabel {
 /// message parameters.
 ///
 /// Return type: `SysResult<bool>`.
-pub struct EnableGroupView {
+pub struct LvmEnableGroupView {
 	pub enable: bool,
 }
 
-impl MsgSend for EnableGroupView {
+impl MsgSend for LvmEnableGroupView {
 	type RetType = SysResult<bool>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v != 0)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::ENABLEGROUPVIEW.into(),
 			wparam: self.enable as _,
 			lparam: 0,
@@ -211,20 +211,20 @@ impl MsgSend for EnableGroupView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct EnsureVisible {
+pub struct LvmEnsureVisible {
 	pub index: u32,
 	pub entirely_visible: bool,
 }
 
-impl MsgSend for EnsureVisible {
+impl MsgSend for LvmEnsureVisible {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::ENSUREVISIBLE.into(),
 			wparam: self.index as _,
 			lparam: !self.entirely_visible as _,
@@ -236,20 +236,20 @@ impl MsgSend for EnsureVisible {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct FindItem<'a, 'b> {
+pub struct LvmFindItem<'a, 'b> {
 	pub start_index: Option<u32>,
 	pub lvfindinfo: &'b LVFINDINFO<'a>,
 }
 
-impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmFindItem<'a, 'b> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::FINDITEM.into(),
 			wparam: self.start_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.lvfindinfo as *const _ as _,
@@ -261,17 +261,17 @@ impl<'a, 'b> MsgSend for FindItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetBkColor {}
+pub struct LvmGetBkColor {}
 
-impl MsgSend for GetBkColor {
+impl MsgSend for LvmGetBkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETBKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -283,19 +283,19 @@ impl MsgSend for GetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetBkImage<'a, 'b> {
+pub struct LvmGetBkImage<'a, 'b> {
 	pub lvbkimage: &'b mut LVBKIMAGE<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetBkImage<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetBkImage<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETBKIMAGE.into(),
 			wparam: 0,
 			lparam: self.lvbkimage as *mut _ as _,
@@ -307,17 +307,17 @@ impl<'a, 'b> MsgSend for GetBkImage<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVIS`.
-pub struct GetCallbackMask {}
+pub struct LvmGetCallbackMask {}
 
-impl MsgSend for GetCallbackMask {
+impl MsgSend for LvmGetCallbackMask {
 	type RetType = co::LVIS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LVIS::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETCALLBACKMASK.into(),
 			wparam: 0,
 			lparam: 0,
@@ -329,20 +329,20 @@ impl MsgSend for GetCallbackMask {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetColumn<'a, 'b> {
+pub struct LvmGetColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b mut LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetColumn<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: self.lvcolumn as *mut _ as _,
@@ -354,19 +354,19 @@ impl<'a, 'b> MsgSend for GetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetColumnOrderArray<'a> {
+pub struct LvmGetColumnOrderArray<'a> {
 	pub indexes: &'a mut Vec<u32>,
 }
 
-impl<'a> MsgSend for GetColumnOrderArray<'a> {
+impl<'a> MsgSend for LvmGetColumnOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETCOLUMNORDERARRAY.into(),
 			wparam: self.indexes.len() as _,
 			lparam: self.indexes.as_mut_ptr() as _,
@@ -378,19 +378,19 @@ impl<'a> MsgSend for GetColumnOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct GetColumnWidth {
+pub struct LvmGetColumnWidth {
 	pub index: u32,
 }
 
-impl MsgSend for GetColumnWidth {
+impl MsgSend for LvmGetColumnWidth {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETCOLUMNWIDTH.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -402,17 +402,17 @@ impl MsgSend for GetColumnWidth {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetCountPerPage {}
+pub struct LvmGetCountPerPage {}
 
-impl MsgSend for GetCountPerPage {
+impl MsgSend for LvmGetCountPerPage {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETCOUNTPERPAGE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -424,17 +424,17 @@ impl MsgSend for GetCountPerPage {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct GetEditControl {}
+pub struct LvmGetEditControl {}
 
-impl MsgSend for GetEditControl {
+impl MsgSend for LvmGetEditControl {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETEDITCONTROL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -446,19 +446,19 @@ impl MsgSend for GetEditControl {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetEmptyText<'a> {
+pub struct LvmGetEmptyText<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetEmptyText<'a> {
+impl<'a> MsgSend for LvmGetEmptyText<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETEMPTYTEXT.into(),
 			wparam: self.text.buf_len(),
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
@@ -470,17 +470,17 @@ impl<'a> MsgSend for GetEmptyText<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LVS_EX`.
-pub struct GetExtendedListViewStyle {}
+pub struct LvmGetExtendedListViewStyle {}
 
-impl MsgSend for GetExtendedListViewStyle {
+impl MsgSend for LvmGetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LVS_EX::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -492,17 +492,17 @@ impl MsgSend for GetExtendedListViewStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetFocusedGroup {}
+pub struct LvmGetFocusedGroup {}
 
-impl MsgSend for GetFocusedGroup {
+impl MsgSend for LvmGetFocusedGroup {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETFOCUSEDGROUP.into(),
 			wparam: 0,
 			lparam: 0,
@@ -514,19 +514,19 @@ impl MsgSend for GetFocusedGroup {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetFooterInfo<'a, 'b> {
+pub struct LvmGetFooterInfo<'a, 'b> {
 	pub info: &'b mut LVFOOTERINFO<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetFooterInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetFooterInfo<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETFOOTERINFO.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -538,20 +538,20 @@ impl<'a, 'b> MsgSend for GetFooterInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetFooterItem<'a, 'b> {
+pub struct LvmGetFooterItem<'a, 'b> {
 	pub index: u32,
 	pub info: &'b mut LVFOOTERITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetFooterItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETFOOTERITEM.into(),
 			wparam: self.index as _,
 			lparam: self.info as *mut _ as _,
@@ -563,20 +563,20 @@ impl<'a, 'b> MsgSend for GetFooterItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetFooterItemRect<'a> {
+pub struct LvmGetFooterItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetFooterItemRect<'a> {
+impl<'a> MsgSend for LvmGetFooterItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETFOOTERITEMRECT.into(),
 			wparam: self.index as _,
 			lparam: self.rect as *mut _ as _,
@@ -588,19 +588,19 @@ impl<'a> MsgSend for GetFooterItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetFooterRect<'a> {
+pub struct LvmGetFooterRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetFooterRect<'a> {
+impl<'a> MsgSend for LvmGetFooterRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETFOOTERRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *mut _ as _,
@@ -612,17 +612,17 @@ impl<'a> MsgSend for GetFooterRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetGroupCount {}
+pub struct LvmGetGroupCount {}
 
-impl MsgSend for GetGroupCount {
+impl MsgSend for LvmGetGroupCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETGROUPCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -634,20 +634,20 @@ impl MsgSend for GetGroupCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+pub struct LvmGetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
 	pub info: &'h mut LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for LvmGetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETGROUPINFO.into(),
 			wparam: self.id as _,
 			lparam: self.info as *mut _ as _,
@@ -659,13 +659,13 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfo<'a, 'b, 'c, 'd, 'e
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+pub struct LvmGetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub index: u32,
 	pub info: &'h mut LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend
-	for GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h>
+	for LvmGetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h>
 {
 	type RetType = SysResult<()>;
 
@@ -673,8 +673,8 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETGROUPINFOBYINDEX.into(),
 			wparam: self.index as _,
 			lparam: self.info as *mut _ as _,
@@ -686,19 +686,19 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetGroupMetrics<'a> {
+pub struct LvmGetGroupMetrics<'a> {
 	pub info: &'a mut LVGROUPMETRICS,
 }
 
-impl<'a> MsgSend for GetGroupMetrics<'a> {
+impl<'a> MsgSend for LvmGetGroupMetrics<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETGROUPMETRICS.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -710,23 +710,23 @@ impl<'a> MsgSend for GetGroupMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetGroupRect<'a> {
+pub struct LvmGetGroupRect<'a> {
 	pub id: u32,
 	pub flags: co::LVGGR,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetGroupRect<'a> {
+impl<'a> MsgSend for LvmGetGroupRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
 		self.rect.top = self.flags.raw();
 
-		WndMsg {
+		Wm {
 			msg_id: co::LVM::GETGROUPRECT.into(),
 			wparam: self.id as _,
 			lparam: self.rect as *mut _ as _,
@@ -738,20 +738,20 @@ impl<'a> MsgSend for GetGroupRect<'a> {
 /// message parameters.
 ///
 /// Return type: `co::LVGS`.
-pub struct GetGroupState {
+pub struct LvmGetGroupState {
 	pub id: u32,
 	pub mask: co::LVGS,
 }
 
-impl MsgSend for GetGroupState {
+impl MsgSend for LvmGetGroupState {
 	type RetType = co::LVGS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LVGS::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETGROUPSTATE.into(),
 			wparam: self.id as _,
 			lparam: self.mask.raw() as _,
@@ -763,17 +763,17 @@ impl MsgSend for GetGroupState {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct GetHeader {}
+pub struct LvmGetHeader {}
 
-impl MsgSend for GetHeader {
+impl MsgSend for LvmGetHeader {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETHEADER.into(),
 			wparam: 0,
 			lparam: 0,
@@ -785,17 +785,17 @@ impl MsgSend for GetHeader {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HCURSOR>`.
-pub struct GetHotCursor {}
+pub struct LvmGetHotCursor {}
 
-impl MsgSend for GetHotCursor {
+impl MsgSend for LvmGetHotCursor {
 	type RetType = SysResult<HCURSOR>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HCURSOR::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETHOTCURSOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -807,17 +807,17 @@ impl MsgSend for GetHotCursor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetHotItem {}
+pub struct LvmGetHotItem {}
 
-impl MsgSend for GetHotItem {
+impl MsgSend for LvmGetHotItem {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|idx| idx as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETHOTITEM.into(),
 			wparam: 0,
 			lparam: 0,
@@ -829,17 +829,17 @@ impl MsgSend for GetHotItem {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetHoverTime {}
+pub struct LvmGetHoverTime {}
 
-impl MsgSend for GetHoverTime {
+impl MsgSend for LvmGetHoverTime {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|idx| idx as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETHOVERTIME.into(),
 			wparam: 0,
 			lparam: 0,
@@ -851,19 +851,19 @@ impl MsgSend for GetHoverTime {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct GetImageList {
+pub struct LvmGetImageList {
 	pub kind: co::LVSIL,
 }
 
-impl MsgSend for GetImageList {
+impl MsgSend for LvmGetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: 0,
@@ -875,19 +875,19 @@ impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetInsertMark<'a> {
+pub struct LvmGetInsertMark<'a> {
 	pub info: &'a mut LVINSERTMARK,
 }
 
-impl<'a> MsgSend for GetInsertMark<'a> {
+impl<'a> MsgSend for LvmGetInsertMark<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETINSERTMARK.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -899,17 +899,17 @@ impl<'a> MsgSend for GetInsertMark<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetInsertMarkColor {}
+pub struct LvmGetInsertMarkColor {}
 
-impl MsgSend for GetInsertMarkColor {
+impl MsgSend for LvmGetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETINSERTMARKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -921,19 +921,19 @@ impl MsgSend for GetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct GetInsertMarkRect<'a> {
+pub struct LvmGetInsertMarkRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetInsertMarkRect<'a> {
+impl<'a> MsgSend for LvmGetInsertMarkRect<'a> {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETINSERTMARKRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *mut _ as _,
@@ -945,19 +945,19 @@ impl<'a> MsgSend for GetInsertMarkRect<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetISearchString<'a> {
+pub struct LvmGetISearchString<'a> {
 	pub buffer: Option<&'a mut WString>,
 }
 
-impl<'a> MsgSend for GetISearchString<'a> {
+impl<'a> MsgSend for LvmGetISearchString<'a> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|c| c as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETISEARCHSTRING.into(),
 			wparam: 0,
 			lparam: self
@@ -972,19 +972,19 @@ impl<'a> MsgSend for GetISearchString<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItem<'a, 'b> {
+pub struct LvmGetItem<'a, 'b> {
 	pub lvitem: &'b mut LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEM.into(),
 			wparam: 0,
 			lparam: self.lvitem as *mut _ as _,
@@ -996,17 +996,17 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetItemCount {}
+pub struct LvmGetItemCount {}
 
-impl MsgSend for GetItemCount {
+impl MsgSend for LvmGetItemCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1018,25 +1018,25 @@ impl MsgSend for GetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemIndexRect<'a, 'b> {
+pub struct LvmGetItemIndexRect<'a, 'b> {
 	pub lvitemindex: &'a LVITEMINDEX,
 	pub rect: &'b mut RECT,
 	pub index: u32,
 	pub portion: co::LVIR,
 }
 
-impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetItemIndexRect<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
 		self.rect.top = self.index as _;
 		self.rect.left = self.portion.raw() as _;
 
-		WndMsg {
+		Wm {
 			msg_id: co::LVM::GETITEMINDEXRECT.into(),
 			wparam: self.lvitemindex as *const _ as _,
 			lparam: self.rect as *mut _ as _,
@@ -1048,20 +1048,20 @@ impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemPosition<'a> {
+pub struct LvmGetItemPosition<'a> {
 	pub index: u32,
 	pub pos: &'a mut POINT,
 }
 
-impl<'a> MsgSend for GetItemPosition<'a> {
+impl<'a> MsgSend for LvmGetItemPosition<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEMPOSITION.into(),
 			wparam: self.index as _,
 			lparam: self.pos as *mut _ as _,
@@ -1073,23 +1073,23 @@ impl<'a> MsgSend for GetItemPosition<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemRect<'a> {
+pub struct LvmGetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
 	pub portion: co::LVIR,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for LvmGetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
 		self.rect.left = self.portion.raw() as _;
 
-		WndMsg {
+		Wm {
 			msg_id: co::LVM::GETITEMRECT.into(),
 			wparam: self.index as _,
 			lparam: self.rect as *mut _ as _,
@@ -1101,19 +1101,19 @@ impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-pub struct GetItemSpacing {
+pub struct LvmGetItemSpacing {
 	pub is_small_icon_view: bool,
 }
 
-impl MsgSend for GetItemSpacing {
+impl MsgSend for LvmGetItemSpacing {
 	type RetType = SIZE;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		SIZE::from(v as u32)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEMSTATE.into(),
 			wparam: self.is_small_icon_view as _,
 			lparam: 0,
@@ -1125,20 +1125,20 @@ impl MsgSend for GetItemSpacing {
 /// message parameters.
 ///
 /// Return type: `co::LVIS`.
-pub struct GetItemState {
+pub struct LvmGetItemState {
 	pub index: u32,
 	pub mask: co::LVIS,
 }
 
-impl MsgSend for GetItemState {
+impl MsgSend for LvmGetItemState {
 	type RetType = co::LVIS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LVIS::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEMSTATE.into(),
 			wparam: self.index as _,
 			lparam: self.mask.raw() as _,
@@ -1150,20 +1150,20 @@ impl MsgSend for GetItemState {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct GetItemText<'a, 'b> {
+pub struct LvmGetItemText<'a, 'b> {
 	pub index: u32,
 	pub lvitem: &'b mut LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetItemText<'a, 'b> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETITEMTEXT.into(),
 			wparam: self.index as _,
 			lparam: self.lvitem as *mut _ as _,
@@ -1175,20 +1175,20 @@ impl<'a, 'b> MsgSend for GetItemText<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetNextItem {
+pub struct LvmGetNextItem {
 	pub initial_index: Option<u32>,
 	pub relationship: co::LVNI,
 }
 
-impl MsgSend for GetNextItem {
+impl MsgSend for LvmGetNextItem {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETNEXTITEM.into(),
 			wparam: self.initial_index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.relationship.raw() as _,
@@ -1200,20 +1200,20 @@ impl MsgSend for GetNextItem {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetNextItemIndex<'a> {
+pub struct LvmGetNextItemIndex<'a> {
 	pub initial_item: &'a mut LVITEMINDEX,
 	pub relationship: co::LVNI,
 }
 
-impl<'a> MsgSend for GetNextItemIndex<'a> {
+impl<'a> MsgSend for LvmGetNextItemIndex<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETNEXTITEMINDEX.into(),
 			wparam: self.initial_item as *mut _ as _,
 			lparam: self.relationship.raw() as _,
@@ -1225,19 +1225,19 @@ impl<'a> MsgSend for GetNextItemIndex<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetNumberOfWorkAreas<'a> {
+pub struct LvmGetNumberOfWorkAreas<'a> {
 	pub num: &'a mut u32,
 }
 
-impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
+impl<'a> MsgSend for LvmGetNumberOfWorkAreas<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETNUMBEROFWORKAREAS.into(),
 			wparam: 0,
 			lparam: self.num as *mut _ as _,
@@ -1249,19 +1249,19 @@ impl<'a> MsgSend for GetNumberOfWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct GetOrigin<'a> {
+pub struct LvmGetOrigin<'a> {
 	pub origin: &'a mut POINT,
 }
 
-impl<'a> MsgSend for GetOrigin<'a> {
+impl<'a> MsgSend for LvmGetOrigin<'a> {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETORIGIN.into(),
 			wparam: 0,
 			lparam: self.origin as *mut _ as _,
@@ -1273,17 +1273,17 @@ impl<'a> MsgSend for GetOrigin<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetOutlineColor {}
+pub struct LvmGetOutlineColor {}
 
-impl MsgSend for GetOutlineColor {
+impl MsgSend for LvmGetOutlineColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETOUTLINECOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1295,17 +1295,17 @@ impl MsgSend for GetOutlineColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetSelectedColumn {}
+pub struct LvmGetSelectedColumn {}
 
-impl MsgSend for GetSelectedColumn {
+impl MsgSend for LvmGetSelectedColumn {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETSELECTEDCOLUMN.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1317,17 +1317,17 @@ impl MsgSend for GetSelectedColumn {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetSelectedCount {}
+pub struct LvmGetSelectedCount {}
 
-impl MsgSend for GetSelectedCount {
+impl MsgSend for LvmGetSelectedCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETSELECTEDCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1339,17 +1339,17 @@ impl MsgSend for GetSelectedCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetSelectionMark {}
+pub struct LvmGetSelectionMark {}
 
-impl MsgSend for GetSelectionMark {
+impl MsgSend for LvmGetSelectionMark {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETSELECTIONMARK.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1361,19 +1361,19 @@ impl MsgSend for GetSelectionMark {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct GetStringWidth {
+pub struct LvmGetStringWidth {
 	pub text: WString,
 }
 
-impl MsgSend for GetStringWidth {
+impl MsgSend for LvmGetStringWidth {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|len| len as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETSTRINGWIDTH.into(),
 			wparam: 0,
 			lparam: self.text.as_ptr() as _,
@@ -1385,25 +1385,25 @@ impl MsgSend for GetStringWidth {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetSubItemRect<'a> {
+pub struct LvmGetSubItemRect<'a> {
 	pub item_index: u32,
 	pub subitem_index: u32,
 	pub rect: &'a mut RECT,
 	pub portion: co::LVIR,
 }
 
-impl<'a> MsgSend for GetSubItemRect<'a> {
+impl<'a> MsgSend for LvmGetSubItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
 		self.rect.left = self.portion.raw() as _;
 		self.rect.top = self.subitem_index as _;
 
-		WndMsg {
+		Wm {
 			msg_id: co::LVM::GETSUBITEMRECT.into(),
 			wparam: self.item_index as _,
 			lparam: self.rect as *mut _ as _,
@@ -1415,17 +1415,17 @@ impl<'a> MsgSend for GetSubItemRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetTextBkColor {}
+pub struct LvmGetTextBkColor {}
 
-impl MsgSend for GetTextBkColor {
+impl MsgSend for LvmGetTextBkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTEXTBKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1437,17 +1437,17 @@ impl MsgSend for GetTextBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetTextColor {}
+pub struct LvmGetTextColor {}
 
-impl MsgSend for GetTextColor {
+impl MsgSend for LvmGetTextColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTEXTCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1459,19 +1459,19 @@ impl MsgSend for GetTextColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetTileInfo<'a, 'b> {
+pub struct LvmGetTileInfo<'a, 'b> {
 	pub info: &'b mut LVTILEINFO<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetTileInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmGetTileInfo<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTILEINFO.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -1483,19 +1483,19 @@ impl<'a, 'b> MsgSend for GetTileInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetTileViewInfo<'a> {
+pub struct LvmGetTileViewInfo<'a> {
 	pub info: &'a mut LVTILEVIEWINFO,
 }
 
-impl<'a> MsgSend for GetTileViewInfo<'a> {
+impl<'a> MsgSend for LvmGetTileViewInfo<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTILEVIEWINFO.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -1507,17 +1507,17 @@ impl<'a> MsgSend for GetTileViewInfo<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct GetTooltips {}
+pub struct LvmGetTooltips {}
 
-impl MsgSend for GetTooltips {
+impl MsgSend for LvmGetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTOOLTIPS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1532,17 +1532,17 @@ impl MsgSend for GetTooltips {
 /// other checks must be made.
 ///
 /// Return type: `u32`.
-pub struct GetTopIndex {}
+pub struct LvmGetTopIndex {}
 
-impl MsgSend for GetTopIndex {
+impl MsgSend for LvmGetTopIndex {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETTOPINDEX.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1554,17 +1554,17 @@ impl MsgSend for GetTopIndex {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct LvmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for LvmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1576,17 +1576,17 @@ impl MsgSend for GetUnicodeFormat {
 /// message, which has no parameters.
 ///
 /// Return type: `co::LV_VIEW`.
-pub struct GetView {}
+pub struct LvmGetView {}
 
-impl MsgSend for GetView {
+impl MsgSend for LvmGetView {
 	type RetType = co::LV_VIEW;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LV_VIEW::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETVIEW.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1598,19 +1598,19 @@ impl MsgSend for GetView {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetViewRect<'a> {
+pub struct LvmGetViewRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetViewRect<'a> {
+impl<'a> MsgSend for LvmGetViewRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETVIEWRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *mut _ as _,
@@ -1622,19 +1622,19 @@ impl<'a> MsgSend for GetViewRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetWorkAreas<'a> {
+pub struct LvmGetWorkAreas<'a> {
 	pub rects: &'a mut [RECT],
 }
 
-impl<'a> MsgSend for GetWorkAreas<'a> {
+impl<'a> MsgSend for LvmGetWorkAreas<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::GETWORKAREAS.into(),
 			wparam: self.rects.len() as _,
 			lparam: self.rects.as_mut_ptr() as _,
@@ -1646,19 +1646,19 @@ impl<'a> MsgSend for GetWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct HasGroup {
+pub struct LvmHasGroup {
 	pub id: u32,
 }
 
-impl MsgSend for HasGroup {
+impl MsgSend for LvmHasGroup {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::HASGROUP.into(),
 			wparam: self.id as _,
 			lparam: 0,
@@ -1670,19 +1670,19 @@ impl MsgSend for HasGroup {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct HitTest<'a> {
+pub struct LvmHitTest<'a> {
 	pub info: &'a mut LVHITTESTINFO,
 }
 
-impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for LvmHitTest<'a> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::HITTEST.into(),
 			wparam: -1 as _,
 			lparam: self.info as *mut _ as _,
@@ -1694,20 +1694,20 @@ impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct InsertColumn<'a, 'b> {
+pub struct LvmInsertColumn<'a, 'b> {
 	pub index: u32,
 	pub column: &'b LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmInsertColumn<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::INSERTCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: self.column as *const _ as _,
@@ -1719,19 +1719,19 @@ impl<'a, 'b> MsgSend for InsertColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+pub struct LvmInsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub group: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for LvmInsertGroup<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::INSERTGROUP.into(),
 			wparam: 0,
 			lparam: self.group as *const _ as _,
@@ -1743,19 +1743,21 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroup<'a, 'b, 'c, 'd, 'e,
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+pub struct LvmInsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub group: &'h LVINSERTGROUPSORTED<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend
+	for LvmInsertGroupSorted<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h>
+{
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::INSERTGROUPSORTED.into(),
 			wparam: 0,
 			lparam: self.group as *const _ as _,
@@ -1767,19 +1769,19 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for InsertGroupSorted<'a, 'b, 'c, '
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct InsertItem<'a, 'b> {
+pub struct LvmInsertItem<'a, 'b> {
 	pub item: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmInsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::INSERTITEM.into(),
 			wparam: 0,
 			lparam: self.item as *const _ as _,
@@ -1791,20 +1793,20 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct InsertMarkHitTest<'a> {
+pub struct LvmInsertMarkHitTest<'a> {
 	pub point: POINT,
 	pub insert_mark: &'a LVINSERTMARK,
 }
 
-impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
+impl<'a, 'b> MsgSend for LvmInsertMarkHitTest<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::INSERTMARKHITTEST.into(),
 			wparam: &self.point as *const _ as _,
 			lparam: self.insert_mark as *const _ as _,
@@ -1816,17 +1818,17 @@ impl<'a, 'b> MsgSend for InsertMarkHitTest<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct IsGroupViewEnabled {}
+pub struct LvmIsGroupViewEnabled {}
 
-impl MsgSend for IsGroupViewEnabled {
+impl MsgSend for LvmIsGroupViewEnabled {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::ISGROUPVIEWENABLED.into(),
 			wparam: 0,
 			lparam: 0,
@@ -1838,19 +1840,19 @@ impl MsgSend for IsGroupViewEnabled {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct IsItemVisible {
+pub struct LvmIsItemVisible {
 	pub index: u32,
 }
 
-impl MsgSend for IsItemVisible {
+impl MsgSend for LvmIsItemVisible {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::ISITEMVISIBLE.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -1862,19 +1864,19 @@ impl MsgSend for IsItemVisible {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct MapIdToIndex {
+pub struct LvmMapIdToIndex {
 	pub id: u32,
 }
 
-impl MsgSend for MapIdToIndex {
+impl MsgSend for LvmMapIdToIndex {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::MAPIDTOINDEX.into(),
 			wparam: self.id as _,
 			lparam: 0,
@@ -1886,19 +1888,19 @@ impl MsgSend for MapIdToIndex {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct MapIndexToId {
+pub struct LvmMapIndexToId {
 	pub index: u32,
 }
 
-impl MsgSend for MapIndexToId {
+impl MsgSend for LvmMapIndexToId {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::MAPINDEXTOID.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -1910,20 +1912,20 @@ impl MsgSend for MapIndexToId {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct RedrawItems {
+pub struct LvmRedrawItems {
 	pub first_index: u32,
 	pub last_index: u32,
 }
 
-impl MsgSend for RedrawItems {
+impl MsgSend for LvmRedrawItems {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::REDRAWITEMS.into(),
 			wparam: self.first_index as _,
 			lparam: self.last_index as _,
@@ -1931,7 +1933,7 @@ impl MsgSend for RedrawItems {
 	}
 }
 
-pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into();
+pub_struct_msg_empty! { LvmRemoveAllGroups: co::LVM::REMOVEALLGROUPS.into();
 	/// [`LVM_REMOVEALLGROUPS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-removeallgroups)
 	/// message, which has no parameters.
 	///
@@ -1942,19 +1944,19 @@ pub_struct_msg_empty! { RemoveAllGroups: co::LVM::REMOVEALLGROUPS.into();
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct RemoveGroup {
+pub struct LvmRemoveGroup {
 	pub id: u32,
 }
 
-impl MsgSend for RemoveGroup {
+impl MsgSend for LvmRemoveGroup {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|id| id as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::REMOVEGROUP.into(),
 			wparam: self.id as _,
 			lparam: 0,
@@ -1966,20 +1968,20 @@ impl MsgSend for RemoveGroup {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Scroll {
+pub struct LvmScroll {
 	pub horizontal: i32,
 	pub vertical: i32,
 }
 
-impl MsgSend for Scroll {
+impl MsgSend for LvmScroll {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SCROLL.into(),
 			wparam: self.horizontal as _,
 			lparam: self.vertical as _,
@@ -1991,19 +1993,19 @@ impl MsgSend for Scroll {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetBkColor {
+pub struct LvmSetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetBkColor {
+impl MsgSend for LvmSetBkColor {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETBKCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
@@ -2015,19 +2017,19 @@ impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetBkImage<'a, 'b> {
+pub struct LvmSetBkImage<'a, 'b> {
 	pub lvbkimage: &'b LVBKIMAGE<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetBkImage<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETBKIMAGE.into(),
 			wparam: 0,
 			lparam: self.lvbkimage as *const _ as _,
@@ -2039,19 +2041,19 @@ impl<'a, 'b> MsgSend for SetBkImage<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCallbackMask {
+pub struct LvmSetCallbackMask {
 	pub mask: co::LVIS,
 }
 
-impl MsgSend for SetCallbackMask {
+impl MsgSend for LvmSetCallbackMask {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETCALLBACKMASK.into(),
 			wparam: self.mask.raw() as _,
 			lparam: 0,
@@ -2063,20 +2065,20 @@ impl MsgSend for SetCallbackMask {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetColumn<'a, 'b> {
+pub struct LvmSetColumn<'a, 'b> {
 	pub index: u32,
 	pub lvcolumn: &'b LVCOLUMN<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetColumn<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: self.lvcolumn as *const _ as _,
@@ -2088,19 +2090,19 @@ impl<'a, 'b> MsgSend for SetColumn<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetColumnOrderArray<'a> {
+pub struct LvmSetColumnOrderArray<'a> {
 	pub order: &'a [u32],
 }
 
-impl<'a> MsgSend for SetColumnOrderArray<'a> {
+impl<'a> MsgSend for LvmSetColumnOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETCOLUMNORDERARRAY.into(),
 			wparam: self.order.len() as _,
 			lparam: vec_ptr(self.order) as _,
@@ -2112,20 +2114,20 @@ impl<'a> MsgSend for SetColumnOrderArray<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetColumnWidth {
+pub struct LvmSetColumnWidth {
 	pub index: u32,
 	pub width: u32,
 }
 
-impl MsgSend for SetColumnWidth {
+impl MsgSend for LvmSetColumnWidth {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETCOLUMNWIDTH.into(),
 			wparam: self.index as _,
 			lparam: self.width as _,
@@ -2137,20 +2139,20 @@ impl MsgSend for SetColumnWidth {
 /// message parameters.
 ///
 /// Return type: `co::LVS_EX`.
-pub struct SetExtendedListViewStyle {
+pub struct LvmSetExtendedListViewStyle {
 	pub style: co::LVS_EX,
 	pub mask: co::LVS_EX,
 }
 
-impl MsgSend for SetExtendedListViewStyle {
+impl MsgSend for LvmSetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::LVS_EX::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
 			wparam: self.style.raw() as _,
 			lparam: self.mask.raw() as _,
@@ -2162,20 +2164,20 @@ impl MsgSend for SetExtendedListViewStyle {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+pub struct LvmSetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
 	pub info: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for LvmSetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETGROUPINFO.into(),
 			wparam: self.id as _,
 			lparam: self.info as *const _ as _,
@@ -2187,19 +2189,19 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c, 'd, 'e
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetGroupMetrics<'a> {
+pub struct LvmSetGroupMetrics<'a> {
 	pub info: &'a LVGROUPMETRICS,
 }
 
-impl<'a> MsgSend for SetGroupMetrics<'a> {
+impl<'a> MsgSend for LvmSetGroupMetrics<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETGROUPMETRICS.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -2211,19 +2213,19 @@ impl<'a> MsgSend for SetGroupMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HCURSOR>`.
-pub struct SetHotCursor<'a> {
+pub struct LvmSetHotCursor<'a> {
 	pub hcursor: Option<&'a HCURSOR>,
 }
 
-impl<'a> MsgSend for SetHotCursor<'a> {
+impl<'a> MsgSend for LvmSetHotCursor<'a> {
 	type RetType = Option<HCURSOR>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HCURSOR::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETHOTCURSOR.into(),
 			wparam: 0,
 			lparam: self.hcursor.map_or(0, |h| h.ptr() as _),
@@ -2235,19 +2237,19 @@ impl<'a> MsgSend for SetHotCursor<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct SetHotItem {
+pub struct LvmSetHotItem {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for SetHotItem {
+impl MsgSend for LvmSetHotItem {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETHOTITEM.into(),
 			wparam: self.index.unwrap_or(0) as _,
 			lparam: 0,
@@ -2259,19 +2261,19 @@ impl MsgSend for SetHotItem {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct SetHoverTime {
+pub struct LvmSetHoverTime {
 	pub ms: Option<u32>,
 }
 
-impl MsgSend for SetHoverTime {
+impl MsgSend for LvmSetHoverTime {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETHOVERTIME.into(),
 			wparam: self.ms.map_or(-1, |ms| ms as i32) as _,
 			lparam: 0,
@@ -2283,19 +2285,19 @@ impl MsgSend for SetHoverTime {
 /// message parameters.
 ///
 /// Return type: `SIZE`.
-pub struct SetIconSpacing {
+pub struct LvmSetIconSpacing {
 	pub size: SIZE,
 }
 
-impl MsgSend for SetIconSpacing {
+impl MsgSend for LvmSetIconSpacing {
 	type RetType = SIZE;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		SIZE::from(v as u32)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETICONSPACING.into(),
 			wparam: 0,
 			lparam: u32::from(self.size) as _,
@@ -2307,20 +2309,20 @@ impl MsgSend for SetIconSpacing {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList {
+pub struct LvmSetImageList {
 	pub kind: co::LVSIL,
 	pub himagelist: Option<HIMAGELIST>,
 }
 
-impl MsgSend for SetImageList {
+impl MsgSend for LvmSetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
@@ -2332,19 +2334,19 @@ impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetInfoTip<'a, 'b> {
+pub struct LvmSetInfoTip<'a, 'b> {
 	pub info: &'b LVSETINFOTIP<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetInfoTip<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETINFOTIP.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -2356,19 +2358,19 @@ impl<'a, 'b> MsgSend for SetInfoTip<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetInsertMark<'a> {
+pub struct LvmSetInsertMark<'a> {
 	pub info: &'a LVINSERTMARK,
 }
 
-impl<'a> MsgSend for SetInsertMark<'a> {
+impl<'a> MsgSend for LvmSetInsertMark<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETINSERTMARK.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -2380,19 +2382,19 @@ impl<'a> MsgSend for SetInsertMark<'a> {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct SetInsertMarkColor {
+pub struct LvmSetInsertMarkColor {
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetInsertMarkColor {
+impl MsgSend for LvmSetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETINSERTMARKCOLOR.into(),
 			wparam: 0,
 			lparam: u32::from(self.color) as _,
@@ -2404,19 +2406,19 @@ impl MsgSend for SetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItem<'a, 'b> {
+pub struct LvmSetItem<'a, 'b> {
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEM.into(),
 			wparam: 0,
 			lparam: self.lvitem as *const _ as _,
@@ -2428,20 +2430,20 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItemCount {
+pub struct LvmSetItemCount {
 	pub count: u32,
 	pub behavior: Option<co::LVSICF>,
 }
 
-impl MsgSend for SetItemCount {
+impl MsgSend for LvmSetItemCount {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMCOUNT.into(),
 			wparam: self.count as _,
 			lparam: self.behavior.unwrap_or_default().raw() as _,
@@ -2453,20 +2455,20 @@ impl MsgSend for SetItemCount {
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-pub struct SetItemIndexState<'a, 'b, 'c> {
+pub struct LvmSetItemIndexState<'a, 'b, 'c> {
 	pub lvitemindex: &'a LVITEMINDEX,
 	pub lvitem: &'c LVITEM<'b>,
 }
 
-impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for LvmSetItemIndexState<'a, 'b, 'c> {
 	type RetType = HrResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		HrRet(v as _).to_hrresult()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMINDEXSTATE.into(),
 			wparam: self.lvitemindex as *const _ as _,
 			lparam: self.lvitem as *const _ as _,
@@ -2478,20 +2480,20 @@ impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItemPosition {
+pub struct LvmSetItemPosition {
 	pub index: u32,
 	pub position: POINT,
 }
 
-impl MsgSend for SetItemPosition {
+impl MsgSend for LvmSetItemPosition {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMPOSITION.into(),
 			wparam: self.index as _,
 			lparam: u32::from(self.position) as _,
@@ -2503,20 +2505,20 @@ impl MsgSend for SetItemPosition {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetItemPosition32 {
+pub struct LvmSetItemPosition32 {
 	pub index: u32,
 	pub position: POINT,
 }
 
-impl MsgSend for SetItemPosition32 {
+impl MsgSend for LvmSetItemPosition32 {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMPOSITION32.into(),
 			wparam: self.index as _,
 			lparam: &self.position as *const _ as _,
@@ -2528,20 +2530,20 @@ impl MsgSend for SetItemPosition32 {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItemState<'a, 'b> {
+pub struct LvmSetItemState<'a, 'b> {
 	pub index: Option<u32>,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetItemState<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMSTATE.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
 			lparam: self.lvitem as *const _ as _,
@@ -2553,20 +2555,20 @@ impl<'a, 'b> MsgSend for SetItemState<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItemText<'a, 'b> {
+pub struct LvmSetItemText<'a, 'b> {
 	pub index: u32,
 	pub lvitem: &'b LVITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetItemText<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETITEMTEXT.into(),
 			wparam: self.index as _,
 			lparam: self.lvitem as *const _ as _,
@@ -2578,19 +2580,19 @@ impl<'a, 'b> MsgSend for SetItemText<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct SetOutlineColor {
+pub struct LvmSetOutlineColor {
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetOutlineColor {
+impl MsgSend for LvmSetOutlineColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETOUTLINECOLOR.into(),
 			wparam: 0,
 			lparam: u32::from(self.color) as _,
@@ -2602,19 +2604,19 @@ impl MsgSend for SetOutlineColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetSelectedColumn {
+pub struct LvmSetSelectedColumn {
 	pub index: u32,
 }
 
-impl MsgSend for SetSelectedColumn {
+impl MsgSend for LvmSetSelectedColumn {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETSELECTEDCOLUMN.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -2626,19 +2628,19 @@ impl MsgSend for SetSelectedColumn {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct SetSelectionMark {
+pub struct LvmSetSelectionMark {
 	pub index: Option<u32>,
 }
 
-impl MsgSend for SetSelectionMark {
+impl MsgSend for LvmSetSelectionMark {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETSELECTIONMARK.into(),
 			wparam: 0,
 			lparam: self.index.map_or(-1, |idx| idx as i32) as _,
@@ -2650,19 +2652,19 @@ impl MsgSend for SetSelectionMark {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTextBkColor {
+pub struct LvmSetTextBkColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetTextBkColor {
+impl MsgSend for LvmSetTextBkColor {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETTEXTBKCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
@@ -2674,19 +2676,19 @@ impl MsgSend for SetTextBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTextColor {
+pub struct LvmSetTextColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetTextColor {
+impl MsgSend for LvmSetTextColor {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETTEXTCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
@@ -2698,19 +2700,19 @@ impl MsgSend for SetTextColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTileInfo<'a, 'b> {
+pub struct LvmSetTileInfo<'a, 'b> {
 	pub info: &'b LVTILEINFO<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for LvmSetTileInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETTILEINFO.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -2722,19 +2724,19 @@ impl<'a, 'b> MsgSend for SetTileInfo<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTileViewInfo<'a> {
+pub struct LvmSetTileViewInfo<'a> {
 	pub info: &'a LVTILEVIEWINFO,
 }
 
-impl<'a> MsgSend for SetTileViewInfo<'a> {
+impl<'a> MsgSend for LvmSetTileViewInfo<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETTILEVIEWINFO.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -2746,19 +2748,19 @@ impl<'a> MsgSend for SetTileViewInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct SetTooltips<'a> {
+pub struct LvmSetTooltips<'a> {
 	pub htooltips: Option<&'a HWND>,
 }
 
-impl<'a> MsgSend for SetTooltips<'a> {
+impl<'a> MsgSend for LvmSetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETTOOLTIPS.into(),
 			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
@@ -2770,19 +2772,19 @@ impl<'a> MsgSend for SetTooltips<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct LvmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for LvmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,
@@ -2794,19 +2796,19 @@ impl MsgSend for SetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetView {
+pub struct LvmSetView {
 	pub view: co::LV_VIEW,
 }
 
-impl MsgSend for SetView {
+impl MsgSend for LvmSetView {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETVIEW.into(),
 			wparam: self.view.raw() as _,
 			lparam: 0,
@@ -2818,19 +2820,19 @@ impl MsgSend for SetView {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetWorkAreas<'a> {
+pub struct LvmSetWorkAreas<'a> {
 	pub rects: Option<&'a [RECT]>,
 }
 
-impl<'a> MsgSend for SetWorkAreas<'a> {
+impl<'a> MsgSend for LvmSetWorkAreas<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SETWORKAREAS.into(),
 			wparam: self.rects.map_or(0, |r| r.len() as _),
 			lparam: self.rects.map_or(0, |r| vec_ptr(r) as _),
@@ -2842,20 +2844,20 @@ impl<'a> MsgSend for SetWorkAreas<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SortGroups {
+pub struct LvmSortGroups {
 	pub callback: Option<PFNLVGROUPCOMPARE>,
 	pub param: Option<isize>,
 }
 
-impl MsgSend for SortGroups {
+impl MsgSend for LvmSortGroups {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SORTGROUPS.into(),
 			wparam: self.callback.map_or(0, |cb| cb as _),
 			lparam: self.param.unwrap_or(0),
@@ -2867,20 +2869,20 @@ impl MsgSend for SortGroups {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SortItems {
+pub struct LvmSortItems {
 	pub param: isize,
 	pub callback: PFNLVCOMPARE,
 }
 
-impl MsgSend for SortItems {
+impl MsgSend for LvmSortItems {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SORTITEMS.into(),
 			wparam: self.param as _,
 			lparam: self.callback as _,
@@ -2892,20 +2894,20 @@ impl MsgSend for SortItems {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SortItemsEx {
+pub struct LvmSortItemsEx {
 	pub param: isize,
 	pub callback: PFNLVCOMPARE,
 }
 
-impl MsgSend for SortItemsEx {
+impl MsgSend for LvmSortItemsEx {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SORTITEMSEX.into(),
 			wparam: self.param as _,
 			lparam: self.callback as _,
@@ -2917,19 +2919,19 @@ impl MsgSend for SortItemsEx {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct SubItemHitTest<'a> {
+pub struct LvmSubItemHitTest<'a> {
 	pub info: &'a mut LVHITTESTINFO,
 }
 
-impl<'a> MsgSend for SubItemHitTest<'a> {
+impl<'a> MsgSend for LvmSubItemHitTest<'a> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::SUBITEMHITTEST.into(),
 			wparam: -1 as _,
 			lparam: self.info as *mut _ as _,
@@ -2941,19 +2943,19 @@ impl<'a> MsgSend for SubItemHitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Update {
+pub struct LvmUpdate {
 	pub index: u32,
 }
 
-impl MsgSend for Update {
+impl MsgSend for LvmUpdate {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::LVM::UPDATE.into(),
 			wparam: self.index as _,
 			lparam: 0,

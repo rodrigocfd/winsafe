@@ -10,7 +10,7 @@ use crate::prelude::*;
 /// This error types wraps the actual user error along with the parameters of
 /// the message where the error happened.
 pub struct MsgError {
-	src_msg: WndMsg,
+	src_msg: Wm,
 	source: Box<dyn std::error::Error + Send + Sync>,
 }
 
@@ -34,16 +34,13 @@ impl std::fmt::Debug for MsgError {
 impl MsgError {
 	/// Constructs a new `MsgError` by wrapping the given error.
 	#[must_use]
-	pub const fn new(
-		src_msg: WndMsg,
-		source: Box<dyn std::error::Error + Send + Sync>,
-	) -> MsgError {
+	pub const fn new(src_msg: Wm, source: Box<dyn std::error::Error + Send + Sync>) -> MsgError {
 		Self { src_msg, source }
 	}
 
 	/// The source message information where the error originated from.
 	#[must_use]
-	pub const fn src_msg(&self) -> WndMsg {
+	pub const fn src_msg(&self) -> Wm {
 		self.src_msg
 	}
 }

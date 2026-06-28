@@ -1,1 +1,3 @@
-pub mod tbm;
+mod tb;
+
+pub use tb::*;

@@ -8,20 +8,20 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct AdjustRect<'a> {
+pub struct TcmAdjustRect<'a> {
 	pub display_rect: bool,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for AdjustRect<'a> {
+impl<'a> MsgSend for TcmAdjustRect<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::ADJUSTRECT.into(),
 			wparam: self.display_rect as _,
 			lparam: self.rect as *mut _ as _,
@@ -33,17 +33,17 @@ impl<'a> MsgSend for AdjustRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteAllItems {}
+pub struct TcmDeleteAllItems {}
 
-impl MsgSend for DeleteAllItems {
+impl MsgSend for TcmDeleteAllItems {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::DELETEALLITEMS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -55,19 +55,19 @@ impl MsgSend for DeleteAllItems {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteItem {
+pub struct TcmDeleteItem {
 	pub index: u32,
 }
 
-impl MsgSend for DeleteItem {
+impl MsgSend for TcmDeleteItem {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::DELETEITEM.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -79,19 +79,19 @@ impl MsgSend for DeleteItem {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct DeselectAll {
+pub struct TcmDeselectAll {
 	pub except_current: bool,
 }
 
-impl MsgSend for DeselectAll {
+impl MsgSend for TcmDeselectAll {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::DESELECTALL.into(),
 			wparam: self.except_current as _,
 			lparam: 0,
@@ -103,17 +103,17 @@ impl MsgSend for DeselectAll {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetCurFocus {}
+pub struct TcmGetCurFocus {}
 
-impl MsgSend for GetCurFocus {
+impl MsgSend for TcmGetCurFocus {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|i| i as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETCURFOCUS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -125,17 +125,17 @@ impl MsgSend for GetCurFocus {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetCurSel {}
+pub struct TcmGetCurSel {}
 
-impl MsgSend for GetCurSel {
+impl MsgSend for TcmGetCurSel {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|i| i as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETCURSEL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -147,17 +147,17 @@ impl MsgSend for GetCurSel {
 /// message, which has no parameters.
 ///
 /// Return type: `co::TCS_EX`.
-pub struct GetExtendedStyle {}
+pub struct TcmGetExtendedStyle {}
 
-impl MsgSend for GetExtendedStyle {
+impl MsgSend for TcmGetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETEXTENDEDSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -169,17 +169,17 @@ impl MsgSend for GetExtendedStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct GetImageList {}
+pub struct TcmGetImageList {}
 
-impl MsgSend for GetImageList {
+impl MsgSend for TcmGetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETIMAGELIST.into(),
 			wparam: 0,
 			lparam: 0,
@@ -191,20 +191,20 @@ impl MsgSend for GetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItem<'a, 'b> {
+pub struct TcmGetItem<'a, 'b> {
 	pub index: u32,
 	pub item: &'b mut TCITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TcmGetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETITEM.into(),
 			wparam: self.index as _,
 			lparam: self.item as *mut _ as _,
@@ -216,17 +216,17 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct GetItemCount {}
+pub struct TcmGetItemCount {}
 
-impl MsgSend for GetItemCount {
+impl MsgSend for TcmGetItemCount {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|c| c as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETITEMCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -238,20 +238,20 @@ impl MsgSend for GetItemCount {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemRect<'a> {
+pub struct TcmGetItemRect<'a> {
 	pub index: u32,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for TcmGetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETITEMRECT.into(),
 			wparam: self.index as _,
 			lparam: self.rect as *mut _ as _,
@@ -263,17 +263,17 @@ impl<'a> MsgSend for GetItemRect<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetRowCount {}
+pub struct TcmGetRowCount {}
 
-impl MsgSend for GetRowCount {
+impl MsgSend for TcmGetRowCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETROWCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -285,17 +285,17 @@ impl MsgSend for GetRowCount {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct GetTooltips {}
+pub struct TcmGetTooltips {}
 
-impl MsgSend for GetTooltips {
+impl MsgSend for TcmGetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETTOOLTIPS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -307,17 +307,17 @@ impl MsgSend for GetTooltips {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct TcmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for TcmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -329,20 +329,20 @@ impl MsgSend for GetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct HighlightItem {
+pub struct TcmHighlightItem {
 	pub index: u32,
 	pub highlight: bool,
 }
 
-impl MsgSend for HighlightItem {
+impl MsgSend for TcmHighlightItem {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::HIGHLIGHTITEM.into(),
 			wparam: self.index as _,
 			lparam: MAKEDWORD(self.highlight as _, 0) as _,
@@ -354,19 +354,19 @@ impl MsgSend for HighlightItem {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct HitTest<'a> {
+pub struct TcmHitTest<'a> {
 	pub info: &'a mut TCHITTESTINFO,
 }
 
-impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for TcmHitTest<'a> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|n| n as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::HITTEST.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -378,20 +378,20 @@ impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct InsertItem<'a, 'b> {
+pub struct TcmInsertItem<'a, 'b> {
 	pub index: u32,
 	pub item: &'b TCITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TcmInsertItem<'a, 'b> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|i| i as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::INSERTITEM.into(),
 			wparam: self.index as _,
 			lparam: self.item as *const _ as _,
@@ -403,19 +403,19 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct RemoveImage {
+pub struct TcmRemoveImage {
 	pub index: u32,
 }
 
-impl MsgSend for RemoveImage {
+impl MsgSend for TcmRemoveImage {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::REMOVEIMAGE.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -427,19 +427,19 @@ impl MsgSend for RemoveImage {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetCurFocus {
+pub struct TcmSetCurFocus {
 	pub index: u32,
 }
 
-impl MsgSend for SetCurFocus {
+impl MsgSend for TcmSetCurFocus {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETCURFOCUS.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -451,19 +451,19 @@ impl MsgSend for SetCurFocus {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct SetCurSel {
+pub struct TcmSetCurSel {
 	pub index: u32,
 }
 
-impl MsgSend for SetCurSel {
+impl MsgSend for TcmSetCurSel {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|i| i as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETCURSEL.into(),
 			wparam: self.index as _,
 			lparam: 0,
@@ -475,20 +475,20 @@ impl MsgSend for SetCurSel {
 /// message parameters.
 ///
 /// Return type: `co::TCS_EX`.
-pub struct SetExtendedStyle {
+pub struct TcmSetExtendedStyle {
 	pub mask: co::TCS_EX,
 	pub style: co::TCS_EX,
 }
 
-impl MsgSend for SetExtendedStyle {
+impl MsgSend for TcmSetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETEXTENDEDSTYLE.into(),
 			wparam: self.mask.raw() as _,
 			lparam: self.style.raw() as _,
@@ -500,19 +500,19 @@ impl MsgSend for SetExtendedStyle {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList {
+pub struct TcmSetImageList {
 	pub himagelist: Option<HIMAGELIST>,
 }
 
-impl MsgSend for SetImageList {
+impl MsgSend for TcmSetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
@@ -524,20 +524,20 @@ impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItem<'a, 'b> {
+pub struct TcmSetItem<'a, 'b> {
 	pub index: u32,
 	pub item: &'b TCITEM<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TcmSetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETITEM.into(),
 			wparam: self.index as _,
 			lparam: self.item as *const _ as _,
@@ -549,19 +549,19 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItemExtra {
+pub struct TcmSetItemExtra {
 	pub num_bytes: u32,
 }
 
-impl MsgSend for SetItemExtra {
+impl MsgSend for TcmSetItemExtra {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETITEMEXTRA.into(),
 			wparam: self.num_bytes as _,
 			lparam: 0,
@@ -573,20 +573,20 @@ impl MsgSend for SetItemExtra {
 /// message parameters.
 ///
 /// Return type: `(u16, u16)`.
-pub struct SetItemSize {
+pub struct TcmSetItemSize {
 	pub width: u16,
 	pub height: u16,
 }
 
-impl MsgSend for SetItemSize {
+impl MsgSend for TcmSetItemSize {
 	type RetType = (u16, u16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETITEMSIZE.into(),
 			wparam: 0,
 			lparam: MAKEDWORD(self.width, self.height) as _,
@@ -598,19 +598,19 @@ impl MsgSend for SetItemSize {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetMinTabWidth {
+pub struct TcmSetMinTabWidth {
 	pub min_width: Option<u32>,
 }
 
-impl MsgSend for SetMinTabWidth {
+impl MsgSend for TcmSetMinTabWidth {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETMINTABWIDTH.into(),
 			wparam: 0,
 			lparam: self.min_width.map_or(-1, |w| w as _),
@@ -622,20 +622,20 @@ impl MsgSend for SetMinTabWidth {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetPadding {
+pub struct TcmSetPadding {
 	pub horizontal: u16,
 	pub vertical: u16,
 }
 
-impl MsgSend for SetPadding {
+impl MsgSend for TcmSetPadding {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETPADDING.into(),
 			wparam: 0,
 			lparam: MAKEDWORD(self.horizontal, self.vertical) as _,
@@ -647,19 +647,19 @@ impl MsgSend for SetPadding {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetTooltips<'a> {
+pub struct TcmSetTooltips<'a> {
 	pub htooltips: Option<&'a HWND>,
 }
 
-impl<'a> MsgSend for SetTooltips<'a> {
+impl<'a> MsgSend for TcmSetTooltips<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETTOOLTIPS.into(),
 			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
@@ -671,19 +671,19 @@ impl<'a> MsgSend for SetTooltips<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct TcmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for TcmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TCM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,

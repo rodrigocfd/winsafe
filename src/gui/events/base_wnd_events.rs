@@ -5,12 +5,12 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct StorageMsg {
 	id: co::WM,
-	fun: Box<dyn Fn(WndMsg) -> AnyResult<isize>>,
+	fun: Box<dyn Fn(msg::Wm) -> AnyResult<isize>>,
 }
 struct StorageCmd {
 	id: (u16, co::CMD),
@@ -18,7 +18,7 @@ struct StorageCmd {
 }
 struct StorageNfy {
 	id: (u16, NmhdrCode),
-	fun: Box<dyn Fn(wm::Notify) -> AnyResult<isize>>,
+	fun: Box<dyn Fn(msg::WmNotify) -> AnyResult<isize>>,
 }
 struct StorageTmr {
 	id: usize,
@@ -71,11 +71,11 @@ impl BaseWndEvents {
 	/// Stops on error. Since this is called only for internal messages, errors
 	/// shouldn't really happen.
 	#[must_use]
-	pub(in crate::gui) fn process_all_messages(&self, p: WndMsg) -> AnyResult<bool> {
+	pub(in crate::gui) fn process_all_messages(&self, p: msg::Wm) -> AnyResult<bool> {
 		let mut at_least_one = false;
 
 		if p.msg_id == co::WM::COMMAND {
-			let wm_cmd = unsafe { wm::Command::from_generic_wm(p) };
+			let wm_cmd = unsafe { msg::WmCommand::from_generic_wm(p) };
 			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
 			for stored_cmd in cmds.iter().filter(|obj| obj.id == key_cmd) {
@@ -85,18 +85,18 @@ impl BaseWndEvents {
 				at_least_one = true;
 			}
 		} else if p.msg_id == co::WM::NOTIFY {
-			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
+			let wm_nfy = unsafe { msg::WmNotify::from_generic_wm(p) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
 			for stored_nfy in nfys.iter().filter(|obj| obj.id == key_nfy) {
-				if let Err(e) = (stored_nfy.fun)(unsafe { wm::Notify::from_generic_wm(p) }) {
-					// wm::Notify cannot be Copy
+				if let Err(e) = (stored_nfy.fun)(unsafe { msg::WmNotify::from_generic_wm(p) }) {
+					// WmNotify cannot be Copy
 					return Err(e); // stop on error
 				}
 				at_least_one = true;
 			}
 		} else if p.msg_id == co::WM::TIMER {
-			let wm_tmr = unsafe { wm::Timer::from_generic_wm(p) };
+			let wm_tmr = unsafe { msg::WmTimer::from_generic_wm(p) };
 			let tmrs = unsafe { &*self.tmrs.get() };
 			for stored_tmr in tmrs.iter().filter(|obj| obj.id == wm_tmr.timer_id) {
 				if let Err(e) = (stored_tmr.fun)() {
@@ -119,9 +119,9 @@ impl BaseWndEvents {
 
 	/// Returns the user return value, if processed.
 	#[must_use]
-	pub(in crate::gui) fn process_last_message(&self, p: WndMsg) -> Option<AnyResult<isize>> {
+	pub(in crate::gui) fn process_last_message(&self, p: msg::Wm) -> Option<AnyResult<isize>> {
 		if p.msg_id == co::WM::COMMAND {
-			let wm_cmd = unsafe { wm::Command::from_generic_wm(p) };
+			let wm_cmd = unsafe { msg::WmCommand::from_generic_wm(p) };
 			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
 			if let Some(stored_cmd) = cmds.iter().rev().find(|obj| obj.id == key_cmd) {
@@ -129,15 +129,15 @@ impl BaseWndEvents {
 				return Some(ret); // handled, stop here
 			}
 		} else if p.msg_id == co::WM::NOTIFY {
-			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
+			let wm_nfy = unsafe { msg::WmNotify::from_generic_wm(p) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
 			if let Some(stored_nfy) = nfys.iter().rev().find(|obj| obj.id == key_nfy) {
-				let ret = (stored_nfy.fun)(unsafe { wm::Notify::from_generic_wm(p) }); // wm::Notify cannot be Copy
+				let ret = (stored_nfy.fun)(unsafe { msg::WmNotify::from_generic_wm(p) }); // WmNotify cannot be Copy
 				return Some(ret); // handled, stop here
 			}
 		} else if p.msg_id == co::WM::TIMER {
-			let wm_tmr = unsafe { wm::Timer::from_generic_wm(p) };
+			let wm_tmr = unsafe { msg::WmTimer::from_generic_wm(p) };
 			let tmrs = unsafe { &*self.tmrs.get() };
 			if let Some(stored_tmr) = tmrs.iter().rev().find(|obj| obj.id == wm_tmr.timer_id) {
 				let ret = (stored_tmr.fun)().map(|_| self.wnd_ty.def_proc_val());
@@ -206,7 +206,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	///
 	/// wnd.on().wm(
 	///     CUSTOM_MSG,
-	///     move |p: msg::WndMsg| -> w::AnyResult<isize> {
+	///     move |p: msg::Wm| -> w::AnyResult<isize> {
 	///         println!("Msg ID: {}", p.msg_id);
 	///         Ok(0)
 	///     },
@@ -214,7 +214,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	/// ```
 	fn wm<F>(&self, ident: co::WM, func: F)
 	where
-		F: Fn(WndMsg) -> AnyResult<isize> + 'static;
+		F: Fn(msg::Wm) -> AnyResult<isize> + 'static;
 
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
@@ -222,12 +222,12 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	where
 		F: Fn() -> AnyResult<()> + 'static;
 
-	fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
+	fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, msg::WmActivate;
 		/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp;
+	fn_wm_withparm_noret! { wm_activate_app, co::WM::ACTIVATEAPP, msg::WmActivateApp;
 		/// [`WM_ACTIVATEAPP`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 		/// message.
 	}
@@ -236,10 +236,10 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	/// message.
 	fn wm_app_command<F>(&self, func: F)
 	where
-		F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
+		F: Fn(msg::WmAppCommand) -> AnyResult<()> + 'static,
 	{
 		self.wm(co::WM::APPCOMMAND, move |p| {
-			func(unsafe { wm::AppCommand::from_generic_wm(p) })?;
+			func(unsafe { msg::WmAppCommand::from_generic_wm(p) })?;
 			Ok(1) // TRUE
 		});
 	}
@@ -249,12 +249,12 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged;
+	fn_wm_withparm_noret! { wm_capture_changed, co::WM::CAPTURECHANGED, msg::WmCaptureChanged;
 		/// [`WM_CAPTURECHANGED`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-capturechanged)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_char, co::WM::CHAR, wm::Char;
+	fn_wm_withparm_noret! { wm_char, co::WM::CHAR, msg::WmChar;
 		/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 		/// message.
 	}
@@ -277,53 +277,53 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::HWND::DestroyWindow).
 	}
 
-	fn_wm_withparm_noret! { wm_context_menu, co::WM::CONTEXTMENU, wm::ContextMenu;
+	fn_wm_withparm_noret! { wm_context_menu, co::WM::CONTEXTMENU, msg::WmContextMenu;
 		/// [`WM_CONTEXTMENU`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
+	fn_wm_ctlcolor! { wm_ctl_color_btn, co::WM::CTLCOLORBTN, msg::WmCtlColorBtn;
 		/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_dlg, co::WM::CTLCOLORDLG, wm::CtlColorDlg;
+	fn_wm_ctlcolor! { wm_ctl_color_dlg, co::WM::CTLCOLORDLG, msg::WmCtlColorDlg;
 		/// [`WM_CTLCOLORDLG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_edit, co::WM::CTLCOLOREDIT, wm::CtlColorEdit;
+	fn_wm_ctlcolor! { wm_ctl_color_edit, co::WM::CTLCOLOREDIT, msg::WmCtlColorEdit;
 		/// [`WM_CTLCOLOREDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_list_box, co::WM::CTLCOLORLISTBOX, wm::CtlColorListBox;
+	fn_wm_ctlcolor! { wm_ctl_color_list_box, co::WM::CTLCOLORLISTBOX, msg::WmCtlColorListBox;
 		/// [`WM_CTLCOLORLISTBOX`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_scroll_bar, co::WM::CTLCOLORSCROLLBAR, wm::CtlColorScrollBar;
+	fn_wm_ctlcolor! { wm_ctl_color_scroll_bar, co::WM::CTLCOLORSCROLLBAR, msg::WmCtlColorScrollBar;
 		/// [`WM_CTLCOLORSCROLLBAR`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 		/// message.
 	}
 
-	fn_wm_ctlcolor! { wm_ctl_color_static, co::WM::CTLCOLORSTATIC, wm::CtlColorStatic;
+	fn_wm_ctlcolor! { wm_ctl_color_static, co::WM::CTLCOLORSTATIC, msg::WmCtlColorStatic;
 		/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar;
+	fn_wm_withparm_noret! { wm_dead_char, co::WM::DEADCHAR, msg::WmDeadChar;
 		/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 		/// message.
 	}
 
-	fn_wm_withparm_boolret! { wm_delete_item, co::WM::DELETEITEM, wm::DeleteItem;
+	fn_wm_withparm_boolret! { wm_delete_item, co::WM::DELETEITEM, msg::WmDeleteItem;
 		/// [`WM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-deleteitem)
 		/// message.
 	}
 
 	fn_wm_noparm_noret! { wm_destroy, co::WM::DESTROY;
-		/// [`WM_DESTROY`](crate::msg::wm::Destroy) message.
+		/// [`WM_DESTROY`](crate::msg::WmDestroy) message.
 		///
 		/// # Examples
 		///
@@ -342,18 +342,18 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_device_change, co::WM::DEVICECHANGE, wm::DeviceChange;
+	fn_wm_withparm_noret! { wm_device_change, co::WM::DEVICECHANGE, msg::WmDeviceChange;
 		/// [`WM_DEVICECHANGE`](https://learn.microsoft.com/en-us/windows/win32/devio/wm-devicechange)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_display_change, co::WM::DISPLAYCHANGE, wm::DisplayChange;
+	fn_wm_withparm_noret! { wm_display_change, co::WM::DISPLAYCHANGE, msg::WmDisplayChange;
 		/// [`WM_DISPLAYCHANGE`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
 		/// message.
 	}
 
 	#[cfg(feature = "shell")]
-	fn_wm_withparm_noret! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles;
+	fn_wm_withparm_noret! { wm_drop_files, co::WM::DROPFILES, msg::WmDropFiles;
 		/// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 		/// message.
 		///
@@ -369,7 +369,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_drop_files(
-		///     move |p: msg::wm::DropFiles| -> w::AnyResult<()> {
+		///     move |p: msg::WmDropFiles| -> w::AnyResult<()> {
 		///         for dropped_file in p.hdrop.DragQueryFile()? {
 		///             let dropped_file = dropped_file?;
 		///             println!("Dropped: {}", dropped_file);
@@ -380,22 +380,22 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_enable, co::WM::ENABLE, wm::Enable;
+	fn_wm_withparm_noret! { wm_enable, co::WM::ENABLE, msg::WmEnable;
 		/// [`WM_ENABLE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_end_session, co::WM::ENDSESSION, wm::EndSession;
+	fn_wm_withparm_noret! { wm_end_session, co::WM::ENDSESSION, msg::WmEndSession;
 		/// [`WM_ENDSESSION`](https://learn.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle;
+	fn_wm_withparm_noret! { wm_enter_idle, co::WM::ENTERIDLE, msg::WmEnterIdle;
 		/// [`WM_ENTERIDLE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_enter_menu_loop, co::WM::ENTERMENULOOP, wm::EnterMenuLoop;
+	fn_wm_withparm_noret! { wm_enter_menu_loop, co::WM::ENTERMENULOOP, msg::WmEnterMenuLoop;
 		/// [`WM_ENTERMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
 		/// message.
 	}
@@ -409,14 +409,14 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	/// message.
 	fn wm_erase_bkgnd<F>(&self, func: F)
 	where
-		F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
+		F: Fn(msg::WmEraseBkgnd) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::ERASEBKGND, move |p| {
-			Ok(func(unsafe { wm::EraseBkgnd::from_generic_wm(p) })? as _)
+			Ok(func(unsafe { msg::WmEraseBkgnd::from_generic_wm(p) })? as _)
 		});
 	}
 
-	fn_wm_withparm_noret! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop;
+	fn_wm_withparm_noret! { wm_exit_menu_loop, co::WM::EXITMENULOOP, msg::WmExitMenuLoop;
 		/// [`WM_EXITMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-exitmenuloop)
 		/// message.
 	}
@@ -426,7 +426,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_coret! { wm_get_dlg_code, co::WM::GETDLGCODE, wm::GetDlgCode, co::DLGC;
+	fn_wm_withparm_coret! { wm_get_dlg_code, co::WM::GETDLGCODE, msg::WmGetDlgCode, co::DLGC;
 		/// [`WM_GETDLGCODE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-getdlgcode)
 		/// message.
 	}
@@ -449,7 +449,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		self.wm(co::WM::MN_GETHMENU, move |_| Ok(func()?.map_or(0, |h| h.ptr() as _)));
 	}
 
-	fn_wm_withparm_noret! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
+	fn_wm_withparm_noret! { wm_get_min_max_info, co::WM::GETMINMAXINFO, msg::WmGetMinMaxInfo;
 		/// [`WM_GETMINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
 		/// message.
 	}
@@ -458,10 +458,10 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	/// message.
 	fn wm_get_text<F>(&self, func: F)
 	where
-		F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
+		F: Fn(msg::WmGetText) -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXT, move |p| {
-			Ok(func(unsafe { wm::GetText::from_generic_wm(p) })? as _)
+			Ok(func(unsafe { msg::WmGetText::from_generic_wm(p) })? as _)
 		});
 	}
 
@@ -474,22 +474,22 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		self.wm(co::WM::GETTEXTLENGTH, move |_| Ok(func()? as _));
 	}
 
-	fn_wm_withparm_noret! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx;
+	fn_wm_withparm_noret! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, msg::WmGetTitleBarInfoEx;
 		/// [`WM_GETTITLEBARINFOEX`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-gettitlebarinfoex)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll;
+	fn_wm_withparm_noret! { wm_h_scroll, co::WM::HSCROLL, msg::WmHScroll;
 		/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_help, co::WM::HELP, wm::Help;
+	fn_wm_withparm_noret! { wm_help, co::WM::HELP, msg::WmHelp;
 		/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;
+	fn_wm_withparm_noret! { wm_init_menu_popup, co::WM::INITMENUPOPUP, msg::WmInitMenuPopup;
 		/// [`WM_INITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 		/// message.
 		///
@@ -502,7 +502,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_menu_popup(
-		///     move |p: msg::wm::InitMenuPopup| -> w::AnyResult<()> {
+		///     move |p: msg::WmInitMenuPopup| -> w::AnyResult<()> {
 		///         if p.hmenu.GetMenuItemID(0).unwrap() == 3001 { // check ID of 1st item
 		///             p.hmenu.EnableMenuItem(w::IdPos::Id(3001), false)?;
 		///         }
@@ -512,22 +512,22 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_key_down, co::WM::KEYDOWN, wm::KeyDown;
+	fn_wm_withparm_noret! { wm_key_down, co::WM::KEYDOWN, msg::WmKeyDown;
 		/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_key_up, co::WM::KEYUP, wm::KeyUp;
+	fn_wm_withparm_noret! { wm_key_up, co::WM::KEYUP, msg::WmKeyUp;
 		/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus;
+	fn_wm_withparm_noret! { wm_kill_focus, co::WM::KILLFOCUS, msg::WmKillFocus;
 		/// [`WM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk;
+	fn_wm_withparm_noret! { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, msg::WmLButtonDblClk;
 		/// [`WM_LBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 		/// message.
 		///
@@ -540,7 +540,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_dbl_clk(
-		///     move |p: msg::wm::LButtonDblClk| -> w::AnyResult<()> {
+		///     move |p: msg::WmLButtonDblClk| -> w::AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
@@ -548,7 +548,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown;
+	fn_wm_withparm_noret! { wm_l_button_down, co::WM::LBUTTONDOWN, msg::WmLButtonDown;
 		/// [`WM_LBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 		/// message.
 		///
@@ -561,7 +561,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_down(
-		///     move |p: msg::wm::LButtonDown| -> w::AnyResult<()> {
+		///     move |p: msg::WmLButtonDown| -> w::AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
@@ -569,47 +569,47 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp;
+	fn_wm_withparm_noret! { wm_l_button_up, co::WM::LBUTTONUP, msg::WmLButtonUp;
 		/// [`WM_LBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk;
+	fn_wm_withparm_noret! { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, msg::WmMButtonDblClk;
 		/// [`WM_MBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown;
+	fn_wm_withparm_noret! { wm_m_button_down, co::WM::MBUTTONDOWN, msg::WmMButtonDown;
 		/// [`WM_MBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp;
+	fn_wm_withparm_noret! { wm_m_button_up, co::WM::MBUTTONUP, msg::WmMButtonUp;
 		/// [`WM_MBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand;
+	fn_wm_withparm_noret! { wm_menu_command, co::WM::MENUCOMMAND, msg::WmMenuCommand;
 		/// [`WM_MENUCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menucommand)
 		/// message.
 	}
 
-	fn_wm_withparm_coret! { wm_menu_drag, co::WM::MENUDRAG, wm::MenuDrag, co::MND;
+	fn_wm_withparm_coret! { wm_menu_drag, co::WM::MENUDRAG, msg::WmMenuDrag, co::MND;
 		/// [`WM_MENUDRAG`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menudrag)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_menu_r_button_up, co::WM::MENURBUTTONUP, wm::MenuRButtonUp;
+	fn_wm_withparm_noret! { wm_menu_r_button_up, co::WM::MENURBUTTONUP, msg::WmMenuRButtonUp;
 		/// [`WM_MENURBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menurbuttonup)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_mouse_h_wheel, co::WM::MOUSEHWHEEL, wm::MouseHWheel;
+	fn_wm_withparm_noret! { wm_mouse_h_wheel, co::WM::MOUSEHWHEEL, msg::WmMouseHWheel;
 		/// [`WM_MOUSEHWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehwheel)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover;
+	fn_wm_withparm_noret! { wm_mouse_hover, co::WM::MOUSEHOVER, msg::WmMouseHover;
 		/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 		/// message.
 	}
@@ -619,27 +619,27 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove;
+	fn_wm_withparm_noret! { wm_mouse_move, co::WM::MOUSEMOVE, msg::WmMouseMove;
 		/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_move, co::WM::MOVE, wm::Move;
+	fn_wm_withparm_noret! { wm_move, co::WM::MOVE, msg::WmMove;
 		/// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_mouse_wheel, co::WM::MOUSEWHEEL, wm::MouseWheel;
+	fn_wm_withparm_noret! { wm_mouse_wheel, co::WM::MOUSEWHEEL, msg::WmMouseWheel;
 		/// [`WM_MOUSEWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_moving, co::WM::MOVING, wm::Moving;
+	fn_wm_withparm_noret! { wm_moving, co::WM::MOVING, msg::WmMoving;
 		/// [`WM_MOVING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 		/// message.
 	}
 
-	fn_wm_withparm_coret! { wm_nc_calc_size, co::WM::NCCALCSIZE, wm::NcCalcSize, co::WVR;
+	fn_wm_withparm_coret! { wm_nc_calc_size, co::WM::NCCALCSIZE, msg::WmNcCalcSize, co::WVR;
 		/// [`WM_NCCALCSIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 		/// message.
 	}
@@ -658,17 +658,17 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// In both cases, [`PostQuitMessage`](crate::PostQuitMessage) is called.
 	}
 
-	fn_wm_withparm_coret! { wm_nc_hit_test, co::WM::NCHITTEST, wm::NcHitTest, co::HT;
+	fn_wm_withparm_coret! { wm_nc_hit_test, co::WM::NCHITTEST, msg::WmNcHitTest, co::HT;
 		/// [`WM_NCHITTEST`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint;
+	fn_wm_withparm_noret! { wm_nc_paint, co::WM::NCPAINT, msg::WmNcPaint;
 		/// [`WM_NCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl;
+	fn_wm_withparm_noret! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, msg::WmNextDlgCtl;
 		/// [`WM_NEXTDLGCTL`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl)
 		/// message.
 	}
@@ -706,12 +706,12 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify;
+	fn_wm_withparm_noret! { wm_parent_notify, co::WM::PARENTNOTIFY, msg::WmParentNotify;
 		/// [`WM_PARENTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_power_broadcast, co::WM::POWERBROADCAST, wm::PowerBroadcast;
+	fn_wm_withparm_noret! { wm_power_broadcast, co::WM::POWERBROADCAST, msg::WmPowerBroadcast;
 		/// [`WM_POWERBROADCAST`](https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast)
 		/// message.
 	}
@@ -721,31 +721,31 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk;
+	fn_wm_withparm_noret! { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, msg::WmRButtonDblClk;
 		/// [`WM_RBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown;
+	fn_wm_withparm_noret! { wm_r_button_down, co::WM::RBUTTONDOWN, msg::WmRButtonDown;
 		/// [`WM_RBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp;
+	fn_wm_withparm_noret! { wm_r_button_up, co::WM::RBUTTONUP, msg::WmRButtonUp;
 		/// [`WM_RBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 	}
 
-	fn_wm_withparm_boolret! { wm_set_cursor, co::WM::SETCURSOR, wm::SetCursor;
+	fn_wm_withparm_boolret! { wm_set_cursor, co::WM::SETCURSOR, msg::WmSetCursor;
 		/// [`WM_SETCURSOR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-setcursor)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus;
+	fn_wm_withparm_noret! { wm_set_focus, co::WM::SETFOCUS, msg::WmSetFocus;
 		/// [`WM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_set_font, co::WM::SETFONT, wm::SetFont;
+	fn_wm_withparm_noret! { wm_set_font, co::WM::SETFONT, msg::WmSetFont;
 		/// [`WM_SETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
 		/// message.
 	}
@@ -754,29 +754,29 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 	/// message.
 	fn wm_set_icon<F>(&self, func: F)
 	where
-		F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
+		F: Fn(msg::WmSetIcon) -> AnyResult<Option<HICON>> + 'static,
 	{
 		self.wm(co::WM::SETICON, move |p| {
-			Ok(func(unsafe { wm::SetIcon::from_generic_wm(p) })?.map_or(0, |h| h.ptr() as _))
+			Ok(func(unsafe { msg::WmSetIcon::from_generic_wm(p) })?.map_or(0, |h| h.ptr() as _))
 		});
 	}
 
-	fn_wm_withparm_noret! { wm_set_redraw, co::WM::SETREDRAW, wm::SetRedraw;
+	fn_wm_withparm_noret! { wm_set_redraw, co::WM::SETREDRAW, msg::WmSetRedraw;
 		/// [`WM_SETREDRAW`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-setredraw)
 		/// message.
 	}
 
-	fn_wm_withparm_boolret! { wm_set_text, co::WM::SETTEXT, wm::SetText;
+	fn_wm_withparm_boolret! { wm_set_text, co::WM::SETTEXT, msg::WmSetText;
 		/// [`WM_SETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-settext)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow;
+	fn_wm_withparm_noret! { wm_show_window, co::WM::SHOWWINDOW, msg::WmShowWindow;
 		/// [`WM_SHOWWINDOW`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_size, co::WM::SIZE, wm::Size;
+	fn_wm_withparm_noret! { wm_size, co::WM::SIZE, msg::WmSize;
 		/// [`WM_SIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 		/// message.
 		///
@@ -789,7 +789,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_size(
-		///     move |p: msg::wm::Size| -> w::AnyResult<()> {
+		///     move |p: msg::WmSize| -> w::AnyResult<()> {
 		///         println!("Client area: {}x{}",
 		///             p.client_area.cx,
 		///             p.client_area.cy,
@@ -800,17 +800,17 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// ```
 	}
 
-	fn_wm_withparm_noret! { wm_sizing, co::WM::SIZING, wm::Sizing;
+	fn_wm_withparm_noret! { wm_sizing, co::WM::SIZING, msg::WmSizing;
 		/// [`WM_SIZING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged;
+	fn_wm_withparm_noret! { wm_style_changed, co::WM::STYLECHANGED, msg::WmStyleChanged;
 		/// [`WM_STYLECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging;
+	fn_wm_withparm_noret! { wm_style_changing, co::WM::STYLECHANGING, msg::WmStyleChanging;
 		/// [`WM_STYLECHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
 		/// message.
 	}
@@ -820,27 +820,27 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_sys_char, co::WM::SYSCHAR, wm::SysChar;
+	fn_wm_withparm_noret! { wm_sys_char, co::WM::SYSCHAR, msg::WmSysChar;
 		/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand;
+	fn_wm_withparm_noret! { wm_sys_command, co::WM::SYSCOMMAND, msg::WmSysCommand;
 		/// [`WM_SYSCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar;
+	fn_wm_withparm_noret! { wm_sys_dead_char, co::WM::SYSDEADCHAR, msg::WmSysDeadChar;
 		/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown;
+	fn_wm_withparm_noret! { wm_sys_key_down, co::WM::SYSKEYDOWN, msg::WmSysKeyDown;
 		/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp;
+	fn_wm_withparm_noret! { wm_sys_key_up, co::WM::SYSKEYUP, msg::WmSysKeyUp;
 		/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 		/// message.
 	}
@@ -850,7 +850,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_uninit_menu_popup, co::WM::UNINITMENUPOPUP, wm::UninitMenuPopup;
+	fn_wm_withparm_noret! { wm_uninit_menu_popup, co::WM::UNINITMENUPOPUP, msg::WmUninitMenuPopup;
 		/// [`WM_UNINITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-uninitmenupopup)
 		/// message.
 	}
@@ -860,37 +860,37 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_v_scroll, co::WM::VSCROLL, wm::VScroll;
+	fn_wm_withparm_noret! { wm_v_scroll, co::WM::VSCROLL, msg::WmVScroll;
 		/// [`WM_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged;
+	fn_wm_withparm_noret! { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, msg::WmWindowPosChanged;
 		/// [`WM_WINDOWPOSCHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging;
+	fn_wm_withparm_noret! { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, msg::WmWindowPosChanging;
 		/// [`WM_WINDOWPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_wts_session_change, co::WM::WTSSESSION_CHANGE, wm::WtsSessionChange;
+	fn_wm_withparm_noret! { wm_wts_session_change, co::WM::WTSSESSION_CHANGE, msg::WmWtsSessionChange;
 		/// [`WM_WTSSESSION_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk;
+	fn_wm_withparm_noret! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, msg::WmXButtonDblClk;
 		/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown;
+	fn_wm_withparm_noret! { wm_x_button_down, co::WM::XBUTTONDOWN, msg::WmXButtonDown;
 		/// [`WM_XBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp;
+	fn_wm_withparm_noret! { wm_x_button_up, co::WM::XBUTTONUP, msg::WmXButtonUp;
 		/// [`WM_XBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 		/// message.
 	}
@@ -899,7 +899,7 @@ pub trait GuiEventsWindow: priv_wnd_events::GuiEvents {
 impl GuiEventsWindow for BaseWndEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 	where
-		F: Fn(WndMsg) -> AnyResult<isize> + 'static,
+		F: Fn(msg::Wm) -> AnyResult<isize> + 'static,
 	{
 		unsafe { &mut *self.msgs.get() }.push(StorageMsg { id: ident, fun: Box::new(func) });
 	}
@@ -1002,7 +1002,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 		});
 	}
 
-	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
+	/// [`WM_NOTIFY`](crate::msg::WmNotify) message, for specific ID and
 	/// notification code.
 	///
 	/// Instead of using this event, you should always prefer the specific
@@ -1029,7 +1029,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 	/// ```
 	fn wm_notify<F>(&self, id_from: impl Into<u16>, code: impl Into<NmhdrCode>, func: F)
 	where
-		F: Fn(wm::Notify) -> AnyResult<isize> + 'static;
+		F: Fn(msg::WmNotify) -> AnyResult<isize> + 'static;
 
 	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 	/// message, sent only to non-dialog windows. Dialog windows must handle
@@ -1045,7 +1045,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// wnd.on().wm_create(
-	///     move |p: msg::wm::Create| -> w::AnyResult<i32> {
+	///     move |p: msg::WmCreate| -> w::AnyResult<i32> {
 	///         println!("Client area: {}x{}",
 	///             p.createstruct.cx,
 	///             p.createstruct.cy,
@@ -1056,12 +1056,14 @@ pub trait GuiEventsParent: GuiEventsWindow {
 	/// ```
 	fn wm_create<F>(&self, func: F)
 	where
-		F: Fn(wm::Create) -> AnyResult<i32> + 'static,
+		F: Fn(msg::WmCreate) -> AnyResult<i32> + 'static,
 	{
-		self.wm(co::WM::CREATE, move |p| Ok(func(unsafe { wm::Create::from_generic_wm(p) })? as _));
+		self.wm(co::WM::CREATE, move |p| {
+			Ok(func(unsafe { msg::WmCreate::from_generic_wm(p) })? as _)
+		});
 	}
 
-	fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog;
+	fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, msg::WmInitDialog;
 		/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
 		/// message, sent only to dialog windows. Non-dialog windows must handle
 		/// [`wm_create`](crate::prelude::GuiEventsParent::wm_create) instead.
@@ -1077,7 +1079,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_dialog(
-		///     move |p: msg::wm::InitDialog| -> w::AnyResult<bool> {
+		///     move |p: msg::WmInitDialog| -> w::AnyResult<bool> {
 		///         println!("Focused HWND: {}", p.hwnd_focus);
 		///         Ok(true)
 		///     },
@@ -1085,7 +1087,7 @@ pub trait GuiEventsParent: GuiEventsWindow {
 		/// ```
 	}
 
-	fn_wm_withparm_boolret! { wm_nc_create, co::WM::NCCREATE, wm::NcCreate;
+	fn_wm_withparm_boolret! { wm_nc_create, co::WM::NCCREATE, msg::WmNcCreate;
 		/// [`WM_NCCREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 		/// message.
 	}
@@ -1105,7 +1107,7 @@ impl GuiEventsParent for BaseWndEvents {
 
 	fn wm_notify<F>(&self, id_from: impl Into<u16>, code: impl Into<NmhdrCode>, func: F)
 	where
-		F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
+		F: Fn(msg::WmNotify) -> AnyResult<isize> + 'static,
 	{
 		unsafe { &mut *self.nfys.get() }.push(StorageNfy {
 			id: (id_from.into(), code.into()),

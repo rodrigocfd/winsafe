@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// This trait is enabled with the `gui` feature, and exposes trackbar control
@@ -27,11 +27,11 @@ pub trait GuiEventsTrackbar: priv_ctrl_events::GuiEvents {
 	/// notification.
 	fn wm_h_scroll<F>(&self, func: F)
 	where
-		F: Fn(wm::HScroll) -> AnyResult<()> + 'static,
+		F: Fn(msg::WmHScroll) -> AnyResult<()> + 'static,
 	{
 		let def_proc_val = self.wnd_ty().def_proc_val();
 		self.wm(co::WM::HSCROLL, move |p| {
-			func(unsafe { wm::HScroll::from_generic_wm(p) })?;
+			func(unsafe { msg::WmHScroll::from_generic_wm(p) })?;
 			Ok(def_proc_val)
 		});
 	}
@@ -40,11 +40,11 @@ pub trait GuiEventsTrackbar: priv_ctrl_events::GuiEvents {
 	/// notification.
 	fn wm_v_scroll<F>(&self, func: F)
 	where
-		F: Fn(wm::VScroll) -> AnyResult<()> + 'static,
+		F: Fn(msg::WmVScroll) -> AnyResult<()> + 'static,
 	{
 		let def_proc_val = self.wnd_ty().def_proc_val();
 		self.wm(co::WM::VSCROLL, move |p| {
-			func(unsafe { wm::VScroll::from_generic_wm(p) })?;
+			func(unsafe { msg::WmVScroll::from_generic_wm(p) })?;
 			Ok(def_proc_val)
 		});
 	}

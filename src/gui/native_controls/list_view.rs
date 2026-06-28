@@ -10,7 +10,7 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::gui::{collections::*, privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct ListViewObj<T> {
@@ -236,10 +236,11 @@ impl<T> ListView<T> {
 
 				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();
 				unsafe {
-					hparent.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // forward Enter key to parent
+					hparent.SendMessage(msg::WmNotify { nmhdr: &mut nmlvkd.hdr }); // forward Enter key to parent
 				}
 			}
-			let dlgc_system = unsafe { self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into()) };
+			let dlgc_system =
+				unsafe { self2.hwnd().DefSubclassProc::<msg::WmGetDlgCode>(p.into()) };
 			Ok(dlgc_system)
 		});
 
@@ -357,21 +358,21 @@ impl<T> ListView<T> {
 	}
 
 	/// Retrieves the current view by sending an
-	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
+	/// [`LvmGetView`](crate::msg::LvmGetView) message.
 	#[must_use]
 	pub fn current_view(&self) -> co::LV_VIEW {
-		unsafe { self.hwnd().SendMessage(lvm::GetView {}) }
+		unsafe { self.hwnd().SendMessage(msg::LvmGetView {}) }
 	}
 
 	/// Returns the embedded [`Header`](crate::gui::Header) of the list view, if
 	/// any.
 	///
 	/// The `Header` is tried to be initialized during the internal
-	/// [`wm::Create`](crate::msg::wm::Create) and
-	/// [`wm::InitDialog`](crate::msg::wm::InitDialog) processing. If the list
-	/// view doesn't happen to have a header – only report view lists have
-	/// headers –, the internal `Header` is removed, and this method will
-	/// forever return `None`.
+	/// [`WmCreate`](crate::msg::WmCreate) and
+	/// [`WmInitDialog`](crate::msg::WmInitDialog) processing. If the list view
+	/// doesn't happen to have a header – only report view lists have headers –,
+	/// the internal `Header` is removed, and this method will forever return
+	/// `None`.
 	///
 	/// This means you may call `header()` to add events to the internal
 	/// `Header`, but if the list view has no header, these events will simply be
@@ -399,16 +400,16 @@ impl<T> ListView<T> {
 	}
 
 	/// Retrieves one of the associated image lists by sending an
-	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+	/// [`LvmGetImageList`](crate::msg::LvmGetImageList) message.
 	///
 	/// Image lists are lazy-initialized: the first time you call this method
 	/// for a given image list, it will be created and assigned with
-	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList).
+	/// [`LvmSetImageList`](crate::msg::LvmSetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self, kind: co::LVSIL) -> HrResult<HIMAGELIST> {
-		match unsafe { self.hwnd().SendMessage(lvm::GetImageList { kind }) } {
+		match unsafe { self.hwnd().SendMessage(msg::LvmGetImageList { kind }) } {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
@@ -419,7 +420,7 @@ impl<T> ListView<T> {
 				let h = HIMAGELIST::Create(sz, co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
-						.SendMessage(lvm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+						.SendMessage(msg::LvmSetImageList { himagelist: Some(h.raw_copy()), kind });
 				}
 				Ok(h)
 			},
@@ -433,17 +434,17 @@ impl<T> ListView<T> {
 	}
 
 	/// Sets the current view by sending an
-	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
+	/// [`LvmSetView`](crate::msg::LvmSetView) message.
 	pub fn set_current_view(&self, view: co::LV_VIEW) -> SysResult<()> {
-		unsafe { self.hwnd().SendMessage(lvm::SetView { view }) }
+		unsafe { self.hwnd().SendMessage(msg::LvmSetView { view }) }
 	}
 
 	/// Sets or unsets the given extended list view styles by sending an
-	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
+	/// [`LvmSetExtendedListViewStyle`](crate::msg::LvmSetExtendedListViewStyle)
 	/// message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
 		unsafe {
-			self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
+			self.hwnd().SendMessage(msg::LvmSetExtendedListViewStyle {
 				mask: ex_style,
 				style: if set { ex_style } else { co::LVS_EX::NoValue },
 			});
@@ -451,11 +452,9 @@ impl<T> ListView<T> {
 	}
 
 	/// Allows or disallows the redrawing of the control by sending a
-	/// [`wm::SetRedraw`](crate::msg::wm::SetRedraw) message.
+	/// [`WmSetRedraw`](crate::msg::WmSetRedraw) message.
 	pub fn set_redraw(&self, can_redraw: bool) {
-		unsafe {
-			self.hwnd().SendMessage(wm::SetRedraw { can_redraw });
-		}
+		unsafe { self.hwnd().SendMessage(msg::WmSetRedraw { can_redraw }) };
 	}
 }
 

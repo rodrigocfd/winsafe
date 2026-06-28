@@ -8,17 +8,17 @@ use crate::user::privs::*;
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-pub struct GetIcon {}
+pub struct StmGetIcon {}
 
-impl MsgSend for GetIcon {
+impl MsgSend for StmGetIcon {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::STM::GETICON.into(),
 			wparam: 0,
 			lparam: 0,
@@ -30,11 +30,11 @@ impl MsgSend for GetIcon {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.
-pub struct GetImage {
+pub struct StmGetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
-impl MsgSend for GetImage {
+impl MsgSend for StmGetImage {
 	type RetType = SysResult<BmpIconCurMeta>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -49,8 +49,8 @@ impl MsgSend for GetImage {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::STM::GETIMAGE.into(),
 			wparam: self.img_type.raw() as _,
 			lparam: 0,
@@ -62,19 +62,19 @@ impl MsgSend for GetImage {
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-pub struct SetIcon<'a> {
+pub struct StmSetIcon<'a> {
 	pub icon: &'a HICON,
 }
 
-impl<'a> MsgSend for SetIcon<'a> {
+impl<'a> MsgSend for StmSetIcon<'a> {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::STM::SETICON.into(),
 			wparam: self.icon.ptr() as _,
 			lparam: 0,
@@ -86,11 +86,11 @@ impl<'a> MsgSend for SetIcon<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<BmpIconCurMeta>`.
-pub struct SetImage {
+pub struct StmSetImage {
 	pub image: BmpIconCurMeta,
 }
 
-impl MsgSend for SetImage {
+impl MsgSend for StmSetImage {
 	type RetType = SysResult<BmpIconCurMeta>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -108,8 +108,8 @@ impl MsgSend for SetImage {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::STM::SETIMAGE.into(),
 			wparam: match self.image {
 				BmpIconCurMeta::Bmp(_) => co::IMAGE_TYPE::BITMAP,

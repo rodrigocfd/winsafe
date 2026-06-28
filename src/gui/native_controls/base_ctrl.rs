@@ -126,7 +126,7 @@ impl BaseCtrl {
 		subclass_id: usize,
 		ref_data: usize,
 	) -> isize {
-		let wm_any = WndMsg::new(msg, wparam, lparam);
+		let wm_any = Wm::new(msg, wparam, lparam);
 		Self::subclass_proc_proc(hwnd, wm_any, subclass_id, ref_data).unwrap_or_else(|err| {
 			quit_error::post_quit_error(wm_any, err);
 			0
@@ -135,7 +135,7 @@ impl BaseCtrl {
 
 	fn subclass_proc_proc(
 		hwnd: HWND,
-		p: WndMsg,
+		p: Wm,
 		subclass_id: usize,
 		ref_data: usize,
 	) -> AnyResult<isize> {

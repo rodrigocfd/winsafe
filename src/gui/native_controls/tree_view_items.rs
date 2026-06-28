@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes item methods of a [`TreeView`](crate::gui::TreeView) control.
@@ -19,8 +19,8 @@ impl<'a, T> TreeViewItems<'a, T> {
 	}
 
 	/// Adds a new root item by sending a
-	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
-	/// the newly added item.
+	/// [`TvmInsertItem`](crate::msg::TvmInsertItem) message, and returns the
+	/// newly added item.
 	pub fn add_root(
 		&self,
 		text: &str,
@@ -31,33 +31,37 @@ impl<'a, T> TreeViewItems<'a, T> {
 	}
 
 	/// Deletes all items by sending a
-	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
+	/// [`TvmDeleteItem`](crate::msg::TvmDeleteItem) message.
 	pub fn delete_all(&self) -> SysResult<()> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
+				.SendMessage(msg::TvmDeleteItem { hitem: &HTREEITEM::NULL })
 		}
 	}
 
 	/// Retrieves the total number of items by sending a
-	/// [`tvm::GetCount`](crate::msg::tvm::GetCount) message.
+	/// [`TvmGetCount`](crate::msg::TvmGetCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		unsafe { self.owner.hwnd().SendMessage(tvm::GetCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::TvmGetCount {}) }
 	}
 
 	/// Retrieves the number of visible items by sending a
-	/// [`tvm::GetVisibleCount`](crate::msg::tvm::GetVisibleCount) message.
+	/// [`TvmGetVisibleCount`](crate::msg::TvmGetVisibleCount) message.
 	#[must_use]
 	pub fn count_visible(&self) -> u32 {
-		unsafe { self.owner.hwnd().SendMessage(tvm::GetVisibleCount {}) }
+		unsafe { self.owner.hwnd().SendMessage(msg::TvmGetVisibleCount {}) }
 	}
 
 	/// Ends the editing of the item's text by sending a
-	/// [`tvm::EndEditLabelNow`](crate::msg::tvm::EndEditLabelNow) message.
+	/// [`TvmEndEditLabelNow`](crate::msg::TvmEndEditLabelNow) message.
 	pub fn end_edit_label_now(&self, save: bool) -> SysResult<()> {
-		unsafe { self.owner.hwnd().SendMessage(tvm::EndEditLabelNow { save }) }
+		unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(msg::TvmEndEditLabelNow { save })
+		}
 	}
 
 	/// Retrieves the item of the given handle.
@@ -94,7 +98,7 @@ impl<'a, T> Iterator for TreeViewItemIter<'a, T> {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.current = unsafe {
-			self.owner.hwnd().SendMessage(tvm::GetNextItem {
+			self.owner.hwnd().SendMessage(msg::TvmGetNextItem {
 				relationship: self.relationship,
 				hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 			})
@@ -131,7 +135,7 @@ impl<'a, T> Iterator for TreeViewChildItemIter<'a, T> {
 		if self.first_call {
 			// Search for the first child.
 			self.current = unsafe {
-				self.owner.hwnd().SendMessage(tvm::GetNextItem {
+				self.owner.hwnd().SendMessage(msg::TvmGetNextItem {
 					relationship: co::TVGN::CHILD,
 					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})
@@ -142,7 +146,7 @@ impl<'a, T> Iterator for TreeViewChildItemIter<'a, T> {
 		} else {
 			// Search for next siblings.
 			self.current = unsafe {
-				self.owner.hwnd().SendMessage(tvm::GetNextItem {
+				self.owner.hwnd().SendMessage(msg::TvmGetNextItem {
 					relationship: co::TVGN::NEXT,
 					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})

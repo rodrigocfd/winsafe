@@ -20,8 +20,8 @@ macro_rules! pub_struct_msg_empty {
 				()
 			}
 
-			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
-				crate::msg::WndMsg {
+			fn as_generic_wm(&mut self) -> crate::msg::Wm {
+				crate::msg::Wm {
 					msg_id: $wmconst,
 					wparam: 0,
 					lparam: 0,
@@ -45,7 +45,7 @@ macro_rules! pub_struct_msg_empty_handleable {
 		}
 
 		impl crate::prelude::MsgSendRecv for $name {
-			unsafe fn from_generic_wm(_: crate::msg::WndMsg) -> Self {
+			unsafe fn from_generic_wm(_: crate::msg::Wm) -> Self {
 				Self {}
 			}
 		}
@@ -80,8 +80,8 @@ macro_rules! pub_struct_msg_char_code {
 				()
 			}
 
-			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
-				crate::msg::WndMsg {
+			fn as_generic_wm(&mut self) -> crate::msg::Wm {
+				crate::msg::Wm {
 					msg_id: $wmconst,
 					wparam: self.char_code as _,
 					lparam: crate::MAKEDWORD(
@@ -99,7 +99,7 @@ macro_rules! pub_struct_msg_char_code {
 		}
 
 		impl crate::prelude::MsgSendRecv for $name {
-			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
+			unsafe fn from_generic_wm(p: crate::msg::Wm) -> Self {
 				use crate::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
 					char_code: p.wparam as _,
@@ -143,8 +143,8 @@ macro_rules! pub_struct_msg_char_key {
 				()
 			}
 
-			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
-				crate::msg::WndMsg {
+			fn as_generic_wm(&mut self) -> crate::msg::Wm {
+				crate::msg::Wm {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.raw() as _,
 					lparam: crate::MAKEDWORD(
@@ -162,7 +162,7 @@ macro_rules! pub_struct_msg_char_key {
 		}
 
 		impl crate::prelude::MsgSendRecv for $name {
-			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
+			unsafe fn from_generic_wm(p: crate::msg::Wm) -> Self {
 				use crate::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
 					vkey_code: unsafe{co::VK::from_raw(p.wparam as _)},
@@ -203,8 +203,8 @@ macro_rules! pub_struct_msg_ctlcolor {
 				}
 			}
 
-			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
-				crate::msg::WndMsg {
+			fn as_generic_wm(&mut self) -> crate::msg::Wm {
+				crate::msg::Wm {
 					msg_id: $wmconst,
 					wparam: <crate::HDC as crate::prelude::Handle>::ptr(&self.hdc) as _,
 					lparam: <crate::HWND as crate::prelude::Handle>::ptr(&self.hwnd) as _,
@@ -213,7 +213,7 @@ macro_rules! pub_struct_msg_ctlcolor {
 		}
 
 		impl crate::prelude::MsgSendRecv for $name {
-			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
+			unsafe fn from_generic_wm(p: crate::msg::Wm) -> Self {
 				unsafe {
 					Self {
 						hdc: <crate::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
@@ -248,8 +248,8 @@ macro_rules! pub_struct_msg_button {
 				()
 			}
 
-			fn as_generic_wm(&mut self) -> WndMsg {
-				crate::msg::WndMsg {
+			fn as_generic_wm(&mut self) -> Wm {
+				crate::msg::Wm {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.raw() as _,
 					lparam: u32::from(self.coords) as _,
@@ -258,7 +258,7 @@ macro_rules! pub_struct_msg_button {
 		}
 
 		impl crate::prelude::MsgSendRecv for $name {
-			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
+			unsafe fn from_generic_wm(p: crate::msg::Wm) -> Self {
 				Self {
 					vkey_code: unsafe { crate::co::MK::from_raw(p.wparam as _) },
 					coords: crate::POINT {

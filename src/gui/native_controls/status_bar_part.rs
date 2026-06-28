@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// A single part of a [`StatusBar`](crate::gui::StatusBar) control.
@@ -31,25 +31,25 @@ impl<'a> StatusBarPart<'a> {
 	}
 
 	/// Sets the icon of a part by sending an
-	/// [`sb::SetIcon`](crate::msg::sb::SetIcon) message.
+	/// [`SbSetIcon`](crate::msg::SbSetIcon) message.
 	///
 	/// Returns the same part, so further operations can be chained.
 	pub fn set_icon(&self, hicon: Option<&HICON>) -> SysResult<Self> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(sb::SetIcon { part_index: self.index as _, hicon })?;
+				.SendMessage(msg::SbSetIcon { part_index: self.index as _, hicon })?;
 		}
 		Ok(*self)
 	}
 
 	/// Sets the text of a part by sending an
-	/// [`sb::SetText`](crate::msg::sb::SetText) message.
+	/// [`SbSetText`](crate::msg::SbSetText) message.
 	///
 	/// Returns the same part, so further operations can be chained.
 	pub fn set_text(&self, text: &str) -> SysResult<Self> {
 		unsafe {
-			self.owner.hwnd().SendMessage(sb::SetText {
+			self.owner.hwnd().SendMessage(msg::SbSetText {
 				part_index: self.index as _,
 				draw_operation: co::SBT::BORDER,
 				text: WString::from_str(text),
@@ -59,7 +59,7 @@ impl<'a> StatusBarPart<'a> {
 	}
 
 	/// Retrieves the text of the item by sending a
-	/// [`sb::GetText`](crate::msg::sb::GetText) message.
+	/// [`SbGetText`](crate::msg::SbGetText) message.
 	///
 	/// # Examples
 	///
@@ -77,12 +77,12 @@ impl<'a> StatusBarPart<'a> {
 		let (num_chars, _) = unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(sb::GetTextLength { part_index: self.index as _ })
+				.SendMessage(msg::SbGetTextLength { part_index: self.index as _ })
 		};
 
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		unsafe {
-			self.owner.hwnd().SendMessage(sb::GetText {
+			self.owner.hwnd().SendMessage(msg::SbGetText {
 				part_index: self.index as _,
 				text: &mut buf,
 			});

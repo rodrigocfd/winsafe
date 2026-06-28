@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::{collections::*, privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct ListBoxObj {
@@ -105,11 +105,11 @@ impl ListBox {
 	}
 
 	/// Sets the scrollable width by sending an
-	/// [`lb::SetHorizontalExtent`](crate::msg::lb::SetHorizontalExtent) message.
+	/// [`LbSetHorizontalExtent`](crate::msg::LbSetHorizontalExtent) message.
 	pub fn set_horizontal_extend(&self, pixels: i32) {
 		unsafe {
 			self.hwnd()
-				.SendMessage(lb::SetHorizontalExtent { width: pixels as _ });
+				.SendMessage(msg::LbSetHorizontalExtent { width: pixels as _ });
 		}
 	}
 }

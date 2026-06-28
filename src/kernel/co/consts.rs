@@ -180,7 +180,7 @@ const_bitflag! { CREATE_EVENT: u32;
 }
 
 const_ordinary! { DBT: u16;
-	/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
+	/// [`WmDeviceChange`](crate::msg::WmDeviceChange) event (`u16`).
 	=>
 	DEVNODES_CHANGED 0x0007
 	QUERYCHANGECONFIG 0x0017
@@ -884,7 +884,7 @@ const_ordinary! { PAGE: u32;
 }
 
 const_ordinary! { PBT: u32;
-	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
+	/// [`WmPowerBroadcast`](crate::msg::WmPowerBroadcast) power-management
 	/// event (`u32`).
 	=>
 	APMPOWERSTATUSCHANGE 0xa
@@ -1810,8 +1810,7 @@ const_ordinary! { WIN32: u16;
 }
 
 const_ordinary! { WTS: u8;
-	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
-	/// (`u32`).
+	/// [`WmWtsSessionChange`](crate::msg::WmWtsSessionChange) `state` (`u32`).
 	=>
 	CONSOLE_CONNECT 0x1
 	CONSOLE_DISCONNECT 0x2

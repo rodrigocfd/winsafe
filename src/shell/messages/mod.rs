@@ -1,1 +1,3 @@
-pub mod wm;
+mod wm;
+
+pub use wm::*;

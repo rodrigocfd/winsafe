@@ -8,7 +8,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{collections::*, privs::*};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Used when adding the parts in
@@ -110,7 +110,7 @@ impl StatusBar {
 
 				// Force first resizing, so the panels are created.
 				let parent_rc = parent2.hwnd().GetClientRect().expect(DONTFAIL);
-				self2.resize(&mut wm::Size {
+				self2.resize(&mut msg::WmSize {
 					client_area: SIZE::with(parent_rc.right, parent_rc.bottom),
 					request: co::SIZE_R::RESTORED,
 				});
@@ -127,7 +127,7 @@ impl StatusBar {
 		new_self
 	}
 
-	fn resize(&self, p: &mut wm::Size) {
+	fn resize(&self, p: &mut msg::WmSize) {
 		if p.request == co::SIZE_R::MINIMIZED || *self.hwnd() == HWND::NULL {
 			return; // nothing to do
 		}
@@ -166,7 +166,7 @@ impl StatusBar {
 
 		unsafe {
 			self.hwnd()
-				.SendMessage(sb::SetParts { right_edges: &right_edges })
+				.SendMessage(msg::SbSetParts { right_edges: &right_edges })
 		}
 		.expect(DONTFAIL);
 	}

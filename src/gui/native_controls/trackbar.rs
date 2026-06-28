@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct TrackbarObj {
@@ -101,42 +101,43 @@ impl Trackbar {
 	}
 
 	/// Retrieves the current position by sending a
-	/// [`trbm::GetPos`](crate::msg::trbm::GetPos) message.
+	/// [`TbmGetPos`](crate::msg::TbmGetPos) message.
 	#[must_use]
 	pub fn pos(&self) -> u32 {
-		unsafe { self.hwnd().SendMessage(trbm::GetPos {}) }
+		unsafe { self.hwnd().SendMessage(msg::TbmGetPos {}) }
 	}
 
 	/// Retrieves the minimum and maximum position values by sending
-	/// [`trbm::GetRangeMin`](crate::msg::trbm::GetRangeMin) and
-	/// [`trbm::GetRangeMax`](crate::msg::trbm::GetRangeMax) messages.
+	/// [`TbmGetRangeMin`](crate::msg::TbmGetRangeMin) and
+	/// [`TbmGetRangeMax`](crate::msg::TbmGetRangeMax) messages.
 	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
 		unsafe {
 			(
-				self.hwnd().SendMessage(trbm::GetRangeMin {}),
-				self.hwnd().SendMessage(trbm::GetRangeMax {}),
+				self.hwnd().SendMessage(msg::TbmGetRangeMin {}),
+				self.hwnd().SendMessage(msg::TbmGetRangeMax {}),
 			)
 		}
 	}
 
 	/// Sets the current position by sending a
-	/// [`trbm::SetPos`](crate::msg::trbm::SetPos) message.
+	/// [`TbmSetPos`](crate::msg::TbmSetPos) message.
 	pub fn set_pos(&self, pos: u32) {
 		unsafe {
-			self.hwnd().SendMessage(trbm::SetPos { redraw: true, pos });
+			self.hwnd()
+				.SendMessage(msg::TbmSetPos { redraw: true, pos });
 		}
 	}
 
 	/// Sets the minimum and maximum position values by sending
-	/// [`trbm::SetRangeMin`](crate::msg::trbm::SetRangeMin) and
-	/// [`trbm::SetRangeMax`](crate::msg::trbm::SetRangeMax) messages.
+	/// [`TbmSetRangeMin`](crate::msg::TbmSetRangeMin) and
+	/// [`TbmSetRangeMax`](crate::msg::TbmSetRangeMax) messages.
 	pub fn set_range(&self, min: u32, max: u32) {
 		unsafe {
 			self.hwnd()
-				.SendMessage(trbm::SetRangeMin { redraw: false, min });
+				.SendMessage(msg::TbmSetRangeMin { redraw: false, min });
 			self.hwnd()
-				.SendMessage(trbm::SetRangeMax { redraw: true, max });
+				.SendMessage(msg::TbmSetRangeMax { redraw: true, max });
 		}
 	}
 }

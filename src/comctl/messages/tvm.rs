@@ -10,19 +10,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<HIMAGELIST>`.
-pub struct CreateDragImage<'a> {
+pub struct TvmCreateDragImage<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for CreateDragImage<'a> {
+impl<'a> MsgSend for TvmCreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::CREATEDRAGIMAGE.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr() as _,
@@ -34,19 +34,19 @@ impl<'a> MsgSend for CreateDragImage<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct DeleteItem<'a> {
+pub struct TvmDeleteItem<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for DeleteItem<'a> {
+impl<'a> MsgSend for TvmDeleteItem<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::DELETEITEM.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr() as _,
@@ -58,19 +58,19 @@ impl<'a> MsgSend for DeleteItem<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct EditLabel<'a> {
+pub struct TvmEditLabel<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for EditLabel<'a> {
+impl<'a> MsgSend for TvmEditLabel<'a> {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::EDITLABEL.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr() as _,
@@ -82,19 +82,19 @@ impl<'a> MsgSend for EditLabel<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct EndEditLabelNow {
+pub struct TvmEndEditLabelNow {
 	pub save: bool,
 }
 
-impl MsgSend for EndEditLabelNow {
+impl MsgSend for TvmEndEditLabelNow {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::ENDEDITLABELNOW.into(),
 			wparam: !self.save as _,
 			lparam: 0,
@@ -106,19 +106,19 @@ impl MsgSend for EndEditLabelNow {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct EnsureVisible<'a> {
+pub struct TvmEnsureVisible<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for EnsureVisible<'a> {
+impl<'a> MsgSend for TvmEnsureVisible<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr() as _,
@@ -130,20 +130,20 @@ impl<'a> MsgSend for EnsureVisible<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Expand<'a> {
+pub struct TvmExpand<'a> {
 	pub action: co::TVE,
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for Expand<'a> {
+impl<'a> MsgSend for TvmExpand<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::EXPAND.into(),
 			wparam: self.action.raw() as _,
 			lparam: self.hitem.ptr() as _,
@@ -155,17 +155,17 @@ impl<'a> MsgSend for Expand<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct GetBkColor {}
+pub struct TvmGetBkColor {}
 
-impl MsgSend for GetBkColor {
+impl MsgSend for TvmGetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETBKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -177,17 +177,17 @@ impl MsgSend for GetBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetCount {}
+pub struct TvmGetCount {}
 
-impl MsgSend for GetCount {
+impl MsgSend for TvmGetCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETCOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -199,17 +199,17 @@ impl MsgSend for GetCount {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct GetEditControl {}
+pub struct TvmGetEditControl {}
 
-impl MsgSend for GetEditControl {
+impl MsgSend for TvmGetEditControl {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETEDITCONTROL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -221,17 +221,17 @@ impl MsgSend for GetEditControl {
 /// message, which has no parameters.
 ///
 /// Return type: `co::TVS_EX`.
-pub struct GetExtendedStyle {}
+pub struct TvmGetExtendedStyle {}
 
-impl MsgSend for GetExtendedStyle {
+impl MsgSend for TvmGetExtendedStyle {
 	type RetType = co::TVS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::TVS_EX::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETEXTENDEDSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -243,19 +243,19 @@ impl MsgSend for GetExtendedStyle {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct GetImageList {
+pub struct TvmGetImageList {
 	pub kind: co::TVSIL,
 }
 
-impl MsgSend for GetImageList {
+impl MsgSend for TvmGetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: 0,
@@ -267,17 +267,17 @@ impl MsgSend for GetImageList {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetIndent {}
+pub struct TvmGetIndent {}
 
-impl MsgSend for GetIndent {
+impl MsgSend for TvmGetIndent {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETINDENT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -289,17 +289,17 @@ impl MsgSend for GetIndent {
 /// message, which has no parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct GetInsertMarkColor {}
+pub struct TvmGetInsertMarkColor {}
 
-impl MsgSend for GetInsertMarkColor {
+impl MsgSend for TvmGetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETINSERTMARKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -311,19 +311,19 @@ impl MsgSend for GetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct GetISearchString<'a> {
+pub struct TvmGetISearchString<'a> {
 	pub buf: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetISearchString<'a> {
+impl<'a> MsgSend for TvmGetISearchString<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETISEARCHSTRING.into(),
 			wparam: 0,
 			lparam: unsafe { self.buf.as_mut_ptr() } as _,
@@ -335,19 +335,19 @@ impl<'a> MsgSend for GetISearchString<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItem<'a, 'b> {
+pub struct TvmGetItem<'a, 'b> {
 	pub tvitem: &'b mut TVITEMEX<'a>,
 }
 
-impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TvmGetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETITEM.into(),
 			wparam: 0,
 			lparam: self.tvitem as *mut _ as _,
@@ -359,17 +359,17 @@ impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetItemHeight {}
+pub struct TvmGetItemHeight {}
 
-impl MsgSend for GetItemHeight {
+impl MsgSend for TvmGetItemHeight {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETITEMHEIGHT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -381,20 +381,20 @@ impl MsgSend for GetItemHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetItemRect<'a> {
+pub struct TvmGetItemRect<'a> {
 	pub text_only: bool,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for TvmGetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETITEMRECT.into(),
 			wparam: self.text_only as _,
 			lparam: self.rect as *mut _ as _,
@@ -406,20 +406,20 @@ impl<'a> MsgSend for GetItemRect<'a> {
 /// message parameters.
 ///
 /// Return type: `co::TVIS`.
-pub struct GetItemState<'a> {
+pub struct TvmGetItemState<'a> {
 	pub hitem: &'a HTREEITEM,
 	pub mask: co::TVIS,
 }
 
-impl<'a> MsgSend for GetItemState<'a> {
+impl<'a> MsgSend for TvmGetItemState<'a> {
 	type RetType = co::TVIS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::TVIS::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETITEMSTATE.into(),
 			wparam: self.hitem.ptr() as _,
 			lparam: self.mask.raw() as _,
@@ -431,9 +431,9 @@ impl<'a> MsgSend for GetItemState<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct GetLineColor {}
+pub struct TvmGetLineColor {}
 
-impl MsgSend for GetLineColor {
+impl MsgSend for TvmGetLineColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -443,8 +443,8 @@ impl MsgSend for GetLineColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETLINECOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -456,20 +456,20 @@ impl MsgSend for GetLineColor {
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
-pub struct GetNextItem<'a> {
+pub struct TvmGetNextItem<'a> {
 	pub relationship: co::TVGN,
 	pub hitem: Option<&'a HTREEITEM>,
 }
 
-impl<'a> MsgSend for GetNextItem<'a> {
+impl<'a> MsgSend for TvmGetNextItem<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.raw() as _,
 			lparam: self.hitem.map_or(0, |h| h.ptr() as _),
@@ -481,17 +481,17 @@ impl<'a> MsgSend for GetNextItem<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetScrollTime {}
+pub struct TvmGetScrollTime {}
 
-impl MsgSend for GetScrollTime {
+impl MsgSend for TvmGetScrollTime {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETSCROLLTIME.into(),
 			wparam: 0,
 			lparam: 0,
@@ -503,17 +503,17 @@ impl MsgSend for GetScrollTime {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct GetTextColor {}
+pub struct TvmGetTextColor {}
 
-impl MsgSend for GetTextColor {
+impl MsgSend for TvmGetTextColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETTEXTCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -525,17 +525,17 @@ impl MsgSend for GetTextColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct GetTooltips {}
+pub struct TvmGetTooltips {}
 
-impl MsgSend for GetTooltips {
+impl MsgSend for TvmGetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETTOOLTIPS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -547,17 +547,17 @@ impl MsgSend for GetTooltips {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct TvmGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for TvmGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -569,17 +569,17 @@ impl MsgSend for GetUnicodeFormat {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetVisibleCount {}
+pub struct TvmGetVisibleCount {}
 
-impl MsgSend for GetVisibleCount {
+impl MsgSend for TvmGetVisibleCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::GETVISIBLECOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -591,19 +591,19 @@ impl MsgSend for GetVisibleCount {
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
-pub struct HitTest<'a> {
+pub struct TvmHitTest<'a> {
 	pub info: &'a TVHITTESTINFO,
 }
 
-impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for TvmHitTest<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::HITTEST.into(),
 			wparam: 0,
 			lparam: &mut self.info as *mut _ as _,
@@ -615,19 +615,19 @@ impl<'a> MsgSend for HitTest<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<HTREEITEM>`.
-pub struct InsertItem<'a, 'b> {
+pub struct TvmInsertItem<'a, 'b> {
 	pub item: &'b TVINSERTSTRUCT<'a>,
 }
 
-impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TvmInsertItem<'a, 'b> {
 	type RetType = SysResult<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::INSERTITEM.into(),
 			wparam: 0,
 			lparam: self.item as *const _ as _,
@@ -639,19 +639,19 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `Option<HTREEITEM>`.
-pub struct MapAccIdToHtreeitem {
+pub struct TvmMapAccIdToHtreeitem {
 	pub acc_id: u32,
 }
 
-impl MsgSend for MapAccIdToHtreeitem {
+impl MsgSend for TvmMapAccIdToHtreeitem {
 	type RetType = SysResult<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::MAPACCIDTOHTREEITEM.into(),
 			wparam: self.acc_id as _,
 			lparam: 0,
@@ -663,19 +663,19 @@ impl MsgSend for MapAccIdToHtreeitem {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct MapHtreeitemToAccId<'a> {
+pub struct TvmMapHtreeitemToAccId<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for MapHtreeitemToAccId<'a> {
+impl<'a> MsgSend for TvmMapHtreeitemToAccId<'a> {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::MAPHTREEITEMTOACCID.into(),
 			wparam: self.hitem.ptr() as _,
 			lparam: 0,
@@ -687,20 +687,20 @@ impl<'a> MsgSend for MapHtreeitemToAccId<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SelectItem<'a> {
+pub struct TvmSelectItem<'a> {
 	pub action: co::TVGN,
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for SelectItem<'a> {
+impl<'a> MsgSend for TvmSelectItem<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.raw() as _,
 			lparam: self.hitem.ptr() as _,
@@ -712,20 +712,20 @@ impl<'a> MsgSend for SelectItem<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetAutoScrollInfo {
+pub struct TvmSetAutoScrollInfo {
 	pub pixels_per_second: u32,
 	pub redraw_interval: u32,
 }
 
-impl MsgSend for SetAutoScrollInfo {
+impl MsgSend for TvmSetAutoScrollInfo {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETAUTOSCROLLINFO.into(),
 			wparam: self.pixels_per_second as _,
 			lparam: self.redraw_interval as _,
@@ -737,11 +737,11 @@ impl MsgSend for SetAutoScrollInfo {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetBkColor {
+pub struct TvmSetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetBkColor {
+impl MsgSend for TvmSetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -751,8 +751,8 @@ impl MsgSend for SetBkColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETBKCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(-1, |color| u32::from(color) as _),
@@ -764,21 +764,21 @@ impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `(u16, u16)`.
-pub struct SetBorder {
+pub struct TvmSetBorder {
 	pub action: co::TVSBF,
 	pub left: u16,
 	pub top: u16,
 }
 
-impl MsgSend for SetBorder {
+impl MsgSend for TvmSetBorder {
 	type RetType = (u16, u16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETBORDER.into(),
 			wparam: self.action.raw() as _,
 			lparam: MAKEDWORD(self.left, self.top) as _,
@@ -790,20 +790,20 @@ impl MsgSend for SetBorder {
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-pub struct SetExtendedStyle {
+pub struct TvmSetExtendedStyle {
 	pub style: co::TVS_EX,
 	pub mask: co::TVS_EX,
 }
 
-impl MsgSend for SetExtendedStyle {
+impl MsgSend for TvmSetExtendedStyle {
 	type RetType = HrResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		HrRet(v as _).to_hrresult()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETEXTENDEDSTYLE.into(),
 			wparam: self.style.raw() as _,
 			lparam: self.mask.raw() as _,
@@ -815,19 +815,19 @@ impl MsgSend for SetExtendedStyle {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetHot<'a> {
+pub struct TvmSetHot<'a> {
 	pub hitem: Option<&'a HTREEITEM>,
 }
 
-impl<'a> MsgSend for SetHot<'a> {
+impl<'a> MsgSend for TvmSetHot<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
 			lparam: self.hitem.map_or(0, |h| h.ptr() as _),
@@ -839,20 +839,20 @@ impl<'a> MsgSend for SetHot<'a> {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList {
+pub struct TvmSetImageList {
 	pub kind: co::TVSIL,
 	pub himagelist: Option<HIMAGELIST>,
 }
 
-impl MsgSend for SetImageList {
+impl MsgSend for TvmSetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
 			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
@@ -864,19 +864,19 @@ impl MsgSend for SetImageList {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetIndent {
+pub struct TvmSetIndent {
 	pub width: u32,
 }
 
-impl MsgSend for SetIndent {
+impl MsgSend for TvmSetIndent {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETINDENT.into(),
 			wparam: self.width as _,
 			lparam: 0,
@@ -888,20 +888,20 @@ impl MsgSend for SetIndent {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetInsertMark<'a> {
+pub struct TvmSetInsertMark<'a> {
 	pub insert_after: bool,
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for SetInsertMark<'a> {
+impl<'a> MsgSend for TvmSetInsertMark<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETINSERTMARK.into(),
 			wparam: self.insert_after as _,
 			lparam: self.hitem.ptr() as _,
@@ -913,19 +913,19 @@ impl<'a> MsgSend for SetInsertMark<'a> {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct SetInsertMarkColor {
+pub struct TvmSetInsertMarkColor {
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetInsertMarkColor {
+impl MsgSend for TvmSetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETINSERTMARKCOLOR.into(),
 			wparam: 0,
 			lparam: u32::from(self.color) as _,
@@ -937,19 +937,19 @@ impl MsgSend for SetInsertMarkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetItem<'a, 'b> {
+pub struct TvmSetItem<'a, 'b> {
 	pub tvitem: &'b TVITEMEX<'a>,
 }
 
-impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for TvmSetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETITEM.into(),
 			wparam: 0,
 			lparam: self.tvitem as *const _ as _,
@@ -961,19 +961,19 @@ impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetItemHeight {
+pub struct TvmSetItemHeight {
 	pub height: Option<u32>,
 }
 
-impl MsgSend for SetItemHeight {
+impl MsgSend for TvmSetItemHeight {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETITEMHEIGHT.into(),
 			wparam: self.height.map_or(-1, |h| h as _) as _,
 			lparam: 0,
@@ -985,19 +985,19 @@ impl MsgSend for SetItemHeight {
 /// message parameters.
 ///
 /// Return type: `COLORREF`.
-pub struct SetLineColor {
+pub struct TvmSetLineColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetLineColor {
+impl MsgSend for TvmSetLineColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { COLORREF::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETLINECOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(CLR_DEFAULT, |c| c.into()) as _,
@@ -1009,19 +1009,19 @@ impl MsgSend for SetLineColor {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetScrollTime {
+pub struct TvmSetScrollTime {
 	pub time_ms: u32,
 }
 
-impl MsgSend for SetScrollTime {
+impl MsgSend for TvmSetScrollTime {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETSCROLLTIME.into(),
 			wparam: self.time_ms as _,
 			lparam: 0,
@@ -1033,11 +1033,11 @@ impl MsgSend for SetScrollTime {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetTextColor {
+pub struct TvmSetTextColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetTextColor {
+impl MsgSend for TvmSetTextColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -1047,8 +1047,8 @@ impl MsgSend for SetTextColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETTEXTCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(-1, |color| u32::from(color) as _),
@@ -1060,19 +1060,19 @@ impl MsgSend for SetTextColor {
 /// message parameters.
 ///
 /// Return type: `Option<HWND>`.
-pub struct SetTooltips<'a> {
+pub struct TvmSetTooltips<'a> {
 	pub htooltips: Option<&'a HWND>,
 }
 
-impl<'a> MsgSend for SetTooltips<'a> {
+impl<'a> MsgSend for TvmSetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETTOOLTIPS.into(),
 			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
@@ -1084,19 +1084,19 @@ impl<'a> MsgSend for SetTooltips<'a> {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct TvmSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for TvmSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,
@@ -1108,19 +1108,19 @@ impl MsgSend for SetUnicodeFormat {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct ShowInfoTip<'a> {
+pub struct TvmShowInfoTip<'a> {
 	pub hitem: &'a HTREEITEM,
 }
 
-impl<'a> MsgSend for ShowInfoTip<'a> {
+impl<'a> MsgSend for TvmShowInfoTip<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
 			lparam: self.hitem.ptr() as _,
@@ -1132,19 +1132,19 @@ impl<'a> MsgSend for ShowInfoTip<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SortChildren {
+pub struct TvmSortChildren {
 	pub recursive: bool,
 }
 
-impl MsgSend for SortChildren {
+impl MsgSend for TvmSortChildren {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SORTCHILDREN.into(),
 			wparam: self.recursive as _,
 			lparam: 0,
@@ -1156,19 +1156,19 @@ impl MsgSend for SortChildren {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SortChildrenCb<'a> {
+pub struct TvmSortChildrenCb<'a> {
 	pub info: &'a TVSORTCB,
 }
 
-impl<'a> MsgSend for SortChildrenCb<'a> {
+impl<'a> MsgSend for TvmSortChildrenCb<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::TVM::SORTCHILDRENCB.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,

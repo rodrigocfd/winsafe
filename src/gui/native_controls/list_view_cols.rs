@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes column methods of a [`ListView`](crate::gui::ListView) control.
@@ -19,8 +19,8 @@ impl<'a, T> ListViewCols<'a, T> {
 		Self { owner }
 	}
 
-	/// Sends a [`lvm::InsertColumn`](crate::msg::lvm::InsertColumn) to add a
-	/// new column with its width, returning the new column.
+	/// Sends a [`LvmInsertColumn`](crate::msg::LvmInsertColumn) to add a new
+	/// column with its width, returning the new column.
 	pub fn add(&self, text: &str, width: i32) -> SysResult<ListViewCol<'a, T>> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.mask = co::LVCF::TEXT | co::LVCF::WIDTH;
@@ -30,7 +30,7 @@ impl<'a, T> ListViewCols<'a, T> {
 		lvc.set_pszText(Some(&mut wtext));
 
 		let idx = unsafe {
-			self.owner.hwnd().SendMessage(lvm::InsertColumn {
+			self.owner.hwnd().SendMessage(msg::LvmInsertColumn {
 				index: 0xffff, // insert as the last column
 				column: &lvc,
 			})?
@@ -39,8 +39,8 @@ impl<'a, T> ListViewCols<'a, T> {
 	}
 
 	/// Retrieves the number of columns by sending an
-	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message to the
-	/// embedded [`Header`](crate::gui::Header).
+	/// [`HdmGetItemCount`](crate::msg::HdmGetItemCount) message to the embedded
+	/// [`Header`](crate::gui::Header).
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
 		match self.owner.header() {

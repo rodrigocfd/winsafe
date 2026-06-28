@@ -2,7 +2,7 @@ use std::any::Any;
 
 use crate::decl::*;
 use crate::gui::{privs::*, *};
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Switches between raw and dialog implementations.
@@ -87,14 +87,12 @@ impl WindowModeless {
 		self.as_ref().on()
 	}
 
-	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
+	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::WmClose)
 	/// message. This is the safest way to close any popup window, because
 	/// you'll able to process the
 	/// [`wm_close`](crate::prelude::GuiEventsWindow::wm_close) event, just like
 	/// if the user clicked the window "X" button.
 	pub fn close(&self) {
-		unsafe {
-			self.hwnd().PostMessage(wm::Close {}).ok(); // ignore errors
-		}
+		unsafe { self.hwnd().PostMessage(msg::WmClose {}) }.ok(); // ignore errors
 	}
 }

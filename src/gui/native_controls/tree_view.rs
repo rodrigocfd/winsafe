@@ -10,7 +10,7 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::gui::{collections::*, privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct TreeViewObj<T> {
@@ -131,11 +131,11 @@ impl<T> TreeView<T> {
 				.for_each(|kind| unsafe {
 					self2
 						.hwnd()
-						.SendMessage(tvm::GetImageList { kind })
+						.SendMessage(msg::TvmGetImageList { kind })
 						.map(|h| {
 							self2
 								.hwnd()
-								.SendMessage(tvm::SetImageList { himagelist: None, kind }); // remove from control
+								.SendMessage(msg::TvmSetImageList { himagelist: None, kind }); // remove from control
 							let _ = ImageListDestroyGuard::new(h); // destroy
 						});
 				});
@@ -178,30 +178,30 @@ impl<T> TreeView<T> {
 
 		let new_hitem = unsafe {
 			self.hwnd()
-				.SendMessage(tvm::InsertItem { item: &mut tvis })?
+				.SendMessage(msg::TvmInsertItem { item: &mut tvis })?
 		};
 
 		Ok(TreeViewItem::new(self, new_hitem))
 	}
 
 	/// Retrieves one of the associated image lists by sending a
-	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) message.
+	/// [`TvmGetImageList`](crate::msg::TvmGetImageList) message.
 	///
 	/// Image lists are lazy-initialized: the first time you call this method
 	/// for a given image list, it will be created and assigned with
-	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList).
+	/// [`TvmSetImageList`](crate::msg::TvmSetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self, kind: co::TVSIL) -> HrResult<HIMAGELIST> {
-		match unsafe { self.hwnd().SendMessage(tvm::GetImageList { kind }) } {
+		match unsafe { self.hwnd().SendMessage(msg::TvmGetImageList { kind }) } {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
 				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
-						.SendMessage(tvm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+						.SendMessage(msg::TvmSetImageList { himagelist: Some(h.raw_copy()), kind });
 				}
 				Ok(h)
 			},
@@ -215,10 +215,10 @@ impl<T> TreeView<T> {
 	}
 
 	/// Sets or unsets the given extended list view styles by sending a
-	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
+	/// [`TvmSetExtendedStyle`](crate::msg::TvmSetExtendedStyle) message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::TVS_EX) -> HrResult<()> {
 		unsafe {
-			self.hwnd().SendMessage(tvm::SetExtendedStyle {
+			self.hwnd().SendMessage(msg::TvmSetExtendedStyle {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TVS_EX::NoValue },
 			})

@@ -1,9 +1,11 @@
-mod wnd_msg;
+mod bm;
+mod cb;
+mod em;
+mod lb;
+mod wm;
 
-pub mod bm;
-pub mod cb;
-pub mod em;
-pub mod lb;
-pub mod wm;
-
-pub use wnd_msg::*;
+pub use bm::*;
+pub use cb::*;
+pub use em::*;
+pub use lb::*;
+pub use wm::*;

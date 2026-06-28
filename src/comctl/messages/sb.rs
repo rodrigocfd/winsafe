@@ -10,19 +10,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetBorders<'a> {
+pub struct SbGetBorders<'a> {
 	pub borders: &'a mut [u32; 3],
 }
 
-impl<'a> MsgSend for GetBorders<'a> {
+impl<'a> MsgSend for SbGetBorders<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETBORDERS.into(),
 			wparam: 0,
 			lparam: self.borders.as_mut_ptr() as _,
@@ -34,19 +34,19 @@ impl<'a> MsgSend for GetBorders<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<HICON>`.
-pub struct GetIcon {
+pub struct SbGetIcon {
 	pub part_index: u8,
 }
 
-impl MsgSend for GetIcon {
+impl MsgSend for SbGetIcon {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETICON.into(),
 			wparam: self.part_index as _,
 			lparam: 0,
@@ -58,19 +58,19 @@ impl MsgSend for GetIcon {
 /// message parameters.
 ///
 /// Return type: `u8`.
-pub struct GetParts<'a> {
+pub struct SbGetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
 
-impl<'a> MsgSend for GetParts<'a> {
+impl<'a> MsgSend for SbGetParts<'a> {
 	type RetType = u8;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
 			lparam: self
@@ -85,20 +85,20 @@ impl<'a> MsgSend for GetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetRect<'a> {
+pub struct SbGetRect<'a> {
 	pub part_index: u8,
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetRect<'a> {
+impl<'a> MsgSend for SbGetRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETRECT.into(),
 			wparam: self.part_index as _,
 			lparam: self.rect as *mut _ as _,
@@ -110,20 +110,20 @@ impl<'a> MsgSend for GetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
-pub struct GetText<'a> {
+pub struct SbGetText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetText<'a> {
+impl<'a> MsgSend for SbGetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETTEXT.into(),
 			wparam: self.part_index as _,
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
@@ -135,19 +135,19 @@ impl<'a> MsgSend for GetText<'a> {
 /// message parameters.
 ///
 /// Return type: `(u16, co::SBT)`.
-pub struct GetTextLength {
+pub struct SbGetTextLength {
 	pub part_index: u8,
 }
 
-impl MsgSend for GetTextLength {
+impl MsgSend for SbGetTextLength {
 	type RetType = (u16, co::SBT);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETTEXTLENGTH.into(),
 			wparam: self.part_index as _,
 			lparam: 0,
@@ -159,20 +159,20 @@ impl MsgSend for GetTextLength {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetTipText<'a> {
+pub struct SbGetTipText<'a> {
 	pub part_index: u8,
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetTipText<'a> {
+impl<'a> MsgSend for SbGetTipText<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETTIPTEXT.into(),
 			wparam: MAKEDWORD(self.part_index as _, self.text.buf_len() as _) as _,
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
@@ -184,17 +184,17 @@ impl<'a> MsgSend for GetTipText<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetUnicodeFormat {}
+pub struct SbGetUnicodeFormat {}
 
-impl MsgSend for GetUnicodeFormat {
+impl MsgSend for SbGetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::GETUNICODEFORMAT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -206,17 +206,17 @@ impl MsgSend for GetUnicodeFormat {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct IsSimple {}
+pub struct SbIsSimple {}
 
-impl MsgSend for IsSimple {
+impl MsgSend for SbIsSimple {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::ISSIMPLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -228,11 +228,11 @@ impl MsgSend for IsSimple {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetBkColor {
+pub struct SbSetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetBkColor {
+impl MsgSend for SbSetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -242,8 +242,8 @@ impl MsgSend for SetBkColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETBKCOLOR.into(),
 			wparam: 0,
 			lparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
@@ -255,20 +255,20 @@ impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetIcon<'a> {
+pub struct SbSetIcon<'a> {
 	pub part_index: u8,
 	pub hicon: Option<&'a HICON>,
 }
 
-impl<'a> MsgSend for SetIcon<'a> {
+impl<'a> MsgSend for SbSetIcon<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
 			lparam: self.hicon.map_or(0, |p| p.ptr() as _),
@@ -280,19 +280,19 @@ impl<'a> MsgSend for SetIcon<'a> {
 /// message parameters.
 ///
 /// Return value: `()`.
-pub struct SetMinHeight {
+pub struct SbSetMinHeight {
 	pub min_height: u32,
 }
 
-impl MsgSend for SetMinHeight {
+impl MsgSend for SbSetMinHeight {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETMINHEIGHT.into(),
 			wparam: self.min_height as _,
 			lparam: 0,
@@ -304,19 +304,19 @@ impl MsgSend for SetMinHeight {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetParts<'a> {
+pub struct SbSetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
-impl<'a> MsgSend for SetParts<'a> {
+impl<'a> MsgSend for SbSetParts<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
 			lparam: vec_ptr(self.right_edges) as _,
@@ -328,21 +328,21 @@ impl<'a> MsgSend for SetParts<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetText {
+pub struct SbSetText {
 	pub part_index: u8,
 	pub draw_operation: co::SBT,
 	pub text: WString,
 }
 
-impl MsgSend for SetText {
+impl MsgSend for SbSetText {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETTEXT.into(),
 			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.raw()) as _,
 			lparam: self.text.as_ptr() as _,
@@ -352,20 +352,20 @@ impl MsgSend for SetText {
 
 /// [`SB_SETTIPTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-settiptext)
 /// message parameters.
-pub struct SetTipText {
+pub struct SbSetTipText {
 	pub part_index: u8,
 	pub text: WString,
 }
 
-impl MsgSend for SetTipText {
+impl MsgSend for SbSetTipText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as _,
 			lparam: self.text.as_ptr() as _,
@@ -377,19 +377,19 @@ impl MsgSend for SetTipText {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct SetUnicodeFormat {
+pub struct SbSetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SbSetUnicodeFormat {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SETUNICODEFORMAT.into(),
 			wparam: self.use_unicode as _,
 			lparam: 0,
@@ -399,19 +399,19 @@ impl MsgSend for SetUnicodeFormat {
 
 /// [`SB_SIMPLE`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-simple)
 /// message parameters.
-pub struct Simple {
+pub struct SbSimple {
 	pub display_simple: bool,
 }
 
-impl MsgSend for Simple {
+impl MsgSend for SbSimple {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::SB::SIMPLE.into(),
 			wparam: self.display_simple as _,
 			lparam: 0,

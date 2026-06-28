@@ -6,7 +6,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// A single item of a [`ListView`](crate::gui::ListView) control.
@@ -37,7 +37,7 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
-	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
+	/// stored data by sending an [`LvmGetItem`](crate::msg::LvmGetItem)
 	/// message.
 	///
 	/// # Panics
@@ -94,7 +94,7 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
+				.SendMessage(msg::LvmGetItem { lvitem: &mut lvi })
 				.expect("ListViewItem with invalid index, no data.");
 		}
 
@@ -105,23 +105,23 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Deletes the item by sending an
-	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) message.
+	/// [`LvmDeleteItem`](crate::msg::LvmDeleteItem) message.
 	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::DeleteItem { index: self.index })
+				.SendMessage(msg::LvmDeleteItem { index: self.index })
 		}
 	}
 
 	/// Scrolls the list by sending an
-	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
-	/// the item is visible in the list.
+	/// [`LvmEnsureVisible`](crate::msg::LvmEnsureVisible) message so that the
+	/// item is visible in the list.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn ensure_visible(&self) -> SysResult<Self> {
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::EnsureVisible {
+			self.owner.hwnd().SendMessage(msg::LvmEnsureVisible {
 				index: self.index,
 				entirely_visible: true,
 			})?;
@@ -130,7 +130,7 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Sets the item as the focused one sending an
-	/// [`lvm:SetItemState`](crate::msg::lvm::SetItemState) message.
+	/// [`LvmSetItemState`](crate::msg::LvmSetItemState) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn focus(&self) -> SysResult<Self> {
@@ -141,13 +141,13 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
+				.SendMessage(msg::LvmSetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
 		Ok(*self)
 	}
 
 	/// Retrieves the icon index of the item by sending an
-	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
+	/// [`LvmGetItem`](crate::msg::LvmGetItem) message.
 	#[must_use]
 	pub fn icon_index(&self) -> SysResult<Option<u32>> {
 		let mut lvi = LVITEM::default();
@@ -157,7 +157,7 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
+				.SendMessage(msg::LvmSetItem { lvitem: &mut lvi })?;
 		}
 
 		Ok(match lvi.iImage {
@@ -173,11 +173,11 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Tells if the item is the focused one by sending an
-	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
+	/// [`LvmGetItemState`](crate::msg::LvmGetItemState) message.
 	#[must_use]
 	pub fn is_focused(&self) -> bool {
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::GetItemState {
+			self.owner.hwnd().SendMessage(msg::LvmGetItemState {
 				index: self.index,
 				mask: co::LVIS::FOCUSED,
 			})
@@ -186,11 +186,11 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Tells if the item is selected by sending an
-	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
+	/// [`LvmGetItemState`](crate::msg::LvmGetItemState) message.
 	#[must_use]
 	pub fn is_selected(&self) -> bool {
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::GetItemState {
+			self.owner.hwnd().SendMessage(msg::LvmGetItemState {
 				index: self.index,
 				mask: co::LVIS::SELECTED,
 			})
@@ -199,23 +199,23 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Tells if the item is currently visible by sending an
-	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
+	/// [`LvmIsItemVisible`](crate::msg::LvmIsItemVisible) message.
 	#[must_use]
 	pub fn is_visible(&self) -> bool {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::IsItemVisible { index: self.index })
+				.SendMessage(msg::LvmIsItemVisible { index: self.index })
 		}
 	}
 
 	/// Retrieves the bounding rectangle of the item by sending an
-	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) message.
+	/// [`LvmGetItemRect`](crate::msg::LvmGetItemRect) message.
 	#[must_use]
 	pub fn rect(&self, portion: co::LVIR) -> SysResult<RECT> {
 		let mut rc = RECT::default();
 		unsafe {
-			self.owner.hwnd().SendMessage(lvm::GetItemRect {
+			self.owner.hwnd().SendMessage(msg::LvmGetItemRect {
 				index: self.index,
 				rect: &mut rc,
 				portion,
@@ -225,7 +225,7 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Sets or removes the selection from the item by sending an
-	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
+	/// [`LvmSetItemState`](crate::msg::LvmSetItemState) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn select(&self, set: bool) -> SysResult<Self> {
@@ -238,13 +238,13 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
+				.SendMessage(msg::LvmSetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
 		Ok(*self)
 	}
 
 	/// Sets the icon index of the item by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
+	/// [`LvmSetItem`](crate::msg::LvmSetItem) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_icon_index(&self, icon_index: Option<u32>) -> SysResult<Self> {
@@ -256,13 +256,13 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
+				.SendMessage(msg::LvmSetItem { lvitem: &mut lvi })?;
 		}
 		Ok(*self)
 	}
 
 	/// Sets the text of the item under a column by sending an
-	/// [`lvm::SetItemText`](crate::msg::lvm::SetItemText) message.
+	/// [`LvmSetItemText`](crate::msg::LvmSetItemText) message.
 	///
 	/// Returns the same item, so further operations can be chained.
 	pub fn set_text(&self, column_index: u32, text: &str) -> SysResult<Self> {
@@ -275,13 +275,13 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::SetItemText { index: self.index, lvitem: &lvi })?;
+				.SendMessage(msg::LvmSetItemText { index: self.index, lvitem: &lvi })?;
 		}
 		Ok(*self)
 	}
 
 	/// Retrieves the text of an item under a column by sending an
-	/// [`lvm::GetItemText`](crate::msg::lvm::GetItemText) message.
+	/// [`LvmGetItemText`](crate::msg::LvmGetItemText) message.
 	#[must_use]
 	pub fn text(&self, column_index: u32) -> String {
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
@@ -296,7 +296,7 @@ impl<'a, T> ListViewItem<'a, T> {
 			let returned_chars = unsafe {
 				self.owner
 					.hwnd() // char count without terminating null
-					.SendMessage(lvm::GetItemText { index: self.index, lvitem: &mut lvi })
+					.SendMessage(msg::LvmGetItemText { index: self.index, lvitem: &mut lvi })
 			} + 1; // plus terminating null count
 
 			if (returned_chars as usize) < buf_sz {
@@ -308,7 +308,7 @@ impl<'a, T> ListViewItem<'a, T> {
 	}
 
 	/// Retrieves the unique ID for the item index by sending an
-	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
+	/// [`LvmMapIndexToId`](crate::msg::LvmMapIndexToId) message.
 	///
 	/// If the item index has became invalid, returns `None`.
 	#[must_use]
@@ -316,7 +316,7 @@ impl<'a, T> ListViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(lvm::MapIndexToId { index: self.index })
+				.SendMessage(msg::LvmMapIndexToId { index: self.index })
 		}
 	}
 }

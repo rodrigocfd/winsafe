@@ -9,19 +9,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct AddPage<'a> {
+pub struct PsmAddPage<'a> {
 	pub hpspg: &'a HPROPSHEETPAGE,
 }
 
-impl<'a> MsgSend for AddPage<'a> {
+impl<'a> MsgSend for PsmAddPage<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::ADDPAGE.into(),
 			wparam: 0,
 			lparam: self.hpspg.ptr() as _,
@@ -33,17 +33,17 @@ impl<'a> MsgSend for AddPage<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Apply {}
+pub struct PsmApply {}
 
-impl MsgSend for Apply {
+impl MsgSend for PsmApply {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::APPLY.into(),
 			wparam: 0,
 			lparam: 0,
@@ -51,11 +51,11 @@ impl MsgSend for Apply {
 	}
 }
 
-pub_struct_msg_empty! { CancelToClose: co::PSM::CANCELTOCLOSE.into();
+pub_struct_msg_empty! { PsmCancelToClose: co::PSM::CANCELTOCLOSE.into();
 	/// [`PSM_CANCELTOCLOSE`](https://learn.microsoft.com/en-us/windows/win32/controls/psm-canceltoclose)
 }
 
-pub_struct_msg_empty! { Changed: co::PSM::CHANGED.into();
+pub_struct_msg_empty! { PsmChanged: co::PSM::CHANGED.into();
 	/// [`PSM_CHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/psm-changed)
 }
 
@@ -63,20 +63,20 @@ pub_struct_msg_empty! { Changed: co::PSM::CHANGED.into();
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct EnableWizButtons {
+pub struct PsmEnableWizButtons {
 	pub btns_to_check: co::PSWIZB,
 	pub btns_to_enable: co::PSWIZB,
 }
 
-impl MsgSend for EnableWizButtons {
+impl MsgSend for PsmEnableWizButtons {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::ENABLEWIZBUTTONS.into(),
 			wparam: self.btns_to_check.raw() as _,
 			lparam: self.btns_to_enable.raw() as _,
@@ -88,17 +88,17 @@ impl MsgSend for EnableWizButtons {
 /// message, which has no parameters.
 ///
 /// Return type: `HWND`.
-pub struct GetCurrentPageHwnd {}
+pub struct PsmGetCurrentPageHwnd {}
 
-impl MsgSend for GetCurrentPageHwnd {
+impl MsgSend for PsmGetCurrentPageHwnd {
 	type RetType = HWND;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { HWND::from_ptr(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::GETCURRENTPAGEHWND.into(),
 			wparam: 0,
 			lparam: 0,
@@ -110,17 +110,17 @@ impl MsgSend for GetCurrentPageHwnd {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<co::ID_PB>`.
-pub struct GetResult {}
+pub struct PsmGetResult {}
 
-impl MsgSend for GetResult {
+impl MsgSend for PsmGetResult {
 	type RetType = SysResult<co::ID_PB>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|n| unsafe { co::ID_PB::from_raw(n as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::GETRESULT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -132,17 +132,17 @@ impl MsgSend for GetResult {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct GetTabControl {}
+pub struct PsmGetTabControl {}
 
-impl MsgSend for GetTabControl {
+impl MsgSend for PsmGetTabControl {
 	type RetType = HWND;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { HWND::from_ptr(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::GETTABCONTROL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -154,19 +154,19 @@ impl MsgSend for GetTabControl {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct HwndToIndex<'a> {
+pub struct PsmHwndToIndex<'a> {
 	pub hwnd_page: &'a HWND,
 }
 
-impl<'a> MsgSend for HwndToIndex<'a> {
+impl<'a> MsgSend for PsmHwndToIndex<'a> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|n| n as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::GETTABCONTROL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -178,19 +178,19 @@ impl<'a> MsgSend for HwndToIndex<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct IdToIndex {
+pub struct PsmIdToIndex {
 	pub pg_res_id: u32,
 }
 
-impl MsgSend for IdToIndex {
+impl MsgSend for PsmIdToIndex {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|n| n as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::IDTOINDEX.into(),
 			wparam: 0,
 			lparam: self.pg_res_id as _,
@@ -202,19 +202,19 @@ impl MsgSend for IdToIndex {
 /// message parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct IndexToHwnd {
+pub struct PsmIndexToHwnd {
 	pub pg_index: u32,
 }
 
-impl MsgSend for IndexToHwnd {
+impl MsgSend for PsmIndexToHwnd {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::INDEXTOHWND.into(),
 			wparam: self.pg_index as _,
 			lparam: 0,
@@ -226,19 +226,19 @@ impl MsgSend for IndexToHwnd {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct IndexToId {
+pub struct PsmIndexToId {
 	pub pg_index: u32,
 }
 
-impl MsgSend for IndexToId {
+impl MsgSend for PsmIndexToId {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|n| n as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::INDEXTOID.into(),
 			wparam: self.pg_index as _,
 			lparam: 0,
@@ -250,19 +250,19 @@ impl MsgSend for IndexToId {
 /// message parameters.
 ///
 /// Return type: `SysResult<HPROPSHEETPAGE>`.
-pub struct IndexToPage {
+pub struct PsmIndexToPage {
 	pub pg_index: u32,
 }
 
-impl MsgSend for IndexToPage {
+impl MsgSend for PsmIndexToPage {
 	type RetType = SysResult<HPROPSHEETPAGE>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HPROPSHEETPAGE::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::INDEXTOPAGE.into(),
 			wparam: self.pg_index as _,
 			lparam: 0,
@@ -274,20 +274,20 @@ impl MsgSend for IndexToPage {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct InsertPage<'a> {
+pub struct PsmInsertPage<'a> {
 	pub index: u32,
 	pub hpage: &'a HPROPSHEETPAGE,
 }
 
-impl<'a> MsgSend for InsertPage<'a> {
+impl<'a> MsgSend for PsmInsertPage<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::INSERTPAGE.into(),
 			wparam: self.index as _,
 			lparam: self.hpage.ptr() as _,
@@ -299,19 +299,19 @@ impl<'a> MsgSend for InsertPage<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct IsDialogMessage<'a> {
+pub struct PsmIsDialogMessage<'a> {
 	pub msg: &'a mut MSG,
 }
 
-impl<'a> MsgSend for IsDialogMessage<'a> {
+impl<'a> MsgSend for PsmIsDialogMessage<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::ISDIALOGMESSAGE.into(),
 			wparam: 0,
 			lparam: self.msg as *mut _ as _,
@@ -323,19 +323,19 @@ impl<'a> MsgSend for IsDialogMessage<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<u32>`.
-pub struct PageToIndex<'a> {
+pub struct PsmPageToIndex<'a> {
 	pub hpspg: &'a HPROPSHEETPAGE,
 }
 
-impl<'a> MsgSend for PageToIndex<'a> {
+impl<'a> MsgSend for PsmPageToIndex<'a> {
 	type RetType = SysResult<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|n| n as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::PAGETOINDEX.into(),
 			wparam: 0,
 			lparam: self.hpspg.ptr() as _,
@@ -347,19 +347,19 @@ impl<'a> MsgSend for PageToIndex<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct PressButton {
+pub struct PsmPressButton {
 	pub index: co::PSBTN,
 }
 
-impl MsgSend for PressButton {
+impl MsgSend for PsmPressButton {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::PRESSBUTTON.into(),
 			wparam: self.index.raw() as _,
 			lparam: 0,
@@ -371,20 +371,20 @@ impl MsgSend for PressButton {
 /// message parameters.
 ///
 /// Return type: `isize`.
-pub struct QuerySiblings {
+pub struct PsmQuerySiblings {
 	pub param1: isize,
 	pub param2: isize,
 }
 
-impl MsgSend for QuerySiblings {
+impl MsgSend for PsmQuerySiblings {
 	type RetType = isize;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::QUERYSIBLINGS.into(),
 			wparam: self.param1 as _,
 			lparam: self.param2,
@@ -392,7 +392,7 @@ impl MsgSend for QuerySiblings {
 	}
 }
 
-pub_struct_msg_empty! { RebootSystem: co::PSM::REBOOTSYSTEM.into();
+pub_struct_msg_empty! { PsmRebootSystem: co::PSM::REBOOTSYSTEM.into();
 	/// [`PSM_REBOOTSYSTEM`](https://learn.microsoft.com/en-us/windows/win32/controls/psm-rebootsystem)
 }
 
@@ -400,17 +400,17 @@ pub_struct_msg_empty! { RebootSystem: co::PSM::REBOOTSYSTEM.into();
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct RecalcPageSizes {}
+pub struct PsmRecalcPageSizes {}
 
-impl MsgSend for RecalcPageSizes {
+impl MsgSend for PsmRecalcPageSizes {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::RECALCPAGESIZES.into(),
 			wparam: 0,
 			lparam: 0,
@@ -422,20 +422,20 @@ impl MsgSend for RecalcPageSizes {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct RemovePage<'a> {
+pub struct PsmRemovePage<'a> {
 	pub index: Option<u32>,
 	pub hpspg: Option<&'a HPROPSHEETPAGE>,
 }
 
-impl<'a> MsgSend for RemovePage<'a> {
+impl<'a> MsgSend for PsmRemovePage<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::REMOVEPAGE.into(),
 			wparam: self.index.unwrap_or_default() as _,
 			lparam: self.hpspg.map_or(std::ptr::null_mut(), |h| h.ptr()) as _,
@@ -443,7 +443,7 @@ impl<'a> MsgSend for RemovePage<'a> {
 	}
 }
 
-pub_struct_msg_empty! { RestartWindows: co::PSM::RESTARTWINDOWS.into();
+pub_struct_msg_empty! { PsmRestartWindows: co::PSM::RESTARTWINDOWS.into();
 	/// [`PSM_RESTARTWINDOWS`](https://learn.microsoft.com/en-us/windows/win32/controls/psm-restartwindows)
 }
 
@@ -451,20 +451,20 @@ pub_struct_msg_empty! { RestartWindows: co::PSM::RESTARTWINDOWS.into();
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetButtonText {
+pub struct PsmSetButtonText {
 	pub btn: co::PSWIZB,
 	pub text: WString,
 }
 
-impl MsgSend for SetButtonText {
+impl MsgSend for PsmSetButtonText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETBUTTONTEXT.into(),
 			wparam: self.btn.raw() as _,
 			lparam: self.text.as_ptr() as _,
@@ -476,20 +476,20 @@ impl MsgSend for SetButtonText {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCurSel<'a> {
+pub struct PsmSetCurSel<'a> {
 	pub index: Option<u32>,
 	pub hpspg: Option<&'a HPROPSHEETPAGE>,
 }
 
-impl<'a> MsgSend for SetCurSel<'a> {
+impl<'a> MsgSend for PsmSetCurSel<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETCURSEL.into(),
 			wparam: self.index.unwrap_or_default() as _,
 			lparam: self.hpspg.map_or(std::ptr::null_mut(), |h| h.ptr()) as _,
@@ -501,19 +501,19 @@ impl<'a> MsgSend for SetCurSel<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCurSelId {
+pub struct PsmSetCurSelId {
 	pub id: u16,
 }
 
-impl MsgSend for SetCurSelId {
+impl MsgSend for PsmSetCurSelId {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETCURSELID.into(),
 			wparam: self.id as _,
 			lparam: 0,
@@ -525,19 +525,19 @@ impl MsgSend for SetCurSelId {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetFinishText {
+pub struct PsmSetFinishText {
 	pub text: WString,
 }
 
-impl MsgSend for SetFinishText {
+impl MsgSend for PsmSetFinishText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETFINISHTEXT.into(),
 			wparam: 0,
 			lparam: self.text.as_ptr() as _,
@@ -549,20 +549,20 @@ impl MsgSend for SetFinishText {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetHeaderSubtitle {
+pub struct PsmSetHeaderSubtitle {
 	pub index: u32,
 	pub text: WString,
 }
 
-impl MsgSend for SetHeaderSubtitle {
+impl MsgSend for PsmSetHeaderSubtitle {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETHEADERSUBTITLE.into(),
 			wparam: self.index as _,
 			lparam: self.text.as_ptr() as _,
@@ -574,20 +574,20 @@ impl MsgSend for SetHeaderSubtitle {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetHeaderTitle {
+pub struct PsmSetHeaderTitle {
 	pub index: u32,
 	pub text: WString,
 }
 
-impl MsgSend for SetHeaderTitle {
+impl MsgSend for PsmSetHeaderTitle {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETHEADERTITLE.into(),
 			wparam: self.index as _,
 			lparam: self.text.as_ptr() as _,
@@ -599,19 +599,19 @@ impl MsgSend for SetHeaderTitle {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetNextText {
+pub struct PsmSetNextText {
 	pub text: WString,
 }
 
-impl MsgSend for SetNextText {
+impl MsgSend for PsmSetNextText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETNEXTTEXT.into(),
 			wparam: 0,
 			lparam: self.text.as_ptr() as _,
@@ -623,20 +623,20 @@ impl MsgSend for SetNextText {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetTitle {
+pub struct PsmSetTitle {
 	pub incl_prefix_suffix: co::PSH,
 	pub title: IdStr,
 }
 
-impl MsgSend for SetTitle {
+impl MsgSend for PsmSetTitle {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETTITLE.into(),
 			wparam: self.incl_prefix_suffix.raw() as _,
 			lparam: self.title.as_ptr() as _,
@@ -648,20 +648,20 @@ impl MsgSend for SetTitle {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetWizButtons {
+pub struct PsmSetWizButtons {
 	pub elev_icon: co::PSWIZBF,
 	pub btns: co::PSWIZB,
 }
 
-impl MsgSend for SetWizButtons {
+impl MsgSend for PsmSetWizButtons {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SETWIZBUTTONS.into(),
 			wparam: self.elev_icon.raw() as _,
 			lparam: self.btns.raw() as _,
@@ -673,20 +673,20 @@ impl MsgSend for SetWizButtons {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct ShowWizButtons {
+pub struct PsmShowWizButtons {
 	pub btns_to_check: co::PSWIZB,
 	pub btns_to_enable: co::PSWIZB,
 }
 
-impl MsgSend for ShowWizButtons {
+impl MsgSend for PsmShowWizButtons {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::SHOWWIZBUTTONS.into(),
 			wparam: self.btns_to_check.raw() as _,
 			lparam: self.btns_to_enable.raw() as _,
@@ -698,19 +698,19 @@ impl MsgSend for ShowWizButtons {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct Unchanged<'a> {
+pub struct PsmUnchanged<'a> {
 	pub hpspg: &'a HPROPSHEETPAGE,
 }
 
-impl<'a> MsgSend for Unchanged<'a> {
+impl<'a> MsgSend for PsmUnchanged<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PSM::UNCHANGED.into(),
 			wparam: self.hpspg.ptr() as _,
 			lparam: 0,

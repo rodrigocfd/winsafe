@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// A single item of a [`TreeView`](crate::gui::TreeView) control.
@@ -37,15 +37,15 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Adds a new child item by sending a
-	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
-	/// the newly added item.
+	/// [`TvmInsertItem`](crate::msg::TvmInsertItem) message, and returns the
+	/// newly added item.
 	pub fn add_child(&self, text: &str, icon_index: Option<u32>, data: T) -> SysResult<Self> {
 		self.owner
 			.raw_insert_item(Some(&self.hitem), text, icon_index, data)
 	}
 
 	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
-	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
+	/// stored data by sending an [`TvmGetItem`](crate::msg::TvmGetItem)
 	/// message.
 	///
 	/// # Panics
@@ -78,7 +78,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
+				.SendMessage(msg::TvmGetItem { tvitem: &mut tvix })
 				.expect("TreeViewItem with invalid index, no data.");
 		}
 
@@ -89,46 +89,46 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Deletes the item by sending a
-	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
+	/// [`TvmDeleteItem`](crate::msg::TvmDeleteItem) message.
 	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::DeleteItem { hitem: &self.hitem })
+				.SendMessage(msg::TvmDeleteItem { hitem: &self.hitem })
 		}
 	}
 
 	/// Begins in-place editing of the item's text by sending a
-	/// [`tvm::EditLabel`](crate::msg::tvm::EditLabel) message.
+	/// [`TvmEditLabel`](crate::msg::TvmEditLabel) message.
 	///
 	/// Returns a handle to the edit control.
 	pub fn edit_label(&self) -> SysResult<HWND> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::EditLabel { hitem: &self.hitem })
+				.SendMessage(msg::TvmEditLabel { hitem: &self.hitem })
 		}
 	}
 
 	/// Ensures that a tree-view item is visible, expanding the parent item or
 	/// scrolling the tree-view control, if necessary, by sending a
-	/// [`tvm::EnsureVisible`](crate::msg::tvm::EnsureVisible) message.
+	/// [`TvmEnsureVisible`](crate::msg::TvmEnsureVisible) message.
 	///
 	/// Returns whether a scroll occurred and no items were expanded.
 	pub fn ensure_visible(&self) -> bool {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::EnsureVisible { hitem: &self.hitem })
+				.SendMessage(msg::TvmEnsureVisible { hitem: &self.hitem })
 				!= 0
 		}
 	}
 
 	/// Expands or collapse the item by sending a
-	/// [`tvm::Expand`](crate::msg::tvm::Expand) message.
+	/// [`TvmExpand`](crate::msg::TvmExpand) message.
 	pub fn expand(&self, expand: bool) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd().SendMessage(tvm::Expand {
+			self.owner.hwnd().SendMessage(msg::TvmExpand {
 				hitem: &self.hitem,
 				action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
 			})
@@ -142,11 +142,11 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Tells if the item is expanded by sending a
-	/// [`tvm::GetItemState`](crate::msg::tvm::GetItemState) message.
+	/// [`TvmGetItemState`](crate::msg::TvmGetItemState) message.
 	#[must_use]
 	pub fn is_expanded(&self) -> bool {
 		unsafe {
-			self.owner.hwnd().SendMessage(tvm::GetItemState {
+			self.owner.hwnd().SendMessage(msg::TvmGetItemState {
 				hitem: &self.hitem,
 				mask: co::TVIS::EXPANDED,
 			})
@@ -155,7 +155,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Tells if the item is a root by sending a
-	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
+	/// [`TvmGetNextItem`](crate::msg::TvmGetNextItem) message.
 	#[must_use]
 	pub fn is_root(&self) -> bool {
 		self.parent().is_none()
@@ -180,11 +180,11 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Retrieves the parent of the item by sending a
-	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
+	/// [`TvmGetNextItem`](crate::msg::TvmGetNextItem) message.
 	#[must_use]
 	pub fn parent(&self) -> Option<Self> {
 		unsafe {
-			self.owner.hwnd().SendMessage(tvm::GetNextItem {
+			self.owner.hwnd().SendMessage(msg::TvmGetNextItem {
 				relationship: co::TVGN::PARENT,
 				hitem: Some(&self.hitem),
 			})
@@ -193,7 +193,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 	}
 
 	/// Sets the text of the item by sending a
-	/// [`tvm::SetItem`](crate::msg::tvm::SetItem) message.
+	/// [`TvmSetItem`](crate::msg::TvmSetItem) message.
 	pub fn set_text(&self, text: &str) -> SysResult<()> {
 		let mut buf = WString::from_str(text);
 
@@ -205,12 +205,12 @@ impl<'a, T> TreeViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::SetItem { tvitem: &tvix })
+				.SendMessage(msg::TvmSetItem { tvitem: &tvix })
 		}
 	}
 
 	/// Retrieves the text of the item by sending a
-	/// [`tvm::GetItem`](crate::msg::tvm::GetItem) message.
+	/// [`TvmGetItem`](crate::msg::TvmGetItem) message.
 	#[must_use]
 	pub fn text(&self) -> SysResult<String> {
 		let mut tvix = TVITEMEX::default();
@@ -223,7 +223,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvix })?;
+				.SendMessage(msg::TvmGetItem { tvitem: &mut tvix })?;
 		}
 
 		Ok(buf.to_string())

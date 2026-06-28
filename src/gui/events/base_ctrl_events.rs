@@ -4,7 +4,7 @@ use std::rc::Rc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 enum CtrlIds {
@@ -45,7 +45,7 @@ pub(in crate::gui) mod priv_ctrl_events {
 	use crate::co;
 	use crate::decl::*;
 	use crate::gui::privs::*;
-	use crate::msg::*;
+	use crate::msg;
 
 	pub trait GuiEvents {
 		#[allow(private_interfaces)]
@@ -54,7 +54,7 @@ pub(in crate::gui) mod priv_ctrl_events {
 
 		fn wm<F>(&self, msg: co::WM, func: F)
 		where
-			F: Fn(WndMsg) -> AnyResult<isize> + 'static;
+			F: Fn(msg::Wm) -> AnyResult<isize> + 'static;
 
 		fn wm_command<F>(&self, code: impl Into<co::CMD>, func: F)
 		where
@@ -62,7 +62,7 @@ pub(in crate::gui) mod priv_ctrl_events {
 
 		fn wm_notify<F>(&self, code: impl Into<NmhdrCode>, func: F)
 		where
-			F: Fn(wm::Notify) -> AnyResult<isize> + 'static;
+			F: Fn(msg::WmNotify) -> AnyResult<isize> + 'static;
 	}
 }
 
@@ -73,7 +73,7 @@ impl priv_ctrl_events::GuiEvents for BaseCtrlEvents {
 
 	fn wm<F>(&self, msg: co::WM, func: F)
 	where
-		F: Fn(WndMsg) -> AnyResult<isize> + 'static,
+		F: Fn(msg::Wm) -> AnyResult<isize> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		match &self.ctrl_ids {
@@ -109,7 +109,7 @@ impl priv_ctrl_events::GuiEvents for BaseCtrlEvents {
 
 	fn wm_notify<F>(&self, code: impl Into<NmhdrCode>, func: F)
 	where
-		F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
+		F: Fn(msg::WmNotify) -> AnyResult<isize> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		match &self.ctrl_ids {

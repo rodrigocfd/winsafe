@@ -6,7 +6,7 @@ use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
 
-pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
+pub_struct_msg_empty! { DtmCloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
 	/// [`DTM_CLOSEMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
 }
 
@@ -14,19 +14,19 @@ pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetDateTimePickerInfo<'a> {
+pub struct DtmGetDateTimePickerInfo<'a> {
 	pub info: &'a mut DATETIMEPICKERINFO,
 }
 
-impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
+impl<'a> MsgSend for DtmGetDateTimePickerInfo<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETDATETIMEPICKERINFO.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -38,19 +38,19 @@ impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetIdealSize<'a> {
+pub struct DtmGetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> MsgSend for GetIdealSize<'a> {
+impl<'a> MsgSend for DtmGetIdealSize<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETIDEALSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *mut _ as _,
@@ -62,19 +62,19 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-pub struct GetMcColor {
+pub struct DtmGetMcColor {
 	pub color_index: co::MCSC,
 }
 
-impl MsgSend for GetMcColor {
+impl MsgSend for DtmGetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETMCCOLOR.into(),
 			wparam: self.color_index.raw() as _,
 			lparam: 0,
@@ -86,17 +86,17 @@ impl MsgSend for GetMcColor {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
-pub struct GetMcStyle {}
+pub struct DtmGetMcStyle {}
 
-impl MsgSend for GetMcStyle {
+impl MsgSend for DtmGetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETMCSTYLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -108,17 +108,17 @@ impl MsgSend for GetMcStyle {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HWND>`.
-pub struct GetMonthCal {}
+pub struct DtmGetMonthCal {}
 
-impl MsgSend for GetMonthCal {
+impl MsgSend for DtmGetMonthCal {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETMONTHCAL.into(),
 			wparam: 0,
 			lparam: 0,
@@ -130,19 +130,19 @@ impl MsgSend for GetMonthCal {
 /// message parameters.
 ///
 /// Return type: `co::GDTR`.
-pub struct GetRange<'a> {
+pub struct DtmGetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for DtmGetRange<'a> {
 	type RetType = co::GDTR;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETRANGE.into(),
 			wparam: 0,
 			lparam: self.system_times as *mut _ as _,
@@ -154,11 +154,11 @@ impl<'a> MsgSend for GetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetSystemTime<'a> {
+pub struct DtmGetSystemTime<'a> {
 	pub system_time: &'a mut SYSTEMTIME,
 }
 
-impl<'a> MsgSend for GetSystemTime<'a> {
+impl<'a> MsgSend for DtmGetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -170,8 +170,8 @@ impl<'a> MsgSend for GetSystemTime<'a> {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::GETSYSTEMTIME.into(),
 			wparam: 0,
 			lparam: self.system_time as *mut _ as _,
@@ -183,19 +183,19 @@ impl<'a> MsgSend for GetSystemTime<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetFormat {
+pub struct DtmSetFormat {
 	pub format_string: Option<WString>,
 }
 
-impl MsgSend for SetFormat {
+impl MsgSend for DtmSetFormat {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::SETFORMAT.into(),
 			wparam: 0,
 			lparam: self.format_string.as_ref().map_or(0, |ws| ws.as_ptr() as _),
@@ -207,20 +207,20 @@ impl MsgSend for SetFormat {
 /// message parameters.
 ///
 /// Return type: `SysResult<COLORREF>`.
-pub struct SetMcColor {
+pub struct DtmSetMcColor {
 	pub color_index: co::MCSC,
 	pub color: COLORREF,
 }
 
-impl MsgSend for SetMcColor {
+impl MsgSend for DtmSetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::SETMCCOLOR.into(),
 			wparam: self.color_index.raw() as _,
 			lparam: u32::from(self.color) as _,
@@ -232,19 +232,19 @@ impl MsgSend for SetMcColor {
 /// message parameters.
 ///
 /// Return type: `SysResult<co::MCS>`.
-pub struct SetMcStyle {
+pub struct DtmSetMcStyle {
 	pub style: co::MCS,
 }
 
-impl MsgSend for SetMcStyle {
+impl MsgSend for DtmSetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::SETMCSTYLE.into(),
 			wparam: 0,
 			lparam: self.style.raw() as _,
@@ -256,20 +256,20 @@ impl MsgSend for SetMcStyle {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetRange<'a> {
+pub struct DtmSetRange<'a> {
 	pub valid: co::GDTR,
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-impl<'a> MsgSend for SetRange<'a> {
+impl<'a> MsgSend for DtmSetRange<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::SETRANGE.into(),
 			wparam: self.valid.raw() as _,
 			lparam: self.system_times as *mut _ as _,
@@ -281,19 +281,19 @@ impl<'a> MsgSend for SetRange<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetSystemTime<'a> {
+pub struct DtmSetSystemTime<'a> {
 	pub system_time: Option<&'a SYSTEMTIME>,
 }
 
-impl<'a> MsgSend for SetSystemTime<'a> {
+impl<'a> MsgSend for DtmSetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::DTM::SETSYSTEMTIME.into(),
 			wparam: self
 				.system_time

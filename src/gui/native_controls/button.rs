@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct ButtonObj {
@@ -152,10 +152,10 @@ impl Button {
 	}
 
 	/// Fires the click event for the button by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
+	/// [`BmClick`](crate::msg::BmClick) message.
 	pub fn trigger_click(&self) {
 		unsafe {
-			self.hwnd().SendMessage(bm::Click {});
+			self.hwnd().SendMessage(msg::BmClick {});
 		}
 	}
 }

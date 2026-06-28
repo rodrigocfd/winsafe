@@ -8,11 +8,11 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetCueBanner<'a> {
+pub struct CbGetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetCueBanner<'a> {
+impl<'a> MsgSend for CbGetCueBanner<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -22,8 +22,8 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::CB::GETCUEBANNER.into(),
 			wparam: unsafe { self.buffer.as_mut_ptr() } as _,
 			lparam: self.buffer.buf_len() as _,
@@ -35,17 +35,17 @@ impl<'a> MsgSend for GetCueBanner<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetMinVisible {}
+pub struct CbGetMinVisible {}
 
-impl MsgSend for GetMinVisible {
+impl MsgSend for CbGetMinVisible {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::CB::GETMINVISIBLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -57,11 +57,11 @@ impl MsgSend for GetMinVisible {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetCueBanner {
+pub struct CbSetCueBanner {
 	pub text: WString,
 }
 
-impl MsgSend for SetCueBanner {
+impl MsgSend for CbSetCueBanner {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -71,8 +71,8 @@ impl MsgSend for SetCueBanner {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::CB::SETCUEBANNER.into(),
 			wparam: 0,
 			lparam: self.text.as_ptr() as _,
@@ -84,19 +84,19 @@ impl MsgSend for SetCueBanner {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetMinVisible {
+pub struct CbSetMinVisible {
 	pub num_items: u32,
 }
 
-impl MsgSend for SetMinVisible {
+impl MsgSend for CbSetMinVisible {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::CB::SETMINVISIBLE.into(),
 			wparam: self.num_items as _,
 			lparam: 0,

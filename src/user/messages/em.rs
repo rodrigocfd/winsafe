@@ -10,17 +10,17 @@ use crate::user::privs::*;
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct CanUndo {}
+pub struct EmCanUndo {}
 
-impl MsgSend for CanUndo {
+impl MsgSend for EmCanUndo {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::CANUNDO.into(),
 			wparam: 0,
 			lparam: 0,
@@ -34,19 +34,19 @@ impl MsgSend for CanUndo {
 /// Return type: `(u16, u16)`.
 ///
 /// This message is implemented for ordinary edit controls, not for rich edit.
-pub struct CharFromPos {
+pub struct EmCharFromPos {
 	pub coords: POINT,
 }
 
-impl MsgSend for CharFromPos {
+impl MsgSend for EmCharFromPos {
 	type RetType = (u16, u16);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::CHARFROMPOS.into(),
 			wparam: 0,
 			lparam: u32::from(self.coords) as _,
@@ -54,7 +54,7 @@ impl MsgSend for CharFromPos {
 	}
 }
 
-pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into();
+pub_struct_msg_empty! { EmEmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into();
 	/// [`EM_EMPTYUNDOBUFFER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-emptyundobuffer)
 }
 
@@ -62,19 +62,19 @@ pub_struct_msg_empty! { EmptyUndoBuffer: co::EM::EMPTYUNDOBUFFER.into();
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct FmtLines {
+pub struct EmFmtLines {
 	pub insert_soft_line_breaks: bool,
 }
 
-impl MsgSend for FmtLines {
+impl MsgSend for EmFmtLines {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::FMTLINES.into(),
 			wparam: self.insert_soft_line_breaks as _,
 			lparam: 0,
@@ -86,17 +86,17 @@ impl MsgSend for FmtLines {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetFirstVisibleLine {}
+pub struct EmGetFirstVisibleLine {}
 
-impl MsgSend for GetFirstVisibleLine {
+impl MsgSend for EmGetFirstVisibleLine {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETFIRSTVISIBLELINE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -108,17 +108,17 @@ impl MsgSend for GetFirstVisibleLine {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<HLOCAL>`.
-pub struct GetHandle {}
+pub struct EmGetHandle {}
 
-impl MsgSend for GetHandle {
+impl MsgSend for EmGetHandle {
 	type RetType = SysResult<HLOCAL>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| unsafe { HLOCAL::from_ptr(v as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETHANDLE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -130,17 +130,17 @@ impl MsgSend for GetHandle {
 /// message, which has no parameters.
 ///
 /// Return type: `co::EIMES`.
-pub struct GetImeStatus {}
+pub struct EmGetImeStatus {}
 
-impl MsgSend for GetImeStatus {
+impl MsgSend for EmGetImeStatus {
 	type RetType = co::EIMES;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETIMESTATUS.into(),
 			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
 			lparam: 0,
@@ -152,17 +152,17 @@ impl MsgSend for GetImeStatus {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetLimitText {}
+pub struct EmGetLimitText {}
 
-impl MsgSend for GetLimitText {
+impl MsgSend for EmGetLimitText {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETLIMITTEXT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -181,19 +181,19 @@ impl MsgSend for GetLimitText {
 /// differentiate between an error and an empty line.
 ///
 /// Return type: `Option<u32>`.
-pub struct GetLine<'a> {
+pub struct EmGetLine<'a> {
 	pub index: u16,
 	pub buffer: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetLine<'a> {
+impl<'a> MsgSend for EmGetLine<'a> {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|count| count as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
 		self.buffer.fill_with_zero();
 		let buf_len = self.buffer.buf_len() - 1; // leave room for terminating null
 		self.buffer
@@ -202,7 +202,7 @@ impl<'a> MsgSend for GetLine<'a> {
 			.next()
 			.map(|wchar| *wchar = buf_len as _); // leave room for terminating null
 
-		WndMsg {
+		Wm {
 			msg_id: co::EM::GETLINE.into(),
 			wparam: self.index as _,
 			lparam: unsafe { self.buffer.as_mut_ptr() } as _,
@@ -214,17 +214,17 @@ impl<'a> MsgSend for GetLine<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetLineCount {}
+pub struct EmGetLineCount {}
 
-impl MsgSend for GetLineCount {
+impl MsgSend for EmGetLineCount {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETLINECOUNT.into(),
 			wparam: 0,
 			lparam: 0,
@@ -236,17 +236,17 @@ impl MsgSend for GetLineCount {
 /// message, which has no parameters.
 ///
 /// Return type: `SIZE`.
-pub struct GetMargins {}
+pub struct EmGetMargins {}
 
-impl MsgSend for GetMargins {
+impl MsgSend for EmGetMargins {
 	type RetType = SIZE;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		SIZE::from(v as u32)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETMARGINS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -258,17 +258,17 @@ impl MsgSend for GetMargins {
 /// message, which has no parameters.
 ///
 /// Return type: `bool`.
-pub struct GetModify {}
+pub struct EmGetModify {}
 
-impl MsgSend for GetModify {
+impl MsgSend for EmGetModify {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETMODIFY.into(),
 			wparam: 0,
 			lparam: 0,
@@ -280,17 +280,17 @@ impl MsgSend for GetModify {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<char>`.
-pub struct GetPasswordChar {}
+pub struct EmGetPasswordChar {}
 
-impl MsgSend for GetPasswordChar {
+impl MsgSend for EmGetPasswordChar {
 	type RetType = Option<char>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|c| unsafe { std::char::from_u32_unchecked(c as _) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETPASSWORDCHAR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -302,19 +302,19 @@ impl MsgSend for GetPasswordChar {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetRect<'a> {
+pub struct EmGetRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetRect<'a> {
+impl<'a> MsgSend for EmGetRect<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETRECT.into(),
 			wparam: 0,
 			lparam: self.rect as *mut _ as _,
@@ -326,20 +326,20 @@ impl<'a> MsgSend for GetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct GetSel<'a, 'b> {
+pub struct EmGetSel<'a, 'b> {
 	pub first_index: Option<&'a mut u32>,
 	pub past_last_index: Option<&'b mut u32>,
 }
 
-impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
+impl<'a, 'b> MsgSend for EmGetSel<'a, 'b> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETSEL.into(),
 			wparam: self.first_index.as_mut().map_or(0, |r| r as *mut _ as _),
 			lparam: self
@@ -354,17 +354,17 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetThumb {}
+pub struct EmGetThumb {}
 
-impl MsgSend for GetThumb {
+impl MsgSend for EmGetThumb {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETTHUMB.into(),
 			wparam: 0,
 			lparam: 0,
@@ -376,17 +376,17 @@ impl MsgSend for GetThumb {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<EDITWORDBREAKPROC>`.
-pub struct GetWordBreakProc {}
+pub struct EmGetWordBreakProc {}
 
-impl MsgSend for GetWordBreakProc {
+impl MsgSend for EmGetWordBreakProc {
 	type RetType = Option<EDITWORDBREAKPROC>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_none(v).map(|p| unsafe { std::mem::transmute(p) })
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::GETTHUMB.into(),
 			wparam: 0,
 			lparam: 0,
@@ -398,19 +398,19 @@ impl MsgSend for GetWordBreakProc {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct LimitText {
+pub struct EmLimitText {
 	pub max: Option<u32>,
 }
 
-impl MsgSend for LimitText {
+impl MsgSend for EmLimitText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::LIMITTEXT.into(),
 			wparam: self.max.unwrap_or(0) as _,
 			lparam: 0,
@@ -422,19 +422,19 @@ impl MsgSend for LimitText {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct LineFromChar {
+pub struct EmLineFromChar {
 	pub char_index: Option<u32>,
 }
 
-impl MsgSend for LineFromChar {
+impl MsgSend for EmLineFromChar {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::LINEFROMCHAR.into(),
 			wparam: self.char_index.unwrap_or(-1i32 as _) as _,
 			lparam: 0,
@@ -446,19 +446,19 @@ impl MsgSend for LineFromChar {
 /// message parameters.
 ///
 /// Return type: `Option<u32>`.
-pub struct LineIndex {
+pub struct EmLineIndex {
 	pub line_index: Option<u32>,
 }
 
-impl MsgSend for LineIndex {
+impl MsgSend for EmLineIndex {
 	type RetType = Option<u32>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::LINEINDEX.into(),
 			wparam: self.line_index.unwrap_or(-1i32 as _) as _,
 			lparam: 0,
@@ -470,19 +470,19 @@ impl MsgSend for LineIndex {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct LineLength {
+pub struct EmLineLength {
 	pub char_index: Option<u32>,
 }
 
-impl MsgSend for LineLength {
+impl MsgSend for EmLineLength {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::LINELENGTH.into(),
 			wparam: self.char_index.unwrap_or(-1i32 as _) as _,
 			lparam: 0,
@@ -494,20 +494,20 @@ impl MsgSend for LineLength {
 /// message parameters.
 ///
 /// Return type: `bool`.
-pub struct LineScroll {
+pub struct EmLineScroll {
 	pub num_chars: u32,
 	pub num_lines: u32,
 }
 
-impl MsgSend for LineScroll {
+impl MsgSend for EmLineScroll {
 	type RetType = bool;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::LINESCROLL.into(),
 			wparam: self.num_chars as _,
 			lparam: self.num_lines as _,
@@ -521,19 +521,19 @@ impl MsgSend for LineScroll {
 /// Return type: `POINT`.
 ///
 /// This message is implemented for ordinary edit controls, not for rich edit.
-pub struct PosFromChar {
+pub struct EmPosFromChar {
 	pub char_index: u32,
 }
 
-impl MsgSend for PosFromChar {
+impl MsgSend for EmPosFromChar {
 	type RetType = POINT;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		POINT::from(v as u32)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::POSFROMCHAR.into(),
 			wparam: self.char_index as _,
 			lparam: 0,
@@ -545,20 +545,20 @@ impl MsgSend for PosFromChar {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct ReplaceSel {
+pub struct EmReplaceSel {
 	pub can_be_undone: bool,
 	pub replacement_text: WString,
 }
 
-impl MsgSend for ReplaceSel {
+impl MsgSend for EmReplaceSel {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::REPLACESEL.into(),
 			wparam: self.can_be_undone as _,
 			lparam: self.replacement_text.as_ptr() as _,
@@ -570,19 +570,19 @@ impl MsgSend for ReplaceSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<u16>`.
-pub struct Scroll {
+pub struct EmScroll {
 	pub action: co::SB_EM,
 }
 
-impl MsgSend for Scroll {
+impl MsgSend for EmScroll {
 	type RetType = SysResult<u16>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|num_lines| num_lines as _)
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SCROLL.into(),
 			wparam: self.action.raw() as _,
 			lparam: 0,
@@ -590,7 +590,7 @@ impl MsgSend for Scroll {
 	}
 }
 
-pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into();
+pub_struct_msg_empty! { EmScrollCaret: co::EM::SCROLLCARET.into();
 	/// [`EM_SCROLLCARET`](https://learn.microsoft.com/en-us/windows/win32/controls/em-scrollcaret)
 }
 
@@ -598,19 +598,19 @@ pub_struct_msg_empty! { ScrollCaret: co::EM::SCROLLCARET.into();
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetHandle<'a> {
+pub struct EmSetHandle<'a> {
 	pub handle: &'a HLOCAL,
 }
 
-impl<'a> MsgSend for SetHandle<'a> {
+impl<'a> MsgSend for EmSetHandle<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETHANDLE.into(),
 			wparam: self.handle.ptr() as _,
 			lparam: 0,
@@ -622,19 +622,19 @@ impl<'a> MsgSend for SetHandle<'a> {
 /// message parameters.
 ///
 /// Return type: `co::EIMES`.
-pub struct SetImeStatus {
+pub struct EmSetImeStatus {
 	pub status: co::EIMES,
 }
 
-impl MsgSend for SetImeStatus {
+impl MsgSend for EmSetImeStatus {
 	type RetType = co::EIMES;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETIMESTATUS.into(),
 			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
 			lparam: self.status.raw() as _,
@@ -646,19 +646,19 @@ impl MsgSend for SetImeStatus {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetLimitText {
+pub struct EmSetLimitText {
 	pub max_chars: Option<u32>,
 }
 
-impl MsgSend for SetLimitText {
+impl MsgSend for EmSetLimitText {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETLIMITTEXT.into(),
 			wparam: self.max_chars.unwrap_or(0) as _,
 			lparam: 0,
@@ -670,20 +670,20 @@ impl MsgSend for SetLimitText {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetMargins {
+pub struct EmSetMargins {
 	pub margins: co::EC,
 	pub size: SIZE,
 }
 
-impl MsgSend for SetMargins {
+impl MsgSend for EmSetMargins {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETMARGINS.into(),
 			wparam: self.margins.raw() as _,
 			lparam: u32::from(self.size) as _,
@@ -695,19 +695,19 @@ impl MsgSend for SetMargins {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetModify {
+pub struct EmSetModify {
 	pub flag: bool,
 }
 
-impl MsgSend for SetModify {
+impl MsgSend for EmSetModify {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETMODIFY.into(),
 			wparam: self.flag as _,
 			lparam: 0,
@@ -719,19 +719,19 @@ impl MsgSend for SetModify {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetPasswordChar {
+pub struct EmSetPasswordChar {
 	pub character: Option<char>,
 }
 
-impl MsgSend for SetPasswordChar {
+impl MsgSend for EmSetPasswordChar {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETPASSWORDCHAR.into(),
 			wparam: self.character.map(|ch| ch as u32).unwrap_or(0) as _,
 			lparam: 0,
@@ -743,19 +743,19 @@ impl MsgSend for SetPasswordChar {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetReadOnly {
+pub struct EmSetReadOnly {
 	pub read_only: bool,
 }
 
-impl MsgSend for SetReadOnly {
+impl MsgSend for EmSetReadOnly {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETREADONLY.into(),
 			wparam: self.read_only as _,
 			lparam: 0,
@@ -767,20 +767,20 @@ impl MsgSend for SetReadOnly {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRect<'a> {
+pub struct EmSetRect<'a> {
 	pub is_absolute_coords: bool,
 	pub rect: Option<&'a RECT>,
 }
 
-impl<'a> MsgSend for SetRect<'a> {
+impl<'a> MsgSend for EmSetRect<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETRECT.into(),
 			wparam: self.is_absolute_coords as _,
 			lparam: self.rect.map_or(0, |rect| rect as *const _ as _),
@@ -792,20 +792,20 @@ impl<'a> MsgSend for SetRect<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRectNp<'a> {
+pub struct EmSetRectNp<'a> {
 	pub is_absolute_coords: bool,
 	pub rect: Option<&'a RECT>,
 }
 
-impl<'a> MsgSend for SetRectNp<'a> {
+impl<'a> MsgSend for EmSetRectNp<'a> {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETRECTNP.into(),
 			wparam: self.is_absolute_coords as _,
 			lparam: self.rect.map_or(0, |rect| rect as *const _ as _),
@@ -817,20 +817,20 @@ impl<'a> MsgSend for SetRectNp<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetSel {
+pub struct EmSetSel {
 	pub start: i32,
 	pub end: i32,
 }
 
-impl MsgSend for SetSel {
+impl MsgSend for EmSetSel {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETSEL.into(),
 			wparam: self.start as _,
 			lparam: self.end as _,
@@ -842,19 +842,19 @@ impl MsgSend for SetSel {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTabStops<'a> {
+pub struct EmSetTabStops<'a> {
 	pub tab_stops: Option<&'a [i32]>,
 }
 
-impl<'a> MsgSend for SetTabStops<'a> {
+impl<'a> MsgSend for EmSetTabStops<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETTABSTOPS.into(),
 			wparam: self.tab_stops.map_or(0, |ts| ts.len() as _),
 			lparam: self.tab_stops.map_or(0, |ts| vec_ptr(ts) as _),
@@ -866,19 +866,19 @@ impl<'a> MsgSend for SetTabStops<'a> {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetWordBreakProc {
+pub struct EmSetWordBreakProc {
 	pub proc: Option<EDITWORDBREAKPROC>,
 }
 
-impl MsgSend for SetWordBreakProc {
+impl MsgSend for EmSetWordBreakProc {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::SETWORDBREAKPROC.into(),
 			wparam: 0,
 			lparam: self.proc.map_or(0, |proc| proc as _),
@@ -890,17 +890,17 @@ impl MsgSend for SetWordBreakProc {
 /// message, which has no parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct Undo {}
+pub struct EmUndo {}
 
-impl MsgSend for Undo {
+impl MsgSend for EmUndo {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::EM::UNDO.into(),
 			wparam: 0,
 			lparam: 0,

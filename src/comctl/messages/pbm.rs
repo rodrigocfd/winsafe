@@ -9,19 +9,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct DeltaPos {
+pub struct PbmDeltaPos {
 	pub advance_amount: u32,
 }
 
-impl MsgSend for DeltaPos {
+impl MsgSend for PbmDeltaPos {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::DELTAPOS.into(),
 			wparam: self.advance_amount as _,
 			lparam: 0,
@@ -33,9 +33,9 @@ impl MsgSend for DeltaPos {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct GetBarColor {}
+pub struct PbmGetBarColor {}
 
-impl MsgSend for GetBarColor {
+impl MsgSend for PbmGetBarColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -45,8 +45,8 @@ impl MsgSend for GetBarColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::GETBARCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -58,9 +58,9 @@ impl MsgSend for GetBarColor {
 /// message, which has no parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct GetBkColor {}
+pub struct PbmGetBkColor {}
 
-impl MsgSend for GetBkColor {
+impl MsgSend for PbmGetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -70,8 +70,8 @@ impl MsgSend for GetBkColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::GETBKCOLOR.into(),
 			wparam: 0,
 			lparam: 0,
@@ -83,17 +83,17 @@ impl MsgSend for GetBkColor {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetPos {}
+pub struct PbmGetPos {}
 
-impl MsgSend for GetPos {
+impl MsgSend for PbmGetPos {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::GETPOS.into(),
 			wparam: 0,
 			lparam: 0,
@@ -105,20 +105,20 @@ impl MsgSend for GetPos {
 /// message parameters.
 ///
 /// Return type: `i32`.
-pub struct GetRange<'a> {
+pub struct PbmGetRange<'a> {
 	pub return_low: bool,
 	pub ranges: Option<&'a mut PBRANGE>,
 }
 
-impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for PbmGetRange<'a> {
 	type RetType = i32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::GETRANGE.into(),
 			wparam: self.return_low as _,
 			lparam: self.ranges.as_mut().map_or(0, |r| r as *mut _ as _),
@@ -130,17 +130,17 @@ impl<'a> MsgSend for GetRange<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `co::PBST`.
-pub struct GetState {}
+pub struct PbmGetState {}
 
-impl MsgSend for GetState {
+impl MsgSend for PbmGetState {
 	type RetType = co::PBST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::PBST::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::GETSTATE.into(),
 			wparam: 0,
 			lparam: 0,
@@ -152,17 +152,17 @@ impl MsgSend for GetState {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetStep {}
+pub struct PbmGetStep {}
 
-impl MsgSend for GetStep {
+impl MsgSend for PbmGetStep {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETSTEP.into(),
 			wparam: 0,
 			lparam: 0,
@@ -174,11 +174,11 @@ impl MsgSend for GetStep {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetBarColor {
+pub struct PbmSetBarColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetBarColor {
+impl MsgSend for PbmSetBarColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -188,8 +188,8 @@ impl MsgSend for SetBarColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETBARCOLOR.into(),
 			wparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
 			lparam: 0,
@@ -201,11 +201,11 @@ impl MsgSend for SetBarColor {
 /// message parameters.
 ///
 /// Return type: `Option<COLORREF>`.
-pub struct SetBkColor {
+pub struct PbmSetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-impl MsgSend for SetBkColor {
+impl MsgSend for PbmSetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -215,8 +215,8 @@ impl MsgSend for SetBkColor {
 		}
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETBKCOLOR.into(),
 			wparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
 			lparam: 0,
@@ -228,20 +228,20 @@ impl MsgSend for SetBkColor {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetMarquee {
+pub struct PbmSetMarquee {
 	pub turn_on: bool,
 	pub time_ms: Option<u32>,
 }
 
-impl MsgSend for SetMarquee {
+impl MsgSend for PbmSetMarquee {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETMARQUEE.into(),
 			wparam: self.turn_on as _,
 			lparam: self.time_ms.unwrap_or(0) as _,
@@ -253,19 +253,19 @@ impl MsgSend for SetMarquee {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetPos {
+pub struct PbmSetPos {
 	pub position: u32,
 }
 
-impl MsgSend for SetPos {
+impl MsgSend for PbmSetPos {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETPOS.into(),
 			wparam: self.position as _,
 			lparam: 0,
@@ -277,20 +277,20 @@ impl MsgSend for SetPos {
 /// message parameters.
 ///
 /// Return type: `SysResult<(u16, u16)>`.
-pub struct SetRange {
+pub struct PbmSetRange {
 	pub min: u16,
 	pub max: u16,
 }
 
-impl MsgSend for SetRange {
+impl MsgSend for PbmSetRange {
 	type RetType = SysResult<(u16, u16)>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETRANGE.into(),
 			wparam: 0,
 			lparam: MAKEDWORD(self.min, self.max) as _,
@@ -302,20 +302,20 @@ impl MsgSend for SetRange {
 /// message parameters.
 ///
 /// Return type: `()`.
-pub struct SetRange32 {
+pub struct PbmSetRange32 {
 	pub min: u32,
 	pub max: u32,
 }
 
-impl MsgSend for SetRange32 {
+impl MsgSend for PbmSetRange32 {
 	type RetType = ();
 
 	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETRANGE32.into(),
 			wparam: self.min as _,
 			lparam: self.max as _,
@@ -327,19 +327,19 @@ impl MsgSend for SetRange32 {
 /// message parameters.
 ///
 /// Return type: `co::PBST`.
-pub struct SetState {
+pub struct PbmSetState {
 	pub state: co::PBST,
 }
 
-impl MsgSend for SetState {
+impl MsgSend for PbmSetState {
 	type RetType = co::PBST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		unsafe { co::PBST::from_raw(v as _) }
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETSTATE.into(),
 			wparam: self.state.raw() as _,
 			lparam: 0,
@@ -351,19 +351,19 @@ impl MsgSend for SetState {
 /// message parameters.
 ///
 /// Return type: `u32`.
-pub struct SetStep {
+pub struct PbmSetStep {
 	pub step: u32,
 }
 
-impl MsgSend for SetStep {
+impl MsgSend for PbmSetStep {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::SETSTEP.into(),
 			wparam: self.step as _,
 			lparam: 0,
@@ -375,17 +375,17 @@ impl MsgSend for SetStep {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct StepIt {}
+pub struct PbmStepIt {}
 
-impl MsgSend for StepIt {
+impl MsgSend for PbmStepIt {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::PBM::STEPIT.into(),
 			wparam: 0,
 			lparam: 0,

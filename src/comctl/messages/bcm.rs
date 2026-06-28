@@ -8,19 +8,19 @@ use crate::user::privs::*;
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetIdealSize<'a> {
+pub struct BcmGetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-impl<'a> MsgSend for GetIdealSize<'a> {
+impl<'a> MsgSend for BcmGetIdealSize<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETIDEALSIZE.into(),
 			wparam: 0,
 			lparam: self.size as *mut _ as _,
@@ -32,19 +32,19 @@ impl<'a> MsgSend for GetIdealSize<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetImageList<'a> {
+pub struct BcmGetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
-impl<'a> MsgSend for GetImageList<'a> {
+impl<'a> MsgSend for BcmGetImageList<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *mut _ as _,
@@ -56,19 +56,19 @@ impl<'a> MsgSend for GetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetNote<'a> {
+pub struct BcmGetNote<'a> {
 	pub text: &'a mut WString,
 }
 
-impl<'a> MsgSend for GetNote<'a> {
+impl<'a> MsgSend for BcmGetNote<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETNOTE.into(),
 			wparam: self.text.buf_len(),
 			lparam: unsafe { self.text.as_mut_ptr() } as _,
@@ -80,17 +80,17 @@ impl<'a> MsgSend for GetNote<'a> {
 /// message, which has no parameters.
 ///
 /// Return type: `u32`.
-pub struct GetNoteLength {}
+pub struct BcmGetNoteLength {}
 
-impl MsgSend for GetNoteLength {
+impl MsgSend for BcmGetNoteLength {
 	type RetType = u32;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETNOTELENGTH.into(),
 			wparam: 0,
 			lparam: 0,
@@ -102,19 +102,19 @@ impl MsgSend for GetNoteLength {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetSplitInfo<'a> {
+pub struct BcmGetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
-impl<'a> MsgSend for GetSplitInfo<'a> {
+impl<'a> MsgSend for BcmGetSplitInfo<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *mut _ as _,
@@ -126,19 +126,19 @@ impl<'a> MsgSend for GetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct GetTextMargin<'a> {
+pub struct BcmGetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
-impl<'a> MsgSend for GetTextMargin<'a> {
+impl<'a> MsgSend for BcmGetTextMargin<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::GETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *mut _ as _,
@@ -150,19 +150,19 @@ impl<'a> MsgSend for GetTextMargin<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetDropDownState {
+pub struct BcmSetDropDownState {
 	pub is_pushed: bool,
 }
 
-impl MsgSend for SetDropDownState {
+impl MsgSend for BcmSetDropDownState {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETDROPDOWNSTATE.into(),
 			wparam: self.is_pushed as _,
 			lparam: 0,
@@ -174,19 +174,19 @@ impl MsgSend for SetDropDownState {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetImageList<'a> {
+pub struct BcmSetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
-impl<'a> MsgSend for SetImageList<'a> {
+impl<'a> MsgSend for BcmSetImageList<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETIMAGELIST.into(),
 			wparam: 0,
 			lparam: self.info as *const _ as _,
@@ -198,19 +198,19 @@ impl<'a> MsgSend for SetImageList<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetNote {
+pub struct BcmSetNote {
 	pub text: WString,
 }
 
-impl MsgSend for SetNote {
+impl MsgSend for BcmSetNote {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETNOTE.into(),
 			wparam: self.text.buf_len(),
 			lparam: self.text.as_ptr() as _,
@@ -222,19 +222,19 @@ impl MsgSend for SetNote {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetShield {
+pub struct BcmSetShield {
 	pub has_elevated_icon: bool,
 }
 
-impl MsgSend for SetShield {
+impl MsgSend for BcmSetShield {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETSHIELD.into(),
 			wparam: self.has_elevated_icon as _,
 			lparam: 0,
@@ -246,19 +246,19 @@ impl MsgSend for SetShield {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetSplitInfo<'a> {
+pub struct BcmSetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
-impl<'a> MsgSend for SetSplitInfo<'a> {
+impl<'a> MsgSend for BcmSetSplitInfo<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETSPLITINFO.into(),
 			wparam: 0,
 			lparam: self.splitinfo as *const _ as _,
@@ -270,19 +270,19 @@ impl<'a> MsgSend for SetSplitInfo<'a> {
 /// message parameters.
 ///
 /// Return type: `SysResult<()>`.
-pub struct SetTextMargin<'a> {
+pub struct BcmSetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
-impl<'a> MsgSend for SetTextMargin<'a> {
+impl<'a> MsgSend for BcmSetTextMargin<'a> {
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
-	fn as_generic_wm(&mut self) -> WndMsg {
-		WndMsg {
+	fn as_generic_wm(&mut self) -> Wm {
+		Wm {
 			msg_id: co::BCM::SETTEXTMARGIN.into(),
 			wparam: 0,
 			lparam: self.margins as *const _ as _,

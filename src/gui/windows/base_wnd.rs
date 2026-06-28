@@ -69,7 +69,7 @@ impl BaseWnd {
 		&self.after_events
 	}
 
-	pub(in crate::gui) fn process_msgs(&self, p: WndMsg) -> AnyResult<(bool, Option<isize>, bool)> {
+	pub(in crate::gui) fn process_msgs(&self, p: Wm) -> AnyResult<(bool, Option<isize>, bool)> {
 		Ok((
 			self.before_events.process_all_messages(p)?,
 			self.user_events.process_last_message(p).transpose()?,
@@ -99,7 +99,7 @@ impl BaseWnd {
 				let pack = Box::new(ThreadPack { func: Box::new(|| Err(err)) });
 				let ptr_pack = Box::into_raw(pack);
 				hwnd.GetAncestor(co::GA::ROOTOWNER).map(|hwnd| unsafe {
-					hwnd.SendMessage(WndMsg {
+					hwnd.SendMessage(Wm {
 						msg_id: Self::WM_UI_THREAD,
 						wparam: Self::WM_UI_THREAD.raw() as _,
 						lparam: ptr_pack as _, // send pointer
@@ -128,7 +128,7 @@ impl BaseWnd {
 		self.hwnd()
 			.GetAncestor(co::GA::ROOTOWNER)
 			.map(|hwnd| unsafe {
-				hwnd.SendMessage(WndMsg {
+				hwnd.SendMessage(Wm {
 					msg_id: Self::WM_UI_THREAD,
 					wparam: Self::WM_UI_THREAD.raw() as _,
 					lparam: ptr_pack as _, // send pointer

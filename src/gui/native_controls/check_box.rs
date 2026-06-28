@@ -7,7 +7,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 struct CheckBoxObj {
@@ -102,7 +102,7 @@ impl CheckBox {
 		new_self
 	}
 
-	/// Sends a [`bm::GetCheck`](crate::msg::bm::GetCheck) message and returns
+	/// Sends a [`BmGetCheck`](crate::msg::BmGetCheck) message and returns
 	/// `true` if current state is `co::BST::CHECKED`.
 	#[must_use]
 	pub fn is_checked(&self) -> bool {
@@ -110,31 +110,31 @@ impl CheckBox {
 	}
 
 	/// Sets or unsets the check mark by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message.
 	pub fn set_check(&self, check: bool) {
 		self.set_state(if check { co::BST::CHECKED } else { co::BST::UNCHECKED });
 	}
 
 	/// Sets the current check state by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
-	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
-	/// can handle the event.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message, then sends a
+	/// [`WmCommand`](crate::msg::WmCommand) message to the parent, so it can
+	/// handle the event.
 	pub fn set_check_and_trigger(&self, check: bool) -> SysResult<()> {
 		self.set_state_and_trigger(if check { co::BST::CHECKED } else { co::BST::UNCHECKED })
 	}
 
 	/// Sets the current check state by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message.
 	pub fn set_state(&self, state: co::BST) {
 		unsafe {
-			self.hwnd().SendMessage(bm::SetCheck { state });
+			self.hwnd().SendMessage(msg::BmSetCheck { state });
 		}
 	}
 
 	/// Sets the current check state by sending a
-	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
-	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
-	/// can handle the event.
+	/// [`BmSetCheck`](crate::msg::BmSetCheck) message, then sends a
+	/// [`WmCommand`](crate::msg::WmCommand) message to the parent, so it can
+	/// handle the event.
 	pub fn set_state_and_trigger(&self, state: co::BST) -> SysResult<()> {
 		self.set_state(state);
 		self.hwnd().GetParent()?.SendCommand(AccelMenuCtrl::Ctrl {
@@ -160,17 +160,17 @@ impl CheckBox {
 	}
 
 	/// Retrieves the current check state by sending a
-	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	/// [`BmGetCheck`](crate::msg::BmGetCheck) message.
 	#[must_use]
 	pub fn state(&self) -> co::BST {
-		unsafe { self.hwnd().SendMessage(bm::GetCheck {}) }
+		unsafe { self.hwnd().SendMessage(msg::BmGetCheck {}) }
 	}
 
 	/// Fires the click event for the check box by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
+	/// [`BmClick`](crate::msg::BmClick) message.
 	pub fn trigger_click(&self) {
 		unsafe {
-			self.hwnd().SendMessage(bm::Click {});
+			self.hwnd().SendMessage(msg::BmClick {});
 		}
 	}
 }

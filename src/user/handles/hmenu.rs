@@ -4,7 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::macros::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 use crate::user::{ffi, iterators::*};
 
@@ -152,9 +152,7 @@ impl HMENU {
 		let pos = hwnd_coords_relative_to.ClientToScreen(pos)?; // now relative to screen
 		hwnd_parent.SetForegroundWindow();
 		self.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)?;
-		unsafe {
-			hwnd_parent.PostMessage(wm::Null {})?; // necessary according to TrackPopupMenu docs
-		}
+		unsafe { hwnd_parent.PostMessage(msg::WmNull {})? }; // necessary according to TrackPopupMenu docs
 		Ok(())
 	}
 

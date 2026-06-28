@@ -1,6 +1,6 @@
 use crate::gui::*;
 use crate::kernel::privs::*;
-use crate::msg::*;
+use crate::msg;
 use crate::prelude::*;
 
 /// Exposes the part methods of a [`StatusBar`](crate::gui::StatusBar) control.
@@ -18,13 +18,13 @@ impl<'a> StatusBarParts<'a> {
 	}
 
 	/// Retrieves the number of parts by sending an
-	/// [`sb::GetParts`](crate::msg::sb::GetParts) message.
+	/// [`SbGetParts`](crate::msg::SbGetParts) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(sb::GetParts { right_edges: None }) as _
+				.SendMessage(msg::SbGetParts { right_edges: None }) as _
 		}
 	}
 

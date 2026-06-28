@@ -260,7 +260,7 @@ macro_rules! const_cmd {
 			$name: u16;
 			$( #[$doc] )*
 			///
-			/// This is a [`wm::Command`](crate::msg::wm::Command) notification
+			/// This is a [`WmCommand`](crate::msg::WmCommand) notification
 			/// code, convertible to [`CMD`](crate::co::CMD).
 		}
 		const_impl_bitflag!($name);
@@ -297,8 +297,8 @@ macro_rules! const_nm {
 			$name: i32;
 			$( #[$doc] )*
 			///
-			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
-			/// code, convertible to/from [`NmhdrCode`](crate::NmhdrCode).
+			/// This is a [`WmNotify`](crate::msg::WmNotify) notification code,
+			/// convertible to/from [`NmhdrCode`](crate::NmhdrCode).
 		}
 		const_impl_bitflag!($name);
 		const_impl_debug_display!($name);
