@@ -35,7 +35,7 @@ if [ -d $LOCAL_DOC ]; then
 fi
 
 echo -e "${BLUE}Generating docs locally...${NC}"
-RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
+RUSTDOCFLAGS="--cfg docsrs -D warnings" cargo +nightly doc --all-features
 
 # Check the existence of -r flag, if absent, we stop here.
 if [[ ! " $@ " =~ " -r " ]]; then
