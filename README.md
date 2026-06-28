@@ -23,7 +23,7 @@ WinSafe documentation:
 
 ### Native FFI items implemented
 
-| Native FFI item |  Count |
+| Native FFI item | Count |
 | - | -: |
 | Functions | 913 |
 | Structs | 264 |
