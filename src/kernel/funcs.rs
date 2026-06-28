@@ -11,6 +11,12 @@ pub fn AttachConsole(process: PidParent) -> SysResult<()> {
 	BoolRet(unsafe { ffi::AttachConsole(process.as_u32()) }).to_sysresult()
 }
 
+/// [`FreeConsole`](https://learn.microsoft.com/en-us/windows/console/freeconsole)
+/// function.
+pub fn FreeConsole() -> SysResult<()> {
+	BoolRet(unsafe { ffi::FreeConsole() }).to_sysresult()
+}
+
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 ///
