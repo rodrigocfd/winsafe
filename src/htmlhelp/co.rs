@@ -1,7 +1,7 @@
 use crate::macros::*;
 
 const_ordinary! { HH: u32;
-	/// [`HtmlHelp`] `uCommand`.
+	/// [`HWND::HtmlHelp`](crate::HWND::HtmlHelp) `uCommand`.
 	=>
 	DISPLAY_TOPIC 0x0000
 	HELP_FINDER 0x0000
