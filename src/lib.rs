@@ -120,10 +120,10 @@ pub mod msg {
 
 	pub use super::user::messages::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::messages::*;
-	#[cfg(feature = "gdi")] pub use super::gdi::messages::*;
-	#[cfg(feature = "shell")] pub use super::shell::messages::*;
-	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::messages::*;
-	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::messages::*;
+	#[cfg(feature = "gdi")] pub use super::gdi::messages_wm::*;
+	#[cfg(feature = "shell")] pub use super::shell::messages_wm::*;
+	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::messages_tb::*;
+	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::messages_dtm::*;
 }
 
 pub mod prelude {

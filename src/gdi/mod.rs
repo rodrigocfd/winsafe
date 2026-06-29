@@ -8,7 +8,7 @@ mod structs;
 pub mod co;
 pub(in crate::gdi) mod ffi;
 pub mod guards;
-pub mod messages;
+pub mod messages_wm;
 pub(crate) mod privs;
 pub(crate) mod traits;
 

@@ -4,7 +4,7 @@ mod handles;
 mod structs;
 
 pub(in crate::comctl_gdi) mod ffi;
-pub mod messages;
+pub mod messages_dtm;
 
 pub mod decl {
 	pub use super::structs::*;

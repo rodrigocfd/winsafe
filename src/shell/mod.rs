@@ -11,7 +11,7 @@ pub mod co;
 pub(in crate::shell) mod ffi;
 pub mod guards;
 pub(in crate::shell) mod iterators;
-pub mod messages;
+pub mod messages_wm;
 pub(crate) mod privs;
 pub(in crate::shell) mod vts;
 
