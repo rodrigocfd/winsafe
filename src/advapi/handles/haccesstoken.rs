@@ -164,7 +164,7 @@ impl HACCESSTOKEN {
 				co::ERROR::INSUFFICIENT_BUFFER | co::ERROR::BAD_LENGTH => {}, // all good
 				err => return Err(err),
 			},
-			Ok(_) => return Err(co::ERROR::INVALID_PARAMETER), // should never happen
+			Ok(_) => return Err(co::ERROR::UNIDENTIFIED_ERROR), // should never happen
 		};
 
 		let mut buf = vec![0u8; num_bytes as usize].into_boxed_slice();

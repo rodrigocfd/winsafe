@@ -43,7 +43,7 @@ impl HWND {
 			)
 		} {
 			1 => Ok(mode_output),
-			_ => Err(co::ERROR::INVALID_PARAMETER),
+			_ => Err(co::ERROR::UNIDENTIFIED_ERROR),
 		}
 	}
 

@@ -30,7 +30,7 @@ pub fn GdiGetBatchLimit() -> u32 {
 /// * [`GdiGetBatchLimit`](crate::GdiGetBatchLimit)
 pub fn GdiSetBatchLimit(limit: u32) -> SysResult<u32> {
 	match unsafe { ffi::GdiSetBatchLimit(limit) } {
-		0 => Err(co::ERROR::INVALID_PARAMETER),
+		0 => Err(co::ERROR::UNIDENTIFIED_ERROR),
 		n => Ok(n),
 	}
 }
