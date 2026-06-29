@@ -1018,8 +1018,8 @@ pub fn ShowCursor(show: bool) -> i32 {
 
 /// [`SoundSentry`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-soundsentry)
 /// function.
-pub fn SoundSentry() -> bool {
-	unsafe { ffi::SoundSentry() != 0 }
+pub fn SoundSentry() -> SysResult<()> {
+	BoolRet(unsafe { ffi::SoundSentry() }).to_invalidparm()
 }
 
 /// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
