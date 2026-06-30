@@ -75,10 +75,11 @@ pub(in crate::htmlhelp) enum HhCmdData {
 impl HhCmdData {
 	#[must_use]
 	pub(in crate::htmlhelp) fn serialize(&self) -> usize {
+		use HhCmdData::*;
 		match self {
-			HhCmdData::None => 0,
-			HhCmdData::Str(s) => s.as_ptr() as _,
-			HhCmdData::Ids(arr) => arr.as_ptr() as _,
+			None => 0,
+			Str(s) => s.as_ptr() as _,
+			Ids(arr) => arr.as_ptr() as _,
 		}
 	}
 }
