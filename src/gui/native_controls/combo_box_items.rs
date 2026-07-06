@@ -65,9 +65,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// Deletes all items by sending a
 	/// [`CbResetContent`](crate::msg::CbResetContent) message.
 	pub fn delete_all(&self) {
-		unsafe {
-			self.owner.hwnd().SendMessage(msg::CbResetContent {});
-		}
+		unsafe { self.owner.hwnd().SendMessage(msg::CbResetContent {}) };
 	}
 
 	/// Returns an iterator over the text items.
@@ -94,9 +92,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// Sets the currently selected index, or clears it, by sending a
 	/// [`CbSetCurSel`](crate::msg::CbSetCurSel) message.
 	pub fn select(&self, index: Option<u32>) {
-		unsafe {
-			self.owner.hwnd().SendMessage(msg::CbSetCurSel { index });
-		}
+		unsafe { self.owner.hwnd().SendMessage(msg::CbSetCurSel { index }) };
 	}
 
 	/// Retrieves the index of the currently selected item, if any, by sending a

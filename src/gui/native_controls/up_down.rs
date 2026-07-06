@@ -166,17 +166,13 @@ impl UpDown {
 	/// Sets the current position by sending an
 	/// [`UdmSetPos32`](crate::msg::UdmSetPos32) message.
 	pub fn set_pos(&self, pos: i32) {
-		unsafe {
-			self.hwnd().SendMessage(msg::UdmSetPos32 { pos });
-		}
+		unsafe { self.hwnd().SendMessage(msg::UdmSetPos32 { pos }) };
 	}
 
 	/// Set the control range by sending an
 	/// [`UdmSetRange32`](crate::msg::UdmSetRange32) message.
 	pub fn set_range(&self, min: i32, max: i32) {
-		unsafe {
-			self.hwnd().SendMessage(msg::UdmSetRange32 { min, max });
-		}
+		unsafe { self.hwnd().SendMessage(msg::UdmSetRange32 { min, max }) };
 	}
 }
 

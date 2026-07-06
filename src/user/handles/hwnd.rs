@@ -1331,9 +1331,7 @@ impl HWND {
 	/// );
 	/// ```
 	pub fn SendCommand(&self, cmd: AccelMenuCtrl) {
-		unsafe {
-			self.SendMessage(msg::WmCommand { event: cmd });
-		}
+		unsafe { self.SendMessage(msg::WmCommand { event: cmd }) };
 	}
 
 	/// [`SendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)

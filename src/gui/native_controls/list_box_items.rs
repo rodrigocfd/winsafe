@@ -64,9 +64,7 @@ impl<'a> ListBoxItems<'a> {
 	/// Deletes all items by sending an
 	/// [`LbResetContent`](crate::msg::LbResetContent) message.
 	pub fn delete_all(&self) {
-		unsafe {
-			self.owner.hwnd().SendMessage(msg::LbResetContent {});
-		}
+		unsafe { self.owner.hwnd().SendMessage(msg::LbResetContent {}) };
 	}
 
 	/// Ensures that the specified item in a list box is visible by sending an

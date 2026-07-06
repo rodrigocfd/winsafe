@@ -145,8 +145,6 @@ impl WindowMain {
 	/// [`wm_close`](crate::prelude::GuiEventsWindow::wm_close) event, just like
 	/// if the user clicked the window "X" button.
 	pub fn close(&self) {
-		unsafe {
-			self.hwnd().PostMessage(msg::WmClose {}).unwrap();
-		}
+		unsafe { self.hwnd().PostMessage(msg::WmClose {}).unwrap() };
 	}
 }

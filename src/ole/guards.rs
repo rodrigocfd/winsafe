@@ -101,9 +101,7 @@ pub struct CoUninitializeGuard {
 
 impl Drop for CoUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::CoUninitialize();
-		}
+		unsafe { ffi::CoUninitialize() };
 	}
 }
 
@@ -137,9 +135,7 @@ pub struct OleUninitializeGuard {}
 
 impl Drop for OleUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::OleUninitialize();
-		}
+		unsafe { ffi::OleUninitialize() };
 	}
 }
 
@@ -166,9 +162,7 @@ pub struct ReleaseStgMediumGuard {
 
 impl Drop for ReleaseStgMediumGuard {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::ReleaseStgMedium(pvoid(&mut self.stgm));
-		}
+		unsafe { ffi::ReleaseStgMedium(pvoid(&mut self.stgm)) };
 	}
 }
 

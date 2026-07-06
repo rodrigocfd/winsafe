@@ -68,3 +68,39 @@ macro_rules! seq_ids {
 		seq_ids!($next_val + 1, $( $others )*);
 	};
 }
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! evt {
+	( $self:ident, $wnd:expr, $ev:ident, $fun:ident ) => {
+		let self2 = $self.clone();
+		$wnd.on().$ev(move || self2.$fun()); // event without parameter
+	};
+	( $self:ident, $ev:ident, $fun:ident ) => {
+		evt!($self, $self.wnd, $ev, $fun);
+	};
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! evp {
+	( $self:ident, $wnd:expr, $ev:ident, $fun:ident ) => {
+		let self2 = $self.clone();
+		$wnd.on().$ev(move |p| self2.$fun(p)); // event with parameter
+	};
+	( $self:ident, $ev:ident, $fun:ident ) => {
+		evp!($self, $self.wnd, $ev, $fun);
+	};
+}
+
+#[doc(hidden)]
+#[macro_export]
+macro_rules! cmd {
+	( $self:ident, $wnd:expr, $cmd:expr, $fun:ident ) => {
+		let self2 = $self.clone();
+		$wnd.on().wm_command_acc_menu($cmd, move || self2.$fun());
+	};
+	( $self:ident, $cmd:expr, $fun:ident ) => {
+		cmd!($self, $self.wnd, $cmd, $fun);
+	};
+}

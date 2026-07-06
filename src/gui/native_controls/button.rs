@@ -154,9 +154,7 @@ impl Button {
 	/// Fires the click event for the button by sending a
 	/// [`BmClick`](crate::msg::BmClick) message.
 	pub fn trigger_click(&self) {
-		unsafe {
-			self.hwnd().SendMessage(msg::BmClick {});
-		}
+		unsafe { self.hwnd().SendMessage(msg::BmClick {}) };
 	}
 }
 

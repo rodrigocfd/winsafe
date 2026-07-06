@@ -9,9 +9,7 @@ impl HWND {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// function.
 	pub fn DragAcceptFiles(&self, accept: bool) {
-		unsafe {
-			ffi::DragAcceptFiles(self.ptr(), accept as _);
-		}
+		unsafe { ffi::DragAcceptFiles(self.ptr(), accept as _) };
 	}
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)

@@ -126,9 +126,7 @@ impl CheckBox {
 	/// Sets the current check state by sending a
 	/// [`BmSetCheck`](crate::msg::BmSetCheck) message.
 	pub fn set_state(&self, state: co::BST) {
-		unsafe {
-			self.hwnd().SendMessage(msg::BmSetCheck { state });
-		}
+		unsafe { self.hwnd().SendMessage(msg::BmSetCheck { state }) };
 	}
 
 	/// Sets the current check state by sending a
@@ -169,9 +167,7 @@ impl CheckBox {
 	/// Fires the click event for the check box by sending a
 	/// [`BmClick`](crate::msg::BmClick) message.
 	pub fn trigger_click(&self) {
-		unsafe {
-			self.hwnd().SendMessage(msg::BmClick {});
-		}
+		unsafe { self.hwnd().SendMessage(msg::BmClick {}) };
 	}
 }
 

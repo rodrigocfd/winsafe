@@ -30,9 +30,7 @@ pub struct ImageListEndDragGuard<'a> {
 
 impl<'a> Drop for ImageListEndDragGuard<'a> {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::ImageList_EndDrag();
-		}
+		unsafe { ffi::ImageList_EndDrag() };
 	}
 }
 

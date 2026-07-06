@@ -155,9 +155,7 @@ impl PropSheet {
 		psh.nPages = ps_pages.len() as _;
 		psh.set_ppsp(&ps_pages);
 
-		unsafe {
-			PropertySheet(&psh)?;
-		}
+		unsafe { PropertySheet(&psh)? };
 		Ok(())
 	}
 }
