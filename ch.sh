@@ -28,6 +28,7 @@ FEATS=(
 	uxtheme
 	version
 	wininet
+	winmm
 	winspool
 )
 
