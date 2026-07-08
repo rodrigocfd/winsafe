@@ -47,6 +47,7 @@ pub enum ClaimSecurityAttr<'a> {
 /// * [`HUPDATERSRC::UpdateResource`](crate::HUPDATERSRC::UpdateResource)
 /// * [`BmpIdbRes`](crate::BmpIdbRes)
 /// * [`IconRes`](crate::IconRes)
+/// * [`PlaySound`](crate::PlaySound)
 /// * [`ResStrs`](crate::ResStrs)
 #[derive(Clone)]
 pub enum IdStr {

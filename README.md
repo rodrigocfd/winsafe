@@ -3,7 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/winsafe.svg?style=flat-square)](https://crates.io/crates/winsafe)
 [![Crates.io total downloads](https://img.shields.io/crates/d/winsafe?color=seagreen&style=flat-square)](https://crates.io/crates/winsafe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?label=license&style=flat-square)](https://opensource.org/licenses/MIT)
-[![Lines of code](https://img.shields.io/badge/LoC-69.9k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
+[![Lines of code](https://img.shields.io/badge/LoC-70.2k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
 
 Windows API and GUI in safe, idiomatic Rust.
 
@@ -25,9 +25,9 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 913 |
+| Functions | 914 |
 | Structs | 264 |
-| Constants | 12,283 |
+| Constants | 12,307 |
 | Window messages | 684 |
 | Handles | 54 |
 | COM interfaces | 98 |
@@ -78,6 +78,7 @@ The following Cargo features are available so far:
 | `user` | User32.dll and ComDlg32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
+| `winmm` | [Windows Multimedia](https://learn.microsoft.com/en-us/windows/win32/multimedia/windows-multimedia-start-page) |
 | `wininet` | [Windows Internet](https://learn.microsoft.com/en-us/windows/win32/wininet/portal) |
 | `winspool` | [Print Spooler API](https://learn.microsoft.com/en-us/windows/win32/printdocs/print-spooler-api) |
 
