@@ -69,7 +69,6 @@ impl RawBase {
 		};
 		wcx.set_lpszClassName(Some(&mut wclass_name));
 
-		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { RegisterClassEx(&wcx) } {
 			Ok(atom) => atom,
 			Err(err) => match err {

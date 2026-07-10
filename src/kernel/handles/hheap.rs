@@ -81,11 +81,11 @@ impl HHEAP {
 		flags: Option<co::HEAP_ALLOC>,
 		num_bytes: usize,
 	) -> SysResult<HeapFreeGuard<'_>> {
-		SetLastError(co::ERROR::SUCCESS);
-		unsafe {
-			PtrRet(ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes))
-				.to_sysresult()
-				.map(|p| HeapFreeGuard::new(self, p, num_bytes))
+		let ptr = unsafe { ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes) };
+		if ptr.is_null() {
+			Err(co::ERROR::NOT_ENOUGH_MEMORY)
+		} else {
+			Ok(unsafe { HeapFreeGuard::new(self, ptr, num_bytes) })
 		}
 	}
 
@@ -169,20 +169,21 @@ impl HHEAP {
 		mem: &mut HeapFreeGuard<'a>,
 		num_bytes: usize,
 	) -> SysResult<()> {
-		SetLastError(co::ERROR::SUCCESS);
-		PtrRet(unsafe {
+		let ptr = unsafe {
 			ffi::HeapReAlloc(
 				self.ptr(),
 				flags.unwrap_or_default().raw(),
 				mem.as_ptr() as _,
 				num_bytes,
 			)
-		})
-		.to_sysresult()
-		.map(|p| {
+		};
+		if ptr.is_null() {
+			Err(co::ERROR::NOT_ENOUGH_MEMORY)
+		} else {
 			let _ = mem.leak();
-			*mem = unsafe { HeapFreeGuard::new(self, p, num_bytes) };
-		})
+			*mem = unsafe { HeapFreeGuard::new(self, ptr, num_bytes) };
+			Ok(())
+		}
 	}
 
 	/// [`HeapSetInformation`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation)
@@ -211,13 +212,11 @@ impl HHEAP {
 		flags: Option<co::HEAP_SIZE>,
 		mem: &HeapFreeGuard<'_>,
 	) -> SysResult<usize> {
-		SetLastError(co::ERROR::SUCCESS);
 		const FAILED: usize = -1isize as usize;
-
 		match unsafe {
 			ffi::HeapSize(self.ptr(), flags.unwrap_or_default().raw(), mem.as_ptr() as _)
 		} {
-			FAILED => Err(GetLastError()),
+			FAILED => Err(co::ERROR::INVALID_PARAMETER),
 			n => Ok(n),
 		}
 	}
@@ -244,7 +243,6 @@ impl HHEAP {
 		flags: Option<co::HEAP_SIZE>,
 		mem: Option<&HeapFreeGuard<'_>>,
 	) -> bool {
-		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ffi::HeapValidate(
 				self.ptr(),

@@ -200,9 +200,7 @@ impl BaseWnd {
 			}
 
 			TranslateMessage(&msg);
-			unsafe {
-				DispatchMessage(&msg);
-			}
+			unsafe { DispatchMessage(&msg) };
 		}
 	}
 
@@ -242,9 +240,7 @@ impl BaseWnd {
 			}
 
 			TranslateMessage(&msg);
-			unsafe {
-				DispatchMessage(&msg);
-			}
+			unsafe { DispatchMessage(&msg) };
 
 			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop

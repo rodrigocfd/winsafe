@@ -533,7 +533,6 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn GetDlgCtrlID(&self) -> SysResult<u16> {
-		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { ffi::GetDlgCtrlID(self.ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual ID is zero
@@ -855,7 +854,6 @@ impl HWND {
 	/// [`String`](std::string::String), performing all necessary allocations.
 	#[must_use]
 	pub fn GetWindowTextLength(&self) -> SysResult<i32> {
-		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { ffi::GetWindowTextLengthW(self.ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero length

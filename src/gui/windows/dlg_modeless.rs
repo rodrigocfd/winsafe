@@ -14,7 +14,7 @@ struct DlgModelessObj {
 
 /// A dialog-based modeless window.
 ///
-/// Hierarchy: `BaseWnd` -> `RawBase` -> `DlgModeless`.
+/// Hierarchy: `BaseWnd` -> `DlgBase` -> `DlgModeless`.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgModeless(Pin<Arc<DlgModelessObj>>);
 
