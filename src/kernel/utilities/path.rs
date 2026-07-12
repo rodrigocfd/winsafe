@@ -29,6 +29,14 @@ use crate::prelude::*;
 /// let all = w::path::dir_list_flat("C:\\Temp")
 ///     .collect::<w::SysResult<Vec<_>>>()?;
 ///
+/// // Filtering by extension and collecting into a Vec
+/// let txts = w::path::dir_list_flat("C:\\Temp")
+///     .filter(|file_path| match file_path {
+///         Err(_) => true,
+///         Ok(file_path) => w::path::has_extension(file_path, &["txt"]),
+///     })
+///     .collect::<w::SysResult<Vec<_>>>()?;
+///
 /// // Transforming and collecting into a Vec
 /// let all = w::path::dir_list_flat("C:\\Temp")
 ///     .map(|file_path| {
