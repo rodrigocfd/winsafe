@@ -28,20 +28,20 @@ impl HVERSIONINFO {
 			HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, block_sz as _)?;
 		let hglobal_ptr = hglobal.leak();
 
-		BoolRet(unsafe {
-			ffi::GetFileVersionInfoW(
+		unsafe {
+			BoolRet(ffi::GetFileVersionInfoW(
 				WString::from_str(file_name).as_ptr(),
 				0,
 				block_sz,
 				hglobal_ptr.ptr(),
-			)
-		})
-		.to_sysresult()
-		.map(|_| unsafe {
-			VersionInfoGuard::new(
-				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), // simply use the HGLOBAL pointer
-			)
-		})
+			))
+			.to_sysresult()
+			.map(|_| {
+				VersionInfoGuard::new(
+					HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), // simply use the HGLOBAL pointer
+				)
+			})
+		}
 	}
 
 	/// [`GetFileVersionInfoSize`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)

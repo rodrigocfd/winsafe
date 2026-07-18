@@ -132,8 +132,8 @@ pub fn ChangeDisplaySettings(
 	dev_mode: Option<&mut DEVMODE>,
 	flags: co::CDS,
 ) -> Result<co::DISP_CHANGE, co::DISP_CHANGE> {
-	let ret = unsafe { ffi::ChangeDisplaySettingsW(pvoid_or_null(dev_mode), flags.raw()) };
 	unsafe {
+		let ret = ffi::ChangeDisplaySettingsW(pvoid_or_null(dev_mode), flags.raw());
 		if ret < 0 {
 			Err(co::DISP_CHANGE::from_raw(ret))
 		} else {
@@ -149,17 +149,15 @@ pub fn ChangeDisplaySettingsEx(
 	dev_mode: Option<&mut DEVMODE>,
 	flags: co::CDS,
 ) -> Result<co::DISP_CHANGE, co::DISP_CHANGE> {
-	let ret = unsafe {
-		ffi::ChangeDisplaySettingsExW(
+	unsafe {
+		let ret = ffi::ChangeDisplaySettingsExW(
 			WString::from_opt_str(device_name).as_ptr(),
 			pvoid_or_null(dev_mode),
 			std::ptr::null_mut(),
 			flags.raw(),
 			std::ptr::null_mut(),
-		)
-	};
+		);
 
-	unsafe {
 		if ret < 0 {
 			Err(co::DISP_CHANGE::from_raw(ret))
 		} else {
