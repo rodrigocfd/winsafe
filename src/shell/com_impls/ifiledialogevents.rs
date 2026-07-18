@@ -130,7 +130,7 @@ impl IFileDialogEventsImpl {
 
 	fn_com_userdef_iunknown_impls!(Self);
 
-	fn OnFileOk(p: COMPTR, pfd: COMPTR) -> HRES {
+	extern "system" fn OnFileOk(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFileOk {
 			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
@@ -140,7 +140,7 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnFolderChanging(p: COMPTR, pfd: COMPTR, psiFolder: COMPTR) -> HRES {
+	extern "system" fn OnFolderChanging(p: COMPTR, pfd: COMPTR, psiFolder: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFolderChanging {
 			Some(func) => unsafe {
@@ -153,7 +153,7 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnFolderChange(p: COMPTR, pfd: COMPTR) -> HRES {
+	extern "system" fn OnFolderChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFolderChange {
 			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
@@ -163,7 +163,7 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnSelectionChange(p: COMPTR, pfd: COMPTR) -> HRES {
+	extern "system" fn OnSelectionChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnSelectionChange {
 			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
@@ -173,7 +173,12 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnShareViolation(p: COMPTR, pfd: COMPTR, psi: COMPTR, pResponse: *mut u32) -> HRES {
+	extern "system" fn OnShareViolation(
+		p: COMPTR,
+		pfd: COMPTR,
+		psi: COMPTR,
+		pResponse: *mut u32,
+	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnShareViolation {
 			Some(func) => unsafe {
@@ -187,7 +192,7 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnTypeChange(p: COMPTR, pfd: COMPTR) -> HRES {
+	extern "system" fn OnTypeChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnTypeChange {
 			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
@@ -197,7 +202,12 @@ impl IFileDialogEventsImpl {
 		})
 	}
 
-	fn OnOverwrite(p: COMPTR, pfd: COMPTR, psi: COMPTR, pResponse: *mut u32) -> HRES {
+	extern "system" fn OnOverwrite(
+		p: COMPTR,
+		pfd: COMPTR,
+		psi: COMPTR,
+		pResponse: *mut u32,
+	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnOverwrite {
 			Some(func) => unsafe {

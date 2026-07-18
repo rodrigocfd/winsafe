@@ -1,5 +1,24 @@
 #![allow(unused_imports, unused_macros)]
 
+/// Declares a COM virtual table struct with its methods.
+macro_rules! com_vtbl {
+	(
+		$name:ident $( : $base:ident )?
+		$(
+			$func:ident( $( $parm:ty ),* ) $( -> $ret:ty )?
+		)*
+	) => {
+		#[repr(C)]
+		pub(crate) struct $name {
+			$( pub(crate) $base: $base, )?
+			$(
+				pub(crate) $func: unsafe extern "system" fn(COMPTR, $( $parm, )* ) $( -> $ret )?,
+			)*
+		}
+	};
+}
+pub(crate) use com_vtbl;
+
 /// Declares an ordinary COM interface, and implements ole_IUnknown trait.
 macro_rules! com_interface {
 	(
@@ -230,7 +249,7 @@ pub(crate) use fn_com_userdef_event;
 /// user-defined COM interface implementation.
 macro_rules! fn_com_userdef_iunknown_impls {
 	($impl:ident) => {
-		fn QueryInterface(
+		extern "system" fn QueryInterface(
 			_p: crate::kernel::ffi_types::COMPTR,
 			_riid: crate::kernel::ffi_types::PCVOID,
 			ppv: *mut crate::kernel::ffi_types::COMPTR,
@@ -241,7 +260,7 @@ macro_rules! fn_com_userdef_iunknown_impls {
 			crate::co::HRESULT::E_NOTIMPL.raw()
 		}
 
-		fn AddRef(p: crate::kernel::ffi_types::COMPTR) -> u32 {
+		extern "system" fn AddRef(p: crate::kernel::ffi_types::COMPTR) -> u32 {
 			let box_impl = crate::ole::privs::box_impl_of::<Self>(p);
 			let cc = box_impl
 				.counter
@@ -250,7 +269,7 @@ macro_rules! fn_com_userdef_iunknown_impls {
 			cc
 		}
 
-		fn Release(p: crate::kernel::ffi_types::COMPTR) -> u32 {
+		extern "system" fn Release(p: crate::kernel::ffi_types::COMPTR) -> u32 {
 			let mut box_impl = crate::ole::privs::box_impl_of::<Self>(p);
 			let count = box_impl
 				.counter
@@ -271,7 +290,9 @@ pub(crate) use fn_com_userdef_iunknown_impls;
 /// implementation.
 macro_rules! fn_com_userdef_impl_noparm {
 	($name:ident) => {
-		fn $name(p: crate::kernel::ffi_types::COMPTR) -> crate::kernel::ffi_types::HRES {
+		extern "system" fn $name(
+			p: crate::kernel::ffi_types::COMPTR,
+		) -> crate::kernel::ffi_types::HRES {
 			let box_impl = crate::ole::privs::box_impl_of::<Self>(p);
 			crate::ole::privs::hrresult_to_hres(match &box_impl.$name {
 				Some(func) => crate::ole::privs::anyresult_to_hresult(func()),

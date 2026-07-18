@@ -133,7 +133,7 @@ impl IOperationsProgressDialogImpl {
 
 	fn_com_userdef_iunknown_impls!(Self);
 
-	fn StartProgressDialog(p: COMPTR, hwndOwner: HANDLE, flags: u32) -> HRES {
+	extern "system" fn StartProgressDialog(p: COMPTR, hwndOwner: HANDLE, flags: u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.StartProgressDialog {
 			Some(func) => unsafe {
@@ -145,7 +145,7 @@ impl IOperationsProgressDialogImpl {
 
 	fn_com_userdef_impl_noparm!(StopProgressDialog);
 
-	fn SetOperation(p: COMPTR, action: u32) -> HRES {
+	extern "system" fn SetOperation(p: COMPTR, action: u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.SetOperation {
 			Some(func) => anyresult_to_hresult(func(unsafe { co::SPACTION::from_raw(action) })),
@@ -153,7 +153,7 @@ impl IOperationsProgressDialogImpl {
 		})
 	}
 
-	fn SetMode(p: COMPTR, mode: u32) -> HRES {
+	extern "system" fn SetMode(p: COMPTR, mode: u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.SetMode {
 			Some(func) => anyresult_to_hresult(func(unsafe { co::PDM::from_raw(mode) })),
@@ -161,7 +161,7 @@ impl IOperationsProgressDialogImpl {
 		})
 	}
 
-	fn UpdateProgress(
+	extern "system" fn UpdateProgress(
 		p: COMPTR,
 		ullPointsCurrent: u64,
 		ullPointsTotal: u64,
@@ -184,7 +184,12 @@ impl IOperationsProgressDialogImpl {
 		})
 	}
 
-	fn UpdateLocations(p: COMPTR, psiSource: COMPTR, psiTarget: COMPTR, psiItem: COMPTR) -> HRES {
+	extern "system" fn UpdateLocations(
+		p: COMPTR,
+		psiSource: COMPTR,
+		psiTarget: COMPTR,
+		psiItem: COMPTR,
+	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.UpdateLocations {
 			Some(func) => unsafe {
@@ -204,7 +209,11 @@ impl IOperationsProgressDialogImpl {
 
 	fn_com_userdef_impl_noparm!(ResumeTimer);
 
-	fn GetMilliseconds(p: COMPTR, pullElapsed: *mut u64, pullRemaining: *mut u64) -> HRES {
+	extern "system" fn GetMilliseconds(
+		p: COMPTR,
+		pullElapsed: *mut u64,
+		pullRemaining: *mut u64,
+	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.GetMilliseconds {
 			Some(func) => {
@@ -214,7 +223,7 @@ impl IOperationsProgressDialogImpl {
 		})
 	}
 
-	fn GetOperationStatus(p: COMPTR, popstatus: *mut u32) -> HRES {
+	extern "system" fn GetOperationStatus(p: COMPTR, popstatus: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.GetOperationStatus {
 			Some(func) => {

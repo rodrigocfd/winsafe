@@ -2,298 +2,261 @@
 
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::macros::*;
 use crate::oleaut::vts::*;
 
-#[repr(C)]
-pub struct IActionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Type: fn(COMPTR, *mut u32) -> HRES,
+com_vtbl! { IActionVT : IDispatchVT
+	get_Id(*mut PSTR) -> HRES
+	put_Id(PCSTR) -> HRES
+	get_Type(*mut u32) -> HRES
 }
 
-#[repr(C)]
-pub struct IActionCollectionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
-	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
-	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Remove: fn(COMPTR, VARIANT) -> HRES,
-	pub Clear: fn(COMPTR) -> HRES,
-	pub get_Context: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Context: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { IActionCollectionVT : IDispatchVT
+	get_Count(*mut i32) -> HRES
+	get_Item(i32, *mut COMPTR) -> HRES
+	get__NewEnum(*mut COMPTR) -> HRES
+	get_XmlText(*mut PSTR) -> HRES
+	put_XmlText(PCSTR) -> HRES
+	Create(u32, *mut COMPTR) -> HRES
+	Remove(VARIANT) -> HRES
+	Clear() -> HRES
+	get_Context(*mut PSTR) -> HRES
+	put_Context(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IBootTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { IBootTriggerVT: ITriggerVT
+	get_Delay(*mut PSTR) -> HRES
+	put_Delay(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IComHandlerActionVT {
-	pub IAction: IActionVT,
-	pub get_ClassId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ClassId: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Data: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Data: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { IComHandlerActionVT : IActionVT
+	get_ClassId(*mut PSTR) -> HRES
+	put_ClassId(PCSTR) -> HRES
+	get_Data(*mut PSTR) -> HRES
+	put_Data(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IDailyTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_DaysInterval: fn(COMPTR, *mut i16) -> HRES,
-	pub put_DaysInterval: fn(COMPTR, i16) -> HRES,
-	pub get_RandomDelay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_RandomDelay: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { IDailyTriggerVT : ITriggerVT
+	get_DaysInterval(*mut i16) -> HRES
+	put_DaysInterval(i16) -> HRES
+	get_RandomDelay(*mut PSTR) -> HRES
+	put_RandomDelay(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IEmailActionVT {
-	pub IAction: IActionVT,
-	pub get_Server: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Server: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Subject: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Subject: fn(COMPTR, PCSTR) -> HRES,
-	pub get_To: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_To: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Cc: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Cc: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Bcc: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Bcc: fn(COMPTR, PCSTR) -> HRES,
-	pub get_ReplyTo: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ReplyTo: fn(COMPTR, PCSTR) -> HRES,
-	pub get_From: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_From: fn(COMPTR, PCSTR) -> HRES,
-	pub get_HeaderFields: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_HeaderFields: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Body: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Body: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Attachments: fn(COMPTR, PVOID) -> HRES,
-	pub put_Attachments: fn(COMPTR, PCVOID) -> HRES,
+com_vtbl! { IEmailActionVT : IActionVT
+	get_Server(*mut PSTR) -> HRES
+	put_Server(PCSTR) -> HRES
+	get_Subject(*mut PSTR) -> HRES
+	put_Subject(PCSTR) -> HRES
+	get_To(*mut PSTR) -> HRES
+	put_To(PCSTR) -> HRES
+	get_Cc(*mut PSTR) -> HRES
+	put_Cc(PCSTR) -> HRES
+	get_Bcc(*mut PSTR) -> HRES
+	put_Bcc(PCSTR) -> HRES
+	get_ReplyTo(*mut PSTR) -> HRES
+	put_ReplyTo(PCSTR) -> HRES
+	get_From(*mut PSTR) -> HRES
+	put_From(PCSTR) -> HRES
+	get_HeaderFields(*mut COMPTR) -> HRES
+	put_HeaderFields(COMPTR) -> HRES
+	get_Body(*mut PSTR) -> HRES
+	put_Body(PCSTR) -> HRES
+	get_Attachments(PVOID) -> HRES
+	put_Attachments(PCVOID) -> HRES
 }
 
-#[repr(C)]
-pub struct IEventTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Subscription: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Subscription: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
-	pub get_ValueQueries: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_ValueQueries: fn(COMPTR, COMPTR) -> HRES,
+com_vtbl! { IEventTriggerVT : ITriggerVT
+	get_Subscription(*mut PSTR) -> HRES
+	put_Subscription(PCSTR) -> HRES
+	get_Delay(*mut PSTR) -> HRES
+	put_Delay(PCSTR) -> HRES
+	get_ValueQueries(*mut COMPTR) -> HRES
+	put_ValueQueries(COMPTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IExecActionVT {
-	pub IAction: IActionVT,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Path: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Arguments: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Arguments: fn(COMPTR, PCSTR) -> HRES,
-	pub get_WorkingDirectory: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_WorkingDirectory: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { IExecActionVT : IActionVT
+	get_Path(*mut PSTR) -> HRES
+	put_Path(PCSTR) -> HRES
+	get_Arguments(*mut PSTR) -> HRES
+	put_Arguments(PCSTR) -> HRES
+	get_WorkingDirectory(*mut PSTR) -> HRES
+	put_WorkingDirectory(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct ILogonTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
-	pub get_UserId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_UserId: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { ILogonTriggerVT : ITriggerVT
+	get_Delay(*mut PSTR) -> HRES
+	put_Delay(PCSTR) -> HRES
+	get_UserId(*mut PSTR) -> HRES
+	put_UserId(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct IPrincipalVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
-	pub get_DisplayName: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_DisplayName: fn(COMPTR, PCSTR) -> HRES,
-	pub get_UserId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_UserId: fn(COMPTR, PCSTR) -> HRES,
-	pub get_LogonType: fn(COMPTR, *mut u32) -> HRES,
-	pub put_LogonType: fn(COMPTR, u32) -> HRES,
-	pub get_GroupId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_GroupId: fn(COMPTR, PCSTR) -> HRES,
-	pub get_RunLevel: fn(COMPTR, *mut u32) -> HRES,
-	pub put_RunLevel: fn(COMPTR, u32) -> HRES,
+com_vtbl! { IPrincipalVT : IDispatchVT
+	get_Id(*mut PSTR) -> HRES
+	put_Id(PCSTR) -> HRES
+	get_DisplayName(*mut PSTR) -> HRES
+	put_DisplayName(PCSTR) -> HRES
+	get_UserId(*mut PSTR) -> HRES
+	put_UserId(PCSTR) -> HRES
+	get_LogonType(*mut u32) -> HRES
+	put_LogonType(u32) -> HRES
+	get_GroupId(*mut PSTR) -> HRES
+	put_GroupId(PCSTR) -> HRES
+	get_RunLevel(*mut u32) -> HRES
+	put_RunLevel(u32) -> HRES
 }
 
-#[repr(C)]
-pub struct IRegisteredTaskVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_State: fn(COMPTR, *mut u32) -> HRES,
-	pub get_Enabled: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Enabled: fn(COMPTR, i16) -> HRES,
-	pub Run: fn(COMPTR, VARIANT, *mut COMPTR) -> HRES,
-	pub RunEx: fn(COMPTR, VARIANT, i32, i32, PCSTR, *mut COMPTR) -> HRES,
-	pub GetInstances: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get_LastRunTime: fn(COMPTR, *mut f64) -> HRES,
-	pub get_LastTaskResult: fn(COMPTR, *mut i32) -> HRES,
-	pub get_NumberOfMissedRuns: fn(COMPTR, *mut i32) -> HRES,
-	pub get_NextRunTime: fn(COMPTR, *mut f64) -> HRES,
-	pub get_Definition: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub get_Xml: fn(COMPTR, *mut PSTR) -> HRES,
-	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
-	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub Stop: fn(COMPTR, i32) -> HRES,
-	pub GetRunTimes: fn(COMPTR, PCVOID, PCVOID, *mut u32, PVOID) -> HRES,
+com_vtbl! { IRegisteredTaskVT : IDispatchVT
+	get_Name(*mut PSTR) -> HRES
+	get_Path(*mut PSTR) -> HRES
+	get_State(*mut u32) -> HRES
+	get_Enabled(*mut i16) -> HRES
+	put_Enabled(i16) -> HRES
+	Run(VARIANT, *mut COMPTR) -> HRES
+	RunEx(VARIANT, i32, i32, PCSTR, *mut COMPTR) -> HRES
+	GetInstances(i32, *mut COMPTR) -> HRES
+	get_LastRunTime(*mut f64) -> HRES
+	get_LastTaskResult(*mut i32) -> HRES
+	get_NumberOfMissedRuns(*mut i32) -> HRES
+	get_NextRunTime(*mut f64) -> HRES
+	get_Definition(*mut COMPTR) -> HRES
+	get_Xml(*mut PSTR) -> HRES
+	GetSecurityDescriptor(i32, *mut PSTR) -> HRES
+	SetSecurityDescriptor(PCSTR, i32) -> HRES
+	Stop(i32) -> HRES
+	GetRunTimes(PCVOID, PCVOID, *mut u32, PVOID) -> HRES
 }
 
-#[repr(C)]
-pub struct IRegistrationInfoVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Description: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Description: fn(COMPTR, PSTR) -> HRES,
-	pub get_Author: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Author: fn(COMPTR, PSTR) -> HRES,
-	pub get_Version: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Version: fn(COMPTR, PSTR) -> HRES,
-	pub get_Date: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Date: fn(COMPTR, PSTR) -> HRES,
-	pub get_Documentation: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Documentation: fn(COMPTR, PSTR) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PSTR) -> HRES,
-	pub get_URI: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_URI: fn(COMPTR, PSTR) -> HRES,
-	pub get_SecurityDescriptor: fn(COMPTR, *mut VARIANT) -> HRES,
-	pub put_SecurityDescriptor: fn(COMPTR, VARIANT) -> HRES,
-	pub get_Source: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Source: fn(COMPTR, PSTR) -> HRES,
+com_vtbl! { IRegistrationInfoVT : IDispatchVT
+	get_Description(*mut PSTR) -> HRES
+	put_Description(PSTR) -> HRES
+	get_Author(*mut PSTR) -> HRES
+	put_Author(PSTR) -> HRES
+	get_Version(*mut PSTR) -> HRES
+	put_Version(PSTR) -> HRES
+	get_Date(*mut PSTR) -> HRES
+	put_Date(PSTR) -> HRES
+	get_Documentation(*mut PSTR) -> HRES
+	put_Documentation(PSTR) -> HRES
+	get_XmlText(*mut PSTR) -> HRES
+	put_XmlText(PSTR) -> HRES
+	get_URI(*mut PSTR) -> HRES
+	put_URI(PSTR) -> HRES
+	get_SecurityDescriptor(*mut VARIANT) -> HRES
+	put_SecurityDescriptor(VARIANT) -> HRES
+	get_Source(*mut PSTR) -> HRES
+	put_Source(PSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct ITaskDefinitionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_RegistrationInfo: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_RegistrationInfo: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Triggers: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Triggers: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Settings: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Settings: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Data: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Data: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Principal: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Principal: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Actions: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Actions: fn(COMPTR, COMPTR) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
+com_vtbl! { ITaskDefinitionVT : IDispatchVT
+	get_RegistrationInfo(*mut COMPTR) -> HRES
+	put_RegistrationInfo(COMPTR) -> HRES
+	get_Triggers(*mut COMPTR) -> HRES
+	put_Triggers(COMPTR) -> HRES
+	get_Settings(*mut COMPTR) -> HRES
+	put_Settings(COMPTR) -> HRES
+	get_Data(*mut PSTR) -> HRES
+	put_Data(PCSTR) -> HRES
+	get_Principal(*mut COMPTR) -> HRES
+	put_Principal(COMPTR) -> HRES
+	get_Actions(*mut COMPTR) -> HRES
+	put_Actions(COMPTR) -> HRES
+	get_XmlText(*mut PSTR) -> HRES
+	put_XmlText(PCSTR) -> HRES
 }
 
-#[repr(C)]
-pub struct ITaskFolderVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetFolders: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub CreateFolder: fn(COMPTR, PCSTR, VARIANT, *mut COMPTR) -> HRES,
-	pub DeleteFolder: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub GetTask: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub DeleteTask: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub RegisterTask:
-		fn(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
-	pub RegisterTaskDefinition:
-		fn(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
-	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
-	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
+com_vtbl! { ITaskFolderVT : IDispatchVT
+	get_Name(*mut PSTR) -> HRES
+	get_Path(*mut PSTR) -> HRES
+	GetFolder(PCSTR, *mut COMPTR) -> HRES
+	GetFolders(i32, *mut COMPTR) -> HRES
+	CreateFolder(PCSTR, VARIANT, *mut COMPTR) -> HRES
+	DeleteFolder(PCSTR, i32) -> HRES
+	GetTask(PCSTR, *mut COMPTR) -> HRES
+	GetTasks(i32, *mut COMPTR) -> HRES
+	DeleteTask(PCSTR, i32) -> HRES
+	RegisterTask(PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES
+	RegisterTaskDefinition(PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES
+	GetSecurityDescriptor(i32, *mut PSTR) -> HRES
+	SetSecurityDescriptor(PCSTR, i32) -> HRES
 }
 
-#[repr(C)]
-pub struct ITaskServiceVT {
-	pub IDispatchVT: IDispatchVT,
-	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetRunningTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub NewTask: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Connect: fn(COMPTR, VARIANT, VARIANT, VARIANT, VARIANT) -> HRES,
-	pub get_Connected: fn(COMPTR, *mut i16) -> HRES,
-	pub get_TargetServer: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_ConnectedUser: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_ConnectedDomain: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_HighestVersion: fn(COMPTR, *mut u32) -> HRES,
+com_vtbl! { ITaskServiceVT : IDispatchVT
+	GetFolder(PCSTR, *mut COMPTR) -> HRES
+	GetRunningTasks(i32, *mut COMPTR) -> HRES
+	NewTask(u32, *mut COMPTR) -> HRES
+	Connect(VARIANT, VARIANT, VARIANT, VARIANT) -> HRES
+	get_Connected(*mut i16) -> HRES
+	get_TargetServer(*mut PSTR) -> HRES
+	get_ConnectedUser(*mut PSTR) -> HRES
+	get_ConnectedDomain(*mut PSTR) -> HRES
+	get_HighestVersion(*mut u32) -> HRES
 }
 
-#[repr(C)]
-pub struct ITaskSettingsVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_AllowDemandStart: fn(COMPTR, *mut i16) -> HRES,
-	pub put_AllowDemandStart: fn(COMPTR, i16) -> HRES,
-	pub get_RestartInterval: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_RestartInterval: fn(COMPTR, PSTR) -> HRES,
-	pub get_RestartCount: fn(COMPTR, *mut i32) -> HRES,
-	pub put_RestartCount: fn(COMPTR, i32) -> HRES,
-	pub get_MultipleInstances: fn(COMPTR, *mut u32) -> HRES,
-	pub put_MultipleInstances: fn(COMPTR, u32) -> HRES,
-	pub get_StopIfGoingOnBatteries: fn(COMPTR, *mut i16) -> HRES,
-	pub put_StopIfGoingOnBatteries: fn(COMPTR, i16) -> HRES,
-	pub get_DisallowStartIfOnBatteries: fn(COMPTR, *mut i16) -> HRES,
-	pub put_DisallowStartIfOnBatteries: fn(COMPTR, i16) -> HRES,
-	pub get_AllowHardTerminate: fn(COMPTR, *mut i16) -> HRES,
-	pub put_AllowHardTerminate: fn(COMPTR, i16) -> HRES,
-	pub get_StartWhenAvailable: fn(COMPTR, *mut i16) -> HRES,
-	pub put_StartWhenAvailable: fn(COMPTR, i16) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PSTR) -> HRES,
-	pub get_RunOnlyIfNetworkAvailable: fn(COMPTR, *mut i16) -> HRES,
-	pub put_RunOnlyIfNetworkAvailable: fn(COMPTR, i16) -> HRES,
-	pub get_ExecutionTimeLimit: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ExecutionTimeLimit: fn(COMPTR, PSTR) -> HRES,
-	pub get_Enabled: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Enabled: fn(COMPTR, i16) -> HRES,
-	pub get_DeleteExpiredTaskAfter: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_DeleteExpiredTaskAfter: fn(COMPTR, PSTR) -> HRES,
-	pub get_Priority: fn(COMPTR, *mut i32) -> HRES,
-	pub put_Priority: fn(COMPTR, i32) -> HRES,
-	pub get_Compatibility: fn(COMPTR, *mut u32) -> HRES,
-	pub put_Compatibility: fn(COMPTR, u32) -> HRES,
-	pub get_Hidden: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Hidden: fn(COMPTR, i16) -> HRES,
-	pub get_IdleSettings: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_IdleSettings: fn(COMPTR, COMPTR) -> HRES,
-	pub get_RunOnlyIfIdle: fn(COMPTR, *mut i16) -> HRES,
-	pub put_RunOnlyIfIdle: fn(COMPTR, i16) -> HRES,
-	pub get_WakeToRun: fn(COMPTR, *mut i16) -> HRES,
-	pub put_WakeToRun: fn(COMPTR, i16) -> HRES,
-	pub get_NetworkSettings: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_NetworkSettings: fn(COMPTR, COMPTR) -> HRES,
+com_vtbl! { ITaskSettingsVT : IDispatchVT
+	get_AllowDemandStart(*mut i16) -> HRES
+	put_AllowDemandStart(i16) -> HRES
+	get_RestartInterval(*mut PSTR) -> HRES
+	put_RestartInterval(PSTR) -> HRES
+	get_RestartCount(*mut i32) -> HRES
+	put_RestartCount(i32) -> HRES
+	get_MultipleInstances(*mut u32) -> HRES
+	put_MultipleInstances(u32) -> HRES
+	get_StopIfGoingOnBatteries(*mut i16) -> HRES
+	put_StopIfGoingOnBatteries(i16) -> HRES
+	get_DisallowStartIfOnBatteries(*mut i16) -> HRES
+	put_DisallowStartIfOnBatteries(i16) -> HRES
+	get_AllowHardTerminate(*mut i16) -> HRES
+	put_AllowHardTerminate(i16) -> HRES
+	get_StartWhenAvailable(*mut i16) -> HRES
+	put_StartWhenAvailable(i16) -> HRES
+	get_XmlText(*mut PSTR) -> HRES
+	put_XmlText(PSTR) -> HRES
+	get_RunOnlyIfNetworkAvailable(*mut i16) -> HRES
+	put_RunOnlyIfNetworkAvailable(i16) -> HRES
+	get_ExecutionTimeLimit(*mut PSTR) -> HRES
+	put_ExecutionTimeLimit(PSTR) -> HRES
+	get_Enabled(*mut i16) -> HRES
+	put_Enabled(i16) -> HRES
+	get_DeleteExpiredTaskAfter(*mut PSTR) -> HRES
+	put_DeleteExpiredTaskAfter(PSTR) -> HRES
+	get_Priority(*mut i32) -> HRES
+	put_Priority(i32) -> HRES
+	get_Compatibility(*mut u32) -> HRES
+	put_Compatibility(u32) -> HRES
+	get_Hidden(*mut i16) -> HRES
+	put_Hidden(i16) -> HRES
+	get_IdleSettings(*mut COMPTR) -> HRES
+	put_IdleSettings(COMPTR) -> HRES
+	get_RunOnlyIfIdle(*mut i16) -> HRES
+	put_RunOnlyIfIdle(i16) -> HRES
+	get_WakeToRun(*mut i16) -> HRES
+	put_WakeToRun(i16) -> HRES
+	get_NetworkSettings(*mut COMPTR) -> HRES
+	put_NetworkSettings(COMPTR) -> HRES
 }
 
-#[repr(C)]
-pub struct ITriggerVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Type: fn(COMPTR, *mut u32) -> HRES,
-	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Repetition: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Repetition: fn(COMPTR, COMPTR) -> HRES,
-	pub get_ExecutionTimeLimit: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ExecutionTimeLimit: fn(COMPTR, PCSTR) -> HRES,
-	pub get_StartBoundary: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_StartBoundary: fn(COMPTR, PCSTR) -> HRES,
-	pub get_EndBoundary: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_EndBoundary: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Enabled: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Enabled: fn(COMPTR, i16) -> HRES,
+com_vtbl! { ITriggerVT : IDispatchVT
+	get_Type(*mut u32) -> HRES
+	get_Id(*mut PSTR) -> HRES
+	put_Id(PCSTR) -> HRES
+	get_Repetition(*mut COMPTR) -> HRES
+	put_Repetition(COMPTR) -> HRES
+	get_ExecutionTimeLimit(*mut PSTR) -> HRES
+	put_ExecutionTimeLimit(PCSTR) -> HRES
+	get_StartBoundary(*mut PSTR) -> HRES
+	put_StartBoundary(PCSTR) -> HRES
+	get_EndBoundary(*mut PSTR) -> HRES
+	put_EndBoundary(PCSTR) -> HRES
+	get_Enabled(*mut i16) -> HRES
+	put_Enabled(i16) -> HRES
 }
 
-#[repr(C)]
-pub struct ITriggerCollectionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
-	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Remove: fn(COMPTR, VARIANT) -> HRES,
-	pub Clear: fn(COMPTR) -> HRES,
+com_vtbl! { ITriggerCollectionVT : IDispatchVT
+	get_Count(*mut i32) -> HRES
+	get_Item(i32, *mut COMPTR) -> HRES
+	get__NewEnum(*mut COMPTR) -> HRES
+	Create(u32, *mut COMPTR) -> HRES
+	Remove(VARIANT) -> HRES
+	Clear() -> HRES
 }

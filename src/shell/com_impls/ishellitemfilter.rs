@@ -61,7 +61,7 @@ impl IShellItemFilterImpl {
 
 	fn_com_userdef_iunknown_impls!(Self);
 
-	fn IncludeItem(p: COMPTR, psi: COMPTR) -> HRES {
+	extern "system" fn IncludeItem(p: COMPTR, psi: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.IncludeItem {
 			Some(func) => {
@@ -71,7 +71,7 @@ impl IShellItemFilterImpl {
 		})
 	}
 
-	fn GetEnumFlagsForItem(p: COMPTR, psi: COMPTR, pgrfFlags: *mut u32) -> HRES {
+	extern "system" fn GetEnumFlagsForItem(p: COMPTR, psi: COMPTR, pgrfFlags: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.GetEnumFlagsForItem {
 			Some(func) => unsafe {

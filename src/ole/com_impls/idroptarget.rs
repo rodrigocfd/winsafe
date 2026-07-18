@@ -145,7 +145,7 @@ impl IDropTargetImpl {
 
 	fn_com_userdef_iunknown_impls!(Self);
 
-	fn DragEnter(
+	extern "system" fn DragEnter(
 		p: COMPTR,
 		pDataObj: COMPTR,
 		grfKeyState: u32,
@@ -166,7 +166,7 @@ impl IDropTargetImpl {
 		})
 	}
 
-	fn DragOver(p: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
+	extern "system" fn DragOver(p: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.DragOver {
 			Some(func) => unsafe {
@@ -182,7 +182,13 @@ impl IDropTargetImpl {
 
 	fn_com_userdef_impl_noparm!(DragLeave);
 
-	fn Drop(p: COMPTR, pDataObj: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
+	extern "system" fn Drop(
+		p: COMPTR,
+		pDataObj: COMPTR,
+		grfKeyState: u32,
+		pt: u64,
+		pdwEffect: *mut u32,
+	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.Drop {
 			Some(func) => unsafe {
