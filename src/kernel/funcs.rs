@@ -536,9 +536,7 @@ pub fn GetLastError() -> co::ERROR {
 #[must_use]
 pub fn GetLocalTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
-	unsafe {
-		ffi::GetLocalTime(pvoid(&mut st));
-	}
+	unsafe { ffi::GetLocalTime(pvoid(&mut st)) };
 	st
 }
 
@@ -590,9 +588,7 @@ pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
 #[must_use]
 pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
-	unsafe {
-		ffi::GetNativeSystemInfo(pvoid(&mut si));
-	}
+	unsafe { ffi::GetNativeSystemInfo(pvoid(&mut si)) };
 	si
 }
 
@@ -776,9 +772,7 @@ pub fn GetPrivateProfileString(
 #[must_use]
 pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
 	let mut si = STARTUPINFO::default();
-	unsafe {
-		ffi::GetStartupInfoW(pvoid(&mut si));
-	}
+	unsafe { ffi::GetStartupInfoW(pvoid(&mut si)) };
 	si
 }
 
@@ -821,9 +815,7 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 #[must_use]
 pub fn GetSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
-	unsafe {
-		ffi::GetSystemInfo(pvoid(&mut si));
-	}
+	unsafe { ffi::GetSystemInfo(pvoid(&mut si)) };
 	si
 }
 
@@ -853,9 +845,7 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 #[must_use]
 pub fn GetSystemTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
-	unsafe {
-		ffi::GetSystemTime(pvoid(&mut st));
-	}
+	unsafe { ffi::GetSystemTime(pvoid(&mut st)) };
 	st
 }
 
@@ -880,9 +870,7 @@ pub fn GetSystemTime() -> SYSTEMTIME {
 #[must_use]
 pub fn GetSystemTimeAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
-	unsafe {
-		ffi::GetSystemTimeAsFileTime(pvoid(&mut ft));
-	}
+	unsafe { ffi::GetSystemTimeAsFileTime(pvoid(&mut ft)) };
 	ft
 }
 
@@ -891,9 +879,7 @@ pub fn GetSystemTimeAsFileTime() -> FILETIME {
 #[must_use]
 pub fn GetSystemTimePreciseAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
-	unsafe {
-		ffi::GetSystemTimePreciseAsFileTime(pvoid(&mut ft));
-	}
+	unsafe { ffi::GetSystemTimePreciseAsFileTime(pvoid(&mut ft)) };
 	ft
 }
 

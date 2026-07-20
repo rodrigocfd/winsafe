@@ -73,10 +73,12 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 #[must_use]
 pub fn GetCurrentProcessExplicitAppUserModelID() -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
-	HrRet(unsafe { ffi::GetCurrentProcessExplicitAppUserModelID(&mut pstr) }).to_hrresult()?;
-	let app_name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
-	let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-	Ok(app_name)
+	unsafe {
+		HrRet(ffi::GetCurrentProcessExplicitAppUserModelID(&mut pstr)).to_hrresult()?;
+		let app_name = WString::from_wchars_nullt(pstr).to_string();
+		let _ = CoTaskMemFreeGuard::new(pstr as _, 0);
+		Ok(app_name)
+	}
 }
 
 /// [`GetDefaultUserProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getdefaultuserprofiledirectoryw)
@@ -193,17 +195,18 @@ pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 /// function.
 pub fn PathSkipRoot(str_path: &str) -> Option<String> {
 	let buf = WString::from_str(str_path);
-	unsafe { ffi::PathSkipRootW(buf.as_ptr()).as_ref() }
-		.map(|ptr| unsafe { WString::from_wchars_nullt(ptr) }.to_string())
+	unsafe {
+		ffi::PathSkipRootW(buf.as_ptr())
+			.as_ref()
+			.map(|ptr| WString::from_wchars_nullt(ptr).to_string())
+	}
 }
 
 /// [`PathStripPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathstrippathw)
 /// function.
 pub fn PathStripPath(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe {
-		ffi::PathStripPathW(buf.as_mut_ptr());
-	}
+	unsafe { ffi::PathStripPathW(buf.as_mut_ptr()) };
 	buf.to_string()
 }
 
@@ -211,9 +214,7 @@ pub fn PathStripPath(str_path: &str) -> String {
 /// function.
 pub fn PathUndecorate(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe {
-		ffi::PathUndecorateW(buf.as_mut_ptr());
-	}
+	unsafe { ffi::PathUndecorateW(buf.as_mut_ptr()) };
 	buf.to_string()
 }
 
@@ -221,9 +222,7 @@ pub fn PathUndecorate(str_path: &str) -> String {
 /// function.
 pub fn PathUnquoteSpaces(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe {
-		ffi::PathUnquoteSpacesW(buf.as_mut_ptr());
-	}
+	unsafe { ffi::PathUnquoteSpacesW(buf.as_mut_ptr()) };
 	buf.to_string()
 }
 
@@ -248,9 +247,7 @@ pub fn SetCurrentProcessExplicitAppUserModelID(app_id: &str) -> HrResult<()> {
 /// The `pv` type varies according to `uFlags`. If you set it wrong, you're
 /// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
-	unsafe {
-		ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv));
-	}
+	unsafe { ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv)) };
 }
 
 /// [`SHBindToParent`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shbindtoparent)

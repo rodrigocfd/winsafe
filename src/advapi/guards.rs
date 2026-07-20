@@ -43,9 +43,7 @@ pub struct FreeSidGuard {
 impl Drop for FreeSidGuard {
 	fn drop(&mut self) {
 		if !self.psid.is_null() {
-			unsafe {
-				ffi::FreeSid(self.psid as *mut _ as _); // ignore errors
-			}
+			unsafe { ffi::FreeSid(self.psid as *mut _ as _) }; // ignore errors
 		}
 	}
 }
@@ -99,9 +97,7 @@ impl Drop for RegCloseKeyGuard {
 		if let Some(h) = self.hkey.as_opt() {
 			// Don't call on predefined keys, these belong to the system.
 			if !self.is_predef_key() {
-				unsafe {
-					ffi::RegCloseKey(h.ptr()); // ignore errors
-				}
+				unsafe { ffi::RegCloseKey(h.ptr()) }; // ignore errors
 			}
 		}
 	}

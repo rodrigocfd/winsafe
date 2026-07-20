@@ -10,6 +10,8 @@ pub(in crate::advapi) extern "system" fn hservicestatus_register_service_ctrl_ha
 where
 	F: FnMut(SvcCtl) -> u32,
 {
-	let func = unsafe { &mut *(context as *mut F) };
-	func(unsafe { SvcCtl::from_raw(control, event_type, event_data) })
+	unsafe {
+		let func = &mut *(context as *mut F);
+		func(SvcCtl::from_raw(control, event_type, event_data))
+	}
 }

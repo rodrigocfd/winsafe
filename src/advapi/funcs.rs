@@ -119,10 +119,12 @@ pub fn AllocateAndInitializeSid(
 #[must_use]
 pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
-	BoolRet(unsafe { ffi::ConvertSidToStringSidW(pcvoid(sid), &mut pstr) }).to_sysresult()?;
-	let name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
-	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) }; // free returned pointer
-	Ok(name)
+	unsafe {
+		BoolRet(ffi::ConvertSidToStringSidW(pcvoid(sid), &mut pstr)).to_sysresult()?;
+		let name = WString::from_wchars_nullt(pstr).to_string();
+		let _ = LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)); // free returned pointer
+		Ok(name)
+	}
 }
 
 /// [`ConvertStringSidToSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw)

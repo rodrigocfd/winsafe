@@ -19,9 +19,7 @@ where
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe {
-				ffi::InternetCloseHandle(h.ptr()); // ignore errors
-			}
+			unsafe { ffi::InternetCloseHandle(h.ptr()) }; // ignore errors
 		}
 	}
 }
