@@ -6,6 +6,8 @@ Windows API and GUI in safe, idiomatic Rust.
 [Docs (master branch)](https://rodrigocfd.github.io/winsafe/winsafe/) •
 [Examples](https://github.com/rodrigocfd/winsafe-examples)
 
+Handwritten since 2019.
+
 WinSafe has:
 
 * low-level Win32 API constants, functions and structs;
