@@ -1236,8 +1236,8 @@ impl MsgSend for WmMouseWheel {
 impl MsgSendRecv for WmMouseWheel {
 	unsafe fn from_generic_wm(p: Wm) -> Self {
 		Self {
-			wheel_distance: LOWORD(p.wparam as _) as _,
-			keys: unsafe { co::MK::from_raw(HIWORD(p.wparam as _)) },
+			wheel_distance: HIWORD(p.wparam as _) as _,
+			keys: unsafe { co::MK::from_raw(LOWORD(p.wparam as _)) },
 			coords: POINT::from(p.lparam as u32),
 		}
 	}
