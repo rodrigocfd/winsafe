@@ -26,6 +26,11 @@ com_vtbl! { IDXGIDeviceVT : IDXGIObjectVT
 	GetGPUThreadPriority(*mut i32) -> HRES
 }
 
+com_vtbl! { IDXGIDevice1VT : IDXGIDeviceVT
+	SetMaximumFrameLatency(u32) -> HRES
+	GetMaximumFrameLatency(*mut u32) -> HRES
+}
+
 com_vtbl! { IDXGIDeviceSubObjectVT : IDXGIObjectVT
 	GetDevice(PCVOID, *mut COMPTR) -> HRES
 }

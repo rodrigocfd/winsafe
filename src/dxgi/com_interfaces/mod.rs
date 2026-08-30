@@ -2,6 +2,7 @@ mod idxgiadapter;
 mod idxgiadapter1;
 mod idxgiadapter2;
 mod idxgidevice;
+mod idxgidevice1;
 mod idxgidevicesubobject;
 mod idxgifactory;
 mod idxgifactory1;
@@ -18,6 +19,7 @@ pub mod decl {
 	pub use super::idxgiadapter1::IDXGIAdapter1;
 	pub use super::idxgiadapter2::IDXGIAdapter2;
 	pub use super::idxgidevice::IDXGIDevice;
+	pub use super::idxgidevice1::IDXGIDevice1;
 	pub use super::idxgidevicesubobject::IDXGIDeviceSubObject;
 	pub use super::idxgifactory::IDXGIFactory;
 	pub use super::idxgifactory1::IDXGIFactory1;
@@ -35,6 +37,7 @@ pub mod traits {
 	pub use super::idxgiadapter1::dxgi_IDXGIAdapter1;
 	pub use super::idxgiadapter2::dxgi_IDXGIAdapter2;
 	pub use super::idxgidevice::dxgi_IDXGIDevice;
+	pub use super::idxgidevice1::dxgi_IDXGIDevice1;
 	pub use super::idxgidevicesubobject::dxgi_IDXGIDeviceSubObject;
 	pub use super::idxgifactory::dxgi_IDXGIFactory;
 	pub use super::idxgifactory1::dxgi_IDXGIFactory1;
