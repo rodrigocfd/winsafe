@@ -37,6 +37,22 @@ impl HUSB {
 			.map(|_| setting_no)
 	}
 
+	/// [`WinUsb_GetCurrentFrameNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_getcurrentframenumber)
+	/// function.
+	///
+	/// Returns the current frame number and the timestamp, respectively.
+	#[must_use]
+	pub fn GetCurrentFrameNumber(&self) -> SysResult<(u32, i64)> {
+		let mut current_frame_no = 0u32;
+		let mut timestamp = 0i64;
+
+		BoolRet(unsafe {
+			ffi::WinUsb_GetCurrentFrameNumber(self.ptr(), &mut current_frame_no, &mut timestamp)
+		})
+		.to_sysresult()
+		.map(|_| (current_frame_no, timestamp))
+	}
+
 	/// [`WinUsb_SetCurrentAlternateSetting`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_setcurrentalternatesetting)
 	/// function.
 	pub fn SetCurrentAlternateSetting(&self, setting_no: u8) -> SysResult<()> {
