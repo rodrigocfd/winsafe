@@ -10,7 +10,7 @@ impl HFILE {
 	/// [`WinUsb_Initialize`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_initialize)
 	/// function.
 	#[must_use]
-	pub fn WinUsb_Initialize(&self) -> SysResult<WinUsbFreeGuard> {
+	pub fn WinUsbInitialize(&self) -> SysResult<WinUsbFreeGuard> {
 		let mut handle = HUSB::NULL;
 		unsafe {
 			BoolRet(ffi::WinUsb_Initialize(self.ptr(), handle.as_mut()))
