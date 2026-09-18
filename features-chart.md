@@ -23,7 +23,8 @@ flowchart RL
     uxtheme --> gdi
     uxtheme --> ole
     version --> kernel
-    winmm --> kernel
     wininet --> kernel
+    winmm --> kernel
     winspool --> user
+    winusb --> kernel
 ```

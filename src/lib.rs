@@ -25,9 +25,10 @@ mod macros;
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
-#[cfg(feature = "winmm")] mod winmm;
 #[cfg(feature = "wininet")] mod wininet;
+#[cfg(feature = "winmm")] mod winmm;
 #[cfg(feature = "winspool")] mod winspool;
+#[cfg(feature = "winusb")] mod winusb;
 #[cfg(all(feature = "advapi", feature = "comctl"))] mod advapi_comctl;
 #[cfg(all(feature = "advapi", feature = "shell"))] mod advapi_shell;
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
@@ -61,6 +62,7 @@ mod decl {
 	#[cfg(feature = "winmm")] pub use super::winmm::decl::*;
 	#[cfg(feature = "wininet")] pub use super::wininet::decl::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::decl::*;
+	#[cfg(feature = "winusb")] pub use super::winusb::decl::*;
 	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::decl::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::decl::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
@@ -115,6 +117,7 @@ pub mod guard {
 	#[cfg(feature = "version")] pub use super::version::guards::*;
 	#[cfg(feature = "wininet")] pub use super::wininet::guards::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::guards::*;
+	#[cfg(feature = "winusb")] pub use super::winusb::guards::*;
 }
 
 #[cfg(feature = "user")]
