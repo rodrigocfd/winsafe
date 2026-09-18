@@ -12,6 +12,12 @@ handle! { HUSB;
 }
 
 impl HUSB {
+	/// [`WinUsb_AbortPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_abortpipe)
+	/// function.
+	pub fn WinUsb_AbortPipe(&self, pipe_id: u8) -> SysResult<()> {
+		BoolRet(unsafe { ffi::WinUsb_AbortPipe(self.ptr(), pipe_id) }).to_sysresult()
+	}
+
 	/// [`WinUsb_FlushPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_flushpipe)
 	/// function.
 	pub fn WinUsb_FlushPipe(&self, pipe_id: u8) -> SysResult<()> {
