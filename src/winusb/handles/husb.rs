@@ -53,6 +53,12 @@ impl HUSB {
 		.map(|_| (current_frame_no, timestamp))
 	}
 
+	/// [`WinUsb_ResetPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_resetpipe)
+	/// function.
+	pub fn ResetPipe(&self, pipe_id: u8) -> SysResult<()> {
+		BoolRet(unsafe { ffi::WinUsb_ResetPipe(self.ptr(), pipe_id) }).to_sysresult()
+	}
+
 	/// [`WinUsb_SetCurrentAlternateSetting`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_setcurrentalternatesetting)
 	/// function.
 	pub fn SetCurrentAlternateSetting(&self, setting_no: u8) -> SysResult<()> {

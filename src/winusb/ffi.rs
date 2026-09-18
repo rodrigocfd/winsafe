@@ -8,5 +8,6 @@ extern_sys! { "winusb";
 	WinUsb_GetCurrentAlternateSetting(HANDLE, *mut u8) -> BOOL
 	WinUsb_GetCurrentFrameNumber(HANDLE, *mut u32, *mut i64) -> BOOL
 	WinUsb_Initialize(HANDLE, *mut HANDLE) -> BOOL
+	WinUsb_ResetPipe(HANDLE, u8) -> BOOL
 	WinUsb_SetCurrentAlternateSetting(HANDLE, u8) -> BOOL
 }
