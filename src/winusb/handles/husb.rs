@@ -27,4 +27,11 @@ impl HUSB {
 			.to_sysresult()
 			.map(|_| setting_no)
 	}
+
+	/// [`WinUsb_SetCurrentAlternateSetting`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_setcurrentalternatesetting)
+	/// function.
+	pub fn WinUsb_SetCurrentAlternateSetting(&self, setting_no: u8) -> SysResult<()> {
+		BoolRet(unsafe { ffi::WinUsb_SetCurrentAlternateSetting(self.ptr(), setting_no) })
+			.to_sysresult()
+	}
 }
