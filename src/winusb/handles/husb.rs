@@ -12,6 +12,12 @@ handle! { HUSB;
 }
 
 impl HUSB {
+	/// [`WinUsb_FlushPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_flushpipe)
+	/// function.
+	pub fn WinUsb_FlushPipe(&self, pipe_id: u8) -> SysResult<()> {
+		BoolRet(unsafe { ffi::WinUsb_FlushPipe(self.ptr(), pipe_id) }).to_sysresult()
+	}
+
 	/// [`WinUsb_GetCurrentAlternateSetting`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_getcurrentalternatesetting)
 	/// function.
 	#[must_use]
