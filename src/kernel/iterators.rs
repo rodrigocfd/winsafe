@@ -1,6 +1,5 @@
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 
 pub(in crate::kernel) struct DirListFlatIter {

@@ -98,7 +98,6 @@ pub(in crate::gui) mod quit_error {
 pub(in crate::gui) mod ui_font {
 	use crate::co;
 	use crate::decl::*;
-	use crate::guard::*;
 	use crate::gui::privs::*;
 	use crate::msg;
 

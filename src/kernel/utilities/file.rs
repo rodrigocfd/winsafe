@@ -1,6 +1,5 @@
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).

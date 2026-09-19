@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::macros::*;
 use crate::ole::{privs::*, vts::*};

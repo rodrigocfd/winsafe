@@ -4,12 +4,12 @@ mod aliases;
 mod com_impls;
 mod com_interfaces;
 mod funcs;
+mod guards;
 mod handles;
 mod structs;
 
 pub mod co;
 pub(in crate::ole) mod ffi;
-pub mod guards;
 pub(crate) mod privs;
 pub(crate) mod vts;
 
@@ -18,6 +18,7 @@ pub mod decl {
 	pub use super::com_impls::decl::*;
 	pub use super::com_interfaces::decl::*;
 	pub use super::funcs::*;
+	pub use super::guards::*;
 	pub use super::structs::*;
 	use crate::macros::*;
 

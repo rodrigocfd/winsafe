@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::gdi::privs::*;
-use crate::guard::*;
 use crate::macros::*;
 
 /// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)

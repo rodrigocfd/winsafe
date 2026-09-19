@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::gdi::ffi;
-use crate::guard::*;
 use crate::kernel::privs::*;
 
 impl HINSTANCE {

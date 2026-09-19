@@ -5,7 +5,6 @@ use std::any::TypeId;
 use crate::co;
 use crate::decl::*;
 use crate::gdi::{ffi, privs::*};
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 

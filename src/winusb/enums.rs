@@ -1,6 +1,5 @@
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 
 /// Variant parameter for:
 ///

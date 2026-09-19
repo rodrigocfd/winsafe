@@ -1,5 +1,4 @@
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 
 pub(in crate::comctl) struct HimagelistIter<'a> {

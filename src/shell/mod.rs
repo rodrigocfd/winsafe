@@ -4,12 +4,12 @@ mod com_impls;
 mod com_interfaces;
 mod enums;
 mod funcs;
+mod guards;
 mod handles;
 mod structs;
 
 pub mod co;
 pub(in crate::shell) mod ffi;
-pub mod guards;
 pub(in crate::shell) mod iterators;
 pub mod messages_wm;
 pub(crate) mod privs;
@@ -20,6 +20,7 @@ pub mod decl {
 	pub use super::com_interfaces::decl::*;
 	pub use super::enums::*;
 	pub use super::funcs::*;
+	pub use super::guards::*;
 	pub use super::handles::decl::*;
 	pub use super::structs::*;
 }

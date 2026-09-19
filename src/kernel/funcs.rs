@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 
 /// [`AttachConsole`](https://learn.microsoft.com/en-us/windows/console/attachconsole)

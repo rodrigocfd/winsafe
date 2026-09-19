@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::winusb::ffi;

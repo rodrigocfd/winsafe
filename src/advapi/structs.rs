@@ -5,7 +5,6 @@ use std::marker::PhantomData;
 use crate::advapi::privs::*;
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::macros::*;
 
 /// [`CLAIM_SECURITY_ATTRIBUTES_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attributes_information)

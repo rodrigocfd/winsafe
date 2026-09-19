@@ -1,5 +1,4 @@
 use crate::decl::*;
-use crate::guard::*;
 use crate::prelude::*;
 
 /// RAII implementation for [`HVERSIONINFO`](crate::HVERSIONINFO) which releases

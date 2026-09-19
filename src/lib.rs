@@ -100,27 +100,6 @@ pub mod co {
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
 
-pub mod guard {
-	//! RAII implementation for various resources, which automatically perform
-	//! cleanup routines when the object goes out of scope.
-	//!
-	//! The guards are named after the functions they call.
-
-	#[cfg(feature = "advapi")] pub use super::advapi::guards::*;
-	#[cfg(feature = "comctl")] pub use super::comctl::guards::*;
-	#[cfg(feature = "gdi")] pub use super::gdi::guards::*;
-	#[cfg(feature = "kernel")] pub use super::kernel::guards::*;
-	#[cfg(feature = "mf")] pub use super::mf::guards::*;
-	#[cfg(feature = "ole")] pub use super::ole::guards::*;
-	#[cfg(feature = "shell")] pub use super::shell::guards::*;
-	#[cfg(feature = "user")] pub use super::user::guards::*;
-	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guards::*;
-	#[cfg(feature = "version")] pub use super::version::guards::*;
-	#[cfg(feature = "wininet")] pub use super::wininet::guards::*;
-	#[cfg(feature = "winspool")] pub use super::winspool::guards::*;
-	#[cfg(feature = "winusb")] pub use super::winusb::guards::*;
-}
-
 #[cfg(feature = "user")]
 pub mod msg {
 	#![doc = include_str!("msg.md")]

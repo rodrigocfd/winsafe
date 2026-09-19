@@ -1,6 +1,5 @@
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 
 /// Manages an [`HFILEMAP`](crate::HFILEMAP) handle, which provides
 /// memory-mapped file operations, including read/write through slices. It is

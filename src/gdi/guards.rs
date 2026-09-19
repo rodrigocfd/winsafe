@@ -3,7 +3,6 @@ use std::ops::{Deref, DerefMut};
 use crate::co;
 use crate::decl::*;
 use crate::gdi::ffi;
-use crate::guard::*;
 use crate::macros::*;
 use crate::prelude::*;
 

@@ -3,7 +3,6 @@
 use crate::co;
 use crate::comctl::ffi;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::macros::*;
 
