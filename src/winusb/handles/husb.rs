@@ -1,6 +1,8 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::macros::*;
 use crate::winusb::ffi;
@@ -51,6 +53,90 @@ impl HUSB {
 		})
 		.to_sysresult()
 		.map(|_| (current_frame_no, timestamp))
+	}
+
+	/// [`WinUsb_GetDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_getdescriptor)
+	/// function.
+	///
+	/// Note that, currently, not all descriptors are implemented. You can query
+	/// only those defined in [`UsbDescr`](crate::UsbDescr) enum, otherwise this
+	/// method will return
+	/// [`ERROR::INVALID_PARAMETER`](crate::co::ERROR::INVALID_PARAMETER).
+	#[must_use]
+	pub fn GetDescriptor(
+		&self,
+		descriptor_type: co::USB_DESCRIPTOR_TYPE,
+		index: u8,
+		lang_id: LANGID,
+	) -> SysResult<UsbDescr> {
+		let mut bytes_read = 0u32;
+		match descriptor_type {
+			co::USB_DESCRIPTOR_TYPE::DEVICE => {
+				let mut obj = USB_DEVICE_DESCRIPTOR::default();
+				let ret = BoolRet(unsafe {
+					ffi::WinUsb_GetDescriptor(
+						self.ptr(),
+						descriptor_type.raw(),
+						index,
+						lang_id.raw(),
+						&mut obj as *mut _ as _,
+						std::mem::size_of::<USB_DEVICE_DESCRIPTOR>() as _,
+						&mut bytes_read,
+					)
+				})
+				.to_sysresult()
+				.map(|_| UsbDescr::Device(obj));
+
+				if bytes_read == std::mem::size_of::<USB_DEVICE_DESCRIPTOR>() as _ {
+					ret
+				} else {
+					Err(co::ERROR::INCORRECT_SIZE)
+				}
+			},
+			co::USB_DESCRIPTOR_TYPE::CONFIGURATION => {
+				let mut obj = USB_CONFIGURATION_DESCRIPTOR::default();
+				let ret = BoolRet(unsafe {
+					ffi::WinUsb_GetDescriptor(
+						self.ptr(),
+						descriptor_type.raw(),
+						index,
+						lang_id.raw(),
+						&mut obj as *mut _ as _,
+						std::mem::size_of::<USB_CONFIGURATION_DESCRIPTOR>() as _,
+						&mut bytes_read,
+					)
+				})
+				.to_sysresult();
+
+				if ret.is_err() {
+					return Err(ret.unwrap_err());
+				} else if bytes_read != std::mem::size_of::<USB_CONFIGURATION_DESCRIPTOR>() as _ {
+					return Err(co::ERROR::INCORRECT_SIZE);
+				}
+
+				let mut obj2 = UsbConfiguratorDescriptorGuard::new(obj.wTotalLength as _);
+				let ret2 = BoolRet(unsafe {
+					ffi::WinUsb_GetDescriptor(
+						self.ptr(),
+						descriptor_type.raw(),
+						index,
+						lang_id.raw(),
+						obj2.as_mut_ptr(),
+						obj.wTotalLength as _,
+						&mut bytes_read,
+					)
+				})
+				.to_sysresult()
+				.map(|_| UsbDescr::Configuration(obj2));
+
+				if bytes_read == std::mem::size_of::<USB_DEVICE_DESCRIPTOR>() as _ {
+					ret2
+				} else {
+					Err(co::ERROR::INCORRECT_SIZE)
+				}
+			},
+			_ => Err(co::ERROR::INVALID_PARAMETER),
+		}
 	}
 
 	/// [`WinUsb_ResetPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_resetpipe)

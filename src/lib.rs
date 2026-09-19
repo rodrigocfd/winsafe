@@ -96,6 +96,7 @@ pub mod co {
 	#[cfg(feature = "winmm")] pub use super::winmm::co::*;
 	#[cfg(feature = "wininet")] pub use super::wininet::co::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::co::*;
+	#[cfg(feature = "winusb")] pub use super::winusb::co::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
 
