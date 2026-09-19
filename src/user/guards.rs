@@ -105,9 +105,8 @@ handle_guard! { EndDeferWindowPosGuard: HDWP;
 /// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 /// when the object goes out of scope.
 ///
-/// The [`PAINTSTRUCT`] object is stored internally, and can be accessed
-/// through the [`paintstruct`](crate::guard::EndPaintGuard::paintstruct)
-/// method.
+/// The [`PAINTSTRUCT`] object is stored internally, and can be accessed through
+/// the [`paintstruct`](crate::EndPaintGuard::paintstruct) method.
 pub struct EndPaintGuard {
 	hwnd: HWND,
 	hdc: HDC,

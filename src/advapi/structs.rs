@@ -171,12 +171,12 @@ impl SERVICE_TIMECHANGE_INFO {
 ///
 /// Possible ways:
 ///
-/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid) as [`FreeSidGuard`](crate::guard::FreeSidGuard);
-/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid) as [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
-/// * [`CopySid`](crate::CopySid) as [`SidGuard`](crate::guard::SidGuard);
-/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid) as [`SidGuard`](crate::guard::SidGuard);
-/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard);
-/// * [`LookupAccountName`](crate::LookupAccountName) as [`SidGuard`](crate::guard::SidGuard).
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid) as [`FreeSidGuard`](crate::FreeSidGuard);
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid) as [`LocalFreeSidGuard`](crate::LocalFreeSidGuard);
+/// * [`CopySid`](crate::CopySid) as [`SidGuard`](crate::SidGuard);
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid) as [`SidGuard`](crate::SidGuard);
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::SidGuard);
+/// * [`LookupAccountName`](crate::LookupAccountName) as [`SidGuard`](crate::SidGuard).
 #[repr(C)]
 pub struct SID {
 	pub Revision: u8,
@@ -375,7 +375,7 @@ pub struct TOKEN_GROUPS<'a> {
 
 impl<'a> TOKEN_GROUPS<'a> {
 	/// Returns a dynamically allocated
-	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
+	/// [`TokenGroupsGuard`](crate::TokenGroupsGuard).
 	#[must_use]
 	pub fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> SysResult<TokenGroupsGuard<'a>> {
 		TokenGroupsGuard::new(groups)
@@ -498,7 +498,7 @@ pub struct TOKEN_PRIVILEGES {
 
 impl TOKEN_PRIVILEGES {
 	/// Returns a dynamically allocated
-	/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
+	/// [`TokenPrivilegesGuard`](crate::TokenPrivilegesGuard).
 	#[must_use]
 	pub fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> SysResult<TokenPrivilegesGuard> {
 		TokenPrivilegesGuard::new(privileges)

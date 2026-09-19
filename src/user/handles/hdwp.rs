@@ -23,7 +23,7 @@ impl HDWP {
 	///
 	/// Here, the cleanup is performed automatically, because
 	/// `BeginDeferWindowPos` returns an
-	/// [`EndDeferWindowPosGuard`](crate::guard::EndDeferWindowPosGuard), which
+	/// [`EndDeferWindowPosGuard`](crate::EndDeferWindowPosGuard), which
 	/// automatically calls `EndDeferWindowPos` when the guard goes out of
 	/// scope.
 	#[must_use]

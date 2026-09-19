@@ -110,10 +110,9 @@ impl HHEAP {
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 	/// as a cleanup operation; here, the cleanup is performed automatically,
 	/// because `HeapLock` returns a
-	/// [`HeapUnlockGuard`](crate::guard::HeapUnlockGuard), which automatically
-	/// calls `HeapUnlock` when the guard goes out of scope. You must, however,
-	/// keep the guard alive, otherwise the cleanup will be performed right
-	/// away.
+	/// [`HeapUnlockGuard`](crate::HeapUnlockGuard), which automatically calls
+	/// `HeapUnlock` when the guard goes out of scope. You must, however, keep
+	/// the guard alive, otherwise the cleanup will be performed right away.
 	///
 	/// # Examples
 	///
@@ -146,8 +145,7 @@ impl HHEAP {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle, present inside
-	/// [`HeapFreeGuard`](crate::guard::HeapFreeGuard), is automatically
-	/// updated.
+	/// [`HeapFreeGuard`](crate::HeapFreeGuard), is automatically updated.
 	///
 	/// # Examples
 	///

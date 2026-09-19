@@ -87,7 +87,7 @@ impl HIMAGELIST {
 	///
 	/// Here, the cleanup is performed automatically, because `BeginDrag`
 	/// returns an
-	/// [`ImageListEndDragGuard`](crate::guard::ImageListEndDragGuard), which
+	/// [`ImageListEndDragGuard`](crate::ImageListEndDragGuard), which
 	/// automatically calls `ImageList_EndDrag` when the guard goes out of
 	/// scope. You must, however, keep the guard alive, otherwise the cleanup
 	/// will be performed right away.

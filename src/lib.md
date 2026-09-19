@@ -105,7 +105,7 @@ PostQuitMessage(0);
 
 Since [`PostQuitMessage`] is a free function, it's simply at the root of the crate.
 
-Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::HWND::BeginPaint), for example – will return the resource wrapped in a [guard], which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
+Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::HWND::BeginPaint), for example – will return the resource wrapped in a guard, which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
 
 Sending messages are a special case, see the [`msg`] module.
 

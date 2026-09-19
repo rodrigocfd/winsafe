@@ -197,10 +197,10 @@ impl HFILE {
 	/// as a cleanup operation.
 	///
 	/// Here, the cleanup is performed automatically, because `LockFile` returns
-	/// an [`UnlockFileGuard`](crate::guard::UnlockFileGuard), which
-	/// automatically calls `UnlockFile` when the guard goes out of scope. You
-	/// must, however, keep the guard alive, otherwise the cleanup will be
-	/// performed right away.
+	/// an [`UnlockFileGuard`](crate::UnlockFileGuard), which automatically
+	/// calls `UnlockFile` when the guard goes out of scope. You must, however,
+	/// keep the guard alive, otherwise the cleanup will be performed right
+	/// away.
 	///
 	/// # Examples
 	///

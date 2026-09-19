@@ -171,7 +171,7 @@ pub struct LOGPALETTE {
 
 impl LOGPALETTE {
 	/// Returns a dynamically allocated
-	/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
+	/// [`LogpaletteGuard`](crate::LogpaletteGuard).
 	#[must_use]
 	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> SysResult<LogpaletteGuard> {
 		LogpaletteGuard::new(palVersion, entries)

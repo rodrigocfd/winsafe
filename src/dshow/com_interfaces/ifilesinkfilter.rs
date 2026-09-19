@@ -35,8 +35,8 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) reference to
 	/// `pmt`, its `pbFormat` field may return a valid reference to a format
 	/// block. If so, you must free it with
-	/// [`CoTaskMemFree`](crate::guard::CoTaskMemFreeGuard), or you'll have a
-	/// memory leak.
+	/// [`CoTaskMemFree`](crate::CoTaskMemFreeGuard), or you'll have a memory
+	/// leak.
 	///
 	/// # Examples
 	///

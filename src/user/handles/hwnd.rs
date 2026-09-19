@@ -91,10 +91,10 @@ impl HWND {
 	/// [`PAINTSTRUCT`](crate::PAINTSTRUCT) object.
 	///
 	/// Here, the cleanup is performed automatically, because `BeginPaint`
-	/// returns an [`EndPaintGuard`](crate::guard::EndPaintGuard), which stores
-	/// the `PAINTSTRUCT` and automatically calls `EndPaint` when the guard goes
-	/// out of scope. You must, however, keep the guard alive, otherwise the
-	/// cleanup will be performed right away.
+	/// returns an [`EndPaintGuard`](crate::EndPaintGuard), which stores the
+	/// `PAINTSTRUCT` and automatically calls `EndPaint` when the guard goes out
+	/// of scope. You must, however, keep the guard alive, otherwise the cleanup
+	/// will be performed right away.
 	///
 	/// # Examples
 	///
@@ -1153,10 +1153,10 @@ impl HWND {
 	/// as a cleanup operation.
 	///
 	/// Here, the cleanup is performed automatically, because `OpenClipboard`
-	/// returns a [`CloseClipboardGuard`](crate::guard::CloseClipboardGuard),
-	/// which automatically calls `CloseClipboard` when the guard goes out of
-	/// scope. You must, however, keep the guard alive, otherwise the cleanup
-	/// will be performed right away.
+	/// returns a [`CloseClipboardGuard`](crate::CloseClipboardGuard), which
+	/// automatically calls `CloseClipboard` when the guard goes out of scope.
+	/// You must, however, keep the guard alive, otherwise the cleanup will be
+	/// performed right away.
 	///
 	/// # Examples
 	///

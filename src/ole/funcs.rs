@@ -122,7 +122,7 @@ where
 /// as a cleanup operation.
 ///
 /// Here, the cleanup is performed automatically, because `CoInitializeEx`
-/// returns a [`CoUninitializeGuard`](crate::guard::CoUninitializeGuard), which
+/// returns a [`CoUninitializeGuard`](crate::CoUninitializeGuard), which
 /// automatically calls `CoUninitialize` when the guard goes out of scope. You
 /// must, however, keep the guard alive, otherwise the cleanup will be performed
 /// right away.
@@ -159,7 +159,7 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 /// function.
 ///
 /// Note that this function will lock the COM object, returning a
-/// [`CoLockObjectExternalGuard`](crate::guard::CoLockObjectExternalGuard). The
+/// [`CoLockObjectExternalGuard`](crate::CoLockObjectExternalGuard). The
 /// unlocking is automatically performed by the guard when it goes out of scope.
 pub fn CoLockObjectExternal<T>(obj: &T) -> HrResult<CoLockObjectExternalGuard<'_, T>>
 where
@@ -313,10 +313,10 @@ pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 /// as a cleanup operation.
 ///
 /// Here, the cleanup is performed automatically, because `OleInitialize`
-/// returns an [`OleUninitializeGuard`](crate::guard::OleUninitializeGuard),
-/// which automatically calls `OleUninitialize` when the guard goes out of
-/// scope. You must, however, keep the guard alive, otherwise the cleanup will
-/// be performed right away.
+/// returns an [`OleUninitializeGuard`](crate::OleUninitializeGuard), which
+/// automatically calls `OleUninitialize` when the guard goes out of scope. You
+/// must, however, keep the guard alive, otherwise the cleanup will be performed
+/// right away.
 ///
 /// # Examples
 ///

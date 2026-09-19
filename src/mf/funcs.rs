@@ -141,9 +141,9 @@ pub fn MFCreateTopologyNode(node_type: co::MF_TOPOLOGY) -> HrResult<IMFTopologyN
 /// as a cleanup operation.
 ///
 /// Here, the cleanup is performed automatically, because `MFStartup` returns a
-/// [`MFShutdownGuard`](crate::guard::MFShutdownGuard), which automatically
-/// calls `MFShutdown` when the guard goes out of scope. You must, however, keep
-/// the guard alive, otherwise the cleanup will be performed right away.
+/// [`MFShutdownGuard`](crate::MFShutdownGuard), which automatically calls
+/// `MFShutdown` when the guard goes out of scope. You must, however, keep the
+/// guard alive, otherwise the cleanup will be performed right away.
 ///
 /// # Examples
 ///

@@ -884,9 +884,9 @@ impl HDC {
 	/// `SelectObject` again, passing the handle to the replaced object.
 	///
 	/// Here, the cleanup is performed automatically, because `SelectObject`
-	/// returns a [`SelectObjectGuard`](crate::guard::SelectObjectGuard), which
-	/// stores the replaced handle and calls `SelectObject` automatically when
-	/// the guard goes out of scope. You must, however, keep the guard alive,
+	/// returns a [`SelectObjectGuard`](crate::SelectObjectGuard), which stores
+	/// the replaced handle and calls `SelectObject` automatically when the
+	/// guard goes out of scope. You must, however, keep the guard alive,
 	/// otherwise the cleanup will be performed right away.
 	///
 	/// # Examples
