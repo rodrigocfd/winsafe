@@ -1657,6 +1657,19 @@ const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
 	Invalid Self::Maximum.0
 }
 
+const_bitflag! { VARIABLE_ATTRIBUTE: u32;
+	/// [`GetFirmwareEnvironmentVariableEx`](crate::GetFirmwareEnvironmentVariableEx)
+	/// attributes (`u32`).
+	=>
+	NON_VOLATILE 0x0000_0001
+	BOOTSERVICE_ACCESS 0x0000_0002
+	RUNTIME_ACCESS 0x0000_0004
+	HARDWARE_ERROR_RECORD 0x0000_0008
+	AUTHENTICATED_WRITE_ACCESS 0x0000_0010
+	TIME_BASED_AUTHENTICATED_WRITE_ACCESS 0x0000_0020
+	APPEND_WRITE 0x0000_0040
+}
+
 const_ordinary! { VER_COND: u8;
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	=>

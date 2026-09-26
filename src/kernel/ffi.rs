@@ -64,6 +64,7 @@ extern_sys! { "kernel32";
 	GetFileSizeEx(HANDLE, *mut i64) -> BOOL
 	GetFileTime(HANDLE, PVOID, PVOID, PVOID) -> BOOL
 	GetFileType(HANDLE) -> u32
+	GetFirmwareEnvironmentVariableExW(PCSTR, PCSTR, PVOID, u32, *mut u32) -> u32
 	GetFirmwareType(*mut u32) -> BOOL
 	GetGuiResources(HANDLE, u32) -> u32
 	GetLargePageMinimum() -> usize
