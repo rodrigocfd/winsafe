@@ -7,7 +7,7 @@
 
 Windows API and GUI in safe, idiomatic Rust.
 
-Handwritten since 2019.
+Handwritten since 2019. LLM-generated PRs are **not** welcome.
 
 WinSafe has:
 
