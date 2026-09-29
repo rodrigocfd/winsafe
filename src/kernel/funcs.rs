@@ -1546,6 +1546,12 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 		.to_sysresult()
 }
 
+/// [`SetDefaultDllDirectories`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-setdefaultdlldirectories)
+/// function.
+pub fn SetDefaultDllDirectories(directory_flags: co::LOAD_LIBRARY_SEARCH) -> SysResult<()> {
+	BoolRet(unsafe { ffi::SetDefaultDllDirectories(directory_flags.raw()) }).to_sysresult()
+}
+
 /// [`SetDllDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setdlldirectoryw)
 /// function.
 pub fn SetDllDirectory(path_name: Option<&str>) -> SysResult<()> {

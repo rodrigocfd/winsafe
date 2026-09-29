@@ -175,6 +175,7 @@ extern_sys! { "kernel32";
 	ResumeThread(HANDLE) -> u32
 	SetConsoleMode(HANDLE, u32) -> BOOL
 	SetCurrentDirectoryW(PCSTR) -> BOOL
+	SetDefaultDllDirectories(u32) -> BOOL
 	SetDllDirectoryW(PCSTR) -> BOOL
 	SetEndOfFile(HANDLE) -> BOOL
 	SetEvent(HANDLE) -> BOOL
