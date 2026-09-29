@@ -484,16 +484,15 @@ pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 /// [`GetFirmwareEnvironmentVariableEx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwareenvironmentvariableexw)
 /// function.
 ///
-/// Returns the number of bytes written to `buffer`, and the attributes of the
-/// variable.
+/// Returns the value of the variable, and its attributes.
 ///
 /// The calling process must hold the `SeSystemEnvironmentPrivilege` privilege,
 /// enabled in its token, otherwise the function fails with
 /// [`co::ERROR::PRIVILEGE_NOT_HELD`](crate::co::ERROR::PRIVILEGE_NOT_HELD).
 /// On a system booted with legacy BIOS it always fails with
 /// [`co::ERROR::INVALID_FUNCTION`](crate::co::ERROR::INVALID_FUNCTION). If
-/// `buffer` is too small, it fails with
-/// [`co::ERROR::INSUFFICIENT_BUFFER`](crate::co::ERROR::INSUFFICIENT_BUFFER).
+/// the variable doesn't exist, it fails with
+/// [`co::ERROR::ENVVAR_NOT_FOUND`](crate::co::ERROR::ENVVAR_NOT_FOUND).
 ///
 /// # Examples
 ///
@@ -505,30 +504,43 @@ pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 /// const IMAGE_SECURITY_DATABASE: w::GUID =
 ///     w::GUID::from_str("d719b2cb-3d3a-4596-a3bc-dad00e67656f");
 ///
-/// let mut buf = vec![0u8; 64 * 1024];
-/// let (num_bytes, attributes) =
-///     w::GetFirmwareEnvironmentVariableEx("db", &IMAGE_SECURITY_DATABASE, &mut buf)?;
-/// let db = &buf[..num_bytes as usize];
+/// let (db, attributes) =
+///     w::GetFirmwareEnvironmentVariableEx("db", &IMAGE_SECURITY_DATABASE)?;
 /// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn GetFirmwareEnvironmentVariableEx(
 	name: &str,
 	guid: &GUID,
-	buffer: &mut [u8],
-) -> SysResult<(u32, co::VARIABLE_ATTRIBUTE)> {
-	let mut attributes = co::VARIABLE_ATTRIBUTE::default();
-	match unsafe {
-		ffi::GetFirmwareEnvironmentVariableExW(
-			WString::from_str(name).as_ptr(),
-			WString::from_str(format!("{{{guid}}}")).as_ptr(),
-			buffer.as_mut_ptr() as _,
-			buffer.len() as _,
-			attributes.as_mut(),
-		)
-	} {
-		0 => Err(GetLastError()),
-		num_bytes => Ok((num_bytes, attributes)),
+) -> SysResult<(Vec<u8>, co::VARIABLE_ATTRIBUTE)> {
+	let name = WString::from_str(name);
+	let guid = WString::from_str(format!("{{{guid}}}"));
+	let mut buf_sz = 64 * 1024; // the Secure Boot databases fit in one call
+	loop {
+		let mut buf = vec![0u8; buf_sz];
+		let mut attributes = co::VARIABLE_ATTRIBUTE::default();
+		match unsafe {
+			ffi::GetFirmwareEnvironmentVariableExW(
+				name.as_ptr(),
+				guid.as_ptr(),
+				buf.as_mut_ptr() as _,
+				buf.len() as _,
+				attributes.as_mut(),
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::INSUFFICIENT_BUFFER => {
+					buf_sz *= 2; // double the buffer size to try again
+				},
+				e => {
+					return Err(e);
+				},
+			},
+			num_bytes => {
+				buf.truncate(num_bytes as _);
+				return Ok((buf, attributes));
+			},
+		}
 	}
 }
 
