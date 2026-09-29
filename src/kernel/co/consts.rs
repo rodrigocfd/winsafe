@@ -771,6 +771,16 @@ const_bitflag! { LMEM: u32;
 	LPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 
+const_bitflag! { LOAD_LIBRARY_SEARCH: u32;
+	/// [`SetDefaultDllDirectories`](crate::SetDefaultDllDirectories)
+	/// `directory_flags` (`u32`).
+	=>
+	APPLICATION_DIR 0x0000_0200
+	DEFAULT_DIRS 0x0000_1000
+	SYSTEM32 0x0000_0800
+	USER_DIRS 0x0000_0400
+}
+
 const_bitflag! { MBC: u32;
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	///
