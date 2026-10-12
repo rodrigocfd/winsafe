@@ -10,9 +10,9 @@ extern_sys! { "ole32";
 extern_sys! { "oleaut32";
 	OleLoadPicture(COMPTR, i32, BOOL, PCVOID, *mut COMPTR) -> HRES
 	OleLoadPicturePath(PCSTR, COMPTR, u32, u32, PCVOID, *mut COMPTR) -> HRES
-	SysAllocString(PCSTR) -> PSTR
+	SysAllocStringLen(PCSTR, u32) -> PSTR
 	SysFreeString(PSTR)
-	SysReAllocString(PSTR, PCSTR) -> PSTR
+	SysReAllocStringLen(PSTR, PCSTR, u32) -> PSTR
 	SysStringLen(PSTR) -> u32
 	SystemTimeToVariantTime(PCVOID, *mut f64) -> i32
 	VariantClear(PVOID) -> HRES
