@@ -59,7 +59,7 @@ impl BSTR {
 	#[must_use]
 	pub fn SysAllocString(s: &str) -> HrResult<Self> {
 		let str_obj = WString::from_str(s);
-		let ptr = unsafe { ffi::SysAllocString(str_obj.as_ptr()) };
+		let ptr = unsafe { ffi::SysAllocStringLen(str_obj.as_ptr(), str_obj.str_len() as _) };
 		if ptr.is_null() { Err(co::HRESULT::E_OUTOFMEMORY) } else { Ok(Self(ptr)) }
 	}
 
