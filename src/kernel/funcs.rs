@@ -481,6 +481,69 @@ pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 	.map(|_| wfad)
 }
 
+/// [`GetFirmwareEnvironmentVariableEx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwareenvironmentvariableexw)
+/// function.
+///
+/// Returns the value of the variable, and its attributes.
+///
+/// The calling process must hold the `SeSystemEnvironmentPrivilege` privilege,
+/// enabled in its token, otherwise the function fails with
+/// [`co::ERROR::PRIVILEGE_NOT_HELD`](crate::co::ERROR::PRIVILEGE_NOT_HELD).
+/// On a system booted with legacy BIOS it always fails with
+/// [`co::ERROR::INVALID_FUNCTION`](crate::co::ERROR::INVALID_FUNCTION). If
+/// the variable doesn't exist, it fails with
+/// [`co::ERROR::ENVVAR_NOT_FOUND`](crate::co::ERROR::ENVVAR_NOT_FOUND).
+///
+/// # Examples
+///
+/// Reading the Secure Boot signature database, `db`:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// const IMAGE_SECURITY_DATABASE: w::GUID =
+///     w::GUID::from_str("d719b2cb-3d3a-4596-a3bc-dad00e67656f");
+///
+/// let (db, attributes) =
+///     w::GetFirmwareEnvironmentVariableEx("db", &IMAGE_SECURITY_DATABASE)?;
+/// # w::SysResult::Ok(())
+/// ```
+#[must_use]
+pub fn GetFirmwareEnvironmentVariableEx(
+	name: &str,
+	guid: &GUID,
+) -> SysResult<(Vec<u8>, co::VARIABLE_ATTRIBUTE)> {
+	let name = WString::from_str(name);
+	let guid = WString::from_str(format!("{{{guid}}}"));
+	let mut buf_sz = 64 * 1024; // the Secure Boot databases fit in one call
+	loop {
+		let mut buf = vec![0u8; buf_sz];
+		let mut attributes = co::VARIABLE_ATTRIBUTE::default();
+		match unsafe {
+			ffi::GetFirmwareEnvironmentVariableExW(
+				name.as_ptr(),
+				guid.as_ptr(),
+				buf.as_mut_ptr() as _,
+				buf.len() as _,
+				attributes.as_mut(),
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::INSUFFICIENT_BUFFER => {
+					buf_sz *= 2; // double the buffer size to try again
+				},
+				e => {
+					return Err(e);
+				},
+			},
+			num_bytes => {
+				buf.truncate(num_bytes as _);
+				return Ok((buf, attributes));
+			},
+		}
+	}
+}
+
 /// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
 /// function.
 #[must_use]
