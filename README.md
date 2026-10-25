@@ -7,7 +7,7 @@
 
 Windows API and GUI in safe, idiomatic Rust.
 
-Handwritten since 2019.
+Handwritten since 2019. LLM-generated PRs are **not** welcome.
 
 WinSafe has:
 
@@ -27,9 +27,9 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 924 |
+| Functions | 925 |
 | Structs | 266 |
-| Constants | 12,333 |
+| Constants | 12,337 |
 | Window messages | 684 |
 | Handles | 55 |
 | COM interfaces | 99 |

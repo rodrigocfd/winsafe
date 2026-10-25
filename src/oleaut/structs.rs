@@ -22,9 +22,7 @@ pub struct BSTR(*mut u16);
 impl Drop for BSTR {
 	fn drop(&mut self) {
 		if !self.0.is_null() {
-			unsafe {
-				ffi::SysFreeString(self.0);
-			}
+			unsafe { ffi::SysFreeString(self.0) };
 		}
 	}
 }
@@ -59,7 +57,7 @@ impl BSTR {
 	#[must_use]
 	pub fn SysAllocString(s: &str) -> HrResult<Self> {
 		let str_obj = WString::from_str(s);
-		let ptr = unsafe { ffi::SysAllocString(str_obj.as_ptr()) };
+		let ptr = unsafe { ffi::SysAllocStringLen(str_obj.as_ptr(), str_obj.str_len() as _) };
 		if ptr.is_null() { Err(co::HRESULT::E_OUTOFMEMORY) } else { Ok(Self(ptr)) }
 	}
 
@@ -69,7 +67,8 @@ impl BSTR {
 	/// The underlying pointer is automatically updated.
 	pub fn SysReAllocString(&mut self, s: &str) -> HrResult<()> {
 		let str_obj = WString::from_str(s);
-		let ptr = unsafe { ffi::SysReAllocString(self.0, str_obj.as_ptr()) };
+		let ptr =
+			unsafe { ffi::SysReAllocStringLen(self.0, str_obj.as_ptr(), str_obj.str_len() as _) };
 		if ptr.is_null() {
 			Err(co::HRESULT::E_OUTOFMEMORY)
 		} else {
