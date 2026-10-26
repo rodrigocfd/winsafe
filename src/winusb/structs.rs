@@ -53,3 +53,27 @@ impl Default for USB_DEVICE_DESCRIPTOR {
 		obj
 	}
 }
+
+/// [`USB_INTERFACE_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/usbspec/ns-usbspec-_usb_interface_descriptor)
+/// struct.
+#[repr(C)]
+pub struct USB_INTERFACE_DESCRIPTOR {
+	bLength: u8,
+	bDescriptorType: co::USB_DESCRIPTOR_TYPE,
+	pub bInterfaceNumber: u8,
+	pub bAlternateSetting: u8,
+	pub bNumEndpoints: u8,
+	pub bInterfaceClass: u8,
+	pub bInterfaceSubClass: u8,
+	pub bInterfaceProtocol: u8,
+	pub iInterface: u8,
+}
+
+impl Default for USB_INTERFACE_DESCRIPTOR {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.bLength = std::mem::size_of::<Self>() as _;
+		obj.bDescriptorType = co::USB_DESCRIPTOR_TYPE::INTERFACE;
+		obj
+	}
+}

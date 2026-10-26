@@ -138,6 +138,25 @@ impl HUSB {
 		}
 	}
 
+	/// [`WinUsb_QueryInterfaceSettings`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_queryinterfacesettings)
+	/// function.
+	#[must_use]
+	pub fn QueryInterfaceSettings(
+		&self,
+		alternate_interface_number: u8,
+	) -> SysResult<USB_INTERFACE_DESCRIPTOR> {
+		let mut obj = USB_INTERFACE_DESCRIPTOR::default();
+		BoolRet(unsafe {
+			ffi::WinUsb_QueryInterfaceSettings(
+				self.ptr(),
+				alternate_interface_number,
+				&mut obj as *mut _ as _,
+			)
+		})
+		.to_sysresult()
+		.map(|_| obj)
+	}
+
 	/// [`WinUsb_ResetPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_resetpipe)
 	/// function.
 	pub fn ResetPipe(&self, pipe_id: u8) -> SysResult<()> {
