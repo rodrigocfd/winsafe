@@ -1,7 +1,7 @@
 use std::rc::Rc;
-use winsafe::{self as w, co, gui, msg, prelude::*};
+use winsafe::{self as w, cmd, co, evp, evt, gui, prelude::*};
 
-use crate::{file_repl, ids, stats, sysdlg};
+use crate::ids;
 
 #[derive(Clone)]
 pub struct DlgMain {
@@ -10,7 +10,7 @@ pub struct DlgMain {
 	pub btn_run: gui::Button,
 	pub pro_load: gui::ProgressBar,
 	pub txt_out: gui::Edit,
-	pub mono_font: Rc<w::guard::DeleteObjectGuard<w::HFONT>>,
+	pub mono_font: Rc<w::DeleteObjectGuard<w::HFONT>>,
 }
 
 impl DlgMain {
@@ -42,95 +42,8 @@ impl DlgMain {
 	}
 
 	fn events(&self) {
-		let self2 = self.clone();
-		self.wnd
-			.on()
-			.wm_init_dialog(move |_| self2.on_init_dialog());
-
-		let self2 = self.clone();
-		self.wnd
-			.on()
-			.wm_command_acc_menu(co::DLGID::CANCEL, move || self2.on_cancel());
-
-		let self2 = self.clone();
-		self.btn_run.on().bn_clicked(move || self2.on_btn_run());
-	}
-
-	fn on_init_dialog(&self) -> w::AnyResult<bool> {
-		self.txt_path.set_text(&format!("{}\\src", ids::ROOT_DIR))?;
-
-		unsafe {
-			self.txt_out.hwnd().SendMessage(msg::WmSetFont {
-				hfont: self.mono_font.raw_copy(), // fixed-width font for output
-				redraw: true,
-			});
-		}
-
-		Ok(true)
-	}
-
-	fn on_cancel(&self) -> w::AnyResult<()> {
-		self.wnd.close(); // close window on Esc
-		Ok(())
-	}
-
-	fn on_btn_run(&self) -> w::AnyResult<()> {
-		self.txt_path.hwnd().EnableWindow(false);
-		self.btn_run.hwnd().EnableWindow(false);
-		self.txt_out.set_text("")?;
-
-		let target_dir = w::path::rtrim_backslash(&self.txt_path.text()?).to_owned();
-		if !w::path::exists(&target_dir) {
-			sysdlg::err(
-				self.wnd.hwnd(),
-				"Bad path",
-				&format!("Process cannot be done.\nPath does not exist:\n{}", target_dir),
-			);
-			self.txt_path.hwnd().EnableWindow(true);
-			self.btn_run.hwnd().EnableWindow(true);
-			self.txt_path.focus()?;
-			return Ok(()); // halt processing
-		}
-
-		self.pro_load.set_marquee(true);
-		let rs_files_list = match stats::rs_files_list(&target_dir) {
-			Err(err) => {
-				sysdlg::err(
-					self.wnd.hwnd(),
-					"File listing",
-					&format!("Failed to list .rs files:\n{}", err.to_string()),
-				);
-				return Ok(()); // halt processing
-			},
-			Ok(f) => f,
-		};
-		self.pro_load.set_marquee(false);
-
-		self.pro_load.set_range(0, rs_files_list.len() as _); // setup progress bar
-		self.pro_load.set_position(0);
-
-		let titlebar_text = self.wnd.hwnd().GetWindowText()?;
-		self.wnd.hwnd().SetWindowText(&format!(
-			"{} - {} files",
-			titlebar_text.split('-').next().unwrap().trim_end(),
-			self.pro_load.range().1,
-		))?;
-
-		let stats = stats::gather(&rs_files_list, |pass_idx| {
-			self.pro_load.set_position(pass_idx as _); // process the files
-		})?;
-
-		self.txt_out.set_text(&stats.to_string())?;
-		self.txt_out.focus()?;
-
-		file_repl::ask_update_stats(
-			self.wnd.hwnd(),
-			&format!("{}\\..\\README.md", target_dir),
-			&stats,
-		)?;
-
-		self.txt_path.hwnd().EnableWindow(true);
-		self.btn_run.hwnd().EnableWindow(true);
-		Ok(())
+		evp!(self, wm_init_dialog, on_init_dialog);
+		cmd!(self, co::DLGID::CANCEL, on_esc);
+		evt!(self, self.btn_run, bn_clicked, on_btn_run);
 	}
 }

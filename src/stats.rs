@@ -5,7 +5,7 @@ pub struct Stats {
 	pub ffis: usize,
 	pub structs: usize,
 	pub consts: usize,
-	pub wmsgs: usize,
+	pub msgs: usize,
 	pub handles: usize,
 	pub com_interfaces: usize,
 	pub com_methods: usize,
@@ -24,7 +24,7 @@ impl std::fmt::Display for Stats {
 			format!("| Functions | {} |", fmt_thousand(self.ffis)),
 			format!("| Structs | {} |", fmt_thousand(self.structs)),
 			format!("| Constants | {} |", fmt_thousand(self.consts)),
-			format!("| Window messages | {} |", fmt_thousand(self.wmsgs)),
+			format!("| Window messages | {} |", fmt_thousand(self.msgs)),
 			format!("| Handles | {} |", fmt_thousand(self.handles)),
 			format!("| COM interfaces | {} |", fmt_thousand(self.com_interfaces)),
 			format!("| COM methods | {} |", fmt_thousand(self.com_methods)),
@@ -145,7 +145,7 @@ impl Stats {
 	fn count_wmsgs(&mut self, contents: &str) {
 		for line in contents.lines() {
 			if line.contains("/// Return type: ") {
-				self.wmsgs += 1; // simplest approach
+				self.msgs += 1; // simplest approach
 			}
 		}
 	}
