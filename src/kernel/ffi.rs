@@ -186,6 +186,7 @@ extern_sys! { "kernel32";
 	SetPriorityClass(HANDLE, u32) -> BOOL
 	SetProcessAffinityUpdateMode(HANDLE, u32) -> BOOL
 	SetProcessPriorityBoost(HANDLE, BOOL) -> BOOL
+	SetThreadExecutionState(u32) -> u32
 	SetThreadIdealProcessor(HANDLE, u32) -> u32
 	SetThreadIdealProcessorEx(HANDLE, PCVOID, PVOID) -> BOOL
 	SetThreadPriorityBoost(HANDLE, BOOL) -> BOOL

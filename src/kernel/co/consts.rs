@@ -291,6 +291,19 @@ const_ordinary! { DRIVE: u32;
 	RAMDISK 6
 }
 
+const_bitflag! { EST: u32;
+	/// [`SetThreadExecutionState`](crate::SetThreadExecutionState) flags
+	/// (`u32`).
+	///
+	/// Originally has `ES` prefix.
+	=>
+	SYSTEM_REQUIRED 0x0000_0001
+	DISPLAY_REQUIRED 0x0000_0002
+	USER_PRESENT 0x0000_0004
+	AWAYMODE_REQUIRED 0x0000_0040
+	CONTINUOUS 0x8000_0000
+}
+
 const_bitflag! { EVENT_RIGHTS: u32;
 	/// Event
 	/// [access rights](https://learn.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights)

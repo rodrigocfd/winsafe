@@ -1588,6 +1588,15 @@ pub fn SetLastError(err_code: co::ERROR) {
 	unsafe { ffi::SetLastError(err_code.raw()) }
 }
 
+/// [`SetThreadExecutionState`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setthreadexecutionstate)
+/// function.
+pub fn SetThreadExecutionState(flags: co::EST) -> SysResult<co::EST> {
+	match unsafe { ffi::SetThreadExecutionState(flags.raw()) } {
+		0 => Err(co::ERROR::BAD_ARGUMENTS),
+		n => Ok(unsafe { co::EST::from_raw(n) }),
+	}
+}
+
 /// [`SetThreadStackGuarantee`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadstackguarantee)
 /// function.
 ///
