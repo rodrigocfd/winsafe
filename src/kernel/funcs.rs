@@ -1488,7 +1488,7 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 		.map(|_| perf_count)
 }
 
-/// [`QueryPerformanceFrequency`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
+/// [`QueryPerformanceFrequency`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancefrequency)
 /// function.
 ///
 /// # Related functions
