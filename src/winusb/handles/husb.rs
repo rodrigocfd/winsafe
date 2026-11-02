@@ -150,7 +150,28 @@ impl HUSB {
 			ffi::WinUsb_QueryInterfaceSettings(
 				self.ptr(),
 				alternate_interface_number,
-				&mut obj as *mut _ as _,
+				pvoid(&mut obj),
+			)
+		})
+		.to_sysresult()
+		.map(|_| obj)
+	}
+
+	/// [`WinUsb_QueryPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_querypipe)
+	/// function.
+	#[must_use]
+	pub fn QueryPipe(
+		&self,
+		alternate_interface_number: u8,
+		pipe_index: u8,
+	) -> SysResult<WINUSB_PIPE_INFORMATION> {
+		let mut obj = WINUSB_PIPE_INFORMATION::default();
+		BoolRet(unsafe {
+			ffi::WinUsb_QueryPipe(
+				self.ptr(),
+				alternate_interface_number,
+				pipe_index,
+				pvoid(&mut obj),
 			)
 		})
 		.to_sysresult()

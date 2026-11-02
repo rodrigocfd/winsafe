@@ -45,3 +45,13 @@ const_ordinary! { USB_DESCRIPTOR_TYPE: u8;
 	/// USB 3.1.
 	SUPERSPEEDPLUS_ISOCH_ENDPOINT_COMPANION 0x31
 }
+
+const_ordinary! { USBD_PIPE_TYPE: u32;
+	/// [`USBD_PIPE_TYPE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/usb/ne-usb-_usbd_pipe_type)
+	/// enumeration (`u32`).
+	=>
+	CONTROL 0
+	ISOCHRONOUS 1
+	BULK 2
+	INTERRUPT 3
+}

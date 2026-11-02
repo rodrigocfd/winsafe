@@ -77,3 +77,15 @@ impl Default for USB_INTERFACE_DESCRIPTOR {
 		obj
 	}
 }
+
+/// [`WINUSB_PIPE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winusbio/ns-winusbio-winusb_pipe_information)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct WINUSB_PIPE_INFORMATION {
+	pub PipeType: co::USBD_PIPE_TYPE,
+	pub PipeId: u8,
+	pub MaximumPacketSize: u16,
+	pub Interval: u8,
+	pub MaximumBytesPerInterval: u32,
+}
