@@ -252,4 +252,29 @@ impl HUSB {
 		BoolRet(unsafe { ffi::WinUsb_SetCurrentAlternateSetting(self.ptr(), setting_no) })
 			.to_sysresult()
 	}
+
+	/// [`WinUsb_WritePipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_writepipe)
+	/// function.
+	///
+	/// Returns the number of bytes written.
+	///
+	/// Note that asynchronous writing – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	pub fn WritePipe(&self, pipe_id: u8, data: &[u8]) -> SysResult<u32> {
+		let mut bytes_written = 0u32;
+		BoolRet(unsafe {
+			ffi::WinUsb_WritePipe(
+				self.ptr(),
+				pipe_id,
+				data.as_ptr() as _,
+				data.len() as _,
+				&mut bytes_written,
+				std::ptr::null_mut(),
+			)
+		})
+		.to_sysresult()
+		.map(|_| bytes_written)
+	}
 }

@@ -14,4 +14,5 @@ extern_sys! { "winusb";
 	WinUsb_ReadPipe(HANDLE, u8, *mut u8, u32, *mut u32, PVOID) -> BOOL
 	WinUsb_ResetPipe(HANDLE, u8) -> BOOL
 	WinUsb_SetCurrentAlternateSetting(HANDLE, u8) -> BOOL
+	WinUsb_WritePipe(HANDLE, u8, *mut u8, u32, *mut u32, PVOID) -> BOOL
 }

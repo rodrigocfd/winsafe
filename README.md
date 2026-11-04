@@ -3,7 +3,7 @@
 [![Crates.io](https://img.shields.io/crates/v/winsafe.svg?style=flat-square)](https://crates.io/crates/winsafe)
 [![Crates.io total downloads](https://img.shields.io/crates/d/winsafe?color=seagreen&style=flat-square)](https://crates.io/crates/winsafe)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?label=license&style=flat-square)](https://opensource.org/licenses/MIT)
-[![Lines of code](https://img.shields.io/badge/LoC-70.3k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
+[![Lines of code](https://img.shields.io/badge/LoC-70.4k-blue?style=flat-square)](https://github.com/rodrigocfd/winsafe)
 
 Windows API and GUI in safe, idiomatic Rust.
 
@@ -27,7 +27,7 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 928 |
+| Functions | 929 |
 | Structs | 268 |
 | Constants | 12,339 |
 | Window messages | 684 |
