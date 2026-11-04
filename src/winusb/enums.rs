@@ -7,6 +7,7 @@ use crate::decl::*;
 pub enum UsbDescr {
 	Device(USB_DEVICE_DESCRIPTOR),
 	Configuration(UsbConfiguratorDescriptorGuard),
+	String(String),
 }
 
 impl UsbDescr {
@@ -17,6 +18,7 @@ impl UsbDescr {
 		match self {
 			Device(_) => co::USB_DESCRIPTOR_TYPE::DEVICE,
 			Configuration(_) => co::USB_DESCRIPTOR_TYPE::CONFIGURATION,
+			String(_) => co::USB_DESCRIPTOR_TYPE::STRING,
 		}
 	}
 }

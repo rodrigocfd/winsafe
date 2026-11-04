@@ -134,6 +134,43 @@ impl HUSB {
 					Err(co::ERROR::INCORRECT_SIZE)
 				}
 			},
+			co::USB_DESCRIPTOR_TYPE::STRING => {
+				let mut buf = vec![0u8; 256]; // max size of USB descriptor
+				let ret = BoolRet(unsafe {
+					ffi::WinUsb_GetDescriptor(
+						self.ptr(),
+						descriptor_type.raw(),
+						index,
+						lang_id.raw(),
+						buf.as_mut_ptr(),
+						buf.len() as _,
+						&mut bytes_read,
+					)
+				})
+				.to_sysresult();
+
+				// USB_STRING_DESCRIPTOR layout:
+				//
+				// Offset 0: bLength
+				// Offset 1: bDescriptorType
+				// Offset 2: UTF-16LE string data
+
+				if ret.is_err() {
+					return Err(ret.unwrap_err());
+				} else if bytes_read < 2 || buf[1] != co::USB_DESCRIPTOR_TYPE::STRING.raw() {
+					return Err(co::ERROR::INVALID_DATA);
+				}
+
+				let str_len = buf[0] as u32;
+				if str_len < 2 || str_len > bytes_read || (str_len % 2) != 0 {
+					return Err(co::ERROR::INVALID_DATA);
+				}
+
+				Ok(UsbDescr::String(
+					WString::from_wchars_count(buf.as_ptr() as _, (str_len as usize - 2) / 2)
+						.to_string(),
+				))
+			},
 			_ => Err(co::ERROR::INVALID_PARAMETER),
 		}
 	}
