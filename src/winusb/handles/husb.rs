@@ -215,6 +215,31 @@ impl HUSB {
 		.map(|_| obj)
 	}
 
+	/// [`WinUsb_ReadPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_readpipe)
+	/// function.
+	///
+	/// Returns the number of bytes read.
+	///
+	/// Note that asynchronous reading – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	pub fn ReadPipe(&self, pipe_id: u8, buffer: &mut [u8]) -> SysResult<u32> {
+		let mut bytes_read = 0u32;
+		BoolRet(unsafe {
+			ffi::WinUsb_ReadPipe(
+				self.ptr(),
+				pipe_id,
+				buffer.as_mut_ptr(),
+				buffer.len() as _,
+				&mut bytes_read,
+				std::ptr::null_mut(),
+			)
+		})
+		.to_sysresult()
+		.map(|_| bytes_read)
+	}
+
 	/// [`WinUsb_ResetPipe`](https://learn.microsoft.com/en-us/windows/win32/api/winusb/nf-winusb-winusb_resetpipe)
 	/// function.
 	pub fn ResetPipe(&self, pipe_id: u8) -> SysResult<()> {
