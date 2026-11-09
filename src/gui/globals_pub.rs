@@ -117,10 +117,10 @@ impl Cursor {
 			use Cursor::*;
 			Ok(match self {
 				Handle(h) => h.raw_copy(),
-				Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?.leak(),
-				Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?.leak(),
+				Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?,
+				Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?,
 				None => HCURSOR::NULL,
-				Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?.leak(),
+				Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?,
 			})
 		}
 	}
@@ -151,10 +151,10 @@ impl Icon {
 			use Icon::*;
 			Ok(match self {
 				Handle(h) => h.raw_copy(),
-				Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?.leak(),
-				Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?.leak(),
+				Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?,
+				Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?,
 				None => HICON::NULL,
-				Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?.leak(),
+				Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?,
 			})
 		}
 	}

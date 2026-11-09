@@ -8,6 +8,9 @@ use crate::kernel::privs::*;
 impl HINSTANCE {
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
+	///
+	/// If the [`co::LR::SHARED`](crate::co::LR::SHARED) is specified, it will
+	/// be removed, for security reasons.
 	#[must_use]
 	pub fn LoadImageBitmap(
 		&self,
@@ -16,14 +19,24 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()))
-				.to_sysresult_handle()
-				.map(|h| DeleteObjectGuard::new(h))
+			PtrRet(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				0,
+				sz.cx,
+				sz.cy,
+				load.raw() & !co::LR::SHARED.raw(),
+			))
+			.to_sysresult_handle()
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
+	///
+	/// If the [`co::LR::SHARED`](crate::co::LR::SHARED) is specified, it will
+	/// be removed, for security reasons.
 	#[must_use]
 	pub fn LoadImageCursor(
 		&self,
@@ -32,14 +45,24 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()))
-				.to_sysresult_handle()
-				.map(|h| DestroyCursorGuard::new(h))
+			PtrRet(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				2,
+				sz.cx,
+				sz.cy,
+				load.raw() & !co::LR::SHARED.raw(),
+			))
+			.to_sysresult_handle()
+			.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
+	///
+	/// If the [`co::LR::SHARED`](crate::co::LR::SHARED) is specified, it will
+	/// be removed, for security reasons.
 	#[must_use]
 	pub fn LoadImageIcon(
 		&self,
@@ -48,9 +71,16 @@ impl HINSTANCE {
 		load: co::LR,
 	) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			PtrRet(ffi::LoadImageW(self.ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()))
-				.to_sysresult_handle()
-				.map(|h| DestroyIconGuard::new(h))
+			PtrRet(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				1,
+				sz.cx,
+				sz.cy,
+				load.raw() & !co::LR::SHARED.raw(),
+			))
+			.to_sysresult_handle()
+			.map(|h| DestroyIconGuard::new(h))
 		}
 	}
 }

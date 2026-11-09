@@ -138,12 +138,8 @@ impl HINSTANCE {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
-		unsafe {
-			PtrRet(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()))
-				.to_sysresult_handle()
-				.map(|h| DestroyCursorGuard::new(h))
-		}
+	pub fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<HCURSOR> {
+		unsafe { PtrRet(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr())) }.to_sysresult_handle()
 	}
 
 	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
@@ -161,12 +157,8 @@ impl HINSTANCE {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
-		unsafe {
-			PtrRet(ffi::LoadIconW(self.ptr(), icon_id.as_ptr()))
-				.to_sysresult_handle()
-				.map(|h| DestroyIconGuard::new(h))
-		}
+	pub fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<HICON> {
+		unsafe { PtrRet(ffi::LoadIconW(self.ptr(), icon_id.as_ptr())) }.to_sysresult_handle()
 	}
 
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
