@@ -187,3 +187,30 @@ impl ReleaseStgMediumGuard {
 		Self { stgm }
 	}
 }
+
+/// RAII implementation which automatically calls
+/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
+/// when the object goes out of scope.
+pub struct RevokeDragDropGuard {
+	hwnd: HWND,
+}
+
+impl Drop for RevokeDragDropGuard {
+	fn drop(&mut self) {
+		unsafe { ffi::RevokeDragDrop(self.hwnd.ptr()) };
+	}
+}
+
+impl RevokeDragDropGuard {
+	/// Constructs the guard by copying the handle.
+	///
+	/// # Safety
+	///
+	/// Be sure you need to call
+	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
+	/// at the end of the scope.
+	#[must_use]
+	pub const unsafe fn new(hwnd: &HWND) -> Self {
+		Self { hwnd: unsafe { hwnd.raw_copy() } }
+	}
+}

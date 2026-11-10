@@ -41,7 +41,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, guard};
+	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let sinkf: w::IFileSinkFilter; // initialized somewhere
 	/// # let sinkf = unsafe { w::IFileSinkFilter::null() };
@@ -50,7 +50,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// unsafe {
 	///     sinkf.GetCurFile(Some(&mut ammt))?;
 	///     if let Some(pb_format) = ammt.pbFormat::<w::DVINFO>() { // valid reference?
-	///         let _ = guard::CoTaskMemFreeGuard::new(pb_format as *mut _  as _, 0);
+	///         let _ = w::CoTaskMemFreeGuard::new(pb_format as *mut _  as _, 0);
 	///     }
 	/// }
 	/// # w::HrResult::Ok(())
