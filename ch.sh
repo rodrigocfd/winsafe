@@ -30,6 +30,7 @@ FEATS=(
 	wininet
 	winmm
 	winspool
+	winusb
 )
 
 set -e
