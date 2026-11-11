@@ -144,7 +144,7 @@ impl ProgressBar {
 
 		if !marquee {
 			let cur_style: co::PBS = self.hwnd().style().into();
-			self.hwnd().set_style(cur_style & !co::PBS::MARQUEE);
+			self.hwnd().set_style(cur_style.without(co::PBS::MARQUEE));
 		}
 	}
 

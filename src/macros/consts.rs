@@ -85,6 +85,14 @@ macro_rules! const_impl_bitflag {
 			pub const fn has(&self, other: Self) -> bool {
 				(self.0 & other.0) != 0
 			}
+
+			/// Returns a new value, removing `what` bitflag from the actual value.
+			///
+			/// Equivalent to `(val & !what)`.
+			#[must_use]
+			pub const fn without(self, what: Self) -> Self {
+				unsafe { Self::from_raw(self.0 & !what.0) }
+			}
 		}
 	};
 }

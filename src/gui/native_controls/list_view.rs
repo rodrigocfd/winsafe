@@ -133,7 +133,8 @@ impl<T> ListView<T> {
 					opts.window_ex_style,
 					"SysListView32",
 					None,
-					opts.window_style | (opts.control_style & !co::LVS::SHAREIMAGELISTS).into(),
+					opts.window_style
+						| (opts.control_style.without(co::LVS::SHAREIMAGELISTS)).into(),
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
@@ -205,7 +206,7 @@ impl<T> ListView<T> {
 			self2.0.base.assign_dlg(&parent2);
 			self2
 				.hwnd()
-				.set_style(co::LVS::from(self2.hwnd().style()) & !co::LVS::SHAREIMAGELISTS);
+				.set_style(co::LVS::from(self2.hwnd().style()).without(co::LVS::SHAREIMAGELISTS));
 			if !unsafe { &*self2.0.header.get() }
 				.as_ref()
 				.unwrap()

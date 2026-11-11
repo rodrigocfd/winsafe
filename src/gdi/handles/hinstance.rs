@@ -25,7 +25,7 @@ impl HINSTANCE {
 				0,
 				sz.cx,
 				sz.cy,
-				load.raw() & !co::LR::SHARED.raw(),
+				load.without(co::LR::SHARED).raw(),
 			))
 			.to_sysresult_handle()
 			.map(|h| DeleteObjectGuard::new(h))
@@ -51,7 +51,7 @@ impl HINSTANCE {
 				2,
 				sz.cx,
 				sz.cy,
-				load.raw() & !co::LR::SHARED.raw(),
+				load.without(co::LR::SHARED).raw(),
 			))
 			.to_sysresult_handle()
 			.map(|h| DestroyCursorGuard::new(h))
@@ -77,7 +77,7 @@ impl HINSTANCE {
 				1,
 				sz.cx,
 				sz.cy,
-				load.raw() & !co::LR::SHARED.raw(),
+				load.without(co::LR::SHARED).raw(),
 			))
 			.to_sysresult_handle()
 			.map(|h| DestroyIconGuard::new(h))

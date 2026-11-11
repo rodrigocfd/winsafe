@@ -53,7 +53,7 @@ impl RadioButton {
 					if is_first {
 						opts.window_style | co::WS::GROUP | co::WS::TABSTOP
 					} else {
-						opts.window_style & !(co::WS::GROUP | co::WS::TABSTOP)
+						opts.window_style.without(co::WS::GROUP | co::WS::TABSTOP)
 					} | opts.control_style.into(),
 					opts.position.into(),
 					opts.size.into(),
@@ -95,7 +95,7 @@ impl RadioButton {
 			self2.hwnd().set_style(if is_first {
 				self2.hwnd().style() | co::WS::GROUP | co::WS::TABSTOP
 			} else {
-				self2.hwnd().style() & !(co::WS::GROUP | co::WS::TABSTOP)
+				self2.hwnd().style().without(co::WS::GROUP | co::WS::TABSTOP)
 			});
 			parent2
 				.as_ref()
